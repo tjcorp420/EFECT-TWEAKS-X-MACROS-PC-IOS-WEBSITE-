@@ -53,7 +53,7 @@
       -webkit-font-smoothing:antialiased;
       overflow-x:hidden;
       padding-top:calc(88px + var(--safeTop));
-      padding-bottom:calc(118px + var(--safeBottom));
+      padding-bottom:calc(132px + var(--safeBottom));
       position:relative;
     }
 
@@ -785,11 +785,21 @@
       aspect-ratio:16/10;
       box-shadow:0 16px 32px rgba(0,0,0,.45);
       width:100%;
+      z-index:2;
+    }
+
+    .preview-image-btn{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      border:0;
+      outline:0;
+      background:#000;
       cursor:pointer;
       padding:0;
       display:block;
       text-align:left;
-      z-index:2;
     }
 
     .preview-img{
@@ -801,8 +811,8 @@
       transition:transform .35s ease, opacity .35s ease;
     }
 
-    .preview-wrap:hover .preview-img,
-    .preview-wrap:active .preview-img{
+    .preview-image-btn:hover .preview-img,
+    .preview-image-btn:active .preview-img{
       transform:scale(1.035);
       opacity:1;
     }
@@ -815,6 +825,7 @@
         radial-gradient(circle at 50% 42%, transparent 22%, rgba(0,0,0,.24) 100%),
         linear-gradient(180deg,transparent 45%,rgba(0,0,0,.74));
       pointer-events:none;
+      z-index:2;
     }
 
     .preview-label{
@@ -832,14 +843,15 @@
       letter-spacing:.12em;
       text-transform:uppercase;
       z-index:3;
+      pointer-events:none;
     }
 
-    .preview-tap{
+    .preview-share{
       position:absolute;
       right:12px;
       bottom:12px;
-      width:36px;
-      height:36px;
+      width:44px;
+      height:44px;
       border-radius:999px;
       display:grid;
       place-items:center;
@@ -847,9 +859,11 @@
       border:1px solid rgba(36,255,36,.32);
       color:var(--green);
       box-shadow:0 0 22px rgba(36,255,36,.18);
-      z-index:3;
-      font-size:16px;
+      z-index:4;
+      font-size:18px;
       font-weight:900;
+      cursor:pointer;
+      backdrop-filter:blur(14px);
     }
 
     .feature-checklist{
@@ -939,9 +953,55 @@
     }
 
     .btn-outline:active,
-    .btn-filled:active{
+    .btn-filled:active,
+    .preview-share:active{
       transform:scale(.965);
       filter:brightness(1.1);
+    }
+
+    /* =========================
+       LEGAL SECTION
+    ========================= */
+
+    .legal-section{
+      padding:4px 16px 18px;
+    }
+
+    .legal-card{
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(36,255,36,.10), transparent 36%),
+        radial-gradient(circle at 100% 0%, rgba(162,12,255,.14), transparent 42%),
+        rgba(255,255,255,.035);
+      box-shadow:0 20px 50px rgba(0,0,0,.52);
+      padding:18px;
+    }
+
+    .legal-title{
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:-.03em;
+      margin-bottom:8px;
+    }
+
+    .legal-copy{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+      margin-bottom:14px;
+    }
+
+    .legal-actions{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+
+    @media (min-width:640px){
+      .legal-actions{
+        grid-template-columns:repeat(3,1fr);
+      }
     }
 
     /* =========================
@@ -1017,7 +1077,8 @@
        MODAL
     ========================= */
 
-    #media-modal{
+    #media-modal,
+    #legal-modal{
       display:none;
       position:fixed;
       z-index:999999;
@@ -1032,7 +1093,8 @@
       padding:22px;
     }
 
-    #media-modal.show{
+    #media-modal.show,
+    #legal-modal.show{
       display:flex;
     }
 
@@ -1075,6 +1137,86 @@
       background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.12);
       backdrop-filter:blur(16px);
+      z-index:3;
+    }
+
+    .legal-modal-card{
+      width:min(760px,100%);
+      max-height:82vh;
+      overflow:auto;
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(36,255,36,.12), transparent 34%),
+        radial-gradient(circle at 100% 0%, rgba(162,12,255,.16), transparent 38%),
+        linear-gradient(180deg,#101116,#050506);
+      box-shadow:
+        0 0 32px rgba(162,12,255,.26),
+        0 24px 70px rgba(0,0,0,.72);
+      padding:22px;
+    }
+
+    .legal-modal-card h2{
+      font-size:26px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-.05em;
+      margin-bottom:8px;
+    }
+
+    .legal-modal-card h2 span{
+      color:var(--green);
+      text-shadow:0 0 16px rgba(36,255,36,.42);
+    }
+
+    .legal-updated{
+      color:var(--muted2);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:18px;
+    }
+
+    .legal-content{
+      display:grid;
+      gap:14px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    .legal-content h3{
+      color:#fff;
+      font-size:15px;
+      font-weight:900;
+      margin-top:4px;
+    }
+
+    .legal-content p,
+    .legal-content li{
+      color:var(--muted);
+    }
+
+    .legal-content ul{
+      padding-left:18px;
+      display:grid;
+      gap:8px;
+    }
+
+    .legal-content strong{
+      color:#fff;
+    }
+
+    .faq-item{
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(255,255,255,.04);
+      padding:14px;
+    }
+
+    .faq-item h3{
+      margin-bottom:6px;
     }
 
     /* =========================
@@ -1427,7 +1569,7 @@
         </h1>
 
         <p>
-          Clean EFECT-branded storefront for your FPS Booster, keyboard macro pack, and optimizer. Preview each product, add items to cart, or buy instantly through Payhip checkout.
+          Clean EFECT-branded storefront for FPS improvement tools, keyboard profile controls, and Windows optimization packs. Preview every product, add items to cart, or buy instantly through secure Payhip checkout.
         </p>
 
         <div class="hero-stats">
@@ -1452,6 +1594,21 @@
     </section>
 
     <section class="card-container" id="productGrid"></section>
+
+    <section class="legal-section">
+      <div class="legal-card">
+        <div class="legal-title">Store Info & Policies</div>
+        <p class="legal-copy">
+          Review delivery, support, usage rules, privacy, and digital product terms before purchasing.
+        </p>
+
+        <div class="legal-actions">
+          <button class="btn-outline play-click" type="button" data-action="legal" data-legal="privacy">Privacy Policy</button>
+          <button class="btn-outline play-click" type="button" data-action="legal" data-legal="faq">FAQ</button>
+          <button class="btn-outline green play-click" type="button" data-action="legal" data-legal="agreement">User Agreement</button>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- PREVIEW MODAL -->
@@ -1466,6 +1623,17 @@
       <source id="video-source" src="" type="video/mp4">
       Your browser does not support HTML5 video.
     </video>
+  </div>
+
+  <!-- LEGAL MODAL -->
+  <div id="legal-modal">
+    <button class="close-modal play-click" id="legalClose" type="button" aria-label="Close legal modal">&times;</button>
+
+    <div class="legal-modal-card">
+      <h2 id="legalTitle">EFECT <span>Policy</span></h2>
+      <div class="legal-updated">Last Updated: 2026</div>
+      <div class="legal-content" id="legalContent"></div>
+    </div>
   </div>
 
   <!-- CART DRAWER -->
@@ -1529,12 +1697,12 @@
         image: "optimizer.png",
         previewType: "image",
         previewSrc: "optimizer.png",
-        description: "Premium optimization pack for cleaner system behavior, lower background noise, network tuning, and performance-focused presets.",
+        description: "Windows optimization pack focused on reducing background load, cleaning startup behavior, tightening process priority, and applying performance presets for a smoother low-latency desktop and gaming setup.",
         features: [
-          "Process priority presets",
-          "Memory cleanup workflow",
-          "Network tuning settings",
-          "Performance preset control"
+          "Startup and background load cleanup",
+          "Process priority and service presets",
+          "Network and responsiveness tuning",
+          "Step-by-step performance setup"
         ]
       },
       {
@@ -1549,12 +1717,12 @@
         previewType: "video",
         previewSrc: "preview.mp4",
         fallbackPreview: "macro.png",
-        description: "Clean keyboard profile system built for simple setup, adjustable delay control, saved binds, and fast profile switching.",
+        description: "EFECT keyboard profile interface built for saved binds, clean toggle controls, delay adjustment, and fast profile switching. Designed for simple setup, organized controls, and a polished EMX dashboard feel.",
         features: [
-          "Customizable keybind profiles",
-          "Adjustable delay controls",
-          "Saved profile setup",
-          "Fast interface controls"
+          "Saved keybind profile system",
+          "Toggle-based macro controls",
+          "Adjustable delay settings",
+          "Clean EFECT dashboard interface"
         ]
       },
       {
@@ -1568,14 +1736,108 @@
         image: "fps.png",
         previewType: "image",
         previewSrc: "fps.png",
-        description: "Maximize smoothness with clean performance presets, game profile tuning, background load reduction, and display-priority optimization.",
+        description: "Performance booster pack made for smoother gameplay feel through game profile tuning, background app reduction, display-priority settings, and lightweight optimization presets.",
         features: [
-          "Custom game profiles",
-          "Background load reduction",
-          "Display priority tuning",
-          "Smoothness-focused setup"
+          "Game-focused performance presets",
+          "Background app reduction guide",
+          "Display and smoothness tuning",
+          "Lightweight setup workflow"
         ]
       }
+    ];
+
+    const LEGAL_PAGES = {
+      privacy: {
+        title: "Privacy Policy",
+        html: `
+          <h3>1. Information We Collect</h3>
+          <p>EFECT does not directly process card payments on this page. Purchases are handled through Payhip checkout. This storefront may store your selected cart items locally in your browser so the cart can stay saved while you browse.</p>
+
+          <h3>2. Payment Information</h3>
+          <p>Payment details, billing information, and checkout security are handled by Payhip and its payment partners. EFECT does not receive or store your full payment card information from this website.</p>
+
+          <h3>3. Local Browser Storage</h3>
+          <p>This site uses localStorage to remember cart selections. You can clear this data by clearing your browser site data or using the Clear Cart button.</p>
+
+          <h3>4. External Links</h3>
+          <p>This site links to Payhip, TikTok, and Discord-related support. Once you leave this website, those platforms operate under their own privacy policies and terms.</p>
+
+          <h3>5. Support</h3>
+          <p>For support, contact EFECT through the Discord username shown on this storefront. Do not send private payment card information through Discord messages.</p>
+        `
+      },
+      faq: {
+        title: "FAQ",
+        html: `
+          <div class="faq-item">
+            <h3>How do I receive my product?</h3>
+            <p>After purchasing through Payhip, follow the download or delivery instructions shown by Payhip. For access help, contact the EFECT Discord username listed on this storefront.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Are purchases instant?</h3>
+            <p>Checkout is direct through Payhip. Digital delivery is normally available after payment confirmation, depending on the product setup and verification process.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>What does the optimizer do?</h3>
+            <p>The optimizer focuses on Windows cleanup, background load reduction, startup behavior, priority presets, and performance-focused settings for smoother system responsiveness.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>What does the FPS Booster do?</h3>
+            <p>The FPS Booster is focused on smoother gameplay setup through game profile tuning, reduced background usage, display-related adjustments, and performance preset guidance.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>What does the macro product include?</h3>
+            <p>The macro product focuses on keyboard profile controls, saved binds, toggle controls, delay settings, and a clean EFECT dashboard interface.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Do I need to follow game or platform rules?</h3>
+            <p>Yes. You are responsible for using all tools only where allowed and for following the rules of any game, platform, tournament, or service you use.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Are refunds available?</h3>
+            <p>Digital products are generally final once delivered or accessed. Contact support if you have a delivery problem or purchased the wrong item.</p>
+          </div>
+        `
+      },
+      agreement: {
+        title: "User Agreement",
+        html: `
+          <h3>1. Digital Product Terms</h3>
+          <p>All EFECT products are digital items. By purchasing, you understand that access, downloads, files, keys, or setup instructions may be delivered digitally.</p>
+
+          <h3>2. Personal Use License</h3>
+          <p>Products are provided for your personal use only. You may not resell, leak, redistribute, re-upload, share license keys, or claim EFECT files as your own.</p>
+
+          <h3>3. Platform Compliance</h3>
+          <p>You are responsible for following the rules of any game, platform, tournament, or service where you use EFECT products. Do not use any product in a way that violates third-party terms, laws, or platform rules.</p>
+
+          <h3>4. No Guaranteed Results</h3>
+          <p>Performance results can vary depending on your PC, Windows settings, hardware, drivers, background apps, internet connection, and game configuration. EFECT does not guarantee a specific FPS number, ping number, or competitive result.</p>
+
+          <h3>5. Support</h3>
+          <p>Support is available through the EFECT contact method shown on this storefront. Support may require proof of purchase, screenshots, or basic system details to help troubleshoot delivery or setup issues.</p>
+
+          <h3>6. Refunds and Chargebacks</h3>
+          <p>Because these are digital products, purchases are generally final after access or delivery. Fraudulent chargebacks, unauthorized sharing, or abuse of support may result in access removal.</p>
+
+          <h3>7. Acceptance</h3>
+          <p>By purchasing or using an EFECT product, you agree to these terms and understand that product access can be revoked if the terms are violated.</p>
+        `
+      }
+    };
+
+    const ACTIVITY_TOASTS = [
+      "<strong>Live Store Activity</strong><br>Zero Delay Optimizer is one of the most viewed packs today.",
+      "<strong>Popular Pick</strong><br>FPS Booster is trending with performance-focused setups.",
+      "<strong>EMX Notice</strong><br>Keyboard Macro profile pack is getting attention right now.",
+      "<strong>Secure Checkout Ready</strong><br>Buy Now and cart checkout are connected to Payhip.",
+      "<strong>Support Reminder</strong><br>Need help after purchase? Contact EFECT through Discord."
     ];
 
     const CHECKOUT_BASE = "https://payhip.com/buy";
@@ -1592,6 +1854,8 @@
     const cartTotal = document.getElementById("cartTotal");
 
     let cart = loadCart();
+    let activityIndex = 0;
+    let activityTimer = null;
 
     function money(value){
       return "$" + Number(value).toFixed(2);
@@ -1674,20 +1938,32 @@
 
             <p class="description-block">${escapeHtml(product.description)}</p>
 
-            <button
-              class="preview-wrap play-click"
-              type="button"
-              data-action="preview"
-              data-title="${escapeHtml(product.title)}"
-              data-preview-type="${escapeHtml(product.previewType)}"
-              data-preview-src="${escapeHtml(product.previewSrc)}"
-              data-fallback-preview="${escapeHtml(product.fallbackPreview || product.image)}"
-              aria-label="Open preview for ${escapeHtml(product.title)}"
-            >
-              <img src="${escapeHtml(product.image)}" class="preview-img" alt="${escapeHtml(product.title)} preview">
+            <div class="preview-wrap">
+              <button
+                class="preview-image-btn play-click"
+                type="button"
+                data-action="preview"
+                data-title="${escapeHtml(product.title)}"
+                data-preview-type="${escapeHtml(product.previewType)}"
+                data-preview-src="${escapeHtml(product.previewSrc)}"
+                data-fallback-preview="${escapeHtml(product.fallbackPreview || product.image)}"
+                aria-label="Open preview for ${escapeHtml(product.title)}"
+              >
+                <img src="${escapeHtml(product.image)}" class="preview-img" alt="${escapeHtml(product.title)} preview">
+              </button>
+
               <span class="preview-label">Tap Image To Preview</span>
-              <span class="preview-tap">↗</span>
-            </button>
+
+              <button
+                class="preview-share play-click"
+                type="button"
+                data-action="share-product"
+                data-key="${escapeHtml(product.key)}"
+                aria-label="Share ${escapeHtml(product.title)}"
+              >
+                ↗
+              </button>
+            </div>
 
             <ul class="feature-checklist">
               ${product.features.map(feature => `
@@ -1821,7 +2097,7 @@
       cartDrawer.classList.remove("show");
       drawerBackdrop.classList.remove("show");
 
-      if(!document.body.classList.contains("booting") && !document.getElementById("media-modal").classList.contains("show")){
+      if(!document.body.classList.contains("booting") && !document.getElementById("media-modal").classList.contains("show") && !document.getElementById("legal-modal").classList.contains("show")){
         document.body.classList.remove("no-scroll");
       }
     }
@@ -1875,6 +2151,28 @@
       }
     }
 
+    function openLegal(pageKey){
+      const page = LEGAL_PAGES[pageKey] || LEGAL_PAGES.faq;
+      const modal = document.getElementById("legal-modal");
+      const title = document.getElementById("legalTitle");
+      const content = document.getElementById("legalContent");
+
+      title.innerHTML = "EFECT <span>" + escapeHtml(page.title) + "</span>";
+      content.innerHTML = page.html;
+
+      modal.classList.add("show");
+      document.body.classList.add("no-scroll");
+    }
+
+    function closeLegal(){
+      const modal = document.getElementById("legal-modal");
+      modal.classList.remove("show");
+
+      if(!cartDrawer.classList.contains("show") && !document.getElementById("media-modal").classList.contains("show")){
+        document.body.classList.remove("no-scroll");
+      }
+    }
+
     function showToast(message){
       const container = document.getElementById("toast-container");
       const toast = document.createElement("div");
@@ -1891,7 +2189,23 @@
       setTimeout(() => {
         toast.classList.remove("show");
         setTimeout(() => toast.remove(), 260);
-      }, 3300);
+      }, 3900);
+    }
+
+    function startActivityToasts(){
+      clearInterval(activityTimer);
+
+      activityTimer = setInterval(() => {
+        if(!document.body.classList.contains("app-ready")) return;
+        if(document.getElementById("media-modal").classList.contains("show")) return;
+        if(document.getElementById("legal-modal").classList.contains("show")) return;
+        if(cartDrawer.classList.contains("show")) return;
+
+        const message = ACTIVITY_TOASTS[activityIndex % ACTIVITY_TOASTS.length];
+        activityIndex++;
+
+        showToast(message);
+      }, 26000);
     }
 
     function showDiscordToast(){
@@ -1928,6 +2242,36 @@
       });
     }
 
+    function getProductByKey(key){
+      return PRODUCTS.find(product => product.key === key);
+    }
+
+    function shareProduct(key){
+      const product = getProductByKey(key);
+
+      if(!product){
+        showToast("Product not found.");
+        return;
+      }
+
+      const productLink = product.productUrl || productCheckoutUrl(product.key);
+      const shareText = `${product.title} — ${product.eyebrow} by EFECT`;
+
+      if(navigator.share){
+        navigator.share({
+          title:product.title,
+          text:shareText,
+          url:productLink
+        }).catch(() => {});
+      }else{
+        navigator.clipboard.writeText(productLink).then(() => {
+          showToast("<strong>Product link copied.</strong><br>" + escapeHtml(product.title));
+        }).catch(() => {
+          showToast("Copy failed.");
+        });
+      }
+    }
+
     function shareApp(){
       if(navigator.share){
         navigator.share({
@@ -1937,7 +2281,7 @@
         }).catch(() => {});
       }else{
         navigator.clipboard.writeText(window.location.href).then(() => {
-          showToast("Link copied.");
+          showToast("Store link copied.");
         }).catch(() => {
           showToast("Copy failed.");
         });
@@ -1989,6 +2333,7 @@
         document.body.classList.add("app-ready");
         document.body.classList.remove("no-scroll");
         document.body.classList.remove("booting");
+        startActivityToasts();
       }, 560);
     }
 
@@ -2017,6 +2362,12 @@
           );
         }
 
+        if(action === "share-product"){
+          event.preventDefault();
+          event.stopPropagation();
+          shareProduct(actionTarget.dataset.key);
+        }
+
         if(action === "add"){
           addToCart(actionTarget.dataset.key);
         }
@@ -2031,6 +2382,10 @@
 
         if(action === "copy-discord"){
           copyDiscord("Ur_not_himfr");
+        }
+
+        if(action === "legal"){
+          openLegal(actionTarget.dataset.legal);
         }
       });
 
@@ -2047,7 +2402,7 @@
       });
 
       document.getElementById("menuBtn").addEventListener("click", () => {
-        showToast("<strong>EFECT Store Menu</strong><br>Use search, cart, product previews, or Buy Now for instant Payhip checkout.");
+        openLegal("faq");
       });
 
       document.getElementById("discordBtn").addEventListener("click", showDiscordToast);
@@ -2059,11 +2414,19 @@
         }
       });
 
+      document.getElementById("legal-modal").addEventListener("click", event => {
+        if(event.target.id === "legal-modal"){
+          closeLegal();
+        }
+      });
+
       document.getElementById("modalClose").addEventListener("click", closeModal);
+      document.getElementById("legalClose").addEventListener("click", closeLegal);
 
       document.addEventListener("keydown", event => {
         if(event.key === "Escape"){
           closeModal();
+          closeLegal();
           closeCart();
         }
       });
