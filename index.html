@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>EMX EFECT MACROS X TWEAKS</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#030405;
+      --bg2:#07080b;
+      --panel:#0c0d10;
+      --panel2:#111218;
+      --line:rgba(255,255,255,.10);
+      --line2:rgba(255,255,255,.16);
+      --text:#ffffff;
+      --muted:#9fa3ad;
+      --muted2:#747985;
+      --green:#24ff24;
+      --green2:#00d91f;
+      --greenDark:#06270b;
+      --purple:#a20cff;
+      --purple2:#7b00ff;
+      --blue:#7ea2ff;
+      --danger:#ff4a6a;
+      --radius:24px;
+      --shadow:0 24px 70px rgba(0,0,0,.72);
+      --font:'Inter',sans-serif;
+      --safeTop:env(safe-area-inset-top);
+      --safeBottom:env(safe-area-inset-bottom);
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:var(--font);
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    html{
+      scroll-behavior:smooth;
+      background:#000;
+    }
+
+    body{
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 20% -10%, rgba(162,12,255,.30), transparent 36%),
+        radial-gradient(circle at 90% 5%, rgba(36,255,36,.12), transparent 30%),
+        linear-gradient(180deg,#030405 0%,#06070a 42%,#020202 100%);
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+      padding-top:calc(88px + var(--safeTop));
+      padding-bottom:calc(118px + var(--safeBottom));
+    }
+
+    body.no-scroll{
+      overflow:hidden;
+    }
+
+    button,
+    a,
+    .tap{
+      touch-action:manipulation;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    /* =========================
+       PREMIUM BOOT SPLASH
+    ========================= */
+
+    #boot-screen{
+      position:fixed;
+      inset:0;
+      z-index:9999999;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      background:
+        radial-gradient(circle at 50% 24%, rgba(162,12,255,.35), transparent 26%),
+        radial-gradient(circle at 50% 78%, rgba(36,255,36,.18), transparent 36%),
+        linear-gradient(180deg,#020204 0%,#050507 48%,#010101 100%);
+      transition:opacity .75s ease, transform .75s ease, visibility .75s ease;
+    }
+
+    body.app-ready #boot-screen{
+      opacity:0;
+      transform:scale(1.025);
+      visibility:hidden;
+      pointer-events:none;
+    }
+
+    .boot-shell{
+      width:min(520px,100%);
+      min-height:620px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .boot-shell::before{
+      content:"";
+      position:absolute;
+      width:420px;
+      height:420px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle, rgba(162,12,255,.20), transparent 56%),
+        conic-gradient(from 180deg, transparent, rgba(36,255,36,.22), transparent, rgba(162,12,255,.28), transparent);
+      filter:blur(.2px);
+      opacity:.8;
+      animation:slowSpin 12s linear infinite;
+      z-index:-2;
+    }
+
+    .boot-shell::after{
+      content:"";
+      position:absolute;
+      width:330px;
+      height:330px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:
+        0 0 80px rgba(162,12,255,.16),
+        inset 0 0 55px rgba(36,255,36,.06);
+      z-index:-1;
+    }
+
+    @keyframes slowSpin{
+      to{ transform:rotate(360deg); }
+    }
+
+    .boot-topline{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:9px 14px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      backdrop-filter:blur(18px);
+      color:var(--muted);
+      font-weight:800;
+      font-size:11px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      margin-bottom:32px;
+    }
+
+    .boot-dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 16px var(--green);
+    }
+
+    .boot-brand{
+      font-size:92px;
+      line-height:.95;
+      letter-spacing:.02em;
+      font-weight:900;
+      color:var(--purple);
+      text-shadow:
+        0 0 18px rgba(162,12,255,.75),
+        0 0 46px rgba(162,12,255,.45),
+        0 0 90px rgba(162,12,255,.18);
+      margin-bottom:12px;
+      animation:brandFloat 3.8s ease-in-out infinite;
+    }
+
+    @keyframes brandFloat{
+      0%,100%{ transform:translateY(0); }
+      50%{ transform:translateY(-7px); }
+    }
+
+    .boot-title{
+      font-size:15px;
+      color:#f8f8f8;
+      font-weight:900;
+      letter-spacing:.26em;
+      text-transform:uppercase;
+      text-align:center;
+      margin-bottom:12px;
+    }
+
+    .boot-subtitle{
+      color:var(--muted);
+      text-align:center;
+      max-width:390px;
+      line-height:1.55;
+      font-size:14px;
+      margin-bottom:28px;
+    }
+
+    .boot-spec-grid{
+      width:100%;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-bottom:34px;
+    }
+
+    .boot-spec{
+      min-height:74px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .boot-spec strong{
+      font-size:17px;
+      color:white;
+      line-height:1;
+    }
+
+    .boot-spec span{
+      margin-top:7px;
+      color:var(--muted2);
+      font-size:10px;
+      letter-spacing:.15em;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    .enter-btn{
+      width:100%;
+      border:2px solid var(--green);
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(36,255,36,.18), transparent 44%),
+        rgba(0,0,0,.38);
+      color:var(--green);
+      min-height:78px;
+      font-size:21px;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      cursor:pointer;
+      box-shadow:
+        0 0 20px rgba(36,255,36,.46),
+        0 0 54px rgba(36,255,36,.22),
+        inset 0 0 26px rgba(36,255,36,.08);
+      transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .enter-btn::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      transform:translateX(-120%) skewX(-22deg);
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.20),transparent);
+      animation:btnSweep 2.8s ease-in-out infinite;
+    }
+
+    @keyframes btnSweep{
+      0%,30%{ transform:translateX(-120%) skewX(-22deg); }
+      65%,100%{ transform:translateX(120%) skewX(-22deg); }
+    }
+
+    .enter-btn:active,
+    .enter-btn.booting{
+      transform:scale(.975);
+      background:rgba(36,255,36,.08);
+      box-shadow:
+        0 0 28px rgba(36,255,36,.65),
+        0 0 70px rgba(36,255,36,.30),
+        inset 0 0 34px rgba(36,255,36,.15);
+    }
+
+    .boot-footer{
+      margin-top:24px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:var(--muted2);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .boot-loader{
+      width:58px;
+      height:4px;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,.10);
+    }
+
+    .boot-loader span{
+      display:block;
+      height:100%;
+      width:48%;
+      border-radius:999px;
+      background:var(--green);
+      box-shadow:0 0 12px var(--green);
+      animation:loaderMove 1.4s ease-in-out infinite;
+    }
+
+    @keyframes loaderMove{
+      0%{ transform:translateX(-120%); }
+      100%{ transform:translateX(230%); }
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:calc(88px + var(--safeTop));
+      padding:var(--safeTop) 16px 0;
+      z-index:1000;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:rgba(3,4,5,.82);
+      backdrop-filter:blur(22px);
+      border-bottom:1px solid rgba(255,255,255,.09);
+      box-shadow:0 18px 40px rgba(0,0,0,.38);
+    }
+
+    .header-left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:82px;
+    }
+
+    .header-logo-text{
+      color:var(--purple);
+      font-weight:900;
+      font-size:24px;
+      letter-spacing:.04em;
+      text-shadow:0 0 18px rgba(162,12,255,.70);
+    }
+
+    .header-main-text{
+      color:white;
+      font-weight:900;
+      font-size:13px;
+      line-height:1.1;
+      letter-spacing:.04em;
+      text-align:center;
+      text-transform:uppercase;
+    }
+
+    .header-main-text span{
+      display:block;
+    }
+
+    .header-actions{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      min-width:112px;
+    }
+
+    .icon-btn{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.045);
+      color:#fff;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      position:relative;
+      font-size:20px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+      transition:transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .icon-btn:active{
+      transform:scale(.94);
+    }
+
+    .cart-count{
+      position:absolute;
+      top:-7px;
+      right:-6px;
+      min-width:22px;
+      height:22px;
+      border-radius:999px;
+      background:var(--green);
+      color:#020202;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      font-size:12px;
+      font-weight:900;
+      box-shadow:0 0 18px rgba(36,255,36,.70);
+    }
+
+    .cart-count.show{
+      display:flex;
+    }
+
+    /* =========================
+       TOP HERO
+    ========================= */
+
+    main{
+      width:min(980px,100%);
+      margin:0 auto;
+    }
+
+    .hero{
+      padding:22px 16px 4px;
+    }
+
+    .hero-card{
+      position:relative;
+      overflow:hidden;
+      border-radius:28px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(162,12,255,.23), transparent 42%),
+        radial-gradient(circle at 88% 18%, rgba(36,255,36,.12), transparent 36%),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .hero-card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.08) 42%,transparent 56%);
+      transform:translateX(-120%);
+      animation:heroSweep 7s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    @keyframes heroSweep{
+      0%,55%{ transform:translateX(-120%); }
+      80%,100%{ transform:translateX(120%); }
+    }
+
+    .hero-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+      color:var(--green);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      border:1px solid rgba(36,255,36,.25);
+      background:rgba(36,255,36,.06);
+      border-radius:999px;
+      padding:8px 11px;
+      margin-bottom:16px;
+    }
+
+    .hero-kicker i{
+      display:block;
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 14px var(--green);
+    }
+
+    .hero h1{
+      font-size:clamp(29px,8vw,56px);
+      line-height:.96;
+      letter-spacing:-.06em;
+      font-weight:900;
+      margin-bottom:14px;
+    }
+
+    .hero h1 span{
+      color:var(--purple);
+      text-shadow:0 0 24px rgba(162,12,255,.50);
+    }
+
+    .hero p{
+      color:var(--muted);
+      line-height:1.55;
+      font-size:15px;
+      max-width:620px;
+    }
+
+    .hero-stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin-top:20px;
+    }
+
+    .hero-stat{
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.09);
+      background:rgba(0,0,0,.28);
+      padding:14px 10px;
+      text-align:center;
+    }
+
+    .hero-stat strong{
+      display:block;
+      font-size:18px;
+      line-height:1;
+    }
+
+    .hero-stat span{
+      display:block;
+      margin-top:7px;
+      color:var(--muted2);
+      font-size:10px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.13em;
+    }
+
+    .search-panel{
+      display:none;
+      padding:12px 16px 0;
+    }
+
+    .search-panel.show{
+      display:block;
+    }
+
+    .search-box{
+      width:100%;
+      height:54px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      outline:none;
+      padding:0 16px;
+      font-size:16px;
+      font-weight:700;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .search-box::placeholder{
+      color:var(--muted2);
+    }
+
+    /* =========================
+       PRODUCT CARDS
+    ========================= */
+
+    .card-container{
+      padding:16px;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+    }
+
+    @media (min-width:820px){
+      .card-container{
+        grid-template-columns:repeat(3,1fr);
+      }
+    }
+
+    .product-card{
+      position:relative;
+      overflow:hidden;
+      border-radius:var(--radius);
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 14% 0%, rgba(162,12,255,.16), transparent 36%),
+        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+      box-shadow:var(--shadow);
+      padding:18px;
+      min-height:100%;
+    }
+
+    .product-card.hidden{
+      display:none;
+    }
+
+    .product-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      border-radius:var(--radius);
+      box-shadow:
+        inset 0 0 0 1px rgba(162,12,255,.18),
+        inset 0 0 55px rgba(162,12,255,.055);
+    }
+
+    .product-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .product-title-wrap{
+      min-width:0;
+    }
+
+    .product-eyebrow{
+      color:var(--green);
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .card-title{
+      color:#fff;
+      font-weight:900;
+      font-size:22px;
+      line-height:1.05;
+      letter-spacing:-.04em;
+      text-transform:capitalize;
+    }
+
+    .card-title .accent{
+      color:var(--purple);
+      text-shadow:0 0 16px rgba(162,12,255,.55);
+    }
+
+    .card-icon-shell{
+      width:58px;
+      height:58px;
+      flex:0 0 58px;
+      border-radius:19px;
+      border:1px solid rgba(255,255,255,.11);
+      background:rgba(0,0,0,.36);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      box-shadow:0 0 30px rgba(162,12,255,.10);
+    }
+
+    .card-icon{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .price-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:8px;
+    }
+
+    .current-price{
+      font-size:40px;
+      font-weight:900;
+      letter-spacing:-.07em;
+      color:#fff;
+    }
+
+    .old-price{
+      font-size:18px;
+      color:var(--muted2);
+      text-decoration:line-through;
+      font-weight:800;
+    }
+
+    .discount-badge{
+      color:var(--green);
+      background:rgba(36,255,36,.10);
+      border:1px solid rgba(36,255,36,.20);
+      border-radius:12px;
+      padding:7px 9px;
+      font-weight:900;
+      font-size:12px;
+      text-transform:uppercase;
+      box-shadow:0 0 20px rgba(36,255,36,.08);
+    }
+
+    .meta-info{
+      color:var(--muted);
+      font-size:13px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+    }
+
+    .meta-info strong{
+      color:var(--green);
+      font-weight:900;
+    }
+
+    .description-block{
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.55;
+      margin-bottom:18px;
+    }
+
+    .preview-wrap{
+      position:relative;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:#000;
+      overflow:hidden;
+      margin-bottom:18px;
+      aspect-ratio:16/10;
+      box-shadow:0 16px 32px rgba(0,0,0,.45);
+    }
+
+    .preview-img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+      opacity:.94;
+      transition:transform .35s ease, opacity .35s ease;
+    }
+
+    .product-card:active .preview-img{
+      transform:scale(1.02);
+      opacity:1;
+    }
+
+    .preview-label{
+      position:absolute;
+      left:12px;
+      bottom:12px;
+      border-radius:999px;
+      padding:7px 10px;
+      background:rgba(0,0,0,.58);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(14px);
+      color:white;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .feature-checklist{
+      list-style:none;
+      display:grid;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .feature-item{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      color:#ececf0;
+      font-size:14px;
+      line-height:1.35;
+      font-weight:700;
+    }
+
+    .check-icon{
+      color:var(--green);
+      font-weight:900;
+      font-size:17px;
+      text-shadow:0 0 14px rgba(36,255,36,.55);
+      line-height:1;
+    }
+
+    .button-group-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-bottom:10px;
+    }
+
+    .btn-outline,
+    .btn-filled{
+      min-height:54px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      cursor:pointer;
+      border:none;
+      font-weight:900;
+      font-size:14px;
+      text-align:center;
+      transition:transform .16s ease, filter .16s ease, box-shadow .16s ease;
+    }
+
+    .btn-outline{
+      background:rgba(0,0,0,.32);
+      border:1px solid rgba(255,255,255,.13);
+      color:#fff;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .btn-outline.green{
+      color:var(--green);
+      border-color:rgba(36,255,36,.34);
+      box-shadow:0 0 20px rgba(36,255,36,.06);
+    }
+
+    .btn-filled{
+      width:100%;
+      color:#040404;
+      background:linear-gradient(135deg,var(--green),#7dff56);
+      box-shadow:
+        0 0 22px rgba(36,255,36,.32),
+        0 15px 28px rgba(0,0,0,.34);
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .btn-filled.purple{
+      color:white;
+      background:linear-gradient(135deg,var(--purple),var(--purple2));
+      box-shadow:
+        0 0 22px rgba(162,12,255,.32),
+        0 15px 28px rgba(0,0,0,.34);
+    }
+
+    .btn-outline:active,
+    .btn-filled:active{
+      transform:scale(.965);
+      filter:brightness(1.1);
+    }
+
+    /* =========================
+       FOOTER SOCIAL BAR
+    ========================= */
+
+    .floating-footer{
+      position:fixed;
+      left:0;
+      bottom:0;
+      width:100%;
+      height:calc(92px + var(--safeBottom));
+      padding:16px 16px calc(16px + var(--safeBottom));
+      z-index:980;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      background:linear-gradient(to top,rgba(0,0,0,.98) 58%,rgba(0,0,0,0));
+      pointer-events:none;
+    }
+
+    .btn-discord,
+    .btn-tiktok{
+      pointer-events:auto;
+      border-radius:999px;
+      min-height:56px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      font-weight:900;
+      background:rgba(0,0,0,.70);
+      backdrop-filter:blur(18px);
+      box-shadow:0 12px 28px rgba(0,0,0,.42);
+    }
+
+    .btn-discord{
+      color:var(--blue);
+      border:2px solid rgba(126,162,255,.85);
+    }
+
+    .btn-tiktok{
+      color:var(--green);
+      border:2px solid rgba(36,255,36,.80);
+    }
+
+    /* =========================
+       FLOATERS
+    ========================= */
+
+    .floating-share{
+      position:fixed;
+      right:16px;
+      bottom:calc(158px + var(--safeBottom));
+      width:52px;
+      height:52px;
+      border-radius:18px;
+      border:1px solid rgba(36,255,36,.30);
+      background:rgba(36,255,36,.10);
+      color:var(--green);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      z-index:950;
+      box-shadow:0 0 24px rgba(36,255,36,.20);
+      backdrop-filter:blur(16px);
+      font-size:22px;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    #media-modal{
+      display:none;
+      position:fixed;
+      z-index:999999;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      background:rgba(0,0,0,.94);
+      backdrop-filter:blur(12px);
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      padding:22px;
+    }
+
+    #media-modal.show{
+      display:flex;
+    }
+
+    #modal-video,
+    #modal-img{
+      max-width:96%;
+      max-height:78%;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:
+        0 0 30px rgba(162,12,255,.40),
+        0 24px 70px rgba(0,0,0,.70);
+      background:#000;
+      object-fit:contain;
+    }
+
+    .close-modal{
+      position:absolute;
+      top:calc(28px + var(--safeTop));
+      right:22px;
+      width:52px;
+      height:52px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-size:34px;
+      font-weight:900;
+      cursor:pointer;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      backdrop-filter:blur(16px);
+    }
+
+    /* =========================
+       CART DRAWER
+    ========================= */
+
+    .drawer-backdrop{
+      position:fixed;
+      inset:0;
+      z-index:99990;
+      background:rgba(0,0,0,.58);
+      backdrop-filter:blur(7px);
+      opacity:0;
+      visibility:hidden;
+      transition:opacity .24s ease, visibility .24s ease;
+    }
+
+    .drawer-backdrop.show{
+      opacity:1;
+      visibility:visible;
+    }
+
+    .cart-drawer{
+      position:fixed;
+      top:0;
+      right:0;
+      width:min(430px,92vw);
+      height:100vh;
+      z-index:99991;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(162,12,255,.20), transparent 35%),
+        linear-gradient(180deg,#0b0c10,#050506);
+      border-left:1px solid rgba(255,255,255,.12);
+      box-shadow:-20px 0 70px rgba(0,0,0,.70);
+      transform:translateX(110%);
+      transition:transform .32s cubic-bezier(.2,.8,.2,1);
+      padding:calc(22px + var(--safeTop)) 16px calc(20px + var(--safeBottom));
+      display:flex;
+      flex-direction:column;
+    }
+
+    .cart-drawer.show{
+      transform:translateX(0);
+    }
+
+    .drawer-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .drawer-title{
+      font-size:24px;
+      font-weight:900;
+      letter-spacing:-.04em;
+    }
+
+    .drawer-title span{
+      color:var(--green);
+      text-shadow:0 0 14px rgba(36,255,36,.50);
+    }
+
+    .drawer-close{
+      width:44px;
+      height:44px;
+      border-radius:15px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      font-size:24px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .cart-list{
+      flex:1;
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      padding-right:2px;
+    }
+
+    .cart-empty{
+      min-height:270px;
+      border:1px dashed rgba(255,255,255,.16);
+      border-radius:24px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      color:var(--muted);
+      padding:24px;
+      line-height:1.5;
+    }
+
+    .cart-item{
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.045);
+      display:grid;
+      grid-template-columns:64px 1fr auto;
+      gap:12px;
+      padding:12px;
+      align-items:center;
+    }
+
+    .cart-item img{
+      width:64px;
+      height:64px;
+      border-radius:15px;
+      object-fit:cover;
+      background:#000;
+    }
+
+    .cart-item h4{
+      font-size:14px;
+      line-height:1.2;
+      margin-bottom:6px;
+    }
+
+    .cart-item p{
+      font-size:13px;
+      color:var(--green);
+      font-weight:900;
+    }
+
+    .remove-btn{
+      width:38px;
+      height:38px;
+      border-radius:13px;
+      border:1px solid rgba(255,74,106,.22);
+      background:rgba(255,74,106,.08);
+      color:var(--danger);
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .drawer-bottom{
+      padding-top:14px;
+      border-top:1px solid rgba(255,255,255,.10);
+      display:grid;
+      gap:10px;
+    }
+
+    .total-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:var(--muted);
+      font-weight:800;
+      padding:0 2px 4px;
+    }
+
+    .total-row strong{
+      color:#fff;
+      font-size:24px;
+      letter-spacing:-.04em;
+    }
+
+    .mini-note{
+      color:var(--muted2);
+      font-size:12px;
+      line-height:1.45;
+      text-align:center;
+    }
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    #toast-container{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:calc(115px + var(--safeBottom));
+      width:calc(100% - 32px);
+      max-width:390px;
+      z-index:1000000;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      pointer-events:none;
+    }
+
+    .toast{
+      background:rgba(14,15,18,.96);
+      border:1px solid rgba(36,255,36,.22);
+      color:#fff;
+      padding:15px;
+      border-radius:18px;
+      box-shadow:
+        0 15px 35px rgba(0,0,0,.55),
+        0 0 24px rgba(36,255,36,.10);
+      font-size:14px;
+      line-height:1.35;
+      opacity:0;
+      transform:translateY(18px);
+      transition:opacity .25s ease, transform .25s ease;
+      pointer-events:auto;
+      text-align:center;
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .toast strong{
+      color:var(--green);
+    }
+
+    .toast-copy-btn{
+      width:100%;
+      min-height:44px;
+      margin-top:12px;
+      border:none;
+      border-radius:999px;
+      color:#050505;
+      background:linear-gradient(135deg,var(--green),#7dff56);
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    @media (max-width:390px){
+      .header-main-text{
+        font-size:12px;
+      }
+
+      .header-actions{
+        min-width:98px;
+        gap:7px;
+      }
+
+      .icon-btn{
+        width:39px;
+        height:39px;
+      }
+
+      .boot-brand{
+        font-size:78px;
+      }
+
+      .enter-btn{
+        min-height:70px;
+        font-size:18px;
+      }
+
+      .hero-stats,
+      .boot-spec-grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+
+<body class="no-scroll">
+
+  <audio id="bootAudio" src="efectboot.mp3" preload="auto"></audio>
+  <audio id="clickAudio" src="click.mp3" preload="auto"></audio>
+
+  <!-- PREMIUM BOOT SCREEN -->
+  <section id="boot-screen" aria-label="EFECT boot screen">
+    <div class="boot-shell">
+      <div class="boot-topline">
+        <span class="boot-dot"></span>
+        EFECT PRO INTERFACE
+      </div>
+
+      <div class="boot-brand">EMX</div>
+
+      <div class="boot-title">EFECT MACROS X TWEAKS</div>
+
+      <p class="boot-subtitle">
+        Premium performance storefront with direct checkout, clean product cards, and EFECT-branded pro hardware energy.
+      </p>
+
+      <div class="boot-spec-grid">
+        <div class="boot-spec">
+          <strong>PRO</strong>
+          <span>Visuals</span>
+        </div>
+        <div class="boot-spec">
+          <strong>FAST</strong>
+          <span>Checkout</span>
+        </div>
+        <div class="boot-spec">
+          <strong>EMX</strong>
+          <span>Domain</span>
+        </div>
+      </div>
+
+      <button id="enterBtn" class="enter-btn" type="button">
+        Enter EFECT Domain
+      </button>
+
+      <div class="boot-footer">
+        <div class="boot-loader"><span></span></div>
+        System Ready
+      </div>
+    </div>
+  </section>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <div class="header-logo-text">EMX</div>
+    </div>
+
+    <div class="header-main-text">
+      <span>EFECT MACROS</span>
+      <span>X TWEAKS</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-btn play-click" id="searchToggle" type="button" aria-label="Search">⌕</button>
+
+      <button class="icon-btn play-click" id="cartToggle" type="button" aria-label="Cart">
+        🛒
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+
+      <button class="icon-btn play-click" id="menuBtn" type="button" aria-label="Menu">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <div class="hero-kicker"><i></i> EFECT DIGITAL STORE</div>
+
+        <h1>
+          Pro tools.<br>
+          <span>Direct checkout.</span>
+        </h1>
+
+        <p>
+          Clean EFECT-branded storefront for your FPS Booster, keyboard macro pack, and optimizer. Add items to cart or buy instantly through Payhip checkout.
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong>3</strong>
+            <span>Products</span>
+          </div>
+          <div class="hero-stat">
+            <strong>24/7</strong>
+            <span>Access</span>
+          </div>
+          <div class="hero-stat">
+            <strong>EMX</strong>
+            <span>Brand</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="search-panel" id="searchPanel">
+      <input id="searchInput" class="search-box" type="search" placeholder="Search products..." autocomplete="off">
+    </section>
+
+    <section class="card-container" id="productGrid"></section>
+  </main>
+
+  <!-- PREVIEW MODAL -->
+  <div id="media-modal" onclick="closeModal(event)">
+    <button class="close-modal play-click" type="button" onclick="closeModal(event)" aria-label="Close preview">&times;</button>
+
+    <img id="modal-img" src="" alt="Fullscreen Preview" style="display:none;">
+
+    <video id="modal-video" controls playsinline style="display:none;">
+      <source id="video-source" src="" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping cart">
+    <div class="drawer-head">
+      <h2 class="drawer-title">Your <span>Cart</span></h2>
+      <button class="drawer-close play-click" id="drawerClose" type="button">×</button>
+    </div>
+
+    <div class="cart-list" id="cartList"></div>
+
+    <div class="drawer-bottom">
+      <div class="total-row">
+        <span>Total</span>
+        <strong id="cartTotal">$0.00</strong>
+      </div>
+
+      <button class="btn-filled play-click" id="checkoutBtn" type="button">
+        Proceed To Checkout →
+      </button>
+
+      <button class="btn-outline play-click" id="clearCartBtn" type="button">
+        Clear Cart
+      </button>
+
+      <div class="mini-note">
+        Checkout opens Payhip directly with your selected product keys.
+      </div>
+    </div>
+  </aside>
+
+  <!-- FOOTER -->
+  <div class="floating-footer">
+    <button class="btn-discord play-click" onclick="showDiscordToast()" type="button">
+      👾 Discord
+    </button>
+
+    <a href="https://www.tiktok.com/@efect2lit?_r=1&_t=ZT-95s3j8WBaXN" target="_blank" rel="noopener" class="btn-tiktok play-click">
+      🎵 Efect2lit
+    </a>
+  </div>
+
+  <button class="floating-share play-click" onclick="shareApp()" type="button" aria-label="Share">
+    ↗
+  </button>
+
+  <div id="toast-container"></div>
+
+  <script>
+    const PRODUCTS = [
+      {
+        id: "fps",
+        key: "EQIrdi",
+        title: "FPS Booster",
+        eyebrow: "Performance Pack",
+        price: 10.99,
+        oldPrice: 21.98,
+        image: "fps.png",
+        previewType: "image",
+        previewSrc: "fps.png",
+        description: "Maximize smoothness with clean performance presets, game profile tuning, background load reduction, and display-priority optimization.",
+        features: [
+          "Custom game profiles",
+          "Background load reduction",
+          "Display priority tuning",
+          "Smoothness-focused setup"
+        ]
+      },
+      {
+        id: "macro",
+        key: "0TOjr",
+        title: "Efect Pro Keyboard Macro",
+        eyebrow: "Control Pack",
+        price: 15.00,
+        oldPrice: 30.00,
+        image: "macro.png",
+        previewType: "video",
+        previewSrc: "preview.mp4",
+        description: "A clean keyboard profile system built for simple setup, adjustable delay control, saved binds, and fast profile switching.",
+        features: [
+          "Customizable keybind profiles",
+          "Adjustable delay controls",
+          "Saved profile setup",
+          "Fast interface controls"
+        ]
+      },
+      {
+        id: "optimizer",
+        key: "KQLzN",
+        title: "Efect Zero Delay Optimizer",
+        eyebrow: "Optimization Pack",
+        price: 25.00,
+        oldPrice: 50.00,
+        image: "optimizer.png",
+        previewType: "image",
+        previewSrc: "optimizer.png",
+        description: "A premium optimization pack for cleaner system behavior, lower background noise, network tuning, and performance-focused presets.",
+        features: [
+          "Process priority presets",
+          "Memory cleanup workflow",
+          "Network tuning settings",
+          "Performance preset control"
+        ]
+      }
+    ];
+
+    const bootAudio = document.getElementById("bootAudio");
+    const clickAudio = document.getElementById("clickAudio");
+
+    const productGrid = document.getElementById("productGrid");
+    const cartCount = document.getElementById("cartCount");
+    const cartDrawer = document.getElementById("cartDrawer");
+    const drawerBackdrop = document.getElementById("drawerBackdrop");
+    const cartList = document.getElementById("cartList");
+    const cartTotal = document.getElementById("cartTotal");
+
+    let cart = loadCart();
+
+    function money(value){
+      return "$" + Number(value).toFixed(2);
+    }
+
+    function productCheckoutUrl(key){
+      return "https://payhip.com/buy?link=" + encodeURIComponent(key);
+    }
+
+    function cartCheckoutUrl(){
+      const uniqueKeys = [...new Set(cart)];
+      const query = uniqueKeys
+        .map(key => "cart_links[]=" + encodeURIComponent(key))
+        .join("&");
+
+      return "https://payhip.com/buy?" + query;
+    }
+
+    function loadCart(){
+      try{
+        return JSON.parse(localStorage.getItem("efect_cart_v2")) || [];
+      }catch(e){
+        return [];
+      }
+    }
+
+    function saveCart(){
+      localStorage.setItem("efect_cart_v2", JSON.stringify(cart));
+    }
+
+    function renderProducts(){
+      productGrid.innerHTML = PRODUCTS.map(product => {
+        const discount = Math.round((1 - product.price / product.oldPrice) * 100);
+
+        return `
+          <article class="product-card" data-search="${product.title.toLowerCase()} ${product.description.toLowerCase()} ${product.eyebrow.toLowerCase()}">
+            <div class="product-top">
+              <div class="product-title-wrap">
+                <div class="product-eyebrow">${product.eyebrow}</div>
+                <h2 class="card-title">${formatTitle(product.title)}</h2>
+              </div>
+
+              <div class="card-icon-shell">
+                <img src="${product.image}" alt="${product.title}" class="card-icon">
+              </div>
+            </div>
+
+            <div class="price-row">
+              <span class="current-price">${money(product.price)}</span>
+              <span class="old-price">${money(product.oldPrice)}</span>
+              <span class="discount-badge">${discount}% OFF</span>
+            </div>
+
+            <div class="meta-info">
+              <span>one-time payment</span>
+              <span>•</span>
+              <strong>Secure Payhip checkout</strong>
+            </div>
+
+            <p class="description-block">${product.description}</p>
+
+            <div class="preview-wrap">
+              <img src="${product.image}" class="preview-img" alt="${product.title} preview">
+              <span class="preview-label">Preview Ready</span>
+            </div>
+
+            <ul class="feature-checklist">
+              ${product.features.map(feature => `
+                <li class="feature-item">
+                  <span class="check-icon">✓</span>
+                  <span>${feature}</span>
+                </li>
+              `).join("")}
+            </ul>
+
+            <div class="button-group-row">
+              <button class="btn-outline play-click" type="button" onclick="openPreview('${product.previewType}', '${product.previewSrc}')">
+                👁 Preview
+              </button>
+
+              <button class="btn-outline green play-click" type="button" onclick="addToCart('${product.key}')">
+                🛒 Add
+              </button>
+            </div>
+
+            <button class="btn-filled play-click" type="button" onclick="buyNow('${product.key}')">
+              Buy Now →
+            </button>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function formatTitle(title){
+      return title
+        .replace("FPS", '<span class="accent">FPS</span>')
+        .replace("Efect", '<span class="accent">Efect</span>');
+    }
+
+    function addToCart(key){
+      if(!cart.includes(key)){
+        cart.push(key);
+        saveCart();
+        updateCartUI();
+        showToast("<strong>Added to cart.</strong><br>Open cart when you are ready to checkout.");
+      }else{
+        showToast("<strong>Already in cart.</strong><br>This product is already selected.");
+      }
+    }
+
+    function removeFromCart(key){
+      cart = cart.filter(item => item !== key);
+      saveCart();
+      updateCartUI();
+    }
+
+    function clearCart(){
+      cart = [];
+      saveCart();
+      updateCartUI();
+      showToast("Cart cleared.");
+    }
+
+    function buyNow(key){
+      window.location.href = productCheckoutUrl(key);
+    }
+
+    function checkout(){
+      if(cart.length === 0){
+        showToast("Your cart is empty. Add a product first.");
+        return;
+      }
+
+      window.location.href = cartCheckoutUrl();
+    }
+
+    function updateCartUI(){
+      const items = cart
+        .map(key => PRODUCTS.find(product => product.key === key))
+        .filter(Boolean);
+
+      cartCount.textContent = items.length;
+      cartCount.classList.toggle("show", items.length > 0);
+
+      if(items.length === 0){
+        cartList.innerHTML = `
+          <div class="cart-empty">
+            <div>
+              <strong style="color:white;font-size:20px;">Cart is empty</strong><br><br>
+              Add a product, then proceed directly to Payhip checkout.
+            </div>
+          </div>
+        `;
+      }else{
+        cartList.innerHTML = items.map(product => `
+          <div class="cart-item">
+            <img src="${product.image}" alt="${product.title}">
+            <div>
+              <h4>${product.title}</h4>
+              <p>${money(product.price)}</p>
+            </div>
+            <button class="remove-btn play-click" type="button" onclick="removeFromCart('${product.key}')">×</button>
+          </div>
+        `).join("");
+      }
+
+      const total = items.reduce((sum, product) => sum + product.price, 0);
+      cartTotal.textContent = money(total);
+
+      bindClickSounds();
+    }
+
+    function openCart(){
+      cartDrawer.classList.add("show");
+      drawerBackdrop.classList.add("show");
+      document.body.classList.add("no-scroll");
+    }
+
+    function closeCart(){
+      cartDrawer.classList.remove("show");
+      drawerBackdrop.classList.remove("show");
+
+      if(!document.body.classList.contains("booting")){
+        document.body.classList.remove("no-scroll");
+      }
+    }
+
+    function openPreview(type, src){
+      const modal = document.getElementById("media-modal");
+      const img = document.getElementById("modal-img");
+      const video = document.getElementById("modal-video");
+      const videoSource = document.getElementById("video-source");
+
+      modal.classList.add("show");
+      document.body.classList.add("no-scroll");
+
+      if(type === "image"){
+        img.src = src;
+        img.style.display = "block";
+        video.style.display = "none";
+        video.pause();
+        video.currentTime = 0;
+      }
+
+      if(type === "video"){
+        videoSource.src = src;
+        video.load();
+        img.style.display = "none";
+        video.style.display = "block";
+        video.play().catch(() => {});
+      }
+    }
+
+    function closeModal(event){
+      if(
+        event.target.id === "media-modal" ||
+        event.target.classList.contains("close-modal")
+      ){
+        const modal = document.getElementById("media-modal");
+        const video = document.getElementById("modal-video");
+
+        modal.classList.remove("show");
+        video.pause();
+        video.currentTime = 0;
+
+        if(!cartDrawer.classList.contains("show")){
+          document.body.classList.remove("no-scroll");
+        }
+      }
+    }
+
+    function showToast(message){
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+
+      toast.className = "toast";
+      toast.innerHTML = message;
+
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.add("show");
+      });
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 260);
+      }, 3300);
+    }
+
+    function showDiscordToast(){
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+
+      toast.className = "toast";
+      toast.innerHTML = `
+        <strong style="font-size:18px;">👾 Join the Discord</strong><br><br>
+        Add me to ask for access to the server.<br>
+        <span style="color:var(--green);font-weight:900;margin:10px 0;display:block;font-size:20px;letter-spacing:.04em;">Ur_not_himfr</span>
+        <button class="toast-copy-btn play-click" onclick="copyDiscord('Ur_not_himfr')">Copy Username</button>
+      `;
+
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => {
+        toast.classList.add("show");
+      });
+
+      bindClickSounds();
+
+      setTimeout(() => {
+        if(toast.parentElement){
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 260);
+        }
+      }, 8000);
+    }
+
+    function copyDiscord(username){
+      navigator.clipboard.writeText(username).then(() => {
+        showToast("Discord username copied.");
+      }).catch(() => {
+        showToast("Copy failed. Username: <strong>" + username + "</strong>");
+      });
+    }
+
+    function shareApp(){
+      if(navigator.share){
+        navigator.share({
+          title:"EMX EFECT MACROS X TWEAKS",
+          text:"EFECT digital storefront with direct Payhip checkout.",
+          url:window.location.href
+        }).catch(() => {});
+      }else{
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          showToast("Link copied.");
+        }).catch(() => {
+          showToast("Copy failed.");
+        });
+      }
+    }
+
+    function toggleSearch(){
+      const panel = document.getElementById("searchPanel");
+      const input = document.getElementById("searchInput");
+
+      panel.classList.toggle("show");
+
+      if(panel.classList.contains("show")){
+        setTimeout(() => input.focus(), 80);
+      }else{
+        input.value = "";
+        filterProducts("");
+      }
+    }
+
+    function filterProducts(value){
+      const query = value.trim().toLowerCase();
+      document.querySelectorAll(".product-card").forEach(card => {
+        const haystack = card.dataset.search || "";
+        card.classList.toggle("hidden", query && !haystack.includes(query));
+      });
+    }
+
+    function playClickSound(){
+      clickAudio.currentTime = 0;
+      clickAudio.play().catch(() => {});
+    }
+
+    function bindClickSounds(){
+      document.querySelectorAll(".play-click").forEach(item => {
+        if(item.dataset.soundBound === "true") return;
+
+        item.dataset.soundBound = "true";
+        item.addEventListener("click", playClickSound);
+      });
+    }
+
+    async function enterDomain(){
+      const btn = document.getElementById("enterBtn");
+
+      btn.classList.add("booting");
+      document.body.classList.add("booting");
+
+      try{
+        bootAudio.currentTime = 0;
+        await bootAudio.play();
+      }catch(e){}
+
+      setTimeout(() => {
+        document.body.classList.add("app-ready");
+        document.body.classList.remove("no-scroll");
+        document.body.classList.remove("booting");
+      }, 520);
+    }
+
+    document.getElementById("enterBtn").addEventListener("click", enterDomain);
+
+    document.getElementById("cartToggle").addEventListener("click", openCart);
+    document.getElementById("drawerClose").addEventListener("click", closeCart);
+    document.getElementById("drawerBackdrop").addEventListener("click", closeCart);
+
+    document.getElementById("checkoutBtn").addEventListener("click", checkout);
+    document.getElementById("clearCartBtn").addEventListener("click", clearCart);
+
+    document.getElementById("searchToggle").addEventListener("click", toggleSearch);
+    document.getElementById("searchInput").addEventListener("input", event => {
+      filterProducts(event.target.value);
+    });
+
+    document.getElementById("menuBtn").addEventListener("click", () => {
+      showToast("<strong>EFECT Store Menu</strong><br>Use search, cart, previews, or direct Buy Now checkout.");
+    });
+
+    renderProducts();
+    updateCartUI();
+    bindClickSounds();
+  </script>
+</body>
+</html>
