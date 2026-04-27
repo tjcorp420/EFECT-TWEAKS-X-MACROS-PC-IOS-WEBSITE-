@@ -143,7 +143,10 @@ function cleanProduct(product) {
     price: Number(product.price || 0),
     oldPrice: Number(product.oldPrice || 0),
     image: String(product.image || ""),
-    previewType: String(product.previewType || "image"),
+  gallery: Array.isArray(product.gallery) ?
+  product.gallery.map((item) => String(item)).filter(Boolean) :
+  [],
+  previewType: String(product.previewType || "image"),
     previewSrc: String(product.previewSrc || product.image || ""),
     fallbackPreview: String(product.fallbackPreview || ""),
     description: String(product.description || ""),

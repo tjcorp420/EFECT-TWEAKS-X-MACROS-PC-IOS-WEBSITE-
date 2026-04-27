@@ -20,6 +20,7 @@ const fields = {
   oldPrice: document.getElementById("oldPriceField"),
   productUrl: document.getElementById("urlField"),
   image: document.getElementById("imageField"),
+  gallery: document.getElementById("galleryField"),
   previewType: document.getElementById("previewTypeField"),
   previewSrc: document.getElementById("previewSrcField"),
   fallbackPreview: document.getElementById("fallbackField"),
@@ -77,7 +78,10 @@ function newProduct(){
     price: 0,
     oldPrice: 0,
     image: "./emx-logo.png",
-    previewType: "image",
+  gallery: [
+    "./emx-logo.png"
+  ],
+  previewType: "image",
     previewSrc: "./emx-logo.png",
     fallbackPreview: "",
     description: "New product description goes here.",
@@ -192,7 +196,8 @@ function loadSelectedProduct(){
   fields.oldPrice.value = product.oldPrice ?? 0;
   fields.productUrl.value = product.productUrl || "";
   fields.image.value = product.image || "";
-  fields.previewType.value = product.previewType || "image";
+fields.gallery.value = Array.isArray(product.gallery) ? product.gallery.join("\n") : "";
+fields.previewType.value = product.previewType || "image";
   fields.previewSrc.value = product.previewSrc || "";
   fields.fallbackPreview.value = product.fallbackPreview || "";
   fields.description.value = product.description || "";
@@ -213,7 +218,11 @@ function readProductFromForm(){
     price: Number(fields.price.value || 0),
     oldPrice: Number(fields.oldPrice.value || 0),
     image: fields.image.value.trim() || "./emx-logo.png",
-    previewType: fields.previewType.value || "image",
+  gallery: fields.gallery.value
+  .split("\n")
+  .map(item => item.trim())
+  .filter(Boolean),
+  previewType: fields.previewType.value || "image",
     previewSrc: fields.previewSrc.value.trim() || fields.image.value.trim() || "./emx-logo.png",
     fallbackPreview: fields.fallbackPreview.value.trim(),
     description: fields.description.value.trim(),
@@ -262,11 +271,24 @@ function renderPreview(){
       ${discount > 0 ? `<span class="status">${discount}% OFF</span>` : ""}
     </div>
 
-    <p>${escapeHtml(product.description)}</p>
+    ${Array.isArray(product.gallery) && product.gallery.length ? `
+  <div style="display:flex;gap:8px;overflow-x:auto;margin:14px 0;padding-bottom:6px;">
+    ${product.gallery.map(src => `
+      <img
+        src="${escapeHtml(src)}"
+        alt="Gallery image"
+        style="width:86px;height:62px;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:#000;flex:0 0 auto;"
+        onerror="this.src='./emx-logo.png'"
+      >
+    `).join("")}
+  </div>
+` : ""}
 
-    <ul>
-      ${product.features.map(feature => `<li>${escapeHtml(feature)}</li>`).join("")}
-    </ul>
+<p>${escapeHtml(product.description)}</p>
+
+<ul>
+  ${product.features.map(feature => `<li>${escapeHtml(feature)}</li>`).join("")}
+</ul>
   `;
 }
 

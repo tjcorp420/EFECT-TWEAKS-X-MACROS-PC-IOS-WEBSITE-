@@ -254,7 +254,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderProducts(){
     if(!productGrid) return;
 
-    productGrid.innerHTML = PRODUCTS.map(product => {
+    productGrid.innerHTML = PRODUCTS
+  .filter(product => product.visible !== false)
+  .map(product => {
       const discount = Math.round((1 - product.price / product.oldPrice) * 100);
 
       return `
@@ -319,6 +321,26 @@ document.addEventListener("DOMContentLoaded", () => {
               ↗
             </button>
           </div>
+          
+                    
+          ${Array.isArray(product.gallery) && product.gallery.length ? `
+            <div class="product-gallery-row">
+              ${product.gallery.map(src => `
+                <button
+                  class="gallery-thumb-btn play-click"
+                  type="button"
+                  data-action="preview"
+                  data-title="${escapeHtml(product.title)}"
+                  data-preview-type="image"
+                  data-preview-src="${escapeHtml(src)}"
+                  data-fallback-preview="${escapeHtml(product.image)}"
+                  aria-label="Preview gallery image for ${escapeHtml(product.title)}"
+                >
+                  <img src="${escapeHtml(src)}" alt="${escapeHtml(product.title)} gallery image">
+                </button>
+              `).join("")}
+            </div>
+          ` : ""}
 
           <ul class="feature-checklist">
             ${product.features.map(feature => `
