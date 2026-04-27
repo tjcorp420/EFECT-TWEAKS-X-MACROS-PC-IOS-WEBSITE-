@@ -271,6 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
               class="card-icon-shell play-click"
               type="button"
               data-action="preview"
+              data-key="${escapeHtml(product.key)}"
               data-title="${escapeHtml(product.title)}"
               data-preview-type="${escapeHtml(product.previewType)}"
               data-preview-src="${escapeHtml(product.previewSrc)}"
@@ -300,6 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
               class="preview-image-btn play-click"
               type="button"
               data-action="preview"
+              data-key="${escapeHtml(product.key)}"
               data-title="${escapeHtml(product.title)}"
               data-preview-type="${escapeHtml(product.previewType)}"
               data-preview-src="${escapeHtml(product.previewSrc)}"
@@ -330,6 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   class="gallery-thumb-btn play-click"
                   type="button"
                   data-action="preview"
+                  data-key="${escapeHtml(product.key)}"
                   data-title="${escapeHtml(product.title)}"
                   data-preview-type="image"
                   data-preview-src="${escapeHtml(src)}"
@@ -1059,27 +1062,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const action = actionTarget.dataset.action;
 
-      if(action === "preview"){
-        const productCard = actionTarget.closest(".product-card");
-        const productKey =
-          actionTarget.dataset.key ||
-          productCard?.querySelector("[data-key]")?.dataset.key;
-
-        const foundIndex = getPreviewProductIndexByKey(productKey);
-
-        if(foundIndex >= 0){
-          openPreviewByIndex(foundIndex);
-        }else{
-          openPreview(
-            actionTarget.dataset.previewType,
-            actionTarget.dataset.previewSrc,
-            actionTarget.dataset.title,
-            actionTarget.dataset.fallbackPreview
-          );
-
-          updatePreviewControls();
-        }
-      }
+      if (action === "preview") {
+  const productCard = actionTarget.closest(".product-card");
+  const productKey =
+    actionTarget.dataset.key ||
+    productCard?.querySelector("[data-key]")?.dataset.key;
+  
+  const mediaSrc = actionTarget.dataset.previewSrc;
+  
+  openProductMediaCarousel(productKey, mediaSrc);
+}
 
       if(action === "share-product"){
         event.preventDefault();
@@ -1607,50 +1599,107 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   let currentPreviewIndex = 0;
+let currentPreviewItems = [];
 
-  function getPreviewProductIndexByKey(key){
-    return PRODUCTS.findIndex(product => product.key === key);
+function getProductMediaItems(product) {
+  if (!product) return [];
+  
+  const items = [];
+  
+  if (product.previewSrc) {
+    items.push({
+      type: product.previewType || "image",
+      src: product.previewSrc,
+      title: product.title || "Product Preview",
+      fallback: product.fallbackPreview || product.image || ""
+    });
+  } else if (product.image) {
+    items.push({
+      type: "image",
+      src: product.image,
+      title: product.title || "Product Preview",
+      fallback: product.image || ""
+    });
   }
-
-  function openPreviewByIndex(index){
-    if(!PRODUCTS.length) return;
-
-    if(index < 0){
-      index = PRODUCTS.length - 1;
-    }
-
-    if(index >= PRODUCTS.length){
-      index = 0;
-    }
-
-    currentPreviewIndex = index;
-
-    const product = PRODUCTS[currentPreviewIndex];
-
-    openPreview(
-      product.previewType,
-      product.previewSrc,
-      product.title,
-      product.fallbackPreview || product.image
-    );
-
-    updatePreviewControls();
+  
+  if (Array.isArray(product.gallery)) {
+    product.gallery.forEach(src => {
+      if (!src) return;
+      
+      const alreadyAdded = items.some(item => item.src === src);
+      if (alreadyAdded) return;
+      
+      items.push({
+        type: "image",
+        src,
+        title: product.title || "Product Preview",
+        fallback: product.image || ""
+      });
+    });
   }
+  
+  return items;
+}
 
-  function updatePreviewControls(){
-    const counter = document.getElementById("previewCounter");
-    const title = document.getElementById("modalTitle");
-
-    const product = PRODUCTS[currentPreviewIndex];
-
-    if(counter){
-      counter.textContent = `${currentPreviewIndex + 1} / ${PRODUCTS.length}`;
-    }
-
-    if(title && product){
-      title.textContent = product.title || "Product Preview";
-    }
+function openProductMediaCarousel(productKey, startSrc) {
+  const product = PRODUCTS.find(item => item.key === productKey);
+  
+  if (!product) {
+    openPreview("image", startSrc || "", "Product Preview", "");
+    return;
   }
+  
+  currentPreviewItems = getProductMediaItems(product);
+  
+  if (!currentPreviewItems.length) return;
+  
+  const startIndex = currentPreviewItems.findIndex(item => item.src === startSrc);
+  currentPreviewIndex = startIndex >= 0 ? startIndex : 0;
+  
+  openPreviewItemByIndex(currentPreviewIndex);
+}
+
+function openPreviewItemByIndex(index) {
+  if (!currentPreviewItems.length) return;
+  
+  if (index < 0) {
+    index = currentPreviewItems.length - 1;
+  }
+  
+  if (index >= currentPreviewItems.length) {
+    index = 0;
+  }
+  
+  currentPreviewIndex = index;
+  
+  const item = currentPreviewItems[currentPreviewIndex];
+  
+  openPreview(
+    item.type,
+    item.src,
+    item.title,
+    item.fallback
+  );
+  
+  updatePreviewControls();
+}
+
+function updatePreviewControls() {
+  const counter = document.getElementById("previewCounter");
+  const title = document.getElementById("modalTitle");
+  
+  const item = currentPreviewItems[currentPreviewIndex];
+  
+  if (counter) {
+    counter.textContent = currentPreviewItems.length ?
+      `${currentPreviewIndex + 1} / ${currentPreviewItems.length}` :
+      "";
+  }
+  
+  if (title && item) {
+    title.textContent = item.title || "Product Preview";
+  }
+}
 
   function setupPreviewUpgrade(){
     const modal = document.getElementById("media-modal");
@@ -1675,7 +1724,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const counter = document.createElement("div");
       counter.id = "previewCounter";
       counter.className = "preview-counter";
-      counter.textContent = `1 / ${PRODUCTS.length}`;
+      counter.textContent = "";
 
       modal.appendChild(prevBtn);
       modal.appendChild(nextBtn);
@@ -1683,12 +1732,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       prevBtn.addEventListener("click", event => {
         event.stopPropagation();
-        openPreviewByIndex(currentPreviewIndex - 1);
+        openPreviewItemByIndex(currentPreviewIndex - 1);
       });
 
       nextBtn.addEventListener("click", event => {
         event.stopPropagation();
-        openPreviewByIndex(currentPreviewIndex + 1);
+        openPreviewItemByIndex(currentPreviewIndex + 1);
       });
     }
 
@@ -1697,13 +1746,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if(!isPreviewOpen) return;
 
-      if(event.key === "ArrowLeft"){
-        openPreviewByIndex(currentPreviewIndex - 1);
-      }
+      if (event.key === "ArrowLeft") {
+  openPreviewItemByIndex(currentPreviewIndex - 1);
+}
 
-      if(event.key === "ArrowRight"){
-        openPreviewByIndex(currentPreviewIndex + 1);
-      }
+if (event.key === "ArrowRight") {
+  openPreviewItemByIndex(currentPreviewIndex + 1);
+}
     });
   }
 
