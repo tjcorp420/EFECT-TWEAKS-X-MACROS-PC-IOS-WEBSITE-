@@ -1,19 +1,401 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Test</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>EMX Store Admin</title>
+
   <style>
+    *{box-sizing:border-box}
     body{
-      background:#000;
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 15% 0%,rgba(36,255,36,.18),transparent 35%),
+        radial-gradient(circle at 85% 0%,rgba(162,12,255,.22),transparent 35%),
+        #020304;
+      color:#f4f6ff;
+      font-family:Arial,Helvetica,sans-serif;
+      padding:16px;
+      padding-bottom:80px;
+    }
+
+    .wrap{max-width:1100px;margin:0 auto}
+
+    .top{
+      position:sticky;
+      top:0;
+      z-index:5;
+      background:rgba(2,3,4,.88);
+      backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;
+      padding:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .brand h1{margin:0;font-size:21px}
+    .brand p{margin:5px 0 0;color:rgba(255,255,255,.62);font-size:13px}
+
+    .pill{
+      border:1px solid rgba(36,255,36,.35);
       color:#24ff24;
-      font-family:Arial,sans-serif;
-      padding:30px;
+      border-radius:999px;
+      padding:8px 10px;
+      font-weight:800;
+      font-size:12px;
+      white-space:nowrap;
+      background:rgba(36,255,36,.08);
+    }
+
+    .card{
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
+      border-radius:22px;
+      padding:16px;
+      margin-bottom:16px;
+      box-shadow:0 20px 60px rgba(0,0,0,.35);
+    }
+
+    h2{margin:0 0 8px;font-size:22px}
+    p{color:rgba(255,255,255,.68);line-height:1.45}
+
+    input,textarea,select{
+      width:100%;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.38);
+      color:white;
+      border-radius:14px;
+      padding:13px;
+      outline:none;
+      font-size:15px;
+    }
+
+    textarea{min-height:88px;resize:vertical}
+
+    label{
+      display:block;
+      margin:13px 0 6px;
+      color:rgba(255,255,255,.75);
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    button{
+      border:0;
+      border-radius:14px;
+      padding:13px 14px;
+      background:#24ff24;
+      color:#020304;
+      font-weight:1000;
+      cursor:pointer;
+      font-size:14px;
+    }
+
+    button.secondary{
+      background:rgba(255,255,255,.08);
+      color:white;
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    button.danger{
+      background:rgba(255,59,85,.15);
+      color:#ffb7c0;
+      border:1px solid rgba(255,59,85,.35);
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .login-row{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:330px 1fr;
+      gap:16px;
+      align-items:start;
+    }
+
+    .list{display:grid;gap:10px}
+
+    .product-btn{
+      text-align:left;
+      background:rgba(0,0,0,.32);
+      color:white;
+      border:1px solid rgba(255,255,255,.12);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+
+    .product-btn.active{
+      border-color:rgba(36,255,36,.75);
+      box-shadow:0 0 24px rgba(36,255,36,.12);
+    }
+
+    .product-btn small{
+      display:block;
+      color:rgba(255,255,255,.56);
+      margin-top:4px;
+    }
+
+    .status{
+      color:#24ff24;
+      font-size:12px;
+      border:1px solid rgba(36,255,36,.28);
+      padding:5px 8px;
+      border-radius:999px;
+      background:rgba(36,255,36,.08);
+    }
+
+    .status.hidden-product{
+      color:#ffb7c0;
+      border-color:rgba(255,59,85,.35);
+      background:rgba(255,59,85,.1);
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .actions .wide{grid-column:1/-1}
+
+    .preview{
+      border:1px solid rgba(36,255,36,.3);
+      border-radius:22px;
+      padding:16px;
+      background:
+        radial-gradient(circle at 15% 0%,rgba(36,255,36,.18),transparent 40%),
+        radial-gradient(circle at 90% 0%,rgba(162,12,255,.18),transparent 40%),
+        rgba(0,0,0,.45);
+    }
+
+    .preview-top{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .preview img{
+      width:90px;
+      height:90px;
+      object-fit:cover;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:#000;
+    }
+
+    .tag{
+      display:inline-block;
+      background:#24ff24;
+      color:#000;
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:12px;
+      font-weight:1000;
+      margin-bottom:10px;
+    }
+
+    .preview h3{
+      margin:0;
+      font-size:26px;
+      line-height:1;
+    }
+
+    .price{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin:16px 0;
+      flex-wrap:wrap;
+    }
+
+    .price strong{
+      color:#24ff24;
+      font-size:26px;
+    }
+
+    .price del{color:rgba(255,255,255,.5)}
+
+    ul{padding-left:20px}
+    li{margin:7px 0}
+
+    .toast{
+      position:fixed;
+      left:16px;
+      right:16px;
+      bottom:18px;
+      z-index:20;
+      background:rgba(0,0,0,.9);
+      border:1px solid rgba(36,255,36,.4);
+      color:white;
+      border-radius:16px;
+      padding:14px;
+      transform:translateY(130%);
+      opacity:0;
+      transition:.25s ease;
+    }
+
+    .toast.show{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    .hidden{display:none!important}
+
+    @media(max-width:800px){
+      .layout{grid-template-columns:1fr}
+      .row{grid-template-columns:1fr}
+      .login-row{grid-template-columns:1fr}
+      .actions{grid-template-columns:1fr}
+      .actions .wide{grid-column:auto}
+      .top{align-items:flex-start}
     }
   </style>
 </head>
+
 <body>
-  <h1>EMX ADMIN TEST WORKING</h1>
-  <p>If you see this, admin.html is deployed correctly.</p>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <h1>EMX Store Admin</h1>
+        <p>Live product editor for your Vercel store</p>
+      </div>
+      <div id="statusPill" class="pill">Locked</div>
+    </div>
+
+    <section id="loginBox" class="card">
+      <h2>Admin Login</h2>
+      <p>Enter the same password you saved in Vercel as <b>ADMIN_PASSWORD</b>.</p>
+
+      <div class="login-row">
+        <input id="adminPassword" type="password" placeholder="Admin password" />
+        <button id="unlockBtn" type="button">Unlock</button>
+      </div>
+    </section>
+
+    <section id="adminApp" class="layout hidden">
+      <aside>
+        <div class="card">
+          <h2>Products</h2>
+          <p>Add, select, reorder, or save product cards.</p>
+
+          <div class="actions">
+            <button id="addBtn" type="button">+ Add Product</button>
+            <button id="reloadBtn" class="secondary" type="button">Reload</button>
+            <button id="saveBtn" class="wide" type="button">Save Live</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div id="productList" class="list"></div>
+        </div>
+      </aside>
+
+      <main>
+        <div class="card">
+          <h2>Edit Product</h2>
+
+          <div class="row">
+            <div>
+              <label>ID</label>
+              <input id="idField" placeholder="optimizer" />
+            </div>
+            <div>
+              <label>Payhip Key</label>
+              <input id="keyField" placeholder="KQLzN" />
+            </div>
+          </div>
+
+          <label>Title</label>
+          <input id="titleField" placeholder="Efect Zero Delay Optimizer" />
+
+          <label>Badge / Eyebrow</label>
+          <input id="eyebrowField" placeholder="Optimization Pack" />
+
+          <div class="row">
+            <div>
+              <label>Price</label>
+              <input id="priceField" type="number" step="0.01" />
+            </div>
+            <div>
+              <label>Old Price</label>
+              <input id="oldPriceField" type="number" step="0.01" />
+            </div>
+          </div>
+
+          <label>Payhip Product URL</label>
+          <input id="urlField" placeholder="https://payhip.com/b/KQLzN" />
+
+          <div class="row">
+            <div>
+              <label>Image Path</label>
+              <input id="imageField" placeholder="./optimizer.png" />
+            </div>
+            <div>
+              <label>Preview Type</label>
+              <select id="previewTypeField">
+                <option value="image">image</option>
+                <option value="video">video</option>
+              </select>
+            </div>
+          </div>
+
+          <label>Preview Source</label>
+          <input id="previewSrcField" placeholder="./preview.mp4 or ./optimizer.png" />
+
+          <label>Fallback Preview</label>
+          <input id="fallbackField" placeholder="./macro.png" />
+
+          <label>Description</label>
+          <textarea id="descriptionField"></textarea>
+
+          <label>Features — one per line</label>
+          <textarea id="featuresField"></textarea>
+
+          <label>Visible On Store</label>
+          <select id="visibleField">
+            <option value="true">Visible</option>
+            <option value="false">Hidden</option>
+          </select>
+
+          <div class="actions">
+            <button id="applyBtn" type="button">Apply Changes</button>
+            <button id="duplicateBtn" class="secondary" type="button">Duplicate</button>
+            <button id="upBtn" class="secondary" type="button">Move Up</button>
+            <button id="downBtn" class="secondary" type="button">Move Down</button>
+            <button id="deleteBtn" class="danger wide" type="button">Delete Product</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Preview</h2>
+          <div id="previewBox" class="preview"></div>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="admin.js"></script>
 </body>
 </html>
