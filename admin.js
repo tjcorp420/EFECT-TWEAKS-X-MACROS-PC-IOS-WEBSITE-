@@ -10,6 +10,7 @@ const adminApp = document.getElementById("adminApp");
 const statusPill = document.getElementById("statusPill");
 const productList = document.getElementById("productList");
 const previewBox = document.getElementById("previewBox");
+const galleryPreviewBox = document.getElementById("galleryPreviewBox");
 
 const fields = {
   id: document.getElementById("idField"),
@@ -247,7 +248,34 @@ function applySelected(showToast){
   }
 }
 
-function renderPreview(){
+function renderGalleryPreview() {
+  if (!galleryPreviewBox) return;
+  
+  const galleryItems = fields.gallery.value
+    .split("\n")
+    .map(item => item.trim())
+    .filter(Boolean);
+  
+  if (!galleryItems.length) {
+    galleryPreviewBox.innerHTML = `
+      <div class="gallery-preview-empty">
+        No gallery images added yet.
+      </div>
+    `;
+    return;
+  }
+  
+  galleryPreviewBox.innerHTML = galleryItems.map((src, index) => `
+    <div class="gallery-preview-item">
+      <img src="${escapeHtml(src)}" alt="Gallery image ${index + 1}" onerror="this.src='./emx-logo.png'">
+      <span>${index + 1}. ${escapeHtml(src.split("/").pop())}</span>
+    </div>
+  `).join("");
+}
+
+function renderPreview() {
+  renderGalleryPreview();
+  
   const product = readProductFromForm();
 
   const oldPrice = Number(product.oldPrice || 0);
