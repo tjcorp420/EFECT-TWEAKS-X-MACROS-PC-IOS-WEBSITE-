@@ -13,7 +13,7 @@
   <meta name="msapplication-TileColor" content="#000000">
   <meta name="mobile-web-app-capable" content="yes">
 
-  <meta property="og:title" content="EMX EFECT MACROS X TWEAKS">
+  <meta property="og:title" content="EMX TWEAKS">
   <meta property="og:description" content="Premium EFECT storefront with direct Payhip checkout, product previews, vouches, and EFECT-branded performance tools.">
   <meta property="og:image" content="emx-logo.png">
   <meta property="og:type" content="website">
@@ -26,7 +26,6 @@
   <title>EMX TWEAKS</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -86,6 +85,32 @@
     </div>
   </section>
 
+  <!-- EMX LOGITECH-STYLE LAUNCH SPLASH -->
+  <section id="emxLaunchOverlay" class="emx-launch-overlay" aria-label="EMX launch animation">
+    <canvas id="launchGalaxy"></canvas>
+
+    <div class="emx-launch-core">
+      <div class="emx-launch-ring ring-one"></div>
+      <div class="emx-launch-ring ring-two"></div>
+      <div class="emx-launch-ring ring-three"></div>
+
+      <div class="emx-launch-logo-wrap">
+        <img src="emx-logo.png" alt="EMX Logo" class="emx-launch-logo">
+      </div>
+
+      <div class="emx-launch-title">EMX SYSTEM LAUNCH</div>
+
+      <div class="emx-launch-bar">
+        <span id="emxLaunchBarFill"></span>
+      </div>
+
+      <div class="emx-launch-bottom-row">
+        <div class="emx-launch-status" id="emxLaunchStatus">INITIALIZING EMX CORE</div>
+        <div class="emx-launch-percent" id="emxLaunchPercent">0%</div>
+      </div>
+    </div>
+  </section>
+
   <!-- HEADER -->
   <header>
     <div class="header-left">
@@ -95,8 +120,8 @@
     </div>
 
     <div class="header-main-text">
-      <span>EFECT MACROS</span>
-      <span>X TWEAKS</span>
+      <span>EMX</span>
+      <span>TWEAKS</span>
     </div>
 
     <div class="header-actions">
@@ -106,6 +131,8 @@
         🛒
         <span class="cart-count" id="cartCount">0</span>
       </button>
+
+      <button class="icon-btn play-click" id="installTestBtn" type="button" aria-label="Install App">⬇</button>
 
       <button class="icon-btn play-click" id="menuBtn" type="button" aria-label="Menu">☰</button>
     </div>
@@ -530,6 +557,53 @@
     </div>
   </aside>
 
+  <!-- PREMIUM SUPPORT WIDGET -->
+  <div id="supportWidget" class="support-widget">
+    <button class="support-fab play-click" id="supportFab" type="button" aria-label="Open support widget">
+      <span class="support-pulse"></span>
+      <span class="support-fab-icon">?</span>
+    </button>
+
+    <div class="support-panel" id="supportPanel">
+      <div class="support-panel-head">
+        <div class="support-logo-mini">
+          <img src="emx-logo.png" alt="EMX logo">
+        </div>
+
+        <div>
+          <div class="support-kicker">EFECT SUPPORT</div>
+          <h3>Need Help Choosing?</h3>
+        </div>
+      </div>
+
+      <p>
+        Not sure which pack to grab? Open vouches, check FAQ, copy Discord, or jump straight to the Ultimate Pack.
+      </p>
+
+      <div class="support-actions">
+        <button class="support-action play-click" type="button" id="supportCopyDiscord">
+          <span>👾</span>
+          <strong>Copy Discord</strong>
+        </button>
+
+        <a class="support-action play-click" href="https://discord.com/channels/1399667461724438538/1490037858864468199" target="_blank" rel="noopener">
+          <span>⭐</span>
+          <strong>Open Vouches</strong>
+        </a>
+
+        <button class="support-action play-click" type="button" id="supportOpenFaq">
+          <span>📌</span>
+          <strong>Open FAQ</strong>
+        </button>
+
+        <button class="support-action green play-click" type="button" id="supportViewBundle">
+          <span>⚡</span>
+          <strong>View Ultimate Pack</strong>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <div class="floating-footer">
     <button class="btn-discord play-click" id="discordBtn" type="button">
@@ -545,57 +619,79 @@
     ↗
   </button>
 
-<!-- INSTALL APP POPUP -->
-<div id="installAppPopup" class="install-popup">
-  <div class="install-card">
-    <button class="install-close play-click" id="installCloseBtn" type="button" aria-label="Close install popup">×</button>
-    
-    <div class="install-logo-wrap">
-      <img src="emx-logo.png" alt="EMX TWEAKS Logo">
+  <!-- INSTALL APP POPUP -->
+  <div id="installAppPopup" class="install-popup">
+    <div class="install-card install-card-pro">
+      <button class="install-close play-click" id="installCloseBtn" type="button" aria-label="Close install popup">×</button>
+
+      <div class="install-phone-preview">
+        <div class="install-phone-glow"></div>
+
+        <div class="install-phone">
+          <div class="install-phone-notch"></div>
+
+          <div class="install-phone-screen">
+            <div class="install-app-icon-preview">
+              <img src="emx-logo.png" alt="EMX TWEAKS Logo">
+            </div>
+
+            <div class="install-app-name">EMX TWEAKS</div>
+
+            <div class="install-mini-dock">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-kicker">
+        <span></span>
+        INSTALL WEB APP
+      </div>
+
+      <h2>Save <span>EMX TWEAKS</span><br>To Home Screen</h2>
+
+      <p>
+        Add EMX TWEAKS to your iPhone Home Screen for faster access, full-screen app mode, realtime updates, and a cleaner premium launch experience.
+      </p>
+
+      <div class="install-steps install-steps-pro">
+        <div class="install-step">
+          <strong>↗</strong>
+          <span>Tap the Share button</span>
+        </div>
+
+        <div class="install-step">
+          <strong>•••</strong>
+          <span>Scroll down and tap More</span>
+        </div>
+
+        <div class="install-step">
+          <strong>＋</strong>
+          <span>Choose Add to Home Screen</span>
+        </div>
+
+        <div class="install-step">
+          <strong>✓</strong>
+          <span>Tap Add to install EMX TWEAKS</span>
+        </div>
+      </div>
+
+      <div class="install-note">
+        <span>iPhone requires manual install through Safari’s Share menu.</span>
+      </div>
+
+      <button class="install-main-btn play-click" id="installCopyBtn" type="button">
+        Copy App Name: EMX TWEAKS
+      </button>
+
+      <button class="install-secondary-btn play-click" id="installLaterBtn" type="button">
+        I’ll Do It Later
+      </button>
     </div>
-    
-    <div class="install-kicker">
-      <span></span>
-      INSTALL WEB APP
-    </div>
-    
-    <h2>Save <span>EMX TWEAKS</span><br>To Home Screen</h2>
-    
-    <p>
-      Add the EMX TWEAKS app to your iPhone Home Screen for faster access, full-screen app mode, Realtime updates and a cleaner premium launch experience.
-    </p>
-    
-    <div class="install-steps">
-  <div class="install-step">
-    <strong>1</strong>
-    <span>Tap the Share button</span>
   </div>
-  
-  <div class="install-step">
-    <strong>2</strong>
-    <span>Scroll down and tap More</span>
-  </div>
-  
-  <div class="install-step">
-    <strong>3</strong>
-    <span>Choose Add to Home Screen</span>
-  </div>
-  
-  <div class="install-step">
-    <strong>4</strong>
-    <span>Tap Add to install EMX TWEAKS</span>
-  </div>
-</div>
-    
-    <button class="install-main-btn play-click" id="installCopyBtn" type="button">
-      Copy App Name: EMX TWEAKS
-    </button>
-    
-    <button class="install-secondary-btn play-click" id="installLaterBtn" type="button">
-      I’ll Do It Later
-    </button>
-  </div>
-</div>
 
   <div id="toast-container"></div>
 

@@ -1,7 +1,7 @@
 {
 "name": "EMX TWEAKS",
 "short_name": "EMX TWEAKS",
-"description": "Premium EFECT storefront with direct checkout, product previews, vouches, and EFECT-branded performance tools.",
+"description": "Premium EMX storefront with direct checkout, product previews, vouches, and EFECT-branded performance tools.",
 "start_url": "./index.html",
 "scope": "./",
 "display": "standalone",
