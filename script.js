@@ -1,5 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const PRODUCTS = window.EMX_PRODUCTS || [];
+      let PRODUCTS = window.EMX_PRODUCTS || [];
+      
+      async function loadProductsFromApi() {
+        try {
+          const response = await fetch("/api/products", {
+            cache: "no-store"
+          });
+          
+          if (!response.ok) {
+            throw new Error("Failed to load live products.");
+          }
+          
+          const liveProducts = await response.json();
+          
+          if (Array.isArray(liveProducts) && liveProducts.length > 0) {
+            PRODUCTS = liveProducts;
+          }
+        } catch (error) {
+          console.warn("Using local products.js fallback:", error);
+        }
+      }
 
   const PRODUCT_DETAILS = {
     optimizer: {
@@ -1706,37 +1726,43 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  renderProducts();
-  updateCartUI();
-  setupEvents();
-  setupProCommandDock();
-  setupProductPowerMeters();
-  setupProductCardPolish();
-  setupTapParticles();
-  setupScrollRevealGlow();
-  setupPreviewUpgrade();
-
-  createGalaxy("galaxyCanvas", {
-    count: 118,
-    speed: .23,
-    glow: 12
+    async function initStore() {
+    await loadProductsFromApi();
+    
+    renderProducts();
+    updateCartUI();
+    setupEvents();
+    setupProCommandDock();
+    setupProductPowerMeters();
+    setupProductCardPolish();
+    setupTapParticles();
+    setupScrollRevealGlow();
+    setupPreviewUpgrade();
+    
+    createGalaxy("galaxyCanvas", {
+      count: 118,
+      speed: .23,
+      glow: 12
+    });
+    
+    createGalaxy("bootGalaxy", {
+      count: 92,
+      speed: .18,
+      glow: 15
+    });
+    
+    createGalaxy("launchGalaxy", {
+      count: 96,
+      speed: .20,
+      glow: 15
+    });
+    
+    createGalaxy("payLoadingGalaxy", {
+      count: 90,
+      speed: .19,
+      glow: 15
+    });
+  }
+  
+  initStore();
   });
-
-  createGalaxy("bootGalaxy", {
-    count: 92,
-    speed: .18,
-    glow: 15
-  });
-
-  createGalaxy("launchGalaxy", {
-    count: 96,
-    speed: .20,
-    glow: 15
-  });
-
-  createGalaxy("payLoadingGalaxy", {
-    count: 90,
-    speed: .19,
-    glow: 15
-  });
-});
