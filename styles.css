@@ -2740,3 +2740,274 @@ body::before{
     transform: translateX(130%) skewX(-22deg);
   }
 }
+/* =========================
+   EMX INSTALL APP POPUP
+========================= */
+
+.install-popup{
+  position:fixed;
+  inset:0;
+  z-index:999998;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(14px);
+}
+
+.install-popup.show{
+  display:flex;
+}
+
+.install-card{
+  width:min(430px,100%);
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,.13);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(36,255,36,.18), transparent 36%),
+    radial-gradient(circle at 85% 0%, rgba(162,12,255,.24), transparent 42%),
+    linear-gradient(180deg,rgba(16,17,22,.96),rgba(3,4,5,.98));
+  box-shadow:
+    0 0 34px rgba(36,255,36,.12),
+    0 0 54px rgba(162,12,255,.16),
+    0 28px 90px rgba(0,0,0,.82);
+  padding:22px;
+  position:relative;
+  overflow:hidden;
+  animation:installPopIn .34s cubic-bezier(.2,.9,.2,1);
+}
+
+.install-card::before{
+  content:"";
+  position:absolute;
+  inset:-80px;
+  z-index:-1;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(36,255,36,.22), transparent 26%),
+    radial-gradient(circle at 80% 25%, rgba(162,12,255,.26), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(36,255,36,.12), transparent 38%);
+  filter:blur(18px);
+  animation:installAuraMove 5s ease-in-out infinite alternate;
+}
+
+.install-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);
+  transform:translateX(-120%);
+  animation:installSweep 4.8s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes installPopIn{
+  0%{
+    opacity:0;
+    transform:translateY(18px) scale(.96);
+  }
+
+  100%{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+@keyframes installAuraMove{
+  0%{
+    opacity:.55;
+    transform:translate3d(-8px,10px,0) scale(1);
+  }
+
+  100%{
+    opacity:1;
+    transform:translate3d(8px,-10px,0) scale(1.07);
+  }
+}
+
+@keyframes installSweep{
+  0%,55%{
+    transform:translateX(-120%) skewX(-22deg);
+  }
+
+  82%,100%{
+    transform:translateX(120%) skewX(-22deg);
+  }
+}
+
+.install-close{
+  position:absolute;
+  top:14px;
+  right:14px;
+  width:42px;
+  height:42px;
+  border-radius:15px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  font-size:28px;
+  line-height:1;
+  font-weight:900;
+  cursor:pointer;
+  z-index:4;
+}
+
+.install-logo-wrap{
+  width:148px;
+  height:88px;
+  margin:4px auto 14px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:installLogoFloat 3.8s ease-in-out infinite;
+}
+
+.install-logo-wrap::before{
+  content:"";
+  position:absolute;
+  inset:-16px;
+  border-radius:999px;
+  background:
+    radial-gradient(circle at 28% 50%, rgba(36,255,36,.28), transparent 45%),
+    radial-gradient(circle at 72% 50%, rgba(162,12,255,.35), transparent 48%);
+  filter:blur(16px);
+  z-index:-1;
+}
+
+.install-logo-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  filter:
+    drop-shadow(0 0 12px rgba(36,255,36,.35))
+    drop-shadow(0 0 22px rgba(162,12,255,.58));
+}
+
+@keyframes installLogoFloat{
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-6px);
+  }
+}
+
+.install-kicker{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  color:var(--green);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+
+.install-kicker span{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 14px var(--green);
+}
+
+.install-card h2{
+  color:#fff;
+  text-align:center;
+  font-size:30px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-.06em;
+  margin-bottom:12px;
+}
+
+.install-card h2 span{
+  color:var(--purple);
+  text-shadow:0 0 20px rgba(162,12,255,.58);
+}
+
+.install-card p{
+  color:var(--muted);
+  text-align:center;
+  font-size:14px;
+  line-height:1.55;
+  margin-bottom:16px;
+}
+
+.install-steps{
+  display:grid;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.install-step{
+  min-height:58px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.045);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.install-step strong{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  color:#020202;
+  background:linear-gradient(135deg,var(--green),#7dff56);
+  box-shadow:0 0 18px rgba(36,255,36,.28);
+  flex:0 0 34px;
+  font-size:15px;
+  font-weight:900;
+}
+
+.install-step span{
+  color:#fff;
+  font-size:13px;
+  font-weight:850;
+  line-height:1.25;
+}
+
+.install-main-btn,
+.install-secondary-btn{
+  width:100%;
+  min-height:54px;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  font-weight:900;
+  font-size:13px;
+}
+
+.install-main-btn{
+  color:#030303;
+  background:linear-gradient(135deg,var(--green),#7dff56);
+  box-shadow:
+    0 0 24px rgba(36,255,36,.28),
+    0 16px 30px rgba(0,0,0,.34);
+  margin-bottom:10px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+
+.install-secondary-btn{
+  color:#fff;
+  background:rgba(0,0,0,.32);
+  border:1px solid rgba(255,255,255,.13);
+}
+
+.install-main-btn:active,
+.install-secondary-btn:active,
+.install-close:active{
+  transform:scale(.965);
+}

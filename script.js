@@ -822,6 +822,7 @@ async function enterDomain(){
     document.body.classList.remove("no-scroll");
     document.body.classList.remove("booting");
     startActivityToasts();
+showInstallPopup();
   }, 560);
 }
 
@@ -1090,4 +1091,60 @@ createGalaxy("bootGalaxy", {
   count: 92,
   speed: .18,
   glow: 15
+});
+
+const INSTALL_POPUP_KEY = "emx_install_popup_seen_v1";
+
+function isStandaloneApp() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function showInstallPopup() {
+  const popup = document.getElementById("installAppPopup");
+  
+  if (!popup) return;
+  if (isStandaloneApp()) return;
+  if (localStorage.getItem(INSTALL_POPUP_KEY) === "yes") return;
+  
+  setTimeout(() => {
+    popup.classList.add("show");
+    document.body.classList.add("no-scroll");
+  }, 1800);
+}
+
+function closeInstallPopup() {
+  const popup = document.getElementById("installAppPopup");
+  
+  if (!popup) return;
+  
+  popup.classList.remove("show");
+  localStorage.setItem(INSTALL_POPUP_KEY, "yes");
+  
+  if (
+    !cartDrawer.classList.contains("show") &&
+    !document.getElementById("media-modal").classList.contains("show") &&
+    !document.getElementById("legal-modal").classList.contains("show") &&
+    !document.getElementById("detail-modal").classList.contains("show") &&
+    !document.body.classList.contains("booting")
+  ) {
+    document.body.classList.remove("no-scroll");
+  }
+}
+
+function copyInstallName() {
+  navigator.clipboard.writeText("EMX TWEAKS").then(() => {
+    showToast("<strong>App name copied.</strong><br>Use EMX TWEAKS on the Home Screen.");
+  }).catch(() => {
+    showToast("App name: <strong>EMX TWEAKS</strong>");
+  });
+}
+
+document.getElementById("installCloseBtn")?.addEventListener("click", closeInstallPopup);
+document.getElementById("installLaterBtn")?.addEventListener("click", closeInstallPopup);
+document.getElementById("installCopyBtn")?.addEventListener("click", copyInstallName);
+
+document.getElementById("installAppPopup")?.addEventListener("click", event => {
+  if (event.target.id === "installAppPopup") {
+    closeInstallPopup();
+  }
 });
