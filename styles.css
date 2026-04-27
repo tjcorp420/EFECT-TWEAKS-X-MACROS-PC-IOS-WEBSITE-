@@ -4059,3 +4059,699 @@ main{
     text-align:left;
   }
 }
+/* =========================
+   EMX TAP PARTICLE SPARKS
+   Safe bottom-block upgrade
+========================= */
+
+#tapParticleLayer{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  pointer-events:none;
+  z-index:100000000;
+  overflow:hidden;
+}
+
+.tap-particle{
+  position:fixed;
+  display:block;
+  border-radius:999px;
+  pointer-events:none;
+  transform:translate(-50%,-50%) scale(.6);
+  background:var(--green);
+  box-shadow:
+    0 0 10px rgba(36,255,36,.95),
+    0 0 22px rgba(36,255,36,.42);
+  animation:tapParticleFly .78s cubic-bezier(.12,.82,.18,1) var(--delay) forwards;
+}
+
+.tap-particle.purple{
+  background:var(--purple);
+  box-shadow:
+    0 0 10px rgba(162,12,255,.95),
+    0 0 22px rgba(162,12,255,.42);
+}
+
+.tap-particle.white{
+  background:#fff;
+  box-shadow:
+    0 0 10px rgba(255,255,255,.95),
+    0 0 22px rgba(36,255,36,.30);
+}
+
+@keyframes tapParticleFly{
+  0%{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(.35);
+    filter:blur(0);
+  }
+
+  12%{
+    opacity:1;
+  }
+
+  72%{
+    opacity:.9;
+    transform:
+      translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)))
+      scale(1);
+    filter:blur(0);
+  }
+
+  100%{
+    opacity:0;
+    transform:
+      translate(calc(-50% + var(--tx)), calc(-50% + var(--ty) + 18px))
+      scale(.15);
+    filter:blur(2px);
+  }
+}
+
+.tap-ring{
+  position:fixed;
+  width:12px;
+  height:12px;
+  left:0;
+  top:0;
+  border-radius:999px;
+  pointer-events:none;
+  transform:translate(-50%,-50%) scale(.65);
+  border:1px solid rgba(36,255,36,.78);
+  box-shadow:
+    0 0 12px rgba(36,255,36,.55),
+    inset 0 0 10px rgba(162,12,255,.22);
+  animation:tapRingPulse .58s cubic-bezier(.15,.8,.25,1) forwards;
+}
+
+.tap-ring::before{
+  content:"";
+  position:absolute;
+  inset:-7px;
+  border-radius:inherit;
+  border:1px solid rgba(162,12,255,.45);
+  box-shadow:0 0 18px rgba(162,12,255,.28);
+}
+
+@keyframes tapRingPulse{
+  0%{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(.35);
+  }
+
+  18%{
+    opacity:1;
+  }
+
+  100%{
+    opacity:0;
+    transform:translate(-50%,-50%) scale(5.4);
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  #tapParticleLayer,
+  .tap-particle,
+  .tap-ring{
+    display:none !important;
+  }
+}
+/* =========================
+   EMX SCROLL REVEAL GLOW
+   Safe bottom-block upgrade
+========================= */
+
+.emx-reveal {
+  opacity: 0;
+  transform: translateY(26px) scale(.985);
+  filter: blur(7px);
+  transition:
+    opacity .72s cubic-bezier(.2, .8, .2, 1),
+    transform .72s cubic-bezier(.2, .8, .2, 1),
+    filter .72s cubic-bezier(.2, .8, .2, 1),
+    box-shadow .72s cubic-bezier(.2, .8, .2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+
+.emx-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.product-card.emx-reveal.revealed,
+.bundle-card.emx-reveal.revealed,
+.proof-card.emx-reveal.revealed,
+.vouch-card.emx-reveal.revealed,
+.legal-card.emx-reveal.revealed {
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, .72),
+    0 0 28px rgba(36, 255, 36, .08),
+    0 0 34px rgba(162, 12, 255, .07);
+}
+
+.trust-pill.emx-reveal.revealed,
+.trust-metric.emx-reveal.revealed,
+.faq-row.emx-reveal.revealed {
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, .45),
+    0 0 22px rgba(36, 255, 36, .055);
+}
+
+.section-head.emx-reveal {
+  transform: translateY(18px);
+}
+
+.section-head.emx-reveal.revealed {
+  transform: translateY(0);
+}
+
+.hero-card.emx-reveal {
+  transform: translateY(18px) scale(.98);
+}
+
+.hero-card.emx-reveal.revealed {
+  transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .emx-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
+/* =========================
+   EMX PREVIEW MODAL UPGRADE
+   Next / Previous Controls
+========================= */
+
+.preview-nav-btn{
+  position:fixed;
+  top:50%;
+  transform:translateY(-50%);
+  width:58px;
+  height:72px;
+  border-radius:22px;
+  border:1px solid rgba(36,255,36,.28);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(36,255,36,.18), transparent 45%),
+    rgba(0,0,0,.62);
+  color:var(--green);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  z-index:1000002;
+  font-size:54px;
+  line-height:1;
+  font-weight:800;
+  box-shadow:
+    0 0 24px rgba(36,255,36,.18),
+    0 16px 42px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(18px);
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    box-shadow .18s ease,
+    background .18s ease;
+}
+
+.preview-nav-btn:hover{
+  border-color:rgba(36,255,36,.55);
+  box-shadow:
+    0 0 28px rgba(36,255,36,.30),
+    0 0 38px rgba(162,12,255,.16),
+    0 16px 42px rgba(0,0,0,.55);
+}
+
+.preview-nav-btn:active{
+  transform:translateY(-50%) scale(.94);
+}
+
+.preview-prev{
+  left:18px;
+}
+
+.preview-next{
+  right:18px;
+}
+
+.preview-counter{
+  position:fixed;
+  left:50%;
+  bottom:calc(34px + var(--safeBottom));
+  transform:translateX(-50%);
+  z-index:1000002;
+  min-width:78px;
+  height:38px;
+  padding:0 15px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(162,12,255,.18), transparent 45%),
+    rgba(0,0,0,.68);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.12em;
+  box-shadow:
+    0 0 22px rgba(162,12,255,.18),
+    0 12px 28px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(16px);
+}
+
+#media-modal:not(.show) .preview-nav-btn,
+#media-modal:not(.show) .preview-counter{
+  display:none;
+}
+
+#media-modal.show .preview-nav-btn,
+#media-modal.show .preview-counter{
+  display:flex;
+}
+
+#media-modal.show .preview-nav-btn{
+  display:grid;
+}
+
+@media (max-width:520px){
+  .preview-nav-btn{
+    width:46px;
+    height:58px;
+    border-radius:18px;
+    font-size:42px;
+  }
+
+  .preview-prev{
+    left:10px;
+  }
+
+  .preview-next{
+    right:10px;
+  }
+
+  .preview-counter{
+    bottom:calc(24px + var(--safeBottom));
+  }
+
+  #modal-video,
+  #modal-img{
+    max-width:88%;
+    max-height:72%;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .preview-nav-btn,
+  .preview-counter{
+    transition:none !important;
+  }
+}
+/* =========================================================
+   EMX SECURE PAYHIP LOADING SCREEN
+   Bottom-safe checkout upgrade
+========================================================= */
+
+.emx-pay-loading{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  z-index:10000080;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(36,255,36,.18), transparent 34%),
+    radial-gradient(circle at 50% 76%, rgba(162,12,255,.24), transparent 42%),
+    linear-gradient(180deg,#020204 0%,#050507 48%,#000 100%);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  overflow:hidden;
+  transition:
+    opacity .36s ease,
+    visibility .36s ease,
+    transform .48s ease;
+}
+
+.emx-pay-loading.show{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+
+.emx-pay-loading.exit{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:scale(1.025);
+}
+
+#payLoadingGalaxy{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  opacity:.92;
+  z-index:-5;
+}
+
+.emx-pay-core{
+  width:min(420px,92vw);
+  min-height:440px;
+  border-radius:34px;
+  border:1px solid rgba(255,255,255,.13);
+  background:
+    radial-gradient(circle at 15% 0%, rgba(36,255,36,.13), transparent 38%),
+    radial-gradient(circle at 85% 0%, rgba(162,12,255,.20), transparent 42%),
+    linear-gradient(180deg,rgba(16,17,22,.74),rgba(3,4,5,.88));
+  box-shadow:
+    0 0 42px rgba(36,255,36,.13),
+    0 0 56px rgba(162,12,255,.18),
+    0 28px 90px rgba(0,0,0,.82),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(18px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:26px 20px;
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  transform:translateY(18px) scale(.97);
+  transition:transform .42s cubic-bezier(.2,.8,.2,1);
+}
+
+.emx-pay-loading.show .emx-pay-core{
+  transform:translateY(0) scale(1);
+}
+
+.emx-pay-core::before{
+  content:"";
+  position:absolute;
+  inset:-80px;
+  z-index:-2;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(36,255,36,.20), transparent 25%),
+    radial-gradient(circle at 82% 22%, rgba(162,12,255,.26), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(36,255,36,.10), transparent 38%);
+  filter:blur(18px);
+  opacity:.85;
+  animation:emxPayAura 4.6s ease-in-out infinite alternate;
+}
+
+.emx-pay-core::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.09),transparent);
+  transform:translateX(-130%) skewX(-22deg);
+  animation:emxPaySweep 3.4s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes emxPayAura{
+  0%{
+    opacity:.48;
+    transform:translate3d(-10px,10px,0) scale(1);
+  }
+
+  100%{
+    opacity:1;
+    transform:translate3d(10px,-10px,0) scale(1.08);
+  }
+}
+
+@keyframes emxPaySweep{
+  0%,48%{
+    transform:translateX(-130%) skewX(-22deg);
+  }
+
+  78%,100%{
+    transform:translateX(130%) skewX(-22deg);
+  }
+}
+
+.emx-pay-ring{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+}
+
+.pay-ring-one{
+  width:275px;
+  height:275px;
+  border:1px solid rgba(36,255,36,.21);
+  box-shadow:
+    0 0 34px rgba(36,255,36,.14),
+    inset 0 0 40px rgba(36,255,36,.05);
+  animation:emxPaySpin 7s linear infinite;
+}
+
+.pay-ring-two{
+  width:220px;
+  height:220px;
+  border:1px solid rgba(162,12,255,.28);
+  box-shadow:
+    0 0 38px rgba(162,12,255,.16),
+    inset 0 0 36px rgba(162,12,255,.05);
+  animation:emxPaySpinReverse 5.8s linear infinite;
+}
+
+@keyframes emxPaySpin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+@keyframes emxPaySpinReverse{
+  to{
+    transform:rotate(-360deg);
+  }
+}
+
+.emx-pay-logo-wrap{
+  width:132px;
+  height:132px;
+  border-radius:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(36,255,36,.13), transparent 42%),
+    radial-gradient(circle at 50% 100%, rgba(162,12,255,.16), transparent 44%),
+    rgba(0,0,0,.45);
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:
+    0 0 28px rgba(36,255,36,.24),
+    0 0 54px rgba(162,12,255,.34),
+    0 24px 60px rgba(0,0,0,.62),
+    inset 0 1px 0 rgba(255,255,255,.12);
+  overflow:hidden;
+  position:relative;
+  z-index:3;
+  animation:emxPayLogoFloat 2.9s ease-in-out infinite;
+}
+
+.emx-pay-logo{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  filter:
+    drop-shadow(0 0 12px rgba(36,255,36,.62))
+    drop-shadow(0 0 22px rgba(162,12,255,.70));
+}
+
+@keyframes emxPayLogoFloat{
+  0%,100%{
+    transform:translateY(0) scale(1);
+  }
+
+  50%{
+    transform:translateY(-8px) scale(1.025);
+  }
+}
+
+.emx-pay-kicker{
+  margin-top:24px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  color:var(--green);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+}
+
+.emx-pay-kicker span{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 14px var(--green);
+}
+
+.emx-pay-core h2{
+  margin-top:10px;
+  color:#fff;
+  font-size:clamp(28px,8vw,42px);
+  line-height:.96;
+  letter-spacing:-.07em;
+  font-weight:900;
+}
+
+.emx-pay-core h2 span{
+  color:var(--purple);
+  text-shadow:0 0 22px rgba(162,12,255,.58);
+}
+
+.emx-pay-core p{
+  margin-top:12px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+  font-weight:800;
+  min-height:20px;
+}
+
+.emx-pay-bar{
+  width:min(280px,78vw);
+  height:9px;
+  border-radius:999px;
+  margin-top:18px;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.11);
+  overflow:hidden;
+  box-shadow:
+    0 0 18px rgba(36,255,36,.12),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.emx-pay-bar span{
+  display:block;
+  width:0%;
+  height:100%;
+  border-radius:999px;
+  background:
+    linear-gradient(90deg,var(--green),#7dff56,var(--purple));
+  box-shadow:
+    0 0 18px rgba(36,255,36,.72),
+    0 0 28px rgba(162,12,255,.40);
+  transition:width .32s cubic-bezier(.2,.8,.2,1);
+}
+
+.emx-pay-steps{
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  margin-top:18px;
+}
+
+.emx-pay-step{
+  min-height:34px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.04);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--muted2);
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  transition:
+    color .24s ease,
+    border-color .24s ease,
+    background .24s ease,
+    box-shadow .24s ease;
+}
+
+.emx-pay-step.active{
+  color:var(--green);
+  border-color:rgba(36,255,36,.34);
+  background:rgba(36,255,36,.08);
+  box-shadow:0 0 20px rgba(36,255,36,.11);
+}
+
+.emx-pay-step.done{
+  color:#fff;
+  border-color:rgba(255,255,255,.14);
+  background:rgba(255,255,255,.07);
+}
+
+.emx-pay-note{
+  margin-top:14px;
+  color:var(--muted2);
+  font-size:11px;
+  line-height:1.4;
+  font-weight:800;
+}
+
+@media (min-width:480px){
+  .emx-pay-steps{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media (max-height:720px){
+  .emx-pay-core{
+    min-height:390px;
+    padding:20px 16px;
+  }
+
+  .emx-pay-logo-wrap{
+    width:108px;
+    height:108px;
+    border-radius:28px;
+  }
+
+  .pay-ring-one{
+    width:238px;
+    height:238px;
+  }
+
+  .pay-ring-two{
+    width:190px;
+    height:190px;
+  }
+
+  .emx-pay-core h2{
+    font-size:28px;
+  }
+
+  .emx-pay-step{
+    min-height:30px;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .emx-pay-loading,
+  .emx-pay-core,
+  .emx-pay-core::before,
+  .emx-pay-core::after,
+  .emx-pay-ring,
+  .emx-pay-logo-wrap,
+  .emx-pay-bar span,
+  .emx-pay-step{
+    animation:none !important;
+    transition:none !important;
+  }
+}

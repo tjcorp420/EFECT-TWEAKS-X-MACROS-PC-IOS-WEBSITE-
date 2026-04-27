@@ -721,6 +721,43 @@
   </button>
 </nav>
 
+<!-- EMX SECURE PAYHIP LOADING SCREEN -->
+<section id="emxPayLoading" class="emx-pay-loading" aria-label="Secure checkout loading screen">
+  <canvas id="payLoadingGalaxy"></canvas>
+  
+  <div class="emx-pay-core">
+    <div class="emx-pay-ring pay-ring-one"></div>
+    <div class="emx-pay-ring pay-ring-two"></div>
+    
+    <div class="emx-pay-logo-wrap">
+      <img src="emx-logo.png" alt="EMX Logo" class="emx-pay-logo">
+    </div>
+    
+    <div class="emx-pay-kicker">
+      <span></span>
+      SECURE CHECKOUT
+    </div>
+    
+    <h2>Connecting To <span>Payhip</span></h2>
+    
+    <p id="emxPayStatus">Encrypting checkout session...</p>
+    
+    <div class="emx-pay-bar">
+      <span id="emxPayBarFill"></span>
+    </div>
+    
+    <div class="emx-pay-steps">
+      <div class="emx-pay-step active" id="payStepOne">VERIFY PRODUCT</div>
+      <div class="emx-pay-step" id="payStepTwo">CONNECT PAYHIP</div>
+      <div class="emx-pay-step" id="payStepThree">OPEN CHECKOUT</div>
+    </div>
+    
+    <div class="emx-pay-note">
+      You are being sent to the official Payhip checkout page.
+    </div>
+  </div>
+</section>
+
   <div id="toast-container"></div>
 
   <script src="script.js"></script>
