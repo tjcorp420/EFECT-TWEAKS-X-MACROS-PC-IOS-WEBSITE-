@@ -827,35 +827,38 @@ document.addEventListener("DOMContentLoaded", () => {
     return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
   }
 
-  function showInstallPopup(force = false){
-    const popup = document.getElementById("installAppPopup");
+function showInstallPopup(force = false) {
+  const popup = document.getElementById("installAppPopup");
+  
+  if (!popup) return;
+  
+  // Only block automatic popup in Home Screen app.
+  // Force=true still lets your download button open the steps.
+  if (!force && isStandaloneApp()) return;
+  
+  if (!force && localStorage.getItem(INSTALL_POPUP_KEY) === "yes") return;
+  
+  popup.classList.add("show");
+  document.body.classList.add("no-scroll");
+}
 
-    if(!popup) return;
-    if(isStandaloneApp()) return;
+function closeInstallPopup() {
+  const popup = document.getElementById("installAppPopup");
+  
+  if (!popup) return;
+  
+  popup.classList.remove("show");
+  localStorage.setItem(INSTALL_POPUP_KEY, "yes");
+  unlockBodyIfSafe();
+}
 
-    if(!force && localStorage.getItem(INSTALL_POPUP_KEY) === "yes") return;
-
-    popup.classList.add("show");
-    document.body.classList.add("no-scroll");
-  }
-
-  function closeInstallPopup(){
-    const popup = document.getElementById("installAppPopup");
-
-    if(!popup) return;
-
-    popup.classList.remove("show");
-    localStorage.setItem(INSTALL_POPUP_KEY, "yes");
-    unlockBodyIfSafe();
-  }
-
-  function copyInstallName(){
-    navigator.clipboard.writeText("EMX TWEAKS").then(() => {
-      showToast("<strong>App name copied.</strong><br>Use EMX TWEAKS on the Home Screen.");
-    }).catch(() => {
-      showToast("App name: <strong>EMX TWEAKS</strong>");
-    });
-  }
+function copyInstallName() {
+  navigator.clipboard.writeText("EMX TWEAKS").then(() => {
+    showToast("<strong>App name copied.</strong><br>Use EMX TWEAKS on the Home Screen.");
+  }).catch(() => {
+    showToast("App name: <strong>EMX TWEAKS</strong>");
+  });
+}
 
   async function enterDomain(){
     if(isLaunching) return;
