@@ -1,25 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
-      let PRODUCTS = window.EMX_PRODUCTS || [];
-      
-      async function loadProductsFromApi() {
-        try {
-          const response = await fetch("/api/products", {
-            cache: "no-store"
-          });
-          
-          if (!response.ok) {
-            throw new Error("Failed to load live products.");
-          }
-          
-          const liveProducts = await response.json();
-          
-          if (Array.isArray(liveProducts) && liveProducts.length > 0) {
-            PRODUCTS = liveProducts;
-          }
-        } catch (error) {
-          console.warn("Using local products.js fallback:", error);
-        }
+  let PRODUCTS = window.EMX_PRODUCTS || [];
+
+  async function loadProductsFromApi(){
+    try{
+      const response = await fetch("/api/products", {
+        cache: "no-store"
+      });
+
+      if(!response.ok){
+        throw new Error("Failed to load live products.");
       }
+
+      const liveProducts = await response.json();
+
+      if(Array.isArray(liveProducts) && liveProducts.length > 0){
+        PRODUCTS = liveProducts;
+      }
+    }catch(error){
+      console.warn("Using local products.js fallback:", error);
+    }
+  }
 
   const PRODUCT_DETAILS = {
     optimizer: {
@@ -80,6 +80,26 @@ document.addEventListener("DOMContentLoaded", () => {
         "Works best with updated drivers",
         "No fixed FPS number guaranteed",
         "Results vary by PC and game configuration"
+      ]
+    },
+    bundle: {
+      includes: [
+        "Zero Delay Optimizer access",
+        "FPS Booster access",
+        "Keyboard Macro dashboard access",
+        "Priority setup support path"
+      ],
+      setup: [
+        "Press bundle checkout",
+        "Complete secure Payhip cart checkout",
+        "Follow delivery instructions for each item",
+        "Contact EFECT Discord support for help"
+      ],
+      compatibility: [
+        "Windows gaming systems",
+        "Digital product bundle",
+        "Results vary by PC and setup",
+        "Use responsibly and follow platform rules"
       ]
     }
   };
@@ -198,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let isLaunching = false;
 
   function money(value){
-    return "$" + Number(value).toFixed(2);
+    return "$" + Number(value || 0).toFixed(2);
   }
 
   function productCheckoutUrl(key){
@@ -233,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function escapeHtml(value){
-    return String(value)
+    return String(value ?? "")
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
@@ -244,20 +264,31 @@ document.addEventListener("DOMContentLoaded", () => {
   function formatTitle(title){
     return title
       .replace("FPS", '<span class="accent">FPS</span>')
-      .replace("Efect", '<span class="accent">Efect</span>');
+      .replace("Efect", '<span class="accent">Efect</span>')
+      .replace("EFECT", '<span class="accent">EFECT</span>');
   }
 
   function getProductByKey(key){
     return PRODUCTS.find(product => product.key === key);
   }
 
+  function getBundleProduct(){
+    return PRODUCTS.find(product => product.id === "bundle");
+  }
+
+  function getStoreProducts(){
+    return PRODUCTS.filter(product => product.id !== "bundle" && product.visible !== false);
+  }
+
   function renderProducts(){
     if(!productGrid) return;
 
-    productGrid.innerHTML = PRODUCTS
-  .filter(product => product.visible !== false)
-  .map(product => {
-      const discount = Math.round((1 - product.price / product.oldPrice) * 100);
+    productGrid.innerHTML = getStoreProducts().map(product => {
+      const oldPrice = Number(product.oldPrice || 0);
+      const price = Number(product.price || 0);
+      const discount = oldPrice > price && oldPrice > 0
+        ? Math.round((1 - price / oldPrice) * 100)
+        : 0;
 
       return `
         <article class="product-card" data-search="${escapeHtml(`${product.title} ${product.description} ${product.eyebrow}`.toLowerCase())}">
@@ -273,8 +304,8 @@ document.addEventListener("DOMContentLoaded", () => {
               data-action="preview"
               data-key="${escapeHtml(product.key)}"
               data-title="${escapeHtml(product.title)}"
-              data-preview-type="${escapeHtml(product.previewType)}"
-              data-preview-src="${escapeHtml(product.previewSrc)}"
+              data-preview-type="${escapeHtml(product.previewType || "image")}"
+              data-preview-src="${escapeHtml(product.previewSrc || product.image)}"
               data-fallback-preview="${escapeHtml(product.fallbackPreview || product.image)}"
               aria-label="Preview ${escapeHtml(product.title)}"
             >
@@ -285,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="price-row">
             <span class="current-price">${money(product.price)}</span>
             <span class="old-price">${money(product.oldPrice)}</span>
-            <span class="discount-badge">${discount}% OFF</span>
+            <span class="discount-badge">${discount > 0 ? discount + "% OFF" : "DEAL"}</span>
           </div>
 
           <div class="meta-info">
@@ -303,8 +334,8 @@ document.addEventListener("DOMContentLoaded", () => {
               data-action="preview"
               data-key="${escapeHtml(product.key)}"
               data-title="${escapeHtml(product.title)}"
-              data-preview-type="${escapeHtml(product.previewType)}"
-              data-preview-src="${escapeHtml(product.previewSrc)}"
+              data-preview-type="${escapeHtml(product.previewType || "image")}"
+              data-preview-src="${escapeHtml(product.previewSrc || product.image)}"
               data-fallback-preview="${escapeHtml(product.fallbackPreview || product.image)}"
               aria-label="Open preview for ${escapeHtml(product.title)}"
             >
@@ -323,8 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
               ↗
             </button>
           </div>
-          
-                    
+
           ${Array.isArray(product.gallery) && product.gallery.length ? `
             <div class="product-gallery-row">
               ${product.gallery.map(src => `
@@ -346,7 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ` : ""}
 
           <ul class="feature-checklist">
-            ${product.features.map(feature => `
+            ${(Array.isArray(product.features) ? product.features : []).map(feature => `
               <li class="feature-item">
                 <span class="check-icon">✓</span>
                 <span>${escapeHtml(feature)}</span>
@@ -380,7 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function addToCart(key){
     const product = getProductByKey(key);
 
-    if(!product){
+    if(!product || product.id === "bundle"){
       showToast("Product not found.");
       return;
     }
@@ -508,7 +538,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function buyNow(key, button){
     const product = getProductByKey(key);
 
-    if(!product){
+    if(!product || product.id === "bundle"){
       showToast("Product not found.");
       return;
     }
@@ -526,14 +556,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buyBundle(button){
-    cart = PRODUCTS.map(product => product.key);
+    cart = getStoreProducts().map(product => product.key);
     saveCart();
     updateCartUI();
     goToPayhip(cartCheckoutUrl(), button);
   }
 
   function addBundleToCart(){
-    PRODUCTS.forEach(product => {
+    getStoreProducts().forEach(product => {
       if(!cart.includes(product.key)){
         cart.push(product.key);
       }
@@ -548,7 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(!cartCount || !cartList || !cartTotal) return;
 
     const items = cart
-      .map(key => PRODUCTS.find(product => product.key === key))
+      .map(key => getStoreProducts().find(product => product.key === key))
       .filter(Boolean);
 
     cartCount.textContent = items.length;
@@ -576,7 +606,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `).join("");
     }
 
-    const total = items.reduce((sum, product) => sum + product.price, 0);
+    const total = items.reduce((sum, product) => sum + Number(product.price || 0), 0);
     cartTotal.textContent = money(total);
   }
 
@@ -665,14 +695,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById("detail-modal");
     if(!modal) return;
 
-    document.getElementById("detailEyebrow").textContent = product.eyebrow;
-    document.getElementById("detailTitle").innerHTML = escapeHtml(product.title)
+    document.getElementById("detailEyebrow").textContent = product.eyebrow || "";
+    document.getElementById("detailTitle").innerHTML = escapeHtml(product.title || "")
       .replace("Efect", "<span>Efect</span>")
+      .replace("EFECT", "<span>EFECT</span>")
       .replace("FPS", "<span>FPS</span>");
 
-    document.getElementById("detailDescription").textContent = product.description;
-    document.getElementById("detailImage").src = product.image;
-    document.getElementById("detailImage").alt = product.title;
+    document.getElementById("detailDescription").textContent = product.description || "";
+    document.getElementById("detailImage").src = product.image || "./emx-logo.png";
+    document.getElementById("detailImage").alt = product.title || "Product image";
     document.getElementById("detailIncludes").innerHTML = detail.includes.map(item => `<li>${escapeHtml(item)}</li>`).join("");
     document.getElementById("detailSetup").innerHTML = detail.setup.map(item => `<li>${escapeHtml(item)}</li>`).join("");
     document.getElementById("detailCompat").innerHTML = detail.compatibility.map(item => `<li>${escapeHtml(item)}</li>`).join("");
@@ -1042,6 +1073,73 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function renderBundleFromAdmin(){
+    const bundle = getBundleProduct();
+
+    if(!bundle) return;
+
+    const bundleCard = document.querySelector(".bundle-card");
+    if(!bundleCard) return;
+
+    const title = bundleCard.querySelector("[data-bundle-title]");
+    const eyebrow = bundleCard.querySelector("[data-bundle-eyebrow]");
+    const description = bundleCard.querySelector("[data-bundle-description]");
+    const price = bundleCard.querySelector("[data-bundle-price]");
+    const oldPrice = bundleCard.querySelector("[data-bundle-old-price]");
+    const discount = bundleCard.querySelector("[data-bundle-discount]");
+    const features = bundleCard.querySelector("[data-bundle-features]");
+    const gallery = bundleCard.querySelector("[data-bundle-gallery]");
+
+    if(title) title.textContent = bundle.title || "EFECT Ultimate Pack";
+    if(eyebrow) eyebrow.textContent = bundle.eyebrow || "Best Value Bundle";
+    if(description) description.textContent = bundle.description || "";
+
+    if(price) price.textContent = money(bundle.price || 0);
+    if(oldPrice) oldPrice.textContent = money(bundle.oldPrice || 0);
+
+    if(discount){
+      const oldValue = Number(bundle.oldPrice || 0);
+      const newValue = Number(bundle.price || 0);
+      const discountValue = oldValue > newValue && oldValue > 0
+        ? Math.round((1 - newValue / oldValue) * 100)
+        : 0;
+
+      discount.textContent = discountValue > 0 ? `${discountValue}% OFF` : "Bundle Deal";
+    }
+
+    if(features){
+      features.innerHTML = Array.isArray(bundle.features)
+        ? bundle.features.map(feature => `
+            <li class="feature-item">
+              <span class="check-icon">✓</span>
+              <span>${escapeHtml(feature)}</span>
+            </li>
+          `).join("")
+        : "";
+    }
+
+    if(gallery){
+      const images = Array.isArray(bundle.gallery) && bundle.gallery.length
+        ? bundle.gallery
+        : [bundle.image].filter(Boolean);
+
+      gallery.innerHTML = images.map(src => `
+        <button
+          class="bundle-preview-card play-click"
+          type="button"
+          data-action="preview"
+          data-key="${escapeHtml(bundle.key)}"
+          data-preview-type="image"
+          data-preview-src="${escapeHtml(src)}"
+          data-title="${escapeHtml(bundle.title || "EFECT Ultimate Pack")}"
+          data-fallback-preview="${escapeHtml(bundle.image || "")}"
+        >
+          <img src="${escapeHtml(src)}" alt="${escapeHtml(bundle.title || "Bundle image")}">
+        </button>
+      `).join("");
+    }
+  }
+
   function setupEvents(){
     const enterBtn = document.getElementById("enterBtn");
 
@@ -1062,16 +1160,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const action = actionTarget.dataset.action;
 
-      if (action === "preview") {
-  const productCard = actionTarget.closest(".product-card");
-  const productKey =
-    actionTarget.dataset.key ||
-    productCard?.querySelector("[data-key]")?.dataset.key;
-  
-  const mediaSrc = actionTarget.dataset.previewSrc;
-  
-  openProductMediaCarousel(productKey, mediaSrc);
-}
+      if(action === "preview"){
+        const productCard = actionTarget.closest(".product-card");
+        const productKey =
+          actionTarget.dataset.key ||
+          productCard?.querySelector("[data-key]")?.dataset.key ||
+          actionTarget.dataset.key;
+
+        const mediaSrc = actionTarget.dataset.previewSrc;
+
+        openProductMediaCarousel(productKey, mediaSrc);
+      }
 
       if(action === "share-product"){
         event.preventDefault();
@@ -1436,7 +1535,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".product-card").forEach(card => {
       const buyButton = card.querySelector('[data-action="buy"]');
       const key = buyButton?.dataset.key;
-      const product = PRODUCTS.find(item => item.key === key);
+      const product = getStoreProducts().find(item => item.key === key);
 
       if(!product) return;
       if(card.querySelector(".power-meter-panel")) return;
@@ -1454,7 +1553,7 @@ document.addEventListener("DOMContentLoaded", () => {
       panel.innerHTML = `
         <div class="power-meter-head">
           <span>EMX Power Readout</span>
-          <strong>${product.eyebrow}</strong>
+          <strong>${escapeHtml(product.eyebrow)}</strong>
         </div>
 
         <div class="power-meter-grid">
@@ -1599,107 +1698,107 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   let currentPreviewIndex = 0;
-let currentPreviewItems = [];
+  let currentPreviewItems = [];
 
-function getProductMediaItems(product) {
-  if (!product) return [];
-  
-  const items = [];
-  
-  if (product.previewSrc) {
-    items.push({
-      type: product.previewType || "image",
-      src: product.previewSrc,
-      title: product.title || "Product Preview",
-      fallback: product.fallbackPreview || product.image || ""
-    });
-  } else if (product.image) {
-    items.push({
-      type: "image",
-      src: product.image,
-      title: product.title || "Product Preview",
-      fallback: product.image || ""
-    });
-  }
-  
-  if (Array.isArray(product.gallery)) {
-    product.gallery.forEach(src => {
-      if (!src) return;
-      
-      const alreadyAdded = items.some(item => item.src === src);
-      if (alreadyAdded) return;
-      
+  function getProductMediaItems(product){
+    if(!product) return [];
+
+    const items = [];
+
+    if(product.previewSrc){
+      items.push({
+        type: product.previewType || "image",
+        src: product.previewSrc,
+        title: product.title || "Product Preview",
+        fallback: product.fallbackPreview || product.image || ""
+      });
+    }else if(product.image){
       items.push({
         type: "image",
-        src,
+        src: product.image,
         title: product.title || "Product Preview",
         fallback: product.image || ""
       });
-    });
-  }
-  
-  return items;
-}
+    }
 
-function openProductMediaCarousel(productKey, startSrc) {
-  const product = PRODUCTS.find(item => item.key === productKey);
-  
-  if (!product) {
-    openPreview("image", startSrc || "", "Product Preview", "");
-    return;
-  }
-  
-  currentPreviewItems = getProductMediaItems(product);
-  
-  if (!currentPreviewItems.length) return;
-  
-  const startIndex = currentPreviewItems.findIndex(item => item.src === startSrc);
-  currentPreviewIndex = startIndex >= 0 ? startIndex : 0;
-  
-  openPreviewItemByIndex(currentPreviewIndex);
-}
+    if(Array.isArray(product.gallery)){
+      product.gallery.forEach(src => {
+        if(!src) return;
 
-function openPreviewItemByIndex(index) {
-  if (!currentPreviewItems.length) return;
-  
-  if (index < 0) {
-    index = currentPreviewItems.length - 1;
-  }
-  
-  if (index >= currentPreviewItems.length) {
-    index = 0;
-  }
-  
-  currentPreviewIndex = index;
-  
-  const item = currentPreviewItems[currentPreviewIndex];
-  
-  openPreview(
-    item.type,
-    item.src,
-    item.title,
-    item.fallback
-  );
-  
-  updatePreviewControls();
-}
+        const alreadyAdded = items.some(item => item.src === src);
+        if(alreadyAdded) return;
 
-function updatePreviewControls() {
-  const counter = document.getElementById("previewCounter");
-  const title = document.getElementById("modalTitle");
-  
-  const item = currentPreviewItems[currentPreviewIndex];
-  
-  if (counter) {
-    counter.textContent = currentPreviewItems.length ?
-      `${currentPreviewIndex + 1} / ${currentPreviewItems.length}` :
-      "";
+        items.push({
+          type: "image",
+          src,
+          title: product.title || "Product Preview",
+          fallback: product.image || ""
+        });
+      });
+    }
+
+    return items;
   }
-  
-  if (title && item) {
-    title.textContent = item.title || "Product Preview";
+
+  function openProductMediaCarousel(productKey, startSrc){
+    const product = PRODUCTS.find(item => item.key === productKey);
+
+    if(!product){
+      openPreview("image", startSrc || "", "Product Preview", "");
+      return;
+    }
+
+    currentPreviewItems = getProductMediaItems(product);
+
+    if(!currentPreviewItems.length) return;
+
+    const startIndex = currentPreviewItems.findIndex(item => item.src === startSrc);
+    currentPreviewIndex = startIndex >= 0 ? startIndex : 0;
+
+    openPreviewItemByIndex(currentPreviewIndex);
   }
-}
+
+  function openPreviewItemByIndex(index){
+    if(!currentPreviewItems.length) return;
+
+    if(index < 0){
+      index = currentPreviewItems.length - 1;
+    }
+
+    if(index >= currentPreviewItems.length){
+      index = 0;
+    }
+
+    currentPreviewIndex = index;
+
+    const item = currentPreviewItems[currentPreviewIndex];
+
+    openPreview(
+      item.type,
+      item.src,
+      item.title,
+      item.fallback
+    );
+
+    updatePreviewControls();
+  }
+
+  function updatePreviewControls(){
+    const counter = document.getElementById("previewCounter");
+    const title = document.getElementById("modalTitle");
+
+    const item = currentPreviewItems[currentPreviewIndex];
+
+    if(counter){
+      counter.textContent = currentPreviewItems.length
+        ? `${currentPreviewIndex + 1} / ${currentPreviewItems.length}`
+        : "";
+    }
+
+    if(title && item){
+      title.textContent = item.title || "Product Preview";
+    }
+  }
 
   function setupPreviewUpgrade(){
     const modal = document.getElementById("media-modal");
@@ -1746,13 +1845,13 @@ function updatePreviewControls() {
 
       if(!isPreviewOpen) return;
 
-      if (event.key === "ArrowLeft") {
-  openPreviewItemByIndex(currentPreviewIndex - 1);
-}
+      if(event.key === "ArrowLeft"){
+        openPreviewItemByIndex(currentPreviewIndex - 1);
+      }
 
-if (event.key === "ArrowRight") {
-  openPreviewItemByIndex(currentPreviewIndex + 1);
-}
+      if(event.key === "ArrowRight"){
+        openPreviewItemByIndex(currentPreviewIndex + 1);
+      }
     });
   }
 
@@ -1797,10 +1896,11 @@ if (event.key === "ArrowRight") {
     }
   });
 
-    async function initStore() {
+  async function initStore(){
     await loadProductsFromApi();
-    
+
     renderProducts();
+    renderBundleFromAdmin();
     updateCartUI();
     setupEvents();
     setupProCommandDock();
@@ -1809,31 +1909,31 @@ if (event.key === "ArrowRight") {
     setupTapParticles();
     setupScrollRevealGlow();
     setupPreviewUpgrade();
-    
+
     createGalaxy("galaxyCanvas", {
       count: 118,
       speed: .23,
       glow: 12
     });
-    
+
     createGalaxy("bootGalaxy", {
       count: 92,
       speed: .18,
       glow: 15
     });
-    
+
     createGalaxy("launchGalaxy", {
       count: 96,
       speed: .20,
       glow: 15
     });
-    
+
     createGalaxy("payLoadingGalaxy", {
       count: 90,
       speed: .19,
       glow: 15
     });
   }
-  
+
   initStore();
-  });
+});
