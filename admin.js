@@ -421,6 +421,24 @@ document.getElementById("duplicateBtn").addEventListener("click", duplicateProdu
 document.getElementById("deleteBtn").addEventListener("click", deleteProduct);
 document.getElementById("upBtn").addEventListener("click", () => moveSelected(-1));
 document.getElementById("downBtn").addEventListener("click", () => moveSelected(1));
+document.getElementById("clearGalleryBtn")?.addEventListener("click", () => {
+  fields.gallery.value = "";
+  renderPreview();
+  toast("Gallery cleared. Press Apply Changes, then Save Live.");
+});
+
+document.getElementById("useMainImageBtn")?.addEventListener("click", () => {
+  const mainImage = fields.image.value.trim();
+  
+  if (!mainImage) {
+    toast("Main image path is empty.");
+    return;
+  }
+  
+  fields.gallery.value = mainImage;
+  renderPreview();
+  toast("Gallery set to main image. Press Apply Changes, then Save Live.");
+});
 
 if(adminPassword){
   document.getElementById("adminPassword").value = adminPassword;
