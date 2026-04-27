@@ -425,12 +425,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function setCheckoutLoading(button){
     if(!button) return;
 
-    button.classList.add("payhip-loading");
-    button.disabled = true;
-
     if(!button.dataset.originalText){
       button.dataset.originalText = button.innerHTML;
     }
+
+    button.classList.add("payhip-loading");
+    button.disabled = true;
 
     button.innerHTML = `
       <span class="payhip-loading-label">SECURE PAYHIP CHECKOUT</span>
@@ -438,81 +438,86 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  function showPayLoadingScreen(url, button) {
-  const overlay = document.getElementById("emxPayLoading");
-  const status = document.getElementById("emxPayStatus");
-  const bar = document.getElementById("emxPayBarFill");
-  const stepOne = document.getElementById("payStepOne");
-  const stepTwo = document.getElementById("payStepTwo");
-  const stepThree = document.getElementById("payStepThree");
-  
-  setCheckoutLoading(button);
-  
-  if (!overlay) {
+  function showPayLoadingScreen(url, button){
+    const overlay = document.getElementById("emxPayLoading");
+    const status = document.getElementById("emxPayStatus");
+    const bar = document.getElementById("emxPayBarFill");
+    const stepOne = document.getElementById("payStepOne");
+    const stepTwo = document.getElementById("payStepTwo");
+    const stepThree = document.getElementById("payStepThree");
+
+    setCheckoutLoading(button);
+
+    if(!overlay){
+      setTimeout(() => {
+        window.location.href = url;
+      }, 650);
+      return;
+    }
+
+    document.body.classList.add("no-scroll");
+
+    overlay.classList.remove("exit");
+    overlay.classList.add("show");
+
+    if(status) status.textContent = "Verifying product selection...";
+    if(bar) bar.style.width = "0%";
+
+    [stepOne, stepTwo, stepThree].forEach(step => {
+      if(step){
+        step.classList.remove("active", "done");
+      }
+    });
+
+    if(stepOne) stepOne.classList.add("active");
+
+    setTimeout(() => {
+      if(status) status.textContent = "Product verified.";
+      if(bar) bar.style.width = "34%";
+
+      if(stepOne){
+        stepOne.classList.remove("active");
+        stepOne.classList.add("done");
+      }
+
+      if(stepTwo) stepTwo.classList.add("active");
+    }, 360);
+
+    setTimeout(() => {
+      if(status) status.textContent = "Connecting to official Payhip checkout...";
+      if(bar) bar.style.width = "68%";
+
+      if(stepTwo){
+        stepTwo.classList.remove("active");
+        stepTwo.classList.add("done");
+      }
+
+      if(stepThree) stepThree.classList.add("active");
+    }, 820);
+
+    setTimeout(() => {
+      if(status) status.textContent = "Opening secure checkout...";
+      if(bar) bar.style.width = "100%";
+
+      if(stepThree){
+        stepThree.classList.remove("active");
+        stepThree.classList.add("done");
+      }
+    }, 1180);
+
+    setTimeout(() => {
+      overlay.classList.add("exit");
+      overlay.classList.remove("show");
+    }, 1450);
+
     setTimeout(() => {
       window.location.href = url;
-    }, 650);
-    return;
+    }, 1650);
   }
-  
-  document.body.classList.add("no-scroll");
-  
-  overlay.classList.remove("exit");
-  overlay.classList.add("show");
-  
-  if (status) status.textContent = "Verifying product selection...";
-  if (bar) bar.style.width = "0%";
-  
-  [stepOne, stepTwo, stepThree].forEach(step => {
-    if (step) {
-      step.classList.remove("active", "done");
-    }
-  });
-  
-  if (stepOne) stepOne.classList.add("active");
-  
-  setTimeout(() => {
-    if (status) status.textContent = "Product verified.";
-    if (bar) bar.style.width = "34%";
-    if (stepOne) {
-      stepOne.classList.remove("active");
-      stepOne.classList.add("done");
-    }
-    if (stepTwo) stepTwo.classList.add("active");
-  }, 360);
-  
-  setTimeout(() => {
-    if (status) status.textContent = "Connecting to official Payhip checkout...";
-    if (bar) bar.style.width = "68%";
-    if (stepTwo) {
-      stepTwo.classList.remove("active");
-      stepTwo.classList.add("done");
-    }
-    if (stepThree) stepThree.classList.add("active");
-  }, 820);
-  
-  setTimeout(() => {
-    if (status) status.textContent = "Opening secure checkout...";
-    if (bar) bar.style.width = "100%";
-    if (stepThree) {
-      stepThree.classList.remove("active");
-      stepThree.classList.add("done");
-    }
-  }, 1180);
-  
-  setTimeout(() => {
-    overlay.classList.add("exit");
-    overlay.classList.remove("show");
-  }, 1450);
-  
-  setTimeout(() => {
-    window.location.href = url;
-  }, 1650);
-}
 
-function goToPayhip(url, button) {
-  showPayLoadingScreen(url, button);
-}
+  function goToPayhip(url, button){
+    showPayLoadingScreen(url, button);
+  }
 
   function buyNow(key, button){
     const product = getProductByKey(key);
@@ -736,8 +741,9 @@ function goToPayhip(url, button) {
     const installOpen = document.getElementById("installAppPopup")?.classList.contains("show");
     const cartOpen = cartDrawer?.classList.contains("show");
     const booting = document.body.classList.contains("booting");
+    const payOpen = document.getElementById("emxPayLoading")?.classList.contains("show");
 
-    if(!mediaOpen && !legalOpen && !detailOpen && !installOpen && !cartOpen && !booting){
+    if(!mediaOpen && !legalOpen && !detailOpen && !installOpen && !cartOpen && !booting && !payOpen){
       document.body.classList.remove("no-scroll");
     }
   }
@@ -771,6 +777,7 @@ function goToPayhip(url, button) {
       if(document.getElementById("legal-modal")?.classList.contains("show")) return;
       if(document.getElementById("detail-modal")?.classList.contains("show")) return;
       if(document.getElementById("installAppPopup")?.classList.contains("show")) return;
+      if(document.getElementById("emxPayLoading")?.classList.contains("show")) return;
       if(cartDrawer?.classList.contains("show")) return;
 
       const message = ACTIVITY_TOASTS[activityIndex % ACTIVITY_TOASTS.length];
@@ -895,38 +902,35 @@ function goToPayhip(url, button) {
     return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
   }
 
-function showInstallPopup(force = false) {
-  const popup = document.getElementById("installAppPopup");
-  
-  if (!popup) return;
-  
-  // Only block automatic popup in Home Screen app.
-  // Force=true still lets your download button open the steps.
-  if (!force && isStandaloneApp()) return;
-  
-  if (!force && localStorage.getItem(INSTALL_POPUP_KEY) === "yes") return;
-  
-  popup.classList.add("show");
-  document.body.classList.add("no-scroll");
-}
+  function showInstallPopup(force = false){
+    const popup = document.getElementById("installAppPopup");
 
-function closeInstallPopup() {
-  const popup = document.getElementById("installAppPopup");
-  
-  if (!popup) return;
-  
-  popup.classList.remove("show");
-  localStorage.setItem(INSTALL_POPUP_KEY, "yes");
-  unlockBodyIfSafe();
-}
+    if(!popup) return;
 
-function copyInstallName() {
-  navigator.clipboard.writeText("EMX TWEAKS").then(() => {
-    showToast("<strong>App name copied.</strong><br>Use EMX TWEAKS on the Home Screen.");
-  }).catch(() => {
-    showToast("App name: <strong>EMX TWEAKS</strong>");
-  });
-}
+    if(!force && isStandaloneApp()) return;
+    if(!force && localStorage.getItem(INSTALL_POPUP_KEY) === "yes") return;
+
+    popup.classList.add("show");
+    document.body.classList.add("no-scroll");
+  }
+
+  function closeInstallPopup(){
+    const popup = document.getElementById("installAppPopup");
+
+    if(!popup) return;
+
+    popup.classList.remove("show");
+    localStorage.setItem(INSTALL_POPUP_KEY, "yes");
+    unlockBodyIfSafe();
+  }
+
+  function copyInstallName(){
+    navigator.clipboard.writeText("EMX TWEAKS").then(() => {
+      showToast("<strong>App name copied.</strong><br>Use EMX TWEAKS on the Home Screen.");
+    }).catch(() => {
+      showToast("App name: <strong>EMX TWEAKS</strong>");
+    });
+  }
 
   async function enterDomain(){
     if(isLaunching) return;
@@ -1008,12 +1012,6 @@ function copyInstallName() {
           isLaunching = false;
 
           startActivityToasts();
-
-          /*
-            IMPORTANT:
-            Install popup no longer auto-opens here.
-            It only opens when the top-right download/install button is clicked.
-          */
         }, 900);
       }
     }, 430);
@@ -1078,27 +1076,27 @@ function copyInstallName() {
 
       const action = actionTarget.dataset.action;
 
-      if (action === "preview") {
-  const productCard = actionTarget.closest(".product-card");
-  const productKey =
-    actionTarget.dataset.key ||
-    productCard?.querySelector("[data-key]")?.dataset.key;
-  
-  const foundIndex = getPreviewProductIndexByKey(productKey);
-  
-  if (foundIndex >= 0) {
-    openPreviewByIndex(foundIndex);
-  } else {
-    openPreview(
-      actionTarget.dataset.previewType,
-      actionTarget.dataset.previewSrc,
-      actionTarget.dataset.title,
-      actionTarget.dataset.fallbackPreview
-    );
-    
-    updatePreviewControls();
-  }
-}
+      if(action === "preview"){
+        const productCard = actionTarget.closest(".product-card");
+        const productKey =
+          actionTarget.dataset.key ||
+          productCard?.querySelector("[data-key]")?.dataset.key;
+
+        const foundIndex = getPreviewProductIndexByKey(productKey);
+
+        if(foundIndex >= 0){
+          openPreviewByIndex(foundIndex);
+        }else{
+          openPreview(
+            actionTarget.dataset.previewType,
+            actionTarget.dataset.previewSrc,
+            actionTarget.dataset.title,
+            actionTarget.dataset.fallbackPreview
+          );
+
+          updatePreviewControls();
+        }
+      }
 
       if(action === "share-product"){
         event.preventDefault();
@@ -1163,11 +1161,6 @@ function copyInstallName() {
     document.getElementById("discordBtn")?.addEventListener("click", showDiscordToast);
     document.getElementById("shareBtn")?.addEventListener("click", shareApp);
 
-    /*
-      Top-right download/install button.
-      This requires this button in index.html:
-      <button class="icon-btn play-click" id="installTestBtn" type="button" aria-label="Install App">⬇</button>
-    */
     document.getElementById("installTestBtn")?.addEventListener("click", () => {
       localStorage.removeItem(INSTALL_POPUP_KEY);
       showInstallPopup(true);
@@ -1359,394 +1352,428 @@ function copyInstallName() {
       window.removeEventListener("resize", resize);
     };
   }
-/* =========================
-   PREMIUM PRODUCT CARD POLISH
-========================= */
 
-function setupProductCardPolish() {
-  const isTouchDevice = window.matchMedia("(hover: none)").matches;
-  
-  if (isTouchDevice) return;
-  
-  document.addEventListener("mousemove", event => {
-    const card = event.target.closest(".product-card");
-    
-    document.querySelectorAll(".product-card.card-hovered").forEach(activeCard => {
-      if (activeCard !== card) {
-        activeCard.classList.remove("card-hovered");
-        activeCard.style.transform = "";
+  function setupProductCardPolish(){
+    const isTouchDevice = window.matchMedia("(hover: none)").matches;
+
+    if(isTouchDevice) return;
+
+    document.addEventListener("mousemove", event => {
+      const card = event.target.closest(".product-card");
+
+      document.querySelectorAll(".product-card.card-hovered").forEach(activeCard => {
+        if(activeCard !== card){
+          activeCard.classList.remove("card-hovered");
+          activeCard.style.transform = "";
+        }
+      });
+
+      if(!card) return;
+
+      const rect = card.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -4;
+      const rotateY = ((x - centerX) / centerX) * 4;
+
+      card.classList.add("card-hovered");
+      card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
+    });
+
+    document.addEventListener("mouseout", event => {
+      const card = event.target.closest(".product-card");
+
+      if(card && !card.contains(event.relatedTarget)){
+        card.classList.remove("card-hovered");
+        card.style.transform = "";
       }
     });
-    
-    if (!card) return;
-    
-    const rect = card.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    const rotateX = ((y - centerY) / centerY) * -4;
-    const rotateY = ((x - centerX) / centerX) * 4;
-    
-    card.classList.add("card-hovered");
-    card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
-  });
-  
-  document.addEventListener("mouseleave", () => {
-    document.querySelectorAll(".product-card.card-hovered").forEach(card => {
-      card.classList.remove("card-hovered");
-      card.style.transform = "";
-    });
-  });
-  
-  document.addEventListener("mouseout", event => {
-    const card = event.target.closest(".product-card");
-    
-    if (card && !card.contains(event.relatedTarget)) {
-      card.classList.remove("card-hovered");
-      card.style.transform = "";
-    }
-  });
-}
-function setupProCommandDock() {
-  document.querySelectorAll("[data-dock-action]").forEach(button => {
-    button.addEventListener("click", () => {
-      const action = button.dataset.dockAction;
-      
-      button.classList.remove("dock-pulse");
-      void button.offsetWidth;
-      button.classList.add("dock-pulse");
-      
-      if (action === "top") {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
-      }
-      
-      if (action === "products") {
-        document.getElementById("productGrid")?.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-      }
-      
-      if (action === "bundle") {
-        document.querySelector(".bundle-card")?.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-      }
-      
-      if (action === "faq") {
-        if (typeof openLegal === "function") {
+  }
+
+  function setupProCommandDock(){
+    document.querySelectorAll("[data-dock-action]").forEach(button => {
+      button.addEventListener("click", () => {
+        const action = button.dataset.dockAction;
+
+        button.classList.remove("dock-pulse");
+        void button.offsetWidth;
+        button.classList.add("dock-pulse");
+
+        if(action === "top"){
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
+        }
+
+        if(action === "products"){
+          document.getElementById("productGrid")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        }
+
+        if(action === "bundle"){
+          document.querySelector(".bundle-card")?.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }
+
+        if(action === "faq"){
           openLegal("faq");
         }
-      }
-      
-      if (action === "install") {
-        localStorage.removeItem(INSTALL_POPUP_KEY);
-        
-        if (typeof showInstallPopup === "function") {
+
+        if(action === "install"){
+          localStorage.removeItem(INSTALL_POPUP_KEY);
           showInstallPopup(true);
         }
+      });
+    });
+  }
+
+  function setupProductPowerMeters(){
+    const productStats = {
+      optimizer: [
+        { label: "Setup Speed", value: 90 },
+        { label: "System Cleanup", value: 95 },
+        { label: "Responsiveness", value: 97 },
+        { label: "Ease Of Use", value: 93 }
+      ],
+      macro: [
+        { label: "Undetectable", value: 100 },
+        { label: "Macro Count", value: 98 },
+        { label: "Keybind Setup", value: 99 },
+        { label: "Speed & Latency", value: 99 }
+      ],
+      fps: [
+        { label: "Game Smoothness", value: 92 },
+        { label: "Background Reduction", value: 90 },
+        { label: "FPS Gain", value: 90 },
+        { label: "Lightweight Setup", value: 94 }
+      ]
+    };
+
+    document.querySelectorAll(".product-card").forEach(card => {
+      const buyButton = card.querySelector('[data-action="buy"]');
+      const key = buyButton?.dataset.key;
+      const product = PRODUCTS.find(item => item.key === key);
+
+      if(!product) return;
+      if(card.querySelector(".power-meter-panel")) return;
+
+      const stats = productStats[product.id] || [
+        { label: "Setup", value: 90 },
+        { label: "Performance", value: 90 },
+        { label: "Ease Of Use", value: 90 },
+        { label: "Support", value: 90 }
+      ];
+
+      const panel = document.createElement("div");
+      panel.className = "power-meter-panel";
+
+      panel.innerHTML = `
+        <div class="power-meter-head">
+          <span>EMX Power Readout</span>
+          <strong>${product.eyebrow}</strong>
+        </div>
+
+        <div class="power-meter-grid">
+          ${stats.map(stat => `
+            <div class="power-meter-row">
+              <div class="power-meter-label">
+                <span>${escapeHtml(stat.label)}</span>
+                <strong>${stat.value}%</strong>
+              </div>
+
+              <div class="power-meter-track">
+                <i style="--power:${stat.value}%;"></i>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      const checklist = card.querySelector(".feature-checklist");
+
+      if(checklist){
+        checklist.insertAdjacentElement("afterend", panel);
       }
     });
-  });
-}
-function setupProductPowerMeters() {
-  const productStats = {
-    optimizer: [
-      { label: "Setup Speed", value: 90 },
-      { label: "System Cleanup", value: 95 },
-      { label: "Responsiveness", value: 97 },
-      { label: "Ease Of Use", value: 93 }
-    ],
-    macro: [
-      { label: "Undetectable", value: 100 },
-      { label: "Macro Count", value: 98 },
-      { label: "Keybind Setup", value: 99 },
-      { label: "Speed & Latency", value: 99 }
-    ],
-    fps: [
-      { label: "Game Smoothness", value: 92 },
-      { label: "Background Reduction", value: 90 },
-      { label: "Fps Gain", value: 90 },
-      { label: "Lightweight Setup", value: 94 }
-    ]
-  };
-  
-  document.querySelectorAll(".product-card").forEach(card => {
-    const buyButton = card.querySelector('[data-action="buy"]');
-    const key = buyButton?.dataset.key;
-    const product = PRODUCTS.find(item => item.key === key);
-    
-    if (!product) return;
-    if (card.querySelector(".power-meter-panel")) return;
-    
-    const stats = productStats[product.id] || [
-      { label: "Setup", value: 90 },
-      { label: "Performance", value: 90 },
-      { label: "Ease Of Use", value: 90 },
-      { label: "Support", value: 90 }
+  }
+
+  function setupTapParticles(){
+    if(document.getElementById("tapParticleLayer")) return;
+
+    const particleLayer = document.createElement("div");
+    particleLayer.id = "tapParticleLayer";
+    document.body.appendChild(particleLayer);
+
+    function createParticle(x, y, burstIndex){
+      const particle = document.createElement("span");
+
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 24 + Math.random() * 46;
+      const size = 4 + Math.random() * 7;
+
+      const moveX = Math.cos(angle) * distance;
+      const moveY = Math.sin(angle) * distance;
+
+      particle.className = "tap-particle";
+      particle.style.left = x + "px";
+      particle.style.top = y + "px";
+      particle.style.width = size + "px";
+      particle.style.height = size + "px";
+      particle.style.setProperty("--tx", moveX + "px");
+      particle.style.setProperty("--ty", moveY + "px");
+      particle.style.setProperty("--delay", burstIndex * 12 + "ms");
+
+      if(Math.random() > 0.55){
+        particle.classList.add("purple");
+      }
+
+      if(Math.random() > 0.72){
+        particle.classList.add("white");
+      }
+
+      particleLayer.appendChild(particle);
+
+      setTimeout(() => {
+        particle.remove();
+      }, 900);
+    }
+
+    function createRing(x, y){
+      const ring = document.createElement("span");
+      ring.className = "tap-ring";
+      ring.style.left = x + "px";
+      ring.style.top = y + "px";
+
+      particleLayer.appendChild(ring);
+
+      setTimeout(() => {
+        ring.remove();
+      }, 650);
+    }
+
+    function burst(event){
+      const target = event.target.closest(
+        "button, a, .play-click, .product-card, .support-action, .bundle-preview-card, .trust-pill, .vouch-card"
+      );
+
+      if(!target) return;
+
+      const point = event.touches && event.touches[0] ? event.touches[0] : event;
+      const x = point.clientX;
+      const y = point.clientY;
+
+      createRing(x, y);
+
+      for(let i = 0; i < 18; i++){
+        createParticle(x, y, i);
+      }
+    }
+
+    document.addEventListener("pointerdown", burst, { passive: true });
+  }
+
+  function setupScrollRevealGlow(){
+    const revealSelectors = [
+      ".hero-card",
+      ".trust-pill",
+      ".section-head",
+      ".product-card",
+      ".bundle-card",
+      ".proof-card",
+      ".trust-metric",
+      ".vouch-card",
+      ".vouch-discord-card",
+      ".faq-row",
+      ".legal-card"
     ];
-    
-    const panel = document.createElement("div");
-    panel.className = "power-meter-panel";
-    
-    panel.innerHTML = `
-      <div class="power-meter-head">
-        <span>EMX Power Readout</span>
-        <strong>${product.eyebrow}</strong>
-      </div>
 
-      <div class="power-meter-grid">
-        ${stats.map(stat => `
-          <div class="power-meter-row">
-            <div class="power-meter-label">
-              <span>${escapeHtml(stat.label)}</span>
-              <strong>${stat.value}%</strong>
-            </div>
+    const revealItems = document.querySelectorAll(revealSelectors.join(","));
 
-            <div class="power-meter-track">
-              <i style="--power:${stat.value}%;"></i>
-            </div>
-          </div>
-        `).join("")}
-      </div>
-    `;
-    
-    const checklist = card.querySelector(".feature-checklist");
-    
-    if (checklist) {
-      checklist.insertAdjacentElement("afterend", panel);
+    revealItems.forEach((item, index) => {
+      item.classList.add("emx-reveal");
+      item.style.setProperty("--reveal-delay", Math.min(index * 35, 280) + "ms");
+    });
+
+    if(!("IntersectionObserver" in window)){
+      revealItems.forEach(item => item.classList.add("revealed"));
+      return;
     }
-  });
-}
-function setupTapParticles() {
-  const particleLayer = document.createElement("div");
-  particleLayer.id = "tapParticleLayer";
-  document.body.appendChild(particleLayer);
-  
-  function createParticle(x, y, burstIndex) {
-    const particle = document.createElement("span");
-    
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 24 + Math.random() * 46;
-    const size = 4 + Math.random() * 7;
-    
-    const moveX = Math.cos(angle) * distance;
-    const moveY = Math.sin(angle) * distance;
-    
-    particle.className = "tap-particle";
-    particle.style.left = x + "px";
-    particle.style.top = y + "px";
-    particle.style.width = size + "px";
-    particle.style.height = size + "px";
-    particle.style.setProperty("--tx", moveX + "px");
-    particle.style.setProperty("--ty", moveY + "px");
-    particle.style.setProperty("--delay", burstIndex * 12 + "ms");
-    
-    if (Math.random() > 0.55) {
-      particle.classList.add("purple");
-    }
-    
-    if (Math.random() > 0.72) {
-      particle.classList.add("white");
-    }
-    
-    particleLayer.appendChild(particle);
-    
-    setTimeout(() => {
-      particle.remove();
-    }, 900);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add("revealed");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.14,
+      rootMargin: "0px 0px -8% 0px"
+    });
+
+    revealItems.forEach(item => observer.observe(item));
   }
-  
-  function createRing(x, y) {
-    const ring = document.createElement("span");
-    ring.className = "tap-ring";
-    ring.style.left = x + "px";
-    ring.style.top = y + "px";
-    
-    particleLayer.appendChild(ring);
-    
-    setTimeout(() => {
-      ring.remove();
-    }, 650);
+
+  let currentPreviewIndex = 0;
+
+  function getPreviewProductIndexByKey(key){
+    return PRODUCTS.findIndex(product => product.key === key);
   }
-  
-  function burst(event) {
-    const target = event.target.closest(
-      "button, a, .play-click, .product-card, .support-action, .bundle-preview-card, .trust-pill, .vouch-card"
+
+  function openPreviewByIndex(index){
+    if(!PRODUCTS.length) return;
+
+    if(index < 0){
+      index = PRODUCTS.length - 1;
+    }
+
+    if(index >= PRODUCTS.length){
+      index = 0;
+    }
+
+    currentPreviewIndex = index;
+
+    const product = PRODUCTS[currentPreviewIndex];
+
+    openPreview(
+      product.previewType,
+      product.previewSrc,
+      product.title,
+      product.fallbackPreview || product.image
     );
-    
-    if (!target) return;
-    
-    const point = event.touches && event.touches[0] ? event.touches[0] : event;
-    const x = point.clientX;
-    const y = point.clientY;
-    
-    createRing(x, y);
-    
-    for (let i = 0; i < 18; i++) {
-      createParticle(x, y, i);
+
+    updatePreviewControls();
+  }
+
+  function updatePreviewControls(){
+    const counter = document.getElementById("previewCounter");
+    const title = document.getElementById("modalTitle");
+
+    const product = PRODUCTS[currentPreviewIndex];
+
+    if(counter){
+      counter.textContent = `${currentPreviewIndex + 1} / ${PRODUCTS.length}`;
+    }
+
+    if(title && product){
+      title.textContent = product.title || "Product Preview";
     }
   }
-  
-  document.addEventListener("pointerdown", burst, { passive: true });
-}
-function setupScrollRevealGlow() {
-  const revealSelectors = [
-    ".hero-card",
-    ".trust-pill",
-    ".section-head",
-    ".product-card",
-    ".bundle-card",
-    ".proof-card",
-    ".trust-metric",
-    ".vouch-card",
-    ".vouch-discord-card",
-    ".faq-row",
-    ".legal-card"
-  ];
-  
-  const revealItems = document.querySelectorAll(revealSelectors.join(","));
-  
-  revealItems.forEach((item, index) => {
-    item.classList.add("emx-reveal");
-    item.style.setProperty("--reveal-delay", Math.min(index * 35, 280) + "ms");
-  });
-  
-  if (!("IntersectionObserver" in window)) {
-    revealItems.forEach(item => item.classList.add("revealed"));
-    return;
-  }
-  
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("revealed");
-        observer.unobserve(entry.target);
+
+  function setupPreviewUpgrade(){
+    const modal = document.getElementById("media-modal");
+
+    if(!modal) return;
+
+    if(!document.getElementById("previewPrevBtn")){
+      const prevBtn = document.createElement("button");
+      prevBtn.id = "previewPrevBtn";
+      prevBtn.className = "preview-nav-btn preview-prev play-click";
+      prevBtn.type = "button";
+      prevBtn.setAttribute("aria-label", "Previous preview");
+      prevBtn.innerHTML = "‹";
+
+      const nextBtn = document.createElement("button");
+      nextBtn.id = "previewNextBtn";
+      nextBtn.className = "preview-nav-btn preview-next play-click";
+      nextBtn.type = "button";
+      nextBtn.setAttribute("aria-label", "Next preview");
+      nextBtn.innerHTML = "›";
+
+      const counter = document.createElement("div");
+      counter.id = "previewCounter";
+      counter.className = "preview-counter";
+      counter.textContent = `1 / ${PRODUCTS.length}`;
+
+      modal.appendChild(prevBtn);
+      modal.appendChild(nextBtn);
+      modal.appendChild(counter);
+
+      prevBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        openPreviewByIndex(currentPreviewIndex - 1);
+      });
+
+      nextBtn.addEventListener("click", event => {
+        event.stopPropagation();
+        openPreviewByIndex(currentPreviewIndex + 1);
+      });
+    }
+
+    document.addEventListener("keydown", event => {
+      const isPreviewOpen = modal.classList.contains("show");
+
+      if(!isPreviewOpen) return;
+
+      if(event.key === "ArrowLeft"){
+        openPreviewByIndex(currentPreviewIndex - 1);
+      }
+
+      if(event.key === "ArrowRight"){
+        openPreviewByIndex(currentPreviewIndex + 1);
       }
     });
-  }, {
-    threshold: 0.14,
-    rootMargin: "0px 0px -8% 0px"
-  });
-  
-  revealItems.forEach(item => observer.observe(item));
-}
-let currentPreviewIndex = 0;
-
-function getPreviewProductIndexByKey(key) {
-  return PRODUCTS.findIndex(product => product.key === key);
-}
-
-function openPreviewByIndex(index) {
-  if (!PRODUCTS.length) return;
-  
-  if (index < 0) {
-    index = PRODUCTS.length - 1;
   }
-  
-  if (index >= PRODUCTS.length) {
-    index = 0;
-  }
-  
-  currentPreviewIndex = index;
-  
-  const product = PRODUCTS[currentPreviewIndex];
-  
-  openPreview(
-    product.previewType,
-    product.previewSrc,
-    product.title,
-    product.fallbackPreview || product.image
-  );
-  
-  updatePreviewControls();
-}
 
-function updatePreviewControls() {
-  const counter = document.getElementById("previewCounter");
-  const title = document.getElementById("modalTitle");
-  
-  const product = PRODUCTS[currentPreviewIndex];
-  
-  if (counter) {
-    counter.textContent = `${currentPreviewIndex + 1} / ${PRODUCTS.length}`;
-  }
-  
-  if (title && product) {
-    title.textContent = product.title || "Product Preview";
-  }
-}
+  function resetEmxPayhipButtonsOnly(){
+    document.querySelectorAll(".payhip-loading, .btn-loading").forEach(button => {
+      button.classList.remove("payhip-loading");
+      button.classList.remove("btn-loading");
+      button.disabled = false;
 
-function setupPreviewUpgrade() {
-  const modal = document.getElementById("media-modal");
-  
-  if (!modal) return;
-  
-  if (!document.getElementById("previewPrevBtn")) {
-    const prevBtn = document.createElement("button");
-    prevBtn.id = "previewPrevBtn";
-    prevBtn.className = "preview-nav-btn preview-prev play-click";
-    prevBtn.type = "button";
-    prevBtn.setAttribute("aria-label", "Previous preview");
-    prevBtn.innerHTML = "‹";
-    
-    const nextBtn = document.createElement("button");
-    nextBtn.id = "previewNextBtn";
-    nextBtn.className = "preview-nav-btn preview-next play-click";
-    nextBtn.type = "button";
-    nextBtn.setAttribute("aria-label", "Next preview");
-    nextBtn.innerHTML = "›";
-    
-    const counter = document.createElement("div");
-    counter.id = "previewCounter";
-    counter.className = "preview-counter";
-    counter.textContent = `1 / ${PRODUCTS.length}`;
-    
-    modal.appendChild(prevBtn);
-    modal.appendChild(nextBtn);
-    modal.appendChild(counter);
-    
-    prevBtn.addEventListener("click", event => {
-      event.stopPropagation();
-      openPreviewByIndex(currentPreviewIndex - 1);
+      if(button.dataset.originalText){
+        button.innerHTML = button.dataset.originalText;
+        delete button.dataset.originalText;
+      }
     });
-    
-    nextBtn.addEventListener("click", event => {
-      event.stopPropagation();
-      openPreviewByIndex(currentPreviewIndex + 1);
-    });
-  }
-  
-  document.addEventListener("keydown", event => {
-    const isPreviewOpen = modal.classList.contains("show");
-    
-    if (!isPreviewOpen) return;
-    
-    if (event.key === "ArrowLeft") {
-      openPreviewByIndex(currentPreviewIndex - 1);
+
+    const payOverlay = document.getElementById("emxPayLoading");
+    const payBar = document.getElementById("emxPayBarFill");
+    const payStatus = document.getElementById("emxPayStatus");
+
+    if(payOverlay){
+      payOverlay.classList.remove("show");
+      payOverlay.classList.remove("exit");
     }
-    
-    if (event.key === "ArrowRight") {
-      openPreviewByIndex(currentPreviewIndex + 1);
+
+    if(payBar){
+      payBar.style.width = "0%";
+    }
+
+    if(payStatus){
+      payStatus.textContent = "Encrypting checkout session...";
+    }
+
+    unlockBodyIfSafe();
+  }
+
+  window.addEventListener("pageshow", resetEmxPayhipButtonsOnly);
+  window.addEventListener("focus", resetEmxPayhipButtonsOnly);
+
+  document.addEventListener("visibilitychange", () => {
+    if(!document.hidden){
+      resetEmxPayhipButtonsOnly();
     }
   });
-}
-renderProducts();
-updateCartUI();
-setupEvents();
-setupProCommandDock();
-setupProductPowerMeters();
-setupProductCardPolish();
-setupTapParticles();
-setupScrollRevealGlow();
-setupPreviewUpgrade();
+
+  renderProducts();
+  updateCartUI();
+  setupEvents();
+  setupProCommandDock();
+  setupProductPowerMeters();
+  setupProductCardPolish();
+  setupTapParticles();
+  setupScrollRevealGlow();
+  setupPreviewUpgrade();
 
   createGalaxy("galaxyCanvas", {
     count: 118,
@@ -1765,10 +1792,10 @@ setupPreviewUpgrade();
     speed: .20,
     glow: 15
   });
-});
 
-createGalaxy("payLoadingGalaxy", {
-  count: 90,
-  speed: .19,
-  glow: 15
+  createGalaxy("payLoadingGalaxy", {
+    count: 90,
+    speed: .19,
+    glow: 15
+  });
 });
