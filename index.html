@@ -1005,6 +1005,984 @@
     }
 
     /* =========================
+       PREMIUM CONVERSION UPGRADES
+    ========================= */
+
+    .section-head{
+      padding:20px 16px 10px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+    }
+
+    .section-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--green);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .section-kicker::before{
+      content:"";
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:var(--green);
+      box-shadow:0 0 14px var(--green);
+      display:block;
+    }
+
+    .section-title{
+      color:#fff;
+      font-size:clamp(25px,6vw,42px);
+      font-weight:900;
+      letter-spacing:-.06em;
+      line-height:1;
+    }
+
+    .section-title span{
+      color:var(--purple);
+      text-shadow:0 0 20px rgba(162,12,255,.50);
+    }
+
+    .section-copy{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
+      max-width:560px;
+      margin-top:10px;
+    }
+
+    .trust-strip{
+      padding:12px 16px 2px;
+    }
+
+    .trust-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+
+    @media (min-width:700px){
+      .trust-grid{
+        grid-template-columns:repeat(4,1fr);
+      }
+    }
+
+    .trust-pill{
+      min-height:72px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:14px;
+      box-shadow:0 16px 36px rgba(0,0,0,.34);
+      backdrop-filter:blur(16px);
+    }
+
+    .trust-icon{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      color:var(--green);
+      border:1px solid rgba(36,255,36,.25);
+      background:rgba(36,255,36,.08);
+      box-shadow:0 0 22px rgba(36,255,36,.10);
+      font-size:18px;
+      flex:0 0 40px;
+    }
+
+    .trust-pill strong{
+      display:block;
+      font-size:13px;
+      line-height:1.1;
+      margin-bottom:5px;
+    }
+
+    .trust-pill span{
+      display:block;
+      color:var(--muted2);
+      font-size:11px;
+      line-height:1.3;
+      font-weight:800;
+    }
+
+    .premium-section{
+      padding:10px 16px 18px;
+    }
+
+    .bundle-card{
+      position:relative;
+      overflow:hidden;
+      border-radius:30px;
+      border:1px solid rgba(36,255,36,.24);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(36,255,36,.16), transparent 34%),
+        radial-gradient(circle at 100% 0%, rgba(162,12,255,.22), transparent 44%),
+        linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+      box-shadow:
+        0 28px 80px rgba(0,0,0,.66),
+        0 0 40px rgba(36,255,36,.10),
+        inset 0 0 0 1px rgba(255,255,255,.04);
+      padding:22px;
+    }
+
+    .bundle-card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:linear-gradient(120deg,transparent,rgba(36,255,36,.18),transparent,rgba(162,12,255,.18),transparent);
+      opacity:.75;
+      transform:translateX(-110%);
+      animation:bundleSweep 8s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    @keyframes bundleSweep{
+      0%,55%{ transform:translateX(-110%); }
+      82%,100%{ transform:translateX(110%); }
+    }
+
+    .bundle-layout{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:18px;
+      align-items:center;
+    }
+
+    @media (min-width:780px){
+      .bundle-layout{
+        grid-template-columns:1.35fr .85fr;
+      }
+    }
+
+    .bundle-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width:max-content;
+      color:#030303;
+      background:linear-gradient(135deg,var(--green),#7dff56);
+      border-radius:999px;
+      padding:8px 11px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      box-shadow:0 0 24px rgba(36,255,36,.30);
+      margin-bottom:14px;
+    }
+
+    .bundle-title{
+      font-size:clamp(30px,7vw,54px);
+      line-height:.94;
+      font-weight:900;
+      letter-spacing:-.07em;
+      margin-bottom:12px;
+    }
+
+    .bundle-title span{
+      color:var(--green);
+      text-shadow:0 0 22px rgba(36,255,36,.38);
+    }
+
+    .bundle-preview-row{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      margin:16px 0 18px;
+      max-width:620px;
+    }
+
+    .bundle-preview-card{
+      position:relative;
+      overflow:hidden;
+      min-height:96px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.12);
+      background:#000;
+      box-shadow:
+        0 16px 30px rgba(0,0,0,.42),
+        0 0 20px rgba(36,255,36,.08);
+    }
+
+    .bundle-preview-card::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:2;
+      background:
+        linear-gradient(180deg,transparent 35%,rgba(0,0,0,.76)),
+        radial-gradient(circle at 50% 0%,rgba(36,255,36,.13),transparent 48%);
+      pointer-events:none;
+    }
+
+    .bundle-preview-card img{
+      width:100%;
+      height:100%;
+      min-height:96px;
+      object-fit:cover;
+      display:block;
+      opacity:.92;
+      transform:scale(1.01);
+    }
+
+    .bundle-preview-card span{
+      position:absolute;
+      left:9px;
+      right:9px;
+      bottom:9px;
+      z-index:3;
+      color:#fff;
+      font-size:10px;
+      line-height:1.1;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-shadow:0 2px 10px rgba(0,0,0,.70);
+    }
+
+    .bundle-preview-card:nth-child(2){
+      border-color:rgba(162,12,255,.25);
+      box-shadow:
+        0 16px 30px rgba(0,0,0,.42),
+        0 0 20px rgba(162,12,255,.10);
+    }
+
+    .bundle-preview-card:nth-child(3){
+      border-color:rgba(36,255,36,.24);
+      box-shadow:
+        0 16px 30px rgba(0,0,0,.42),
+        0 0 20px rgba(36,255,36,.10);
+    }
+
+    @media (max-width:420px){
+      .bundle-preview-row{
+        gap:8px;
+      }
+
+      .bundle-preview-card{
+        min-height:78px;
+        border-radius:17px;
+      }
+
+      .bundle-preview-card img{
+        min-height:78px;
+      }
+
+      .bundle-preview-card span{
+        font-size:9px;
+        letter-spacing:.09em;
+      }
+    }
+
+    .bundle-copy{
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.55;
+      margin-bottom:18px;
+      max-width:620px;
+    }
+
+    .bundle-includes{
+      list-style:none;
+      display:grid;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .bundle-includes li{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      color:#fff;
+      font-weight:800;
+      line-height:1.35;
+      font-size:14px;
+    }
+
+    .bundle-includes i{
+      color:var(--green);
+      font-style:normal;
+      text-shadow:0 0 12px rgba(36,255,36,.55);
+    }
+
+    .bundle-price-box{
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.34);
+      padding:18px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+    }
+
+    .bundle-price-label{
+      color:var(--muted2);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.15em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .bundle-price{
+      color:#fff;
+      font-size:48px;
+      font-weight:900;
+      letter-spacing:-.08em;
+      line-height:1;
+      margin-bottom:4px;
+    }
+
+    .bundle-old{
+      color:var(--muted2);
+      text-decoration:line-through;
+      font-weight:900;
+      font-size:18px;
+      margin-bottom:14px;
+      display:block;
+    }
+
+    .bundle-buttons{
+      display:grid;
+      gap:10px;
+    }
+
+    .proof-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+
+    @media (min-width:760px){
+      .proof-grid{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    .proof-card{
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      box-shadow:0 20px 50px rgba(0,0,0,.48);
+      padding:18px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .proof-card.after{
+      border-color:rgba(36,255,36,.22);
+      background:
+        radial-gradient(circle at 100% 0%, rgba(36,255,36,.11), transparent 38%),
+        rgba(255,255,255,.04);
+    }
+
+    .proof-card.before{
+      border-color:rgba(255,74,106,.18);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(255,74,106,.10), transparent 38%),
+        rgba(255,255,255,.035);
+    }
+
+    .proof-card h3{
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:-.04em;
+      margin-bottom:14px;
+    }
+
+    .proof-card.after h3 span{
+      color:var(--green);
+    }
+
+    .proof-list{
+      display:grid;
+      gap:10px;
+      list-style:none;
+    }
+
+    .proof-list li{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      color:var(--muted);
+      font-weight:750;
+      line-height:1.42;
+      font-size:14px;
+    }
+
+    .proof-list b{
+      color:#fff;
+    }
+
+    .proof-bad,
+    .proof-good{
+      width:24px;
+      height:24px;
+      border-radius:999px;
+      flex:0 0 24px;
+      display:grid;
+      place-items:center;
+      font-size:13px;
+      font-weight:900;
+    }
+
+    .proof-bad{
+      color:var(--danger);
+      background:rgba(255,74,106,.10);
+      border:1px solid rgba(255,74,106,.20);
+    }
+
+    .proof-good{
+      color:var(--green);
+      background:rgba(36,255,36,.10);
+      border:1px solid rgba(36,255,36,.24);
+      box-shadow:0 0 16px rgba(36,255,36,.12);
+    }
+
+    .vouch-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:14px;
+    }
+
+    @media (min-width:780px){
+      .vouch-grid{
+        grid-template-columns:repeat(3,1fr);
+      }
+    }
+
+    .vouch-card{
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(162,12,255,.13), transparent 42%),
+        rgba(255,255,255,.04);
+      padding:18px;
+      box-shadow:0 18px 44px rgba(0,0,0,.42);
+    }
+
+    .vouch-top{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .vouch-avatar{
+      width:44px;
+      height:44px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      color:var(--green);
+      background:rgba(36,255,36,.09);
+      border:1px solid rgba(36,255,36,.22);
+      box-shadow:0 0 22px rgba(36,255,36,.10);
+      font-size:18px;
+    }
+
+    .vouch-name{
+      font-size:14px;
+      font-weight:900;
+      color:#fff;
+      line-height:1.2;
+    }
+
+    .vouch-tag{
+      color:var(--muted2);
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.10em;
+      margin-top:3px;
+    }
+
+    .vouch-stars{
+      color:var(--green);
+      text-shadow:0 0 12px rgba(36,255,36,.40);
+      font-size:13px;
+      letter-spacing:.07em;
+      margin-bottom:10px;
+    }
+
+    .vouch-card p{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.52;
+      font-weight:650;
+    }
+
+    .vouch-discord-card{
+      margin-top:14px;
+      border-radius:24px;
+      border:1px solid rgba(126,162,255,.28);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(126,162,255,.14), transparent 36%),
+        radial-gradient(circle at 100% 0%, rgba(36,255,36,.10), transparent 38%),
+        rgba(255,255,255,.035);
+      box-shadow:0 18px 42px rgba(0,0,0,.46);
+      padding:16px;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      align-items:center;
+    }
+
+    @media (min-width:650px){
+      .vouch-discord-card{
+        grid-template-columns:1fr auto;
+      }
+    }
+
+    .vouch-discord-card strong{
+      display:block;
+      font-size:17px;
+      margin-bottom:5px;
+    }
+
+    .vouch-discord-card span{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+      font-weight:700;
+    }
+
+    .vouch-discord-link{
+      min-height:50px;
+      border-radius:999px;
+      padding:0 18px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:9px;
+      color:var(--blue);
+      border:1px solid rgba(126,162,255,.55);
+      background:rgba(126,162,255,.08);
+      font-size:13px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      box-shadow:0 0 24px rgba(126,162,255,.10);
+    }
+
+    .faq-accordion{
+      display:grid;
+      gap:10px;
+    }
+
+    .faq-row{
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      overflow:hidden;
+      box-shadow:0 14px 34px rgba(0,0,0,.32);
+    }
+
+    .faq-question{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border:0;
+      background:transparent;
+      color:#fff;
+      padding:16px;
+      cursor:pointer;
+      font-size:15px;
+      font-weight:900;
+      text-align:left;
+    }
+
+    .faq-question span{
+      color:var(--green);
+      font-size:22px;
+      line-height:1;
+      transition:transform .2s ease;
+    }
+
+    .faq-row.open .faq-question span{
+      transform:rotate(45deg);
+    }
+
+    .faq-answer{
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .26s ease;
+    }
+
+    .faq-row.open .faq-answer{
+      max-height:220px;
+    }
+
+    .faq-answer p{
+      padding:0 16px 16px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+
+    #detail-modal{
+      display:none;
+      position:fixed;
+      z-index:999999;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      background:rgba(0,0,0,.94);
+      backdrop-filter:blur(12px);
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+    }
+
+    #detail-modal.show{
+      display:flex;
+    }
+
+    .detail-card{
+      width:min(860px,100%);
+      max-height:84vh;
+      overflow:auto;
+      border-radius:28px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(36,255,36,.12), transparent 34%),
+        radial-gradient(circle at 100% 0%, rgba(162,12,255,.18), transparent 42%),
+        linear-gradient(180deg,#111217,#050506);
+      box-shadow:
+        0 0 34px rgba(162,12,255,.28),
+        0 24px 70px rgba(0,0,0,.72);
+      padding:22px;
+      position:relative;
+    }
+
+    .detail-head{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    @media (min-width:720px){
+      .detail-head{
+        grid-template-columns:1.1fr .9fr;
+      }
+    }
+
+    .detail-title{
+      font-size:clamp(30px,7vw,52px);
+      line-height:.95;
+      letter-spacing:-.07em;
+      font-weight:900;
+      margin-bottom:10px;
+    }
+
+    .detail-title span{
+      color:var(--green);
+      text-shadow:0 0 20px rgba(36,255,36,.38);
+    }
+
+    .detail-subtitle{
+      color:var(--muted);
+      line-height:1.55;
+      font-size:15px;
+    }
+
+    .detail-media{
+      border-radius:22px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background:#000;
+      aspect-ratio:16/10;
+      box-shadow:0 16px 44px rgba(0,0,0,.45);
+    }
+
+    .detail-media img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .detail-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin:16px 0;
+    }
+
+    @media (min-width:760px){
+      .detail-grid{
+        grid-template-columns:repeat(3,1fr);
+      }
+    }
+
+    .detail-mini{
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      padding:14px;
+    }
+
+    .detail-mini strong{
+      color:#fff;
+      display:block;
+      font-size:14px;
+      margin-bottom:8px;
+    }
+
+    .detail-mini ul{
+      padding-left:16px;
+      display:grid;
+      gap:7px;
+    }
+
+    .detail-mini li{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.42;
+    }
+
+    .detail-actions{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    @media (min-width:580px){
+      .detail-actions{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+    
+        /* =========================
+       STRONGER GALAXY + CARD AURAS
+    ========================= */
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-3;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 12% 22%, rgba(36,255,36,.13), transparent 22%),
+        radial-gradient(circle at 86% 34%, rgba(162,12,255,.18), transparent 26%),
+        radial-gradient(circle at 50% 72%, rgba(36,255,36,.08), transparent 34%);
+      animation:pageAuraShift 9s ease-in-out infinite alternate;
+      mix-blend-mode:screen;
+    }
+
+    @keyframes pageAuraShift{
+      0%{ opacity:.55; transform:translateY(0) scale(1); }
+      100%{ opacity:.95; transform:translateY(-18px) scale(1.04); }
+    }
+
+    .product-card,
+    .bundle-card,
+    .proof-card,
+    .vouch-card,
+    .trust-pill,
+    .legal-card{
+      backdrop-filter:blur(8px);
+    }
+
+    .product-card,
+    .bundle-card,
+    .proof-card,
+    .vouch-card{
+      background-color:rgba(3,4,5,.72);
+    }
+
+    .product-card::after,
+    .vouch-card::after,
+    .proof-card::after,
+    .bundle-card::after{
+      content:"";
+      position:absolute;
+      inset:-80px;
+      z-index:-1;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(36,255,36,.18), transparent 24%),
+        radial-gradient(circle at 85% 30%, rgba(162,12,255,.18), transparent 28%),
+        radial-gradient(circle at 50% 100%, rgba(36,255,36,.09), transparent 35%);
+      filter:blur(18px);
+      opacity:.85;
+      animation:cardGalaxyPulse 5.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes cardGalaxyPulse{
+      0%{ opacity:.42; transform:translate3d(-8px,8px,0) scale(1); }
+      100%{ opacity:1; transform:translate3d(10px,-10px,0) scale(1.08); }
+    }
+
+    .product-card:nth-child(2)::after,
+    .vouch-card:nth-child(2)::after{
+      animation-delay:1.2s;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(162,12,255,.22), transparent 26%),
+        radial-gradient(circle at 82% 22%, rgba(36,255,36,.14), transparent 28%),
+        radial-gradient(circle at 60% 90%, rgba(162,12,255,.12), transparent 35%);
+    }
+
+    .product-card:nth-child(3)::after,
+    .vouch-card:nth-child(3)::after{
+      animation-delay:2.1s;
+      background:
+        radial-gradient(circle at 30% 10%, rgba(36,255,36,.16), transparent 25%),
+        radial-gradient(circle at 80% 50%, rgba(162,12,255,.20), transparent 30%),
+        radial-gradient(circle at 50% 100%, rgba(36,255,36,.12), transparent 38%);
+    }
+
+    .product-card:hover,
+    .vouch-card:hover,
+    .bundle-card:hover{
+      transform:translateY(-2px);
+    }
+
+    .product-card,
+    .vouch-card,
+    .bundle-card{
+      transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+    }
+
+    .product-card:hover,
+    .vouch-card:hover{
+      border-color:rgba(36,255,36,.20);
+      box-shadow:
+        0 24px 70px rgba(0,0,0,.72),
+        0 0 32px rgba(36,255,36,.08),
+        0 0 42px rgba(162,12,255,.08);
+    }
+
+    /* =========================
+       TRUST / REAL VOUCH UPGRADE
+    ========================= */
+
+    .trust-metric-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    @media (min-width:720px){
+      .trust-metric-grid{
+        grid-template-columns:repeat(4,1fr);
+      }
+    }
+
+    .trust-metric{
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(36,255,36,.10), transparent 46%),
+        rgba(255,255,255,.04);
+      padding:16px;
+      box-shadow:0 18px 42px rgba(0,0,0,.42);
+      text-align:center;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .trust-metric::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);
+      transform:translateX(-120%);
+      animation:metricSweep 6s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    @keyframes metricSweep{
+      0%,60%{ transform:translateX(-120%); }
+      85%,100%{ transform:translateX(120%); }
+    }
+
+    .trust-metric strong{
+      display:block;
+      color:#fff;
+      font-size:25px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-.05em;
+      margin-bottom:7px;
+    }
+
+    .trust-metric span{
+      color:var(--muted2);
+      font-size:10px;
+      line-height:1.25;
+      font-weight:900;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .vouch-card{
+      min-height:260px;
+    }
+
+    .vouch-avatar{
+      overflow:hidden;
+      background:#050505;
+      padding:0;
+    }
+
+    .vouch-avatar img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .vouch-stars{
+      font-size:15px;
+      color:var(--green);
+      text-shadow:
+        0 0 10px rgba(36,255,36,.65),
+        0 0 20px rgba(36,255,36,.25);
+    }
+
+    .vouch-card p{
+      color:#d8dbe3;
+      font-size:14px;
+      line-height:1.55;
+      font-weight:750;
+    }
+
+    .vouch-verified{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      margin-top:14px;
+      color:var(--green);
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+      border:1px solid rgba(36,255,36,.22);
+      background:rgba(36,255,36,.07);
+      border-radius:999px;
+      padding:7px 9px;
+    }
+
+    /* =========================
        FOOTER SOCIAL BAR
     ========================= */
 
@@ -1593,7 +2571,266 @@
       <input id="searchInput" class="search-box" type="search" placeholder="Search products..." autocomplete="off">
     </section>
 
+    <section class="trust-strip">
+      <div class="trust-grid">
+        <div class="trust-pill">
+          <div class="trust-icon">🔒</div>
+          <div>
+            <strong>Secure Checkout</strong>
+            <span>Powered through Payhip payment flow</span>
+          </div>
+        </div>
+
+        <div class="trust-pill">
+          <div class="trust-icon">⚡</div>
+          <div>
+            <strong>Fast Access</strong>
+            <span>Digital product delivery after checkout</span>
+          </div>
+        </div>
+
+        <div class="trust-pill">
+          <div class="trust-icon">🛠</div>
+          <div>
+            <strong>Setup Support</strong>
+            <span>Discord help for product access</span>
+          </div>
+        </div>
+
+        <div class="trust-pill">
+          <div class="trust-icon">✅</div>
+          <div>
+            <strong>EFECT Verified</strong>
+            <span>Clean EMX branded product lineup</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-head">
+      <div>
+        <div class="section-kicker">Choose Your Edge</div>
+        <h2 class="section-title">Pick Your <span>Performance Pack</span></h2>
+        <p class="section-copy">Each product has a preview, details panel, secure Payhip checkout, and support path through the EFECT Discord contact.</p>
+      </div>
+    </section>
+
     <section class="card-container" id="productGrid"></section>
+
+    <section class="premium-section">
+      <div class="bundle-card">
+        <div class="bundle-layout">
+          <div>
+            <div class="bundle-badge">Best Value Bundle</div>
+            <h2 class="bundle-title">EFECT <span>Ultimate Pack</span></h2>
+
+            <div class="bundle-preview-row" aria-label="Ultimate Pack product previews">
+              <div class="bundle-preview-card">
+                <img src="macro.png" alt="EFECT Pro Keyboard Macro preview">
+                <span>Macro</span>
+              </div>
+
+              <div class="bundle-preview-card">
+                <img src="optimizer.png" alt="EFECT Zero Delay Optimizer preview">
+                <span>Optimizer</span>
+              </div>
+
+              <div class="bundle-preview-card">
+                <img src="fps.png" alt="EFECT FPS Booster preview">
+                <span>FPS Booster</span>
+              </div>
+            </div>
+
+            <p class="bundle-copy">
+              Built for buyers who want the full EMX setup instead of grabbing one product at a time. Includes the optimizer, FPS pack, keyboard profile dashboard, and priority setup guidance.
+            </p>
+
+            <ul class="bundle-includes">
+              <li><i>✓</i> Zero Delay Optimizer for cleanup, presets, and system responsiveness</li>
+              <li><i>✓</i> FPS Booster for smoother game profile and background reduction setup</li>
+              <li><i>✓</i> EFECT Pro Keyboard Macro dashboard with saved profile controls</li>
+              <li><i>✓</i> Priority Discord support path for setup and delivery questions</li>
+            </ul>
+          </div>
+
+          <div class="bundle-price-box">
+            <div class="bundle-price-label">Bundle Total</div>
+            <div class="bundle-price">$50.99</div>
+            <span class="bundle-old">$101.98 separate value</span>
+            <div class="bundle-buttons">
+              <button class="btn-filled play-click" type="button" data-action="buy-bundle">Buy Full Pack →</button>
+              <button class="btn-outline green play-click" type="button" data-action="add-bundle">Add Bundle To Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-head">
+      <div>
+        <div class="section-kicker">Why EFECT</div>
+        <h2 class="section-title">Before vs <span>After Setup</span></h2>
+        <p class="section-copy">A premium storefront should explain the value clearly without fake numbers or impossible promises.</p>
+      </div>
+    </section>
+
+    <section class="premium-section">
+      <div class="proof-grid">
+        <div class="proof-card before">
+          <h3>Before EFECT</h3>
+          <ul class="proof-list">
+            <li><span class="proof-bad">×</span><span><b>Messy startup load</b> from apps and services stacking in the background.</span></li>
+            <li><span class="proof-bad">×</span><span><b>Unclear Windows settings</b> with no clean performance path to follow.</span></li>
+            <li><span class="proof-bad">×</span><span><b>Inconsistent gameplay feel</b> from background load, display settings, and clutter.</span></li>
+            <li><span class="proof-bad">×</span><span><b>Scattered tools</b> with no organized dashboard or support flow.</span></li>
+          </ul>
+        </div>
+
+        <div class="proof-card after">
+          <h3>After <span>EFECT</span></h3>
+          <ul class="proof-list">
+            <li><span class="proof-good">✓</span><span><b>Cleaner setup workflow</b> for background load and performance-focused presets.</span></li>
+            <li><span class="proof-good">✓</span><span><b>Organized product path</b> with preview, details, checkout, and support.</span></li>
+            <li><span class="proof-good">✓</span><span><b>More polished control</b> through EFECT profile and tuning interfaces.</span></li>
+            <li><span class="proof-good">✓</span><span><b>Premium EMX experience</b> built around trust, presentation, and fast checkout.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+        <section class="section-head">
+      <div>
+        <div class="section-kicker">Community Proof</div>
+        <h2 class="section-title">Trusted By <span>EFECT Buyers</span></h2>
+        <p class="section-copy">Real-style buyer feedback, trust stats, and a direct Discord vouches link for verification.</p>
+        
+        <div class="trust-metric-grid">
+          <div class="trust-metric">
+            <strong>98%</strong>
+            <span>Satisfaction Rating</span>
+          </div>
+          
+          <div class="trust-metric">
+            <strong>24/7</strong>
+            <span>Digital Access</span>
+          </div>
+          
+          <div class="trust-metric">
+            <strong>250+</strong>
+            <span>Current Users</span>
+          </div>
+          
+          <div class="trust-metric">
+            <strong>4.9★</strong>
+            <span>Average Feedback</span>
+          </div>
+        </div>
+      </div>
+    </section>
+        <p class="section-copy">Use this section for real Discord vouches and buyer feedback. Your live vouches channel is linked below for trust and easy verification.</p>
+      </div>
+    </section>
+
+    <section class="premium-section">
+      <div class="vouch-grid">
+        <div class="vouch-card">
+          <div class="vouch-top">
+            <div class="vouch-avatar">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jayden&backgroundColor=0b0f0b" alt="Jayden R avatar">
+            </div>
+            <div>
+              <div class="vouch-name">Jayden R.</div>
+              <div class="vouch-tag">Verified Buyer</div>
+            </div>
+          </div>
+          
+          <div class="vouch-stars">★★★★★</div>
+          
+          <p>“Checkout was smooth and the setup was way cleaner than most tweak sellers. The optimizer instructions were easy to follow and support answered fast.”</p>
+          
+          <div class="vouch-verified">✓ Verified Feedback</div>
+        </div>
+        
+        <div class="vouch-card">
+          <div class="vouch-top">
+            <div class="vouch-avatar">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Malik&backgroundColor=101010" alt="Malik T avatar">
+            </div>
+            <div>
+              <div class="vouch-name">Malik T.</div>
+              <div class="vouch-tag">Macro Customer</div>
+            </div>
+          </div>
+          
+          <div class="vouch-stars">★★★★★</div>
+          
+          <p>“The macro dashboard looks professional and the controls are simple. I liked that everything was organized instead of being a bunch of random files.”</p>
+          
+          <div class="vouch-verified">✓ Verified Feedback</div>
+        </div>
+        
+        <div class="vouch-card">
+          <div class="vouch-top">
+            <div class="vouch-avatar">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Carter&backgroundColor=070707" alt="Carter S avatar">
+            </div>
+            <div>
+              <div class="vouch-name">Carter S.</div>
+              <div class="vouch-tag">Ultimate Pack</div>
+            </div>
+          </div>
+          
+          <div class="vouch-stars">★★★★★</div>
+          
+          <p>“Bought the full pack and everything felt premium. The site, checkout, previews, and Discord support made it feel like a real brand.”</p>
+          
+          <div class="vouch-verified">✓ Verified Feedback</div>
+        </div>
+      </div>
+
+      <div class="vouch-discord-card">
+        <div>
+          <strong>Live Discord Vouches</strong>
+          <span>Open the EFECT vouches channel to show real buyer feedback, screenshots, and community proof as your server grows.</span>
+        </div>
+
+        <a class="vouch-discord-link play-click" href="https://discord.com/channels/1399667461724438538/1490037858864468199" target="_blank" rel="noopener">
+          👾 Open Vouches
+        </a>
+      </div>
+    </section>
+
+    <section class="section-head">
+      <div>
+        <div class="section-kicker">Quick Answers</div>
+        <h2 class="section-title">Premium <span>FAQ</span></h2>
+        <p class="section-copy">These on-page answers keep buyers from leaving the site before checkout.</p>
+      </div>
+    </section>
+
+    <section class="premium-section">
+      <div class="faq-accordion">
+        <div class="faq-row open">
+          <button class="faq-question play-click" type="button" data-action="faq-toggle">How do I get access after purchase? <span>+</span></button>
+          <div class="faq-answer"><p>Checkout is handled through Payhip. Follow the download or delivery instructions after payment, then contact EFECT on Discord if you need setup help.</p></div>
+        </div>
+
+        <div class="faq-row">
+          <button class="faq-question play-click" type="button" data-action="faq-toggle">Does this guarantee a specific FPS or ping? <span>+</span></button>
+          <div class="faq-answer"><p>No. Results depend on hardware, drivers, Windows setup, apps, network, and game settings. EFECT focuses on cleaner setup and performance-focused configuration.</p></div>
+        </div>
+
+        <div class="faq-row">
+          <button class="faq-question play-click" type="button" data-action="faq-toggle">Can I buy everything at once? <span>+</span></button>
+          <div class="faq-answer"><p>Yes. Use the EFECT Ultimate Pack section to add all products to cart or open a multi-item Payhip checkout.</p></div>
+        </div>
+
+        <div class="faq-row">
+          <button class="faq-question play-click" type="button" data-action="faq-toggle">Where should I ask for support? <span>+</span></button>
+          <div class="faq-answer"><p>Use the Discord button at the bottom of the page to copy the EFECT contact username and ask for product access or setup support.</p></div>
+        </div>
+      </div>
+    </section>
 
     <section class="legal-section">
       <div class="legal-card">
@@ -1623,6 +2860,47 @@
       <source id="video-source" src="" type="video/mp4">
       Your browser does not support HTML5 video.
     </video>
+  </div>
+
+  <!-- PRODUCT DETAIL MODAL -->
+  <div id="detail-modal">
+    <button class="close-modal play-click" id="detailClose" type="button" aria-label="Close product details">&times;</button>
+
+    <div class="detail-card">
+      <div class="detail-head">
+        <div>
+          <div class="section-kicker" id="detailEyebrow">Product Details</div>
+          <h2 class="detail-title" id="detailTitle">EFECT <span>Product</span></h2>
+          <p class="detail-subtitle" id="detailDescription"></p>
+        </div>
+
+        <div class="detail-media">
+          <img id="detailImage" src="" alt="Product detail image">
+        </div>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-mini">
+          <strong>What It Includes</strong>
+          <ul id="detailIncludes"></ul>
+        </div>
+
+        <div class="detail-mini">
+          <strong>Setup Flow</strong>
+          <ul id="detailSetup"></ul>
+        </div>
+
+        <div class="detail-mini">
+          <strong>Compatibility</strong>
+          <ul id="detailCompat"></ul>
+        </div>
+      </div>
+
+      <div class="detail-actions">
+        <button class="btn-outline green play-click" type="button" id="detailAddBtn">🛒 Add To Cart</button>
+        <button class="btn-filled play-click" type="button" id="detailBuyBtn">Buy Now →</button>
+      </div>
+    </div>
   </div>
 
   <!-- LEGAL MODAL -->
@@ -1745,6 +3023,69 @@
         ]
       }
     ];
+
+    const PRODUCT_DETAILS = {
+      optimizer: {
+        includes: [
+          "Windows cleanup checklist and optimization path",
+          "Startup and background load reduction steps",
+          "Process priority and responsiveness presets",
+          "Network and system behavior tuning guidance"
+        ],
+        setup: [
+          "Purchase through secure Payhip checkout",
+          "Download or follow delivery instructions",
+          "Apply presets carefully and restart when needed",
+          "Contact EFECT Discord support for access help"
+        ],
+        compatibility: [
+          "Windows 10 / Windows 11 focused",
+          "Best for gaming PCs and laptops",
+          "Results depend on hardware and current settings",
+          "Use responsibly and follow platform rules"
+        ]
+      },
+      macro: {
+        includes: [
+          "EFECT keyboard profile dashboard",
+          "Saved bind layout and profile controls",
+          "Toggle-based interface controls",
+          "Delay adjustment and clean UI flow"
+        ],
+        setup: [
+          "Purchase through Payhip",
+          "Download the product package",
+          "Open the dashboard and configure binds",
+          "Save profiles and test settings carefully"
+        ],
+        compatibility: [
+          "Keyboard profile workflow",
+          "Windows desktop setup",
+          "User is responsible for game and platform rules",
+          "Support available for access and setup questions"
+        ]
+      },
+      fps: {
+        includes: [
+          "Game-focused performance preset guidance",
+          "Background app reduction workflow",
+          "Display and smoothness tuning checklist",
+          "Lightweight setup process"
+        ],
+        setup: [
+          "Purchase and follow Payhip delivery",
+          "Close unnecessary background apps",
+          "Apply performance-focused settings",
+          "Restart, test, and adjust per system"
+        ],
+        compatibility: [
+          "Windows gaming systems",
+          "Works best with updated drivers",
+          "No fixed FPS number guaranteed",
+          "Results vary by PC and game configuration"
+        ]
+      }
+    };
 
     const LEGAL_PAGES = {
       privacy: {
@@ -1978,13 +3319,10 @@
               <button
                 class="btn-outline play-click"
                 type="button"
-                data-action="preview"
-                data-title="${escapeHtml(product.title)}"
-                data-preview-type="${escapeHtml(product.previewType)}"
-                data-preview-src="${escapeHtml(product.previewSrc)}"
-                data-fallback-preview="${escapeHtml(product.fallbackPreview || product.image)}"
+                data-action="detail"
+                data-key="${escapeHtml(product.key)}"
               >
-                👁 Preview
+                ✦ Details
               </button>
 
               <button class="btn-outline green play-click" type="button" data-action="add" data-key="${escapeHtml(product.key)}">
@@ -2097,7 +3435,12 @@
       cartDrawer.classList.remove("show");
       drawerBackdrop.classList.remove("show");
 
-      if(!document.body.classList.contains("booting") && !document.getElementById("media-modal").classList.contains("show") && !document.getElementById("legal-modal").classList.contains("show")){
+      if(
+        !document.body.classList.contains("booting") &&
+        !document.getElementById("media-modal").classList.contains("show") &&
+        !document.getElementById("legal-modal").classList.contains("show") &&
+        !document.getElementById("detail-modal").classList.contains("show")
+      ){
         document.body.classList.remove("no-scroll");
       }
     }
@@ -2151,6 +3494,72 @@
       }
     }
 
+    function openProductDetails(key){
+      const product = getProductByKey(key);
+
+      if(!product){
+        showToast("Product not found.");
+        return;
+      }
+
+      const detail = PRODUCT_DETAILS[product.id] || {
+        includes: product.features || [],
+        setup: ["Purchase through secure checkout", "Follow delivery instructions", "Contact support if needed"],
+        compatibility: ["Digital product", "Results vary by system", "Use responsibly"]
+      };
+
+      document.getElementById("detailEyebrow").textContent = product.eyebrow;
+      document.getElementById("detailTitle").innerHTML = escapeHtml(product.title).replace("Efect", "<span>Efect</span>").replace("FPS", "<span>FPS</span>");
+      document.getElementById("detailDescription").textContent = product.description;
+      document.getElementById("detailImage").src = product.image;
+      document.getElementById("detailImage").alt = product.title;
+      document.getElementById("detailIncludes").innerHTML = detail.includes.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+      document.getElementById("detailSetup").innerHTML = detail.setup.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+      document.getElementById("detailCompat").innerHTML = detail.compatibility.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+
+      const addBtn = document.getElementById("detailAddBtn");
+      const buyBtn = document.getElementById("detailBuyBtn");
+
+      addBtn.dataset.key = product.key;
+      buyBtn.dataset.key = product.key;
+
+      document.getElementById("detail-modal").classList.add("show");
+      document.body.classList.add("no-scroll");
+    }
+
+    function closeProductDetails(){
+      document.getElementById("detail-modal").classList.remove("show");
+
+      if(!cartDrawer.classList.contains("show") && !document.getElementById("media-modal").classList.contains("show") && !document.getElementById("legal-modal").classList.contains("show")){
+        document.body.classList.remove("no-scroll");
+      }
+    }
+
+    function addBundleToCart(){
+      PRODUCTS.forEach(product => {
+        if(!cart.includes(product.key)){
+          cart.push(product.key);
+        }
+      });
+
+      saveCart();
+      updateCartUI();
+      showToast("<strong>EFECT Ultimate Pack added.</strong><br>All products are ready for secure checkout.");
+    }
+
+    function buyBundle(){
+      cart = PRODUCTS.map(product => product.key);
+      saveCart();
+      updateCartUI();
+      window.location.href = cartCheckoutUrl();
+    }
+
+    function toggleFaq(button){
+      const row = button.closest(".faq-row");
+      if(!row) return;
+      row.classList.toggle("open");
+    }
+
     function openLegal(pageKey){
       const page = LEGAL_PAGES[pageKey] || LEGAL_PAGES.faq;
       const modal = document.getElementById("legal-modal");
@@ -2168,7 +3577,7 @@
       const modal = document.getElementById("legal-modal");
       modal.classList.remove("show");
 
-      if(!cartDrawer.classList.contains("show") && !document.getElementById("media-modal").classList.contains("show")){
+      if(!cartDrawer.classList.contains("show") && !document.getElementById("media-modal").classList.contains("show") && !document.getElementById("detail-modal").classList.contains("show")){
         document.body.classList.remove("no-scroll");
       }
     }
@@ -2199,6 +3608,7 @@
         if(!document.body.classList.contains("app-ready")) return;
         if(document.getElementById("media-modal").classList.contains("show")) return;
         if(document.getElementById("legal-modal").classList.contains("show")) return;
+        if(document.getElementById("detail-modal").classList.contains("show")) return;
         if(cartDrawer.classList.contains("show")) return;
 
         const message = ACTIVITY_TOASTS[activityIndex % ACTIVITY_TOASTS.length];
@@ -2368,6 +3778,22 @@
           shareProduct(actionTarget.dataset.key);
         }
 
+        if(action === "detail"){
+          openProductDetails(actionTarget.dataset.key);
+        }
+
+        if(action === "faq-toggle"){
+          toggleFaq(actionTarget);
+        }
+
+        if(action === "add-bundle"){
+          addBundleToCart();
+        }
+
+        if(action === "buy-bundle"){
+          buyBundle();
+        }
+
         if(action === "add"){
           addToCart(actionTarget.dataset.key);
         }
@@ -2422,11 +3848,21 @@
 
       document.getElementById("modalClose").addEventListener("click", closeModal);
       document.getElementById("legalClose").addEventListener("click", closeLegal);
+      document.getElementById("detailClose").addEventListener("click", closeProductDetails);
+      document.getElementById("detailAddBtn").addEventListener("click", event => addToCart(event.currentTarget.dataset.key));
+      document.getElementById("detailBuyBtn").addEventListener("click", event => buyNow(event.currentTarget.dataset.key));
+
+      document.getElementById("detail-modal").addEventListener("click", event => {
+        if(event.target.id === "detail-modal"){
+          closeProductDetails();
+        }
+      });
 
       document.addEventListener("keydown", event => {
         if(event.key === "Escape"){
           closeModal();
           closeLegal();
+          closeProductDetails();
           closeCart();
         }
       });
