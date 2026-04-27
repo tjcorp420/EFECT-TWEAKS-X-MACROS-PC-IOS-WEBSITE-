@@ -1278,10 +1278,178 @@ function copyInstallName() {
       window.removeEventListener("resize", resize);
     };
   }
+/* =========================
+   PREMIUM PRODUCT CARD POLISH
+========================= */
 
+function setupProductCardPolish() {
+  const isTouchDevice = window.matchMedia("(hover: none)").matches;
+  
+  if (isTouchDevice) return;
+  
+  document.addEventListener("mousemove", event => {
+    const card = event.target.closest(".product-card");
+    
+    document.querySelectorAll(".product-card.card-hovered").forEach(activeCard => {
+      if (activeCard !== card) {
+        activeCard.classList.remove("card-hovered");
+        activeCard.style.transform = "";
+      }
+    });
+    
+    if (!card) return;
+    
+    const rect = card.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateX = ((y - centerY) / centerY) * -4;
+    const rotateY = ((x - centerX) / centerX) * 4;
+    
+    card.classList.add("card-hovered");
+    card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-3px)`;
+  });
+  
+  document.addEventListener("mouseleave", () => {
+    document.querySelectorAll(".product-card.card-hovered").forEach(card => {
+      card.classList.remove("card-hovered");
+      card.style.transform = "";
+    });
+  });
+  
+  document.addEventListener("mouseout", event => {
+    const card = event.target.closest(".product-card");
+    
+    if (card && !card.contains(event.relatedTarget)) {
+      card.classList.remove("card-hovered");
+      card.style.transform = "";
+    }
+  });
+}
+function setupProCommandDock() {
+  document.querySelectorAll("[data-dock-action]").forEach(button => {
+    button.addEventListener("click", () => {
+      const action = button.dataset.dockAction;
+      
+      button.classList.remove("dock-pulse");
+      void button.offsetWidth;
+      button.classList.add("dock-pulse");
+      
+      if (action === "top") {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      }
+      
+      if (action === "products") {
+        document.getElementById("productGrid")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+      
+      if (action === "bundle") {
+        document.querySelector(".bundle-card")?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+      
+      if (action === "faq") {
+        if (typeof openLegal === "function") {
+          openLegal("faq");
+        }
+      }
+      
+      if (action === "install") {
+        localStorage.removeItem(INSTALL_POPUP_KEY);
+        
+        if (typeof showInstallPopup === "function") {
+          showInstallPopup(true);
+        }
+      }
+    });
+  });
+}
+function setupProductPowerMeters() {
+  const productStats = {
+    optimizer: [
+      { label: "Setup Speed", value: 90 },
+      { label: "System Cleanup", value: 95 },
+      { label: "Responsiveness", value: 97 },
+      { label: "Ease Of Use", value: 93 }
+    ],
+    macro: [
+      { label: "Undetectable", value: 100 },
+      { label: "Macro Count", value: 98 },
+      { label: "Keybind Setup", value: 99 },
+      { label: "Speed & Latency", value: 99 }
+    ],
+    fps: [
+      { label: "Game Smoothness", value: 92 },
+      { label: "Background Reduction", value: 90 },
+      { label: "Fps Gain", value: 90 },
+      { label: "Lightweight Setup", value: 94 }
+    ]
+  };
+  
+  document.querySelectorAll(".product-card").forEach(card => {
+    const buyButton = card.querySelector('[data-action="buy"]');
+    const key = buyButton?.dataset.key;
+    const product = PRODUCTS.find(item => item.key === key);
+    
+    if (!product) return;
+    if (card.querySelector(".power-meter-panel")) return;
+    
+    const stats = productStats[product.id] || [
+      { label: "Setup", value: 90 },
+      { label: "Performance", value: 90 },
+      { label: "Ease Of Use", value: 90 },
+      { label: "Support", value: 90 }
+    ];
+    
+    const panel = document.createElement("div");
+    panel.className = "power-meter-panel";
+    
+    panel.innerHTML = `
+      <div class="power-meter-head">
+        <span>EMX Power Readout</span>
+        <strong>${product.eyebrow}</strong>
+      </div>
+
+      <div class="power-meter-grid">
+        ${stats.map(stat => `
+          <div class="power-meter-row">
+            <div class="power-meter-label">
+              <span>${escapeHtml(stat.label)}</span>
+              <strong>${stat.value}%</strong>
+            </div>
+
+            <div class="power-meter-track">
+              <i style="--power:${stat.value}%;"></i>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+    
+    const checklist = card.querySelector(".feature-checklist");
+    
+    if (checklist) {
+      checklist.insertAdjacentElement("afterend", panel);
+    }
+  });
+}
   renderProducts();
-  updateCartUI();
-  setupEvents();
+updateCartUI();
+setupEvents();
+setupProCommandDock();
+setupProductPowerMeters();
+setupProductCardPolish();
 
   createGalaxy("galaxyCanvas", {
     count: 118,
