@@ -1,31 +1,25 @@
 function removeInstantBlackout() {
-  const bootScreen = document.getElementById("boot-screen");
+  document.documentElement.classList.add("emx-ready");
+  document.documentElement.classList.remove("emx-preboot");
+  
   const blackout = document.getElementById("instantBlackout");
-  
-  if (bootScreen) {
-    bootScreen.style.display = "";
-    bootScreen.style.opacity = "";
-    bootScreen.style.visibility = "";
-  }
-  
-  document.body.classList.add("instant-ready");
   
   if (blackout) {
     setTimeout(() => {
       blackout.remove();
-    }, 450);
+    }, 320);
   }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  setTimeout(removeInstantBlackout, 700);
+  setTimeout(removeInstantBlackout, 450);
 });
 
 window.addEventListener("load", () => {
-  setTimeout(removeInstantBlackout, 700);
+  setTimeout(removeInstantBlackout, 450);
 });
 
-setTimeout(removeInstantBlackout, 1600);
+setTimeout(removeInstantBlackout, 1400);
 
 document.addEventListener("DOMContentLoaded", () => {
       let PRODUCTS = window.EMX_PRODUCTS || [];

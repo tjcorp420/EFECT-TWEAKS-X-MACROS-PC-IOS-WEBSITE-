@@ -5379,3 +5379,10 @@ body.booting #supportWidget {
 #adminSettingsModal .admin-btn {
   width: 100% !important;
 }
+#boot-screen {
+  z-index: 999998 !important;
+}
+
+#instantBlackout {
+  z-index: 2147483647 !important;
+}

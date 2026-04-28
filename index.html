@@ -27,6 +27,52 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <style>
+  html.emx-preboot,
+  html.emx-preboot body {
+    background: #000 !important;
+    overflow: hidden !important;
+  }
+  
+  html.emx-preboot header,
+  html.emx-preboot main,
+  html.emx-preboot .floating-footer,
+  html.emx-preboot .floating-share,
+  html.emx-preboot #proCommandDock,
+  html.emx-preboot #supportWidget,
+  html.emx-preboot #cartDrawer,
+  html.emx-preboot #drawerBackdrop,
+  html.emx-preboot #installAppPopup,
+  html.emx-preboot #emxPayLoading {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  
+  html.emx-preboot #boot-screen {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+  
+  #instantBlackout {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;
+    background: #000;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity .28s ease;
+  }
+  
+  html.emx-ready #instantBlackout {
+    opacity: 0;
+  }
+</style>
+
+<script>
+  document.documentElement.classList.add("emx-preboot");
+</script>
 </head>
 
 <body class="no-scroll">
