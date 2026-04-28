@@ -5077,3 +5077,63 @@ button,
   min-width: 0 !important;
   overflow: hidden !important;
 }
+/* FINAL ADMIN OVERFLOW FIX */
+#galleryField {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-all !important;
+}
+
+.gallery-preview-row,
+.gallery-preview-grid,
+.gallery-row,
+.gallery-thumbs,
+.product-gallery-row {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+}
+
+.gallery-preview-row>*,
+.gallery-preview-grid>*,
+.gallery-row>*,
+.gallery-thumbs>*,
+.product-gallery-row>* {
+  flex: 0 0 auto !important;
+  max-width: 150px !important;
+}
+
+.media-library-panel,
+#mediaLibraryPanel {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.media-library-grid {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.media-tile {
+  width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.media-actions {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}

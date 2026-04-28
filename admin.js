@@ -147,6 +147,18 @@ function copyText(value) {
   });
 }
 
+function cleanGalleryField() {
+  fields.gallery.value = fields.gallery.value
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean)
+    .join("\n");
+  
+  lockAdminMobileWidth();
+  setTimeout(lockAdminMobileWidth, 100);
+  setTimeout(lockAdminMobileWidth, 500);
+}
+
 function addUrlToGallery(url) {
   const currentLines = fields.gallery.value
     .split("\n")
@@ -158,6 +170,7 @@ function addUrlToGallery(url) {
   }
   
   fields.gallery.value = currentLines.join("\n");
+  cleanGalleryField();
   
   if (typeof renderPreview === "function") {
     renderPreview();
@@ -410,14 +423,15 @@ async function uploadSelectedFile(file) {
     }
     
     if (uploadTargetMode === "gallery") {
-      const currentLines = fields.gallery.value
-        .split("\n")
-        .map(line => line.trim())
-        .filter(Boolean);
-      
-      currentLines.push(uploadedUrl);
-      fields.gallery.value = currentLines.join("\n");
-    }
+  const currentLines = fields.gallery.value
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean);
+  
+  currentLines.push(uploadedUrl);
+  fields.gallery.value = currentLines.join("\n");
+  cleanGalleryField();
+}
     
     if (uploadTargetMode === "video") {
       fields.previewType.value = "video";
