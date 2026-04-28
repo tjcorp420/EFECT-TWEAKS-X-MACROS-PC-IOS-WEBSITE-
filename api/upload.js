@@ -1,6 +1,6 @@
-import { put } from "@vercel/blob";
+const { put } = require("@vercel/blob");
 
-export const config = {
+module.exports.config = {
   api: {
     bodyParser: false
   }
@@ -16,7 +16,7 @@ async function readRequestBody(request) {
   return Buffer.concat(chunks);
 }
 
-export default async function handler(request, response) {
+module.exports = async function handler(request, response) {
   try {
     if (request.method !== "POST") {
       return response.status(405).json({
@@ -34,6 +34,7 @@ export default async function handler(request, response) {
     
     const fileName = request.headers["x-file-name"] || `emx-upload-${Date.now()}.png`;
     const contentType = request.headers["content-type"] || "application/octet-stream";
+    
     const safeName = String(fileName)
       .replace(/[^a-zA-Z0-9._-]/g, "-")
       .toLowerCase();
@@ -62,4 +63,4 @@ export default async function handler(request, response) {
       error: error.message || "Upload failed."
     });
   }
-}
+};
