@@ -591,19 +591,22 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
   
-  const checkoutUrl = product.productUrl || ("https://payhip.com/b/" + encodeURIComponent(product.key || key));
+  const productKey = product.key || key;
+  const directCheckoutUrl = productCheckoutUrl(productKey);
+  const productPageUrl = product.productUrl || ("https://payhip.com/b/" + encodeURIComponent(productKey));
   
-  goToPayhip(checkoutUrl, button);
-}
-
-  function checkout(button){
-    if(cart.length === 0){
-      showToast("Your cart is empty. Add a product first.");
-      return;
-    }
-
-    goToPayhip(cartCheckoutUrl(), button);
+  const fallbackKey = "emx_checkout_fallback_" + productKey;
+  const shouldFallback = sessionStorage.getItem(fallbackKey) === "yes";
+  
+  if (shouldFallback) {
+    sessionStorage.removeItem(fallbackKey);
+    goToPayhip(productPageUrl, button);
+    return;
   }
+  
+  sessionStorage.setItem(fallbackKey, "yes");
+  goToPayhip(directCheckoutUrl, button);
+}
 
   function buyBundle(button){
     cart = getStoreProducts().map(product => product.key);
