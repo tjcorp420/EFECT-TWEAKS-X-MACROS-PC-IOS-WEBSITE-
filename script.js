@@ -1307,6 +1307,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
         openProductMediaCarousel(productKey, mediaSrc);
       }
+      
+      if (action === "proof-preview") {
+  event.preventDefault();
+  event.stopPropagation();
+  
+  const proofButtons = Array.from(document.querySelectorAll('[data-action="proof-preview"]'));
+  
+  currentPreviewItems = proofButtons.map(button => ({
+    type: "image",
+    src: button.dataset.previewSrc,
+    title: button.dataset.title || "Proof Preview",
+    fallback: button.dataset.previewSrc
+  })).filter(item => item.src);
+  
+  const startSrc = actionTarget.dataset.previewSrc;
+  const startIndex = currentPreviewItems.findIndex(item => item.src === startSrc);
+  
+  currentPreviewIndex = startIndex >= 0 ? startIndex : 0;
+  
+  openPreviewItemByIndex(currentPreviewIndex);
+}
 
       if(action === "share-product"){
         event.preventDefault();

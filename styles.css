@@ -5538,3 +5538,228 @@ body.booting #supportWidget {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+/* =========================
+   EMX VOUCH PROOF HUB
+========================= */
+
+.vouch-proof-hub {
+  position: relative;
+  overflow: hidden;
+  margin: 18px 16px 16px;
+  padding: 22px;
+  border-radius: 28px;
+  border: 1px solid rgba(36, 255, 36, .24);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(36, 255, 36, .16), transparent 38%),
+    radial-gradient(circle at 100% 0%, rgba(162, 12, 255, .20), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .025));
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, .62),
+    0 0 34px rgba(36, 255, 36, .10),
+    0 0 42px rgba(162, 12, 255, .10),
+    inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.vouch-proof-hub::before {
+  content: "";
+  position: absolute;
+  inset: -80px;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(36, 255, 36, .20), transparent 25%),
+    radial-gradient(circle at 85% 25%, rgba(162, 12, 255, .22), transparent 30%),
+    radial-gradient(circle at 50% 100%, rgba(36, 255, 36, .10), transparent 38%);
+  filter: blur(18px);
+  opacity: .8;
+  z-index: -1;
+  animation: vouchProofAura 5.5s ease-in-out infinite alternate;
+}
+
+@keyframes vouchProofAura {
+  0% {
+    opacity: .48;
+    transform: translate3d(-8px, 8px, 0) scale(1);
+  }
+  
+  100% {
+    opacity: 1;
+    transform: translate3d(10px, -10px, 0) scale(1.08);
+  }
+}
+
+.vouch-proof-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+  padding: 8px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(36, 255, 36, .24);
+  background: rgba(36, 255, 36, .07);
+}
+
+.vouch-proof-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--green);
+  box-shadow: 0 0 14px rgba(36, 255, 36, .85);
+}
+
+.vouch-proof-top p {
+  margin: 0;
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 1000;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.vouch-proof-hub h2 {
+  margin: 0 0 10px;
+  color: #fff;
+  font-size: clamp(28px, 7vw, 46px);
+  line-height: .96;
+  letter-spacing: -.06em;
+  font-weight: 1000;
+}
+
+.vouch-proof-copy {
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, .66);
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 750;
+}
+
+.vouch-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.vouch-proof-pill {
+  min-height: 74px;
+  padding: 13px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, .11);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(36, 255, 36, .10), transparent 46%),
+    rgba(0, 0, 0, .34);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07);
+}
+
+.vouch-proof-pill strong {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 25px;
+  margin-bottom: 8px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--green), #7dff56);
+  color: #030303;
+  font-size: 11px;
+  font-weight: 1000;
+  box-shadow: 0 0 16px rgba(36, 255, 36, .28);
+}
+
+.vouch-proof-pill span {
+  display: block;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.25;
+  font-weight: 1000;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+@media (min-width: 720px) {
+  .vouch-proof-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+/* PROOF HUB PHOTO BOXES */
+.vouch-proof-pill.photo-pill {
+  position: relative;
+  min-height: 150px;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #000;
+}
+
+.vouch-proof-pill.photo-pill img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: .72;
+  filter: saturate(1.1) contrast(1.05);
+}
+
+.vouch-proof-pill.photo-pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .12), rgba(0, 0, 0, .78)),
+    radial-gradient(circle at 20% 18%, rgba(36, 255, 36, .28), transparent 42%),
+    radial-gradient(circle at 90% 20%, rgba(162, 12, 255, .20), transparent 45%);
+  pointer-events: none;
+}
+
+.vouch-proof-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 18px;
+}
+
+.vouch-proof-overlay strong {
+  display: inline-flex;
+  width: 54px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--green), #7dff56);
+  color: #000;
+  font-size: 16px;
+  font-weight: 1000;
+  box-shadow: 0 0 22px rgba(36, 255, 36, .55);
+}
+
+.vouch-proof-overlay span {
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.05;
+  font-weight: 1000;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  text-shadow: 0 3px 14px rgba(0, 0, 0, .85);
+}
+/* PROOF HUB CLICKABLE PREVIEW FIX */
+button.vouch-proof-pill.photo-pill {
+  border: 1px solid rgba(255, 255, 255, .12);
+  cursor: pointer;
+  text-align: left;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+button.vouch-proof-pill.photo-pill:active {
+  transform: scale(.975);
+  filter: brightness(1.15);
+}
+
+button.vouch-proof-pill.photo-pill:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
