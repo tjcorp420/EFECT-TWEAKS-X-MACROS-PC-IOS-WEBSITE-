@@ -561,9 +561,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1650);
   }
 
-  function goToPayhip(url, button){
-    showPayLoadingScreen(url, button);
+  function goToPayhip(url, button) {
+  if (window.__emxCheckoutLocked) {
+    return;
   }
+  
+  window.__emxCheckoutLocked = true;
+  
+  showPayLoadingScreen(url, button);
+  
+  setTimeout(() => {
+    window.__emxCheckoutLocked = false;
+  }, 5000);
+}
 
   function buyNow(key, button){
     const product = getProductByKey(key);
@@ -2012,40 +2022,39 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function resetEmxPayhipButtonsOnly(){
-    document.querySelectorAll(".payhip-loading, .btn-loading").forEach(button => {
-      button.classList.remove("payhip-loading");
-      button.classList.remove("btn-loading");
-      button.disabled = false;
-
-      if(button.dataset.originalText){
-        button.innerHTML = button.dataset.originalText;
-        delete button.dataset.originalText;
-      }
-    });
-
-    const payOverlay = document.getElementById("emxPayLoading");
-    const payBar = document.getElementById("emxPayBarFill");
-    const payStatus = document.getElementById("emxPayStatus");
-
-    if(payOverlay){
-      payOverlay.classList.remove("show");
-      payOverlay.classList.remove("exit");
+  function resetEmxPayhipButtonsOnly() {
+  window.__emxCheckoutLocked = false;
+  
+  document.querySelectorAll(".payhip-loading, .btn-loading").forEach(button => {
+    button.classList.remove("payhip-loading");
+    button.classList.remove("btn-loading");
+    button.disabled = false;
+    
+    if (button.dataset.originalText) {
+      button.innerHTML = button.dataset.originalText;
+      delete button.dataset.originalText;
     }
-
-    if(payBar){
-      payBar.style.width = "0%";
-    }
-
-    if(payStatus){
-      payStatus.textContent = "Encrypting checkout session...";
-    }
-
-    unlockBodyIfSafe();
+  });
+  
+  const payOverlay = document.getElementById("emxPayLoading");
+  const payBar = document.getElementById("emxPayBarFill");
+  const payStatus = document.getElementById("emxPayStatus");
+  
+  if (payOverlay) {
+    payOverlay.classList.remove("show");
+    payOverlay.classList.remove("exit");
   }
-
-  window.addEventListener("pageshow", resetEmxPayhipButtonsOnly);
-  window.addEventListener("focus", resetEmxPayhipButtonsOnly);
+  
+  if (payBar) {
+    payBar.style.width = "0%";
+  }
+  
+  if (payStatus) {
+    payStatus.textContent = "Encrypting checkout session...";
+  }
+  
+  unlockBodyIfSafe();
+}
 
   document.addEventListener("visibilitychange", () => {
     if(!document.hidden){
