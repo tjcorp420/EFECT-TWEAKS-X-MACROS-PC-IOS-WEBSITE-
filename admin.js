@@ -589,6 +589,70 @@ function setupAdminTabs() {
   showAdminTab(activeAdminTab);
 }
 
+function ensureAdminSettingsPanel() {
+  let panel =
+    document.getElementById("adminSettingsPanel") ||
+    document.querySelector(".admin-settings-panel");
+  
+  if (panel) {
+    return panel;
+  }
+  
+  panel = document.createElement("section");
+  panel.id = "adminSettingsPanel";
+  panel.className = "admin-settings-panel";
+  
+  panel.innerHTML = `
+    <h2>Admin Settings</h2>
+    <p>Quick tools for your EMX admin app.</p>
+
+    <div class="settings-grid">
+      <button class="admin-btn" type="button" id="settingsReloadBtn">Reload Products</button>
+      <button class="admin-btn" type="button" id="settingsSaveBtn">Save Live</button>
+      <button class="admin-btn" type="button" id="settingsClearMediaBtn">Clear Media Library</button>
+      <button class="admin-btn danger-soft" type="button" id="settingsLogoutBtn">Lock Admin</button>
+    </div>
+
+    <div class="settings-note">
+      <b>Tip:</b> Use Products to select cards, Editor to change info, Media to reuse uploads, and Preview to check the final card.
+    </div>
+  `;
+  
+  adminApp.appendChild(panel);
+  
+  document.getElementById("settingsReloadBtn")?.addEventListener("click", () => {
+    loadProducts()
+      .then(() => toast("Reloaded products."))
+      .catch(error => toast("<b>Reload failed:</b><br>" + escapeHtml(error.message)));
+  });
+  
+  document.getElementById("settingsSaveBtn")?.addEventListener("click", () => {
+    saveProducts()
+      .catch(error => {
+        setStatus("Save Failed");
+        toast("<b>Save failed:</b><br>" + escapeHtml(error.message));
+      });
+  });
+  
+  document.getElementById("settingsClearMediaBtn")?.addEventListener("click", () => {
+    if (confirm("Clear recent uploaded media from this phone?")) {
+      saveMediaLibrary([]);
+      renderMediaLibrary();
+      toast("Media library cleared.");
+    }
+  });
+  
+  document.getElementById("settingsLogoutBtn")?.addEventListener("click", () => {
+    sessionStorage.removeItem("emx_admin_password");
+    adminPassword = "";
+    adminApp.classList.add("hidden");
+    loginBox.classList.remove("hidden");
+    toast("Admin locked.");
+  });
+  
+  return panel;
+}
+
 function showAdminTab(tabName) {
   activeAdminTab = tabName;
   localStorage.setItem("emx_admin_active_tab", activeAdminTab);
@@ -626,34 +690,22 @@ function showAdminTab(tabName) {
   }
   
   if (tabName === "settings") {
-  let settingsPanel =
-    document.getElementById("adminSettingsPanel") ||
-    document.querySelector(".admin-settings-panel");
+  target = ensureAdminSettingsPanel();
   
-  if (!settingsPanel) {
-    setupAdminTabs();
-    
-    settingsPanel =
-      document.getElementById("adminSettingsPanel") ||
-      document.querySelector(".admin-settings-panel");
-  }
-  
-  if (settingsPanel) {
-    settingsPanel.style.display = "block";
-    settingsPanel.style.visibility = "visible";
-    settingsPanel.style.opacity = "1";
-  }
-  
-  target = settingsPanel;
+  target.style.display = "block";
+  target.style.visibility = "visible";
+  target.style.opacity = "1";
 }
   lockAdminMobileWidth();
   
   if (target) {
     setTimeout(() => {
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
+      const top = target.getBoundingClientRect().top + window.scrollY - 90;
+
+window.scrollTo({
+  top,
+  behavior: "smooth"
+});
     }, 120);
   } else {
     toast("Could not find " + tabName + " section.");

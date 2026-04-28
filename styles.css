@@ -5307,3 +5307,10 @@ body.booting #supportWidget {
   visibility: visible !important;
   opacity: 1 !important;
 }
+#adminSettingsPanel {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  scroll-margin-top: 90px !important;
+  margin-bottom: 180px !important;
+}
