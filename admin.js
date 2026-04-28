@@ -30,6 +30,139 @@ const fields = {
   visible: document.getElementById("visibleField")
 };
 
+const uploadInput = document.createElement("input");
+uploadInput.type = "file";
+uploadInput.accept = "image/*,video/mp4,video/webm,video/quicktime";
+uploadInput.style.display = "none";
+document.body.appendChild(uploadInput);
+
+let uploadTargetMode = "main";
+
+function createUploadButton(text, mode) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "admin-btn upload-btn";
+  button.textContent = text;
+  
+  button.addEventListener("click", () => {
+    uploadTargetMode = mode;
+    
+    if (mode === "video") {
+      uploadInput.accept = "video/mp4,video/webm,video/quicktime";
+    } else {
+      uploadInput.accept = "image/*";
+    }
+    
+    uploadInput.value = "";
+    uploadInput.click();
+  });
+  
+  return button;
+}
+
+function insertAfterField(field, button) {
+  if (!field || !field.parentElement) return;
+  
+  field.insertAdjacentElement("afterend", button);
+}
+
+function setUploadBusy(isBusy) {
+  document.querySelectorAll(".upload-btn").forEach(button => {
+    button.disabled = isBusy;
+    button.textContent = isBusy ? "Uploading..." : button.dataset.originalText;
+  });
+}
+
+function addUploadButtons() {
+  const mainButton = createUploadButton("Upload Main Image", "main");
+  const galleryButton = createUploadButton("Upload Gallery Image", "gallery");
+  const videoButton = createUploadButton("Upload Preview Video", "video");
+  
+  mainButton.dataset.originalText = "Upload Main Image";
+  galleryButton.dataset.originalText = "Upload Gallery Image";
+  videoButton.dataset.originalText = "Upload Preview Video";
+  
+  insertAfterField(fields.image, mainButton);
+  insertAfterField(fields.gallery, galleryButton);
+  insertAfterField(fields.previewSrc, videoButton);
+}
+
+async function uploadSelectedFile(file) {
+  if (!file) {
+    return;
+  }
+  
+  try {
+    setUploadBusy(true);
+    
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      headers: {
+        "Content-Type": file.type || "application/octet-stream",
+        "x-file-name": file.name || `emx-upload-${Date.now()}`
+      },
+      body: file
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok || !data.ok || !data.url) {
+      throw new Error(data.error || "Upload failed.");
+    }
+    
+    const uploadedUrl = data.url;
+    
+    if (uploadTargetMode === "main") {
+      fields.image.value = uploadedUrl;
+      
+      if (!fields.fallbackPreview.value.trim()) {
+        fields.fallbackPreview.value = uploadedUrl;
+      }
+      
+      if (fields.previewType.value !== "video" && !fields.previewSrc.value.trim()) {
+        fields.previewSrc.value = uploadedUrl;
+        fields.previewType.value = "image";
+      }
+    }
+    
+    if (uploadTargetMode === "gallery") {
+      const currentLines = fields.gallery.value
+        .split("\n")
+        .map(line => line.trim())
+        .filter(Boolean);
+      
+      currentLines.push(uploadedUrl);
+      fields.gallery.value = currentLines.join("\n");
+    }
+    
+    if (uploadTargetMode === "video") {
+      fields.previewType.value = "video";
+      fields.previewSrc.value = uploadedUrl;
+      
+      if (fields.image.value.trim() && !fields.fallbackPreview.value.trim()) {
+        fields.fallbackPreview.value = fields.image.value.trim();
+      }
+    }
+    
+    if (typeof renderPreview === "function") {
+      renderPreview();
+    }
+    
+    alert("Upload complete. Press Apply Changes, then Save Live.");
+  } catch (error) {
+    alert(error.message || "Upload failed.");
+  } finally {
+    setUploadBusy(false);
+  }
+}
+
+uploadInput.addEventListener("change", event => {
+  const file = event.target.files && event.target.files[0];
+  uploadSelectedFile(file);
+});
+
+addUploadButtons();
+
 function toast(message){
   const el = document.getElementById("toast");
   el.innerHTML = message;
