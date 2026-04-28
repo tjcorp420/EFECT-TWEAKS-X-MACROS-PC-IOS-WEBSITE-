@@ -692,9 +692,11 @@ function showAdminTab(tabName) {
   if (tabName === "settings") {
   target = ensureAdminSettingsPanel();
   
-  target.style.display = "block";
-  target.style.visibility = "visible";
-  target.style.opacity = "1";
+  if (target) {
+    target.style.display = "block";
+    target.style.visibility = "visible";
+    target.style.opacity = "1";
+  }
 }
   lockAdminMobileWidth();
   
@@ -703,7 +705,7 @@ function showAdminTab(tabName) {
       const top = target.getBoundingClientRect().top + window.scrollY - 90;
 
 window.scrollTo({
-  top,
+  top: top,
   behavior: "smooth"
 });
     }, 120);
