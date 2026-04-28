@@ -573,7 +573,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    goToPayhip(product.productUrl || productCheckoutUrl(key), button);
+    goToPayhip(productCheckoutUrl(product.key || key), button);
   }
 
   function checkout(button){

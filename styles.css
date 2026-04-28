@@ -7096,3 +7096,25 @@ body {
     opacity:.9 !important;
   }
 }
+/* CART COUNT BADGE FIX */
+.cart-count {
+  top: -10px !important;
+  right: -10px !important;
+  min-width: 26px !important;
+  height: 26px !important;
+  padding: 0 7px !important;
+  font-size: 13px !important;
+  line-height: 26px !important;
+  border-radius: 999px !important;
+  overflow: visible !important;
+  z-index: 20 !important;
+}
+
+#cartToggle {
+  overflow: visible !important;
+}
+
+.header-actions,
+.icon-btn {
+  overflow: visible !important;
+}
