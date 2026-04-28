@@ -1,7 +1,28 @@
-document.addEventListener("DOMContentLoaded", () => {
-  let PRODUCTS = window.EMX_PRODUCTS || [];
+function removeInstantBlackout() {
+  document.body.classList.add("instant-ready");
+  
+  const blackout = document.getElementById("instantBlackout");
+  if (blackout) {
+    setTimeout(() => {
+      blackout.remove();
+    }, 350);
+  }
+}
 
-  async function loadProductsFromApi(){
+window.addEventListener("DOMContentLoaded", () => {
+  setTimeout(removeInstantBlackout, 350);
+});
+
+window.addEventListener("load", () => {
+  setTimeout(removeInstantBlackout, 350);
+});
+
+setTimeout(removeInstantBlackout, 1200);
+
+document.addEventListener("DOMContentLoaded", () => {
+      let PRODUCTS = window.EMX_PRODUCTS || [];
+      
+      async function loadProductsFromApi() {
     try{
       const response = await fetch("/api/products", {
         cache: "no-store"

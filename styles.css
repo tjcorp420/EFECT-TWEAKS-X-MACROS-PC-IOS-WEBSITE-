@@ -1,3 +1,16 @@
+#instantBlackout {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  background: #000;
+  pointer-events: none;
+}
+
+body.instant-ready #instantBlackout {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .28s ease, visibility .28s ease;
+}
 :root{
   --bg:#020304;
   --bg2:#07080b;
@@ -5259,7 +5272,7 @@ body {
 body:has(#loginBox:not(.hidden)) #adminTabBar {
   display: none !important;
 }
-
+m
 #adminApp.hidden~#adminTabBar,
 body:has(#adminApp.hidden) #adminTabBar {
   display: none !important;
