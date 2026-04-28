@@ -568,11 +568,19 @@ document.addEventListener("DOMContentLoaded", () => {
   
   window.__emxCheckoutLocked = true;
   
-  showPayLoadingScreen(url, button);
+  setCheckoutLoading(button);
+  
+  const payOverlay = document.getElementById("emxPayLoading");
+  if (payOverlay) {
+    payOverlay.classList.remove("show");
+    payOverlay.classList.remove("exit");
+  }
+  
+  document.body.classList.remove("no-scroll");
   
   setTimeout(() => {
-    window.__emxCheckoutLocked = false;
-  }, 5000);
+    window.location.assign(url);
+  }, 220);
 }
 
   function buyNow(key, button){
