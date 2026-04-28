@@ -5328,3 +5328,36 @@ body.booting #supportWidget {
   bottom: 18px !important;
   z-index: 999999 !important;
 }
+.admin-tab-hidden {
+  display: none !important;
+}
+
+.admin-tab-active {
+  display: block !important;
+}
+
+#adminTabBar {
+  position: fixed !important;
+  left: 12px !important;
+  right: 12px !important;
+  bottom: 18px !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 10px !important;
+  border-radius: 22px !important;
+  background: rgba(0, 0, 0, .72) !important;
+  border: 1px solid rgba(31, 255, 31, .24) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+#adminTabBar button {
+  flex: 1 1 30% !important;
+  min-height: 46px !important;
+}
+
+body {
+  padding-bottom: 150px !important;
+}

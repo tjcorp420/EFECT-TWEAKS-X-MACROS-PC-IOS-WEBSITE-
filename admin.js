@@ -13,11 +13,11 @@ const previewBox = document.getElementById("previewBox");
 const galleryPreviewBox = document.getElementById("galleryPreviewBox");
 
 const adminSections = {
-  products: null,
-  editor: null,
-  media: null,
-  preview: null,
-  settings: null
+  products: document.getElementById("productsPanel") || productList?.closest("section"),
+  editor: document.getElementById("editorPanel") || fields.id?.closest("section"),
+  media: document.getElementById("mediaLibraryPanel"),
+  preview: document.getElementById("previewPanel") || previewBox?.closest("section"),
+  settings: document.getElementById("settingsPanel") || document.querySelector(".admin-settings-panel")
 };
 
 let activeAdminTab = localStorage.getItem("emx_admin_active_tab") || "products";
@@ -589,7 +589,15 @@ function showAdminTab(tabName) {
   activeAdminTab = tabName;
   localStorage.setItem("emx_admin_active_tab", activeAdminTab);
   
-  Object.entries(adminSections).forEach(([name, section]) => {
+  const freshSections = {
+    products: document.getElementById("productsPanel") || productList?.closest("section"),
+    editor: document.getElementById("editorPanel") || fields.id?.closest("section"),
+    media: document.getElementById("mediaLibraryPanel"),
+    preview: document.getElementById("previewPanel") || previewBox?.closest("section"),
+    settings: document.getElementById("settingsPanel") || document.querySelector(".admin-settings-panel")
+  };
+  
+  Object.entries(freshSections).forEach(([name, section]) => {
     if (!section) return;
     
     const isActive = name === activeAdminTab;
@@ -612,7 +620,7 @@ function showAdminTab(tabName) {
   
   lockAdminMobileWidth();
   
-  const activeSection = adminSections[activeAdminTab];
+  const activeSection = freshSections[activeAdminTab];
   
   if (activeSection) {
     setTimeout(() => {
@@ -620,7 +628,9 @@ function showAdminTab(tabName) {
         behavior: "smooth",
         block: "start"
       });
-    }, 80);
+    }, 100);
+  } else {
+    toast("Tab section not found: " + activeAdminTab);
   }
 }
 
