@@ -592,8 +592,10 @@ function showAdminTab(tabName) {
   Object.entries(adminSections).forEach(([name, section]) => {
     if (!section) return;
     
-    section.classList.toggle("admin-tab-hidden", name !== activeAdminTab);
-    section.classList.toggle("admin-tab-active", name === activeAdminTab);
+    const isActive = name === activeAdminTab;
+    
+    section.classList.toggle("admin-tab-hidden", !isActive);
+    section.classList.toggle("admin-tab-active", isActive);
   });
   
   document.querySelectorAll("#adminTabBar [data-admin-tab]").forEach(button => {
@@ -609,6 +611,17 @@ function showAdminTab(tabName) {
   }
   
   lockAdminMobileWidth();
+  
+  const activeSection = adminSections[activeAdminTab];
+  
+  if (activeSection) {
+    setTimeout(() => {
+      activeSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }, 80);
+  }
 }
 
 function toast(message){
