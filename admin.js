@@ -626,11 +626,26 @@ function showAdminTab(tabName) {
   }
   
   if (tabName === "settings") {
-    target =
+  let settingsPanel =
+    document.getElementById("adminSettingsPanel") ||
+    document.querySelector(".admin-settings-panel");
+  
+  if (!settingsPanel) {
+    setupAdminTabs();
+    
+    settingsPanel =
       document.getElementById("adminSettingsPanel") ||
       document.querySelector(".admin-settings-panel");
   }
   
+  if (settingsPanel) {
+    settingsPanel.style.display = "block";
+    settingsPanel.style.visibility = "visible";
+    settingsPanel.style.opacity = "1";
+  }
+  
+  target = settingsPanel;
+}
   lockAdminMobileWidth();
   
   if (target) {

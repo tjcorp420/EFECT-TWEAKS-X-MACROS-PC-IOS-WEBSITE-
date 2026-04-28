@@ -5301,3 +5301,9 @@ body.booting #supportWidget {
     transform: translateX(-50%) !important;
   }
 }
+#adminSettingsPanel,
+.admin-settings-panel {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
