@@ -5314,3 +5314,68 @@ body.booting #supportWidget {
   scroll-margin-top: 90px !important;
   margin-bottom: 180px !important;
 }
+#adminSettingsModal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1000000 !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 22px !important;
+  background: rgba(0, 0, 0, .72) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+}
+
+#adminSettingsModal.show {
+  display: flex !important;
+}
+
+.admin-settings-modal-card {
+  width: min(640px, 100%) !important;
+  max-height: 82vh !important;
+  overflow: auto !important;
+  padding: 26px !important;
+  border-radius: 30px !important;
+  border: 1px solid rgba(31, 255, 31, .32) !important;
+  background: linear-gradient(145deg, rgba(22, 24, 28, .98), rgba(4, 5, 7, .98)) !important;
+  box-shadow:
+    0 0 40px rgba(31, 255, 31, .20),
+    0 30px 80px rgba(0, 0, 0, .70) !important;
+}
+
+.admin-settings-modal-card h2 {
+  margin: 0 44px 8px 0 !important;
+  color: #fff !important;
+  font-size: 34px !important;
+  letter-spacing: -.04em !important;
+}
+
+.admin-settings-modal-card p {
+  margin: 0 0 18px !important;
+  color: rgba(255, 255, 255, .65) !important;
+  font-weight: 800 !important;
+}
+
+.admin-settings-close {
+  position: absolute !important;
+  top: 18px !important;
+  right: 18px !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(255, 255, 255, .14) !important;
+  background: rgba(255, 255, 255, .08) !important;
+  color: white !important;
+  font-size: 30px !important;
+  font-weight: 900 !important;
+}
+
+#adminSettingsModal .settings-grid {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+#adminSettingsModal .admin-btn {
+  width: 100% !important;
+}

@@ -653,6 +653,80 @@ function ensureAdminSettingsPanel() {
   return panel;
 }
 
+function openAdminSettingsModal() {
+  let modal = document.getElementById("adminSettingsModal");
+  
+  if (!modal) {
+    modal = document.createElement("div");
+    modal.id = "adminSettingsModal";
+    modal.innerHTML = `
+      <div class="admin-settings-modal-card">
+        <button class="admin-settings-close" type="button" id="adminSettingsCloseBtn">×</button>
+
+        <h2>Admin Settings</h2>
+        <p>Quick tools for your EMX admin app.</p>
+
+        <div class="settings-grid">
+          <button class="admin-btn" type="button" id="modalReloadProductsBtn">Reload Products</button>
+          <button class="admin-btn" type="button" id="modalSaveLiveBtn">Save Live</button>
+          <button class="admin-btn" type="button" id="modalClearMediaBtn">Clear Media Library</button>
+          <button class="admin-btn danger-soft" type="button" id="modalLockAdminBtn">Lock Admin</button>
+        </div>
+
+        <div class="settings-note">
+          <b>Tip:</b> Use Products to select cards, Editor to change info, Media to reuse uploads, and Preview to check the final card.
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    document.getElementById("adminSettingsCloseBtn")?.addEventListener("click", () => {
+      modal.classList.remove("show");
+    });
+    
+    modal.addEventListener("click", event => {
+      if (event.target === modal) {
+        modal.classList.remove("show");
+      }
+    });
+    
+    document.getElementById("modalReloadProductsBtn")?.addEventListener("click", () => {
+      loadProducts()
+        .then(() => toast("Reloaded products."))
+        .catch(error => toast("<b>Reload failed:</b><br>" + escapeHtml(error.message)));
+    });
+    
+    document.getElementById("modalSaveLiveBtn")?.addEventListener("click", () => {
+      saveProducts()
+        .then(() => toast("Saved live."))
+        .catch(error => {
+          setStatus("Save Failed");
+          toast("<b>Save failed:</b><br>" + escapeHtml(error.message));
+        });
+    });
+    
+    document.getElementById("modalClearMediaBtn")?.addEventListener("click", () => {
+      if (confirm("Clear recent uploaded media from this phone?")) {
+        saveMediaLibrary([]);
+        renderMediaLibrary();
+        toast("Media library cleared.");
+      }
+    });
+    
+    document.getElementById("modalLockAdminBtn")?.addEventListener("click", () => {
+      sessionStorage.removeItem("emx_admin_password");
+      adminPassword = "";
+      modal.classList.remove("show");
+      adminApp.classList.add("hidden");
+      loginBox.classList.remove("hidden");
+      toast("Admin locked.");
+    });
+  }
+  
+  modal.classList.add("show");
+}
+
 function showAdminTab(tabName) {
   activeAdminTab = tabName;
   localStorage.setItem("emx_admin_active_tab", activeAdminTab);
@@ -690,13 +764,8 @@ function showAdminTab(tabName) {
   }
   
   if (tabName === "settings") {
-  target = ensureAdminSettingsPanel();
-  
-  if (target) {
-    target.style.display = "block";
-    target.style.visibility = "visible";
-    target.style.opacity = "1";
-  }
+  openAdminSettingsModal();
+  return;
 }
   lockAdminMobileWidth();
   
