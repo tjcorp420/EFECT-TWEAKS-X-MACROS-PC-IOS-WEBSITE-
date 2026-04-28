@@ -5298,3 +5298,18 @@ body.booting #supportWidget {
   visibility: hidden !important;
   pointer-events: none !important;
 }
+#adminTabBar {
+  position: fixed !important;
+  left: 12px !important;
+  right: 12px !important;
+  bottom: 18px !important;
+  z-index: 999999 !important;
+}
+
+.admin-tab-hidden {
+  display: none !important;
+}
+
+.admin-tab-active {
+  display: block !important;
+}
