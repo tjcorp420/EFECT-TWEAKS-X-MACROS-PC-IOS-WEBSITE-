@@ -701,13 +701,15 @@ document.addEventListener("DOMContentLoaded", () => {
     unlockBodyIfSafe();
   }
 
-  function openProductDetails(key){
-    const product = getProductByKey(key);
-
-    if(!product){
-      showToast("Product not found.");
-      return;
-    }
+ function openProductDetails(key) {
+  const product = getProductByKey(key);
+  
+  if (!product) {
+    showToast("Product not found.");
+    return;
+  }
+  
+ 
 
     const detail = PRODUCT_DETAILS[product.id] || {
       includes: product.features || [],
