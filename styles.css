@@ -4921,3 +4921,66 @@ main{
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+/* ADMIN MOBILE WIDTH FIX — prevents Blob URLs from zooming the whole page out */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+#adminApp,
+.admin-app,
+.admin-shell,
+.edit-panel,
+.product-editor,
+.media-library-panel,
+.card,
+.panel {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+input,
+textarea,
+select {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+textarea {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+input {
+  white-space: nowrap;
+}
+
+.media-library-panel {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.media-library-grid {
+  max-width: 100%;
+}
+
+.media-tile {
+  min-width: 0;
+}
+
+.media-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-btn,
+.admin-btn {
+  max-width: 100%;
+}
