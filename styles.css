@@ -5137,3 +5137,121 @@ button,
   max-width: 100% !important;
   overflow: hidden !important;
 }
+/* EMX ADMIN TABS */
+.admin-tab-hidden {
+  display: none !important;
+}
+
+.admin-tab-active {
+  display: block !important;
+}
+
+body {
+  padding-bottom: 110px !important;
+}
+
+.admin-tab-bar {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 18px;
+  z-index: 99999;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  padding: 9px;
+  border-radius: 28px;
+  border: 1px solid rgba(31, 255, 31, .28);
+  background: rgba(0, 0, 0, .76);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 0 34px rgba(31, 255, 31, .16),
+    0 20px 60px rgba(0, 0, 0, .55),
+    inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.admin-tab-bar button {
+  min-width: 0 !important;
+  min-height: 58px;
+  border: 1px solid rgba(255, 255, 255, .11);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .035));
+  color: rgba(255, 255, 255, .72);
+  font-size: 10px;
+  font-weight: 1000;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.admin-tab-bar button span {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.admin-tab-bar button.active {
+  background: linear-gradient(180deg, #22ff22, #11c911);
+  color: #000;
+  border-color: rgba(31, 255, 31, .9);
+  box-shadow:
+    0 0 22px rgba(31, 255, 31, .45),
+    inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+
+.admin-settings-panel {
+  margin: 28px auto;
+  padding: 24px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  background: linear-gradient(145deg, rgba(255, 255, 255, .09), rgba(255, 255, 255, .035));
+  box-shadow: 0 18px 55px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+.admin-settings-panel h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 34px;
+  letter-spacing: -.04em;
+}
+
+.admin-settings-panel p {
+  margin: 8px 0 18px;
+  color: rgba(255, 255, 255, .62);
+  font-weight: 700;
+}
+
+.settings-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-btn.danger-soft {
+  background: rgba(255, 60, 90, .16) !important;
+  color: #ffb0c0 !important;
+  border: 1px solid rgba(255, 60, 90, .35) !important;
+}
+
+.settings-note {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid rgba(255, 255, 255, .10);
+  color: rgba(255, 255, 255, .72);
+  line-height: 1.45;
+}
+
+@media (min-width:720px) {
+  .admin-tab-bar {
+    left: 50%;
+    right: auto;
+    width: 620px;
+    transform: translateX(-50%);
+  }
+}

@@ -12,6 +12,16 @@ const productList = document.getElementById("productList");
 const previewBox = document.getElementById("previewBox");
 const galleryPreviewBox = document.getElementById("galleryPreviewBox");
 
+const adminSections = {
+  products: null,
+  editor: null,
+  media: null,
+  preview: null,
+  settings: null
+};
+
+let activeAdminTab = localStorage.getItem("emx_admin_active_tab") || "products";
+
 const fields = {
   id: document.getElementById("idField"),
   key: document.getElementById("keyField"),
@@ -464,6 +474,150 @@ uploadInput.addEventListener("change", event => {
 });
 
 addUploadButtons();
+setupAdminTabs();
+function setupAdminTabs() {
+  if (document.getElementById("adminTabBar")) return;
+  
+  const productsCard = productList?.closest("section") || productList?.parentElement;
+  const editorCard = fields.id?.closest("section") || fields.id?.parentElement;
+  const previewCard = previewBox?.closest("section") || previewBox?.parentElement;
+  const mediaCard = document.getElementById("mediaLibraryPanel");
+  
+  adminSections.products = productsCard;
+  adminSections.editor = editorCard;
+  adminSections.preview = previewCard;
+  adminSections.media = mediaCard;
+  
+  const settingsPanel = document.createElement("section");
+  settingsPanel.id = "adminSettingsPanel";
+  settingsPanel.className = "admin-settings-panel";
+  settingsPanel.innerHTML = `
+    <h2>Admin Settings</h2>
+    <p>Quick tools for your EMX admin app.</p>
+
+    <div class="settings-grid">
+      <button class="admin-btn" type="button" id="settingsReloadBtn">Reload Products</button>
+      <button class="admin-btn" type="button" id="settingsSaveBtn">Save Live</button>
+      <button class="admin-btn" type="button" id="settingsClearMediaBtn">Clear Media Library</button>
+      <button class="admin-btn danger-soft" type="button" id="settingsLogoutBtn">Lock Admin</button>
+    </div>
+
+    <div class="settings-note">
+      <b>Tip:</b> Use Products to select cards, Editor to change info, Media to reuse uploads, and Preview to check the final card.
+    </div>
+  `;
+  
+  if (previewCard && previewCard.parentElement) {
+    previewCard.insertAdjacentElement("afterend", settingsPanel);
+  } else {
+    document.body.appendChild(settingsPanel);
+  }
+  
+  adminSections.settings = settingsPanel;
+  
+  document.getElementById("settingsReloadBtn")?.addEventListener("click", () => {
+    loadProducts()
+      .then(() => toast("Reloaded products."))
+      .catch(error => toast("<b>Reload failed:</b><br>" + escapeHtml(error.message)));
+  });
+  
+  document.getElementById("settingsSaveBtn")?.addEventListener("click", () => {
+    saveProducts()
+      .catch(error => {
+        setStatus("Save Failed");
+        toast("<b>Save failed:</b><br>" + escapeHtml(error.message));
+      });
+  });
+  
+  document.getElementById("settingsClearMediaBtn")?.addEventListener("click", () => {
+    if (confirm("Clear recent uploaded media from this phone?")) {
+      saveMediaLibrary([]);
+      renderMediaLibrary();
+      toast("Media library cleared.");
+    }
+  });
+  
+  document.getElementById("settingsLogoutBtn")?.addEventListener("click", () => {
+    sessionStorage.removeItem("emx_admin_password");
+    adminPassword = "";
+    adminApp.classList.add("hidden");
+    loginBox.classList.remove("hidden");
+    toast("Admin locked.");
+  });
+  
+  const tabBar = document.createElement("nav");
+  tabBar.id = "adminTabBar";
+  tabBar.className = "admin-tab-bar";
+  tabBar.innerHTML = `
+    <button type="button" data-admin-tab="products">
+      <span>▦</span>
+      Products
+    </button>
+
+    <button type="button" data-admin-tab="editor">
+      <span>✎</span>
+      Editor
+    </button>
+
+    <button type="button" data-admin-tab="media">
+      <span>▧</span>
+      Media
+    </button>
+
+    <button type="button" data-admin-tab="preview">
+      <span>◉</span>
+      Preview
+    </button>
+
+    <button type="button" data-admin-tab="settings">
+      <span>⚙</span>
+      Settings
+    </button>
+  `;
+  
+  document.body.appendChild(tabBar);
+  
+  tabBar.querySelectorAll("[data-admin-tab]").forEach(button => {
+    button.addEventListener("click", () => {
+      showAdminTab(button.dataset.adminTab);
+    });
+  });
+  
+  showAdminTab(activeAdminTab);
+}
+
+function showAdminTab(tabName) {
+  activeAdminTab = tabName;
+  localStorage.setItem("emx_admin_active_tab", activeAdminTab);
+  
+  Object.entries(adminSections).forEach(([name, section]) => {
+    if (!section) return;
+    
+    section.classList.toggle("admin-tab-hidden", name !== activeAdminTab);
+    section.classList.toggle("admin-tab-active", name === activeAdminTab);
+  });
+  
+  document.querySelectorAll("#adminTabBar [data-admin-tab]").forEach(button => {
+    button.classList.toggle("active", button.dataset.adminTab === activeAdminTab);
+  });
+  
+  if (activeAdminTab === "preview") {
+    renderPreview();
+  }
+  
+  if (activeAdminTab === "media") {
+    renderMediaLibrary();
+  }
+  
+  lockAdminMobileWidth();
+  
+  setTimeout(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }, 50);
+}
 
 function toast(message){
   const el = document.getElementById("toast");
@@ -592,12 +746,12 @@ async function saveProducts(){
   toast("<b>Saved live.</b><br>Your Vercel database was updated.");
 }
 
-function renderProductList(){
+function renderProductList() {
   productList.innerHTML = products.map((product, index) => {
     const active = index === selectedIndex ? "active" : "";
     const hiddenClass = product.visible === false ? "hidden-product" : "";
     const status = product.visible === false ? "Hidden" : "Live";
-
+    
     return `
       <button class="product-btn ${active}" type="button" data-index="${index}">
         <span>
@@ -608,7 +762,7 @@ function renderProductList(){
       </button>
     `;
   }).join("");
-
+  
   document.querySelectorAll(".product-btn").forEach(button => {
     button.addEventListener("click", () => {
       applySelected(false);
@@ -616,6 +770,10 @@ function renderProductList(){
       renderProductList();
       loadSelectedProduct();
       renderPreview();
+      
+      if (typeof showAdminTab === "function") {
+        showAdminTab("editor");
+      }
     });
   });
 }
