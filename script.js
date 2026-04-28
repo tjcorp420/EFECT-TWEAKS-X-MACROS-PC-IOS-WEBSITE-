@@ -583,16 +583,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 220);
 }
 
-  function buyNow(key, button){
-    const product = getProductByKey(key);
-
-    if(!product || product.id === "bundle"){
-      showToast("Product not found.");
-      return;
-    }
-
-    goToPayhip(productCheckoutUrl(product.key || key), button);
+  function buyNow(key, button) {
+  const product = getProductByKey(key);
+  
+  if (!product || product.id === "bundle") {
+    showToast("Product not found.");
+    return;
   }
+  
+  const checkoutUrl = product.productUrl || ("https://payhip.com/b/" + encodeURIComponent(product.key || key));
+  
+  goToPayhip(checkoutUrl, button);
+}
 
   function checkout(button){
     if(cart.length === 0){
