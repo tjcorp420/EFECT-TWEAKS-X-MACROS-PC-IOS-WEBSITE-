@@ -1381,6 +1381,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if(action === "buy"){
         buyNow(actionTarget.dataset.key, actionTarget);
       }
+      
+      if (action === "checkout") {
+  checkout(actionTarget);
+}
 
       if(action === "remove"){
         removeFromCart(actionTarget.dataset.key);
