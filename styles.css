@@ -5277,3 +5277,24 @@ m
 body:has(#adminApp.hidden) #adminTabBar {
   display: none !important;
 }
+body:not(.app-ready) header,
+body:not(.app-ready) main,
+body:not(.app-ready) .floating-footer,
+body:not(.app-ready) .floating-share,
+body:not(.app-ready) #proCommandDock,
+body:not(.app-ready) #supportWidget {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.booting header,
+body.booting main,
+body.booting .floating-footer,
+body.booting .floating-share,
+body.booting #proCommandDock,
+body.booting #supportWidget {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

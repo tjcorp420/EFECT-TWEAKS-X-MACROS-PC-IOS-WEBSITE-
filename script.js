@@ -1,23 +1,31 @@
 function removeInstantBlackout() {
+  const bootScreen = document.getElementById("boot-screen");
+  const blackout = document.getElementById("instantBlackout");
+  
+  if (bootScreen) {
+    bootScreen.style.display = "";
+    bootScreen.style.opacity = "";
+    bootScreen.style.visibility = "";
+  }
+  
   document.body.classList.add("instant-ready");
   
-  const blackout = document.getElementById("instantBlackout");
   if (blackout) {
     setTimeout(() => {
       blackout.remove();
-    }, 350);
+    }, 450);
   }
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  setTimeout(removeInstantBlackout, 350);
+  setTimeout(removeInstantBlackout, 700);
 });
 
 window.addEventListener("load", () => {
-  setTimeout(removeInstantBlackout, 350);
+  setTimeout(removeInstantBlackout, 700);
 });
 
-setTimeout(removeInstantBlackout, 1200);
+setTimeout(removeInstantBlackout, 1600);
 
 document.addEventListener("DOMContentLoaded", () => {
       let PRODUCTS = window.EMX_PRODUCTS || [];
