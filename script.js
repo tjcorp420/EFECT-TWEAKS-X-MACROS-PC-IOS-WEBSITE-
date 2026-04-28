@@ -343,10 +343,17 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div class="meta-info">
-            <span>one-time payment</span>
-            <span>•</span>
-            <strong>Secure Payhip checkout</strong>
-          </div>
+  <span>one-time payment</span>
+  <span>•</span>
+  <strong>Secure Payhip checkout</strong>
+</div>
+
+<div class="product-trust-row">
+  <span>🔒 Secure Payhip Checkout</span>
+  <span>⚡ Instant Digital Delivery</span>
+  <span>🛠 Setup Support</span>
+  <span>✅ Verified</span>
+</div>
 
           <p class="description-block">${escapeHtml(product.description)}</p>
 
