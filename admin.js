@@ -593,39 +593,55 @@ function showAdminTab(tabName) {
   activeAdminTab = tabName;
   localStorage.setItem("emx_admin_active_tab", activeAdminTab);
   
-  adminSections = getAdminSections();
-  
-  Object.entries(adminSections).forEach(([name, section]) => {
-    if (!section) return;
-    
-    const isActive = name === activeAdminTab;
-    section.classList.toggle("admin-tab-hidden", !isActive);
-    section.classList.toggle("admin-tab-active", isActive);
-  });
-  
   document.querySelectorAll("#adminTabBar [data-admin-tab]").forEach(button => {
     button.classList.toggle("active", button.dataset.adminTab === activeAdminTab);
   });
   
-  if (activeAdminTab === "preview") {
-    renderPreview();
+  document.querySelectorAll(".admin-tab-hidden").forEach(section => {
+    section.classList.remove("admin-tab-hidden");
+  });
+  
+  document.querySelectorAll(".admin-tab-active").forEach(section => {
+    section.classList.remove("admin-tab-active");
+  });
+  
+  let target = null;
+  
+  if (tabName === "products") {
+    target = productList;
   }
   
-  if (activeAdminTab === "media") {
+  if (tabName === "editor") {
+    target = fields.id || fields.title || fields.image;
+  }
+  
+  if (tabName === "media") {
+    target = document.getElementById("mediaLibraryPanel") || document.getElementById("mediaLibraryGrid");
     renderMediaLibrary();
+  }
+  
+  if (tabName === "preview") {
+    renderPreview();
+    target = previewBox;
+  }
+  
+  if (tabName === "settings") {
+    target =
+      document.getElementById("adminSettingsPanel") ||
+      document.querySelector(".admin-settings-panel");
   }
   
   lockAdminMobileWidth();
   
-  const activeSection = adminSections[activeAdminTab];
-  
-  if (activeSection) {
+  if (target) {
     setTimeout(() => {
-      activeSection.scrollIntoView({
+      target.scrollIntoView({
         behavior: "smooth",
-        block: "start"
+        block: "center"
       });
-    }, 100);
+    }, 120);
+  } else {
+    toast("Could not find " + tabName + " section.");
   }
 }
 
