@@ -5255,3 +5255,12 @@ body {
     transform: translateX(-50%);
   }
 }
+#loginBox:not(.hidden)~#adminTabBar,
+body:has(#loginBox:not(.hidden)) #adminTabBar {
+  display: none !important;
+}
+
+#adminApp.hidden~#adminTabBar,
+body:has(#adminApp.hidden) #adminTabBar {
+  display: none !important;
+}

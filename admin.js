@@ -474,7 +474,6 @@ uploadInput.addEventListener("change", event => {
 });
 
 addUploadButtons();
-setupAdminTabs();
 function setupAdminTabs() {
   if (document.getElementById("adminTabBar")) return;
   
@@ -996,9 +995,11 @@ function unlock(){
   sessionStorage.setItem("emx_admin_password", adminPassword);
 
   loginBox.classList.add("hidden");
-  adminApp.classList.remove("hidden");
+adminApp.classList.remove("hidden");
 
-  loadProducts()
+setupAdminTabs();
+
+loadProducts()
     .then(() => {
       toast("Admin unlocked. Products loaded.");
     })
