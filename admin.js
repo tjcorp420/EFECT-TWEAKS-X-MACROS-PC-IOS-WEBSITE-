@@ -37,6 +37,102 @@ uploadInput.style.display = "none";
 document.body.appendChild(uploadInput);
 
 let uploadTargetMode = "main";
+const MEDIA_LIBRARY_KEY = "emx_recent_uploaded_media_v1";
+
+function getMediaLibrary() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(MEDIA_LIBRARY_KEY));
+    return Array.isArray(saved) ? saved : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function saveMediaLibrary(items) {
+  localStorage.setItem(MEDIA_LIBRARY_KEY, JSON.stringify(items));
+}
+
+function addToMediaLibrary(item) {
+  const library = getMediaLibrary();
+  
+  const cleanItem = {
+    url: item.url,
+    type: item.type || "image",
+    name: item.name || "EMX Upload",
+    createdAt: Date.now()
+  };
+  
+  const withoutDuplicate = library.filter(media => media.url !== cleanItem.url);
+  withoutDuplicate.unshift(cleanItem);
+  
+  saveMediaLibrary(withoutDuplicate.slice(0, 30));
+  renderMediaLibrary();
+}
+
+function removeFromMediaLibrary(url) {
+  const library = getMediaLibrary().filter(media => media.url !== url);
+  saveMediaLibrary(library);
+  renderMediaLibrary();
+}
+
+function copyText(value) {
+  navigator.clipboard.writeText(value).then(() => {
+    alert("Copied URL.");
+  }).catch(() => {
+    alert(value);
+  });
+}
+
+function addUrlToGallery(url) {
+  const currentLines = fields.gallery.value
+    .split("\n")
+    .map(line => line.trim())
+    .filter(Boolean);
+  
+  if (!currentLines.includes(url)) {
+    currentLines.push(url);
+  }
+  
+  fields.gallery.value = currentLines.join("\n");
+  
+  if (typeof renderPreview === "function") {
+    renderPreview();
+  }
+}
+
+function useMediaAsMain(url) {
+  fields.image.value = url;
+  
+  if (!fields.fallbackPreview.value.trim()) {
+    fields.fallbackPreview.value = url;
+  }
+  
+  if (fields.previewType.value !== "video" && !fields.previewSrc.value.trim()) {
+    fields.previewType.value = "image";
+    fields.previewSrc.value = url;
+  }
+  
+  if (typeof renderPreview === "function") {
+    renderPreview();
+  }
+}
+
+function useMediaAsPreview(media) {
+  fields.previewType.value = media.type === "video" ? "video" : "image";
+  fields.previewSrc.value = media.url;
+  
+  if (media.type === "image" && !fields.image.value.trim()) {
+    fields.image.value = media.url;
+  }
+  
+  if (fields.image.value.trim() && !fields.fallbackPreview.value.trim()) {
+    fields.fallbackPreview.value = fields.image.value.trim();
+  }
+  
+  if (typeof renderPreview === "function") {
+    renderPreview();
+  }
+}
 
 function createUploadButton(text, mode) {
   const button = document.createElement("button");
@@ -85,6 +181,125 @@ function addUploadButtons() {
   insertAfterField(fields.image, mainButton);
   insertAfterField(fields.gallery, galleryButton);
   insertAfterField(fields.previewSrc, videoButton);
+  
+  createMediaLibraryPanel();
+}
+
+function createMediaLibraryPanel() {
+  if (document.getElementById("mediaLibraryPanel")) return;
+  
+  const panel = document.createElement("section");
+  panel.id = "mediaLibraryPanel";
+  panel.className = "media-library-panel";
+  
+  panel.innerHTML = `
+    <div class="media-library-head">
+      <div>
+        <h2>Media Library</h2>
+        <p>Recent uploads saved on this device.</p>
+      </div>
+
+      <button class="admin-btn small" type="button" id="clearMediaLibraryBtn">
+        Clear
+      </button>
+    </div>
+
+    <div id="mediaLibraryGrid" class="media-library-grid"></div>
+  `;
+  
+  const previewBoxParent = previewBox?.parentElement;
+  
+  if (previewBoxParent) {
+    previewBoxParent.insertAdjacentElement("beforebegin", panel);
+  } else {
+    document.body.appendChild(panel);
+  }
+  
+  document.getElementById("clearMediaLibraryBtn")?.addEventListener("click", () => {
+    if (confirm("Clear recent uploaded media from this admin device?")) {
+      saveMediaLibrary([]);
+      renderMediaLibrary();
+    }
+  });
+  
+  renderMediaLibrary();
+}
+
+function renderMediaLibrary() {
+  const grid = document.getElementById("mediaLibraryGrid");
+  if (!grid) return;
+  
+  const library = getMediaLibrary();
+  
+  if (!library.length) {
+    grid.innerHTML = `
+      <div class="media-empty">
+        Upload images or videos and they will appear here.
+      </div>
+    `;
+    return;
+  }
+  
+  grid.innerHTML = library.map((media, index) => {
+    const isVideo = media.type === "video";
+    
+    return `
+      <article class="media-tile">
+        <div class="media-thumb">
+          ${
+            isVideo
+              ? `<video src="${escapeHtml(media.url)}" muted playsinline preload="metadata"></video>`
+              : `<img src="${escapeHtml(media.url)}" alt="${escapeHtml(media.name)}">`
+          }
+
+          <span class="media-type">${isVideo ? "VIDEO" : "IMAGE"}</span>
+        </div>
+
+        <div class="media-name">${escapeHtml(media.name)}</div>
+
+        <div class="media-actions">
+          <button type="button" data-media-action="main" data-index="${index}">Main</button>
+          <button type="button" data-media-action="gallery" data-index="${index}">Gallery</button>
+          <button type="button" data-media-action="preview" data-index="${index}">Preview</button>
+          <button type="button" data-media-action="copy" data-index="${index}">Copy</button>
+          <button type="button" data-media-action="remove" data-index="${index}" class="danger">×</button>
+        </div>
+      </article>
+    `;
+  }).join("");
+  
+  grid.querySelectorAll("[data-media-action]").forEach(button => {
+    button.addEventListener("click", () => {
+      const action = button.dataset.mediaAction;
+      const index = Number(button.dataset.index);
+      const media = getMediaLibrary()[index];
+      
+      if (!media) return;
+      
+      if (action === "main") {
+        useMediaAsMain(media.url);
+        alert("Set as main image. Press Apply Changes, then Save Live.");
+      }
+      
+      if (action === "gallery") {
+        addUrlToGallery(media.url);
+        alert("Added to gallery. Press Apply Changes, then Save Live.");
+      }
+      
+      if (action === "preview") {
+        useMediaAsPreview(media);
+        alert("Set as preview source. Press Apply Changes, then Save Live.");
+      }
+      
+      if (action === "copy") {
+        copyText(media.url);
+      }
+      
+      if (action === "remove") {
+        removeFromMediaLibrary(media.url);
+      }
+    });
+  });
 }
 
 async function uploadSelectedFile(file) {
@@ -111,6 +326,11 @@ async function uploadSelectedFile(file) {
     }
     
     const uploadedUrl = data.url;
+    addToMediaLibrary({
+  url: uploadedUrl,
+  type: file.type && file.type.startsWith("video/") ? "video" : "image",
+  name: file.name || "EMX Upload"
+});
     
     if (uploadTargetMode === "main") {
       fields.image.value = uploadedUrl;
