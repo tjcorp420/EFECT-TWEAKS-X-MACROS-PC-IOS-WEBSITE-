@@ -4984,3 +4984,96 @@ input {
 .admin-btn {
   max-width: 100%;
 }
+/* HARD FIX: stop Blob URLs from stretching admin on mobile */
+* {
+  box-sizing: border-box !important;
+}
+
+html,
+body {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+body {
+  position: relative !important;
+}
+
+#adminApp,
+#loginBox,
+.admin-panel,
+.admin-card,
+.editor-card,
+.product-editor,
+.media-library-panel,
+.preview-card,
+section,
+form,
+label,
+.field,
+.input-wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+}
+
+/* exact admin fields */
+#imageField,
+#galleryField,
+#previewSrcField,
+#fallbackField,
+#urlField,
+#descriptionField,
+#featuresField,
+input,
+textarea,
+select {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* long Blob URLs stay inside fields instead of stretching page */
+#imageField,
+#previewSrcField,
+#fallbackField,
+#urlField,
+input {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* gallery/textarea Blob URLs wrap */
+#galleryField,
+textarea {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-all !important;
+  overflow-x: hidden !important;
+  resize: vertical !important;
+}
+
+/* buttons stop pushing off-screen */
+button,
+.admin-btn,
+.upload-btn {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  white-space: normal !important;
+}
+
+/* thumbnails/media library cannot widen page */
+.gallery-preview-row,
+.gallery-preview-grid,
+.media-library-grid,
+.media-tile,
+.media-thumb {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}

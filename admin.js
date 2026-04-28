@@ -30,6 +30,27 @@ const fields = {
   visible: document.getElementById("visibleField")
 };
 
+function lockAdminMobileWidth() {
+  document.documentElement.style.maxWidth = "100%";
+  document.documentElement.style.overflowX = "hidden";
+  document.body.style.maxWidth = "100%";
+  document.body.style.overflowX = "hidden";
+  
+  ["image", "gallery", "previewSrc", "fallbackPreview", "productUrl"].forEach(key => {
+    if (fields[key]) {
+      fields[key].setAttribute("wrap", "soft");
+      fields[key].style.width = "100%";
+      fields[key].style.maxWidth = "100%";
+      fields[key].style.minWidth = "0";
+      fields[key].style.boxSizing = "border-box";
+      fields[key].style.overflowX = "hidden";
+    }
+  });
+}
+
+lockAdminMobileWidth();
+window.addEventListener("resize", lockAdminMobileWidth);
+
 const uploadInput = document.createElement("input");
 uploadInput.type = "file";
 uploadInput.accept = "image/*,video/mp4,video/webm,video/quicktime";
