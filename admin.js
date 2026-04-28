@@ -12,16 +12,6 @@ const productList = document.getElementById("productList");
 const previewBox = document.getElementById("previewBox");
 const galleryPreviewBox = document.getElementById("galleryPreviewBox");
 
-const adminSections = {
-  products: document.getElementById("productsPanel") || productList?.closest("section"),
-  editor: document.getElementById("editorPanel") || fields.id?.closest("section"),
-  media: document.getElementById("mediaLibraryPanel"),
-  preview: document.getElementById("previewPanel") || previewBox?.closest("section"),
-  settings: document.getElementById("settingsPanel") || document.querySelector(".admin-settings-panel")
-};
-
-let activeAdminTab = localStorage.getItem("emx_admin_active_tab") || "products";
-
 const fields = {
   id: document.getElementById("idField"),
   key: document.getElementById("keyField"),
@@ -39,6 +29,20 @@ const fields = {
   features: document.getElementById("featuresField"),
   visible: document.getElementById("visibleField")
 };
+
+let activeAdminTab = localStorage.getItem("emx_admin_active_tab") || "products";
+
+let adminSections = {};
+
+function getAdminSections() {
+  return {
+    products: document.getElementById("productsPanel") || productList?.closest("section"),
+    editor: document.getElementById("editorPanel") || fields.id?.closest("section"),
+    media: document.getElementById("mediaLibraryPanel"),
+    preview: document.getElementById("previewPanel") || previewBox?.closest("section"),
+    settings: document.getElementById("settingsPanel") || document.querySelector(".admin-settings-panel")
+  };
+}
 
 function lockAdminMobileWidth() {
   const safeWidth = Math.max(280, window.innerWidth - 32) + "px";
@@ -589,19 +593,12 @@ function showAdminTab(tabName) {
   activeAdminTab = tabName;
   localStorage.setItem("emx_admin_active_tab", activeAdminTab);
   
-  const freshSections = {
-    products: document.getElementById("productsPanel") || productList?.closest("section"),
-    editor: document.getElementById("editorPanel") || fields.id?.closest("section"),
-    media: document.getElementById("mediaLibraryPanel"),
-    preview: document.getElementById("previewPanel") || previewBox?.closest("section"),
-    settings: document.getElementById("settingsPanel") || document.querySelector(".admin-settings-panel")
-  };
+  adminSections = getAdminSections();
   
-  Object.entries(freshSections).forEach(([name, section]) => {
+  Object.entries(adminSections).forEach(([name, section]) => {
     if (!section) return;
     
     const isActive = name === activeAdminTab;
-    
     section.classList.toggle("admin-tab-hidden", !isActive);
     section.classList.toggle("admin-tab-active", isActive);
   });
@@ -620,7 +617,7 @@ function showAdminTab(tabName) {
   
   lockAdminMobileWidth();
   
-  const activeSection = freshSections[activeAdminTab];
+  const activeSection = adminSections[activeAdminTab];
   
   if (activeSection) {
     setTimeout(() => {
@@ -629,8 +626,6 @@ function showAdminTab(tabName) {
         block: "start"
       });
     }, 100);
-  } else {
-    toast("Tab section not found: " + activeAdminTab);
   }
 }
 
@@ -999,24 +994,24 @@ function moveSelected(direction){
   renderPreview();
 }
 
-function unlock(){
+function unlock() {
   const password = document.getElementById("adminPassword").value.trim();
-
-  if(!password){
+  
+  if (!password) {
     toast("Enter your admin password.");
     return;
   }
-
+  
   adminPassword = password;
   sessionStorage.setItem("emx_admin_password", adminPassword);
-
+  
   loginBox.classList.add("hidden");
-adminApp.classList.remove("hidden");
-
-setupAdminTabs();
-
-loadProducts()
+  adminApp.classList.remove("hidden");
+  
+  loadProducts()
     .then(() => {
+      setupAdminTabs();
+      showAdminTab("products");
       toast("Admin unlocked. Products loaded.");
     })
     .catch(error => {
@@ -1026,6 +1021,8 @@ loadProducts()
 }
 
 Object.values(fields).forEach(field => {
+  if (!field) return;
+  
   field.addEventListener("input", renderPreview);
   field.addEventListener("change", renderPreview);
 });
