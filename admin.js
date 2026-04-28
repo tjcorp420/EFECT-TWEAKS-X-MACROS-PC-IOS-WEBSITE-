@@ -31,25 +31,68 @@ const fields = {
 };
 
 function lockAdminMobileWidth() {
+  const safeWidth = Math.max(280, window.innerWidth - 32) + "px";
+  
+  document.documentElement.style.width = "100%";
   document.documentElement.style.maxWidth = "100%";
   document.documentElement.style.overflowX = "hidden";
+  
+  document.body.style.width = "100%";
   document.body.style.maxWidth = "100%";
   document.body.style.overflowX = "hidden";
   
-  ["image", "gallery", "previewSrc", "fallbackPreview", "productUrl"].forEach(key => {
-    if (fields[key]) {
-      fields[key].setAttribute("wrap", "soft");
-      fields[key].style.width = "100%";
-      fields[key].style.maxWidth = "100%";
-      fields[key].style.minWidth = "0";
-      fields[key].style.boxSizing = "border-box";
-      fields[key].style.overflowX = "hidden";
-    }
+  document.querySelectorAll("*").forEach(element => {
+    element.style.maxWidth = "100%";
+    element.style.boxSizing = "border-box";
+  });
+  
+  const problemFields = [
+    fields.image,
+    fields.gallery,
+    fields.previewSrc,
+    fields.fallbackPreview,
+    fields.productUrl
+  ];
+  
+  problemFields.forEach(field => {
+    if (!field) return;
+    
+    field.setAttribute("cols", "1");
+    field.setAttribute("spellcheck", "false");
+    field.setAttribute("autocomplete", "off");
+    field.setAttribute("autocorrect", "off");
+    field.setAttribute("autocapitalize", "off");
+    
+    field.style.display = "block";
+    field.style.width = "100%";
+    field.style.maxWidth = safeWidth;
+    field.style.minWidth = "0";
+    field.style.boxSizing = "border-box";
+    field.style.overflowX = "auto";
+    field.style.whiteSpace = "pre";
+    field.style.wordBreak = "normal";
+    field.style.overflowWrap = "normal";
+  });
+  
+  if (fields.gallery) {
+    fields.gallery.style.whiteSpace = "pre-wrap";
+    fields.gallery.style.wordBreak = "break-all";
+    fields.gallery.style.overflowWrap = "anywhere";
+    fields.gallery.style.overflowX = "hidden";
+  }
+  
+  document.querySelectorAll("section, div, form, label, textarea, input, select, button").forEach(element => {
+    element.style.maxWidth = "100%";
+    element.style.minWidth = "0";
   });
 }
 
 lockAdminMobileWidth();
+
 window.addEventListener("resize", lockAdminMobileWidth);
+window.addEventListener("orientationchange", () => {
+  setTimeout(lockAdminMobileWidth, 300);
+});
 
 const uploadInput = document.createElement("input");
 uploadInput.type = "file";
@@ -389,7 +432,11 @@ async function uploadSelectedFile(file) {
       renderPreview();
     }
     
-    alert("Upload complete. Press Apply Changes, then Save Live.");
+    lockAdminMobileWidth();
+setTimeout(lockAdminMobileWidth, 100);
+setTimeout(lockAdminMobileWidth, 500);
+
+alert("Upload complete. Press Apply Changes, then Save Live.");
   } catch (error) {
     alert(error.message || "Upload failed.");
   } finally {
