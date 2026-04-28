@@ -3679,7 +3679,7 @@ main{
   min-height:72px;
   z-index:965;
   display:grid;
-  grid-template-columns:repeat(5,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:7px;
   padding:9px;
   border-radius:26px;
@@ -5163,7 +5163,7 @@ body {
   z-index: 999999 !important;
   
   display: grid !important;
-  grid-template-columns: repeat(5, 1fr) !important;
+  grid-template-columns: repeat(4, 1fr) !important;
   gap: 7px !important;
   
   padding: 9px !important;

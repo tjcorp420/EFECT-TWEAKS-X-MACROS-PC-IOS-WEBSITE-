@@ -552,10 +552,6 @@ function setupAdminTabs() {
   tabBar.id = "adminTabBar";
   tabBar.className = "admin-tab-bar";
   tabBar.innerHTML = `
-    <button type="button" data-admin-tab="products">
-      <span>▦</span>
-      Products
-    </button>
 
     <button type="button" data-admin-tab="editor">
       <span>✎</span>
