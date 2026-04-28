@@ -709,39 +709,143 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
   
- 
-
-    const detail = PRODUCT_DETAILS[product.id] || {
-      includes: product.features || [],
-      setup: ["Purchase through secure checkout", "Follow delivery instructions", "Contact support if needed"],
-      compatibility: ["Digital product", "Results vary by system", "Use responsibly"]
-    };
-
-    const modal = document.getElementById("detail-modal");
-    if(!modal) return;
-
-    document.getElementById("detailEyebrow").textContent = product.eyebrow || "";
-    document.getElementById("detailTitle").innerHTML = escapeHtml(product.title || "")
+  const detail = PRODUCT_DETAILS[product.id] || {
+    includes: product.features || [],
+    setup: [
+      "Purchase through secure checkout",
+      "Follow delivery instructions",
+      "Contact support if needed"
+    ],
+    compatibility: [
+      "Digital product",
+      "Results vary by system",
+      "Use responsibly"
+    ]
+  };
+  
+  const modal = document.getElementById("detail-modal");
+  if (!modal) return;
+  
+  const detailEyebrow = document.getElementById("detailEyebrow");
+  const detailTitle = document.getElementById("detailTitle");
+  const detailDescription = document.getElementById("detailDescription");
+  const detailImage = document.getElementById("detailImage");
+  const detailIncludes = document.getElementById("detailIncludes");
+  const detailSetup = document.getElementById("detailSetup");
+  const detailCompat = document.getElementById("detailCompat");
+  
+  if (detailEyebrow) {
+    detailEyebrow.textContent = product.eyebrow || "Product Details";
+  }
+  
+  if (detailTitle) {
+    detailTitle.innerHTML = escapeHtml(product.title || "")
+      .replace("EMX", "<span>EMX</span>")
       .replace("Efect", "<span>Efect</span>")
       .replace("EFECT", "<span>EFECT</span>")
       .replace("FPS", "<span>FPS</span>");
-
-    document.getElementById("detailDescription").textContent = product.description || "";
-    document.getElementById("detailImage").src = product.image || "./emx-logo.png";
-    document.getElementById("detailImage").alt = product.title || "Product image";
-    document.getElementById("detailIncludes").innerHTML = detail.includes.map(item => `<li>${escapeHtml(item)}</li>`).join("");
-    document.getElementById("detailSetup").innerHTML = detail.setup.map(item => `<li>${escapeHtml(item)}</li>`).join("");
-    document.getElementById("detailCompat").innerHTML = detail.compatibility.map(item => `<li>${escapeHtml(item)}</li>`).join("");
-
-    const addBtn = document.getElementById("detailAddBtn");
-    const buyBtn = document.getElementById("detailBuyBtn");
-
-    if(addBtn) addBtn.dataset.key = product.key;
-    if(buyBtn) buyBtn.dataset.key = product.key;
-
-    modal.classList.add("show");
-    document.body.classList.add("no-scroll");
   }
+  
+  if (detailDescription) {
+    detailDescription.textContent = product.description || "";
+  }
+  
+  if (detailImage) {
+    detailImage.src = product.image || "./emx-logo.png";
+    detailImage.alt = product.title || "Product image";
+  }
+  
+  if (detailIncludes) {
+    detailIncludes.innerHTML = detail.includes
+      .map(item => `<li>${escapeHtml(item)}</li>`)
+      .join("");
+  }
+  
+  if (detailSetup) {
+    detailSetup.innerHTML = detail.setup
+      .map(item => `<li>${escapeHtml(item)}</li>`)
+      .join("");
+  }
+  
+  if (detailCompat) {
+    detailCompat.innerHTML = detail.compatibility
+      .map(item => `<li>${escapeHtml(item)}</li>`)
+      .join("");
+  }
+  
+  const detailCard = modal.querySelector(".detail-card");
+  
+  if (detailCard) {
+    const oldUpgrade = document.getElementById("detailCheckoutFlow");
+    if (oldUpgrade) {
+      oldUpgrade.remove();
+    }
+    
+    const upgradePanel = document.createElement("div");
+    upgradePanel.id = "detailCheckoutFlow";
+    upgradePanel.className = "detail-checkout-upgrade";
+    
+    upgradePanel.innerHTML = `
+      <div class="detail-trust-badges">
+        <span>🔒 Secure Payhip</span>
+        <span>📲 Digital Instant Delivery</span>
+        <span>🛠 Setup Support</span>
+        <span>✅ EFECT Verified</span>
+      </div>
+
+      <div class="detail-after-checkout">
+        <div class="detail-after-head">
+          <span>POST CHECKOUT FLOW</span>
+          <h3>What Happens After Checkout?</h3>
+          <p>Buyers get a clear delivery path after purchase, with support available if setup help is needed.</p>
+        </div>
+
+        <div class="detail-flow-grid">
+          <div class="detail-flow-step">
+            <strong>01</strong>
+            <span>Secure Checkout Opens</span>
+            <p>Buy Now sends the buyer through the official Payhip checkout flow.</p>
+          </div>
+
+          <div class="detail-flow-step">
+            <strong>02</strong>
+            <span>Access Instructions</span>
+            <p>After payment, follow the product download or delivery instructions.</p>
+          </div>
+
+          <div class="detail-flow-step">
+            <strong>03</strong>
+            <span>Save Purchase Proof</span>
+            <p>Keep your Payhip receipt or proof of purchase for support verification.</p>
+          </div>
+
+          <div class="detail-flow-step">
+            <strong>04</strong>
+            <span>EFECT Support</span>
+            <p>Contact EFECT support through Discord if you need access or setup help.</p>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    const detailActions = detailCard.querySelector(".detail-actions");
+    
+    if (detailActions) {
+      detailActions.insertAdjacentElement("beforebegin", upgradePanel);
+    } else {
+      detailCard.appendChild(upgradePanel);
+    }
+  }
+  
+  const addBtn = document.getElementById("detailAddBtn");
+  const buyBtn = document.getElementById("detailBuyBtn");
+  
+  if (addBtn) addBtn.dataset.key = product.key;
+  if (buyBtn) buyBtn.dataset.key = product.key;
+  
+  modal.classList.add("show");
+  document.body.classList.add("no-scroll");
+}
 
   function closeProductDetails(){
     const modal = document.getElementById("detail-modal");
