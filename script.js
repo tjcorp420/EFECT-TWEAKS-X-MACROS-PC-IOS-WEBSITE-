@@ -222,6 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   const SITE_BASE_URL = "https://efect-macros-x-tweaks.vercel.app/";
+  const REFERRALS_API_URL = "/api/referrals";
   const CHECKOUT_BASE = "https://payhip.com/buy";
   const CART_STORAGE_KEY = "efect_cart_v3";
   const INSTALL_POPUP_KEY = "emx_install_popup_seen_v1";
@@ -1335,6 +1336,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getAffiliatePortalNodes(){
     return {
+      email: document.getElementById("affiliateEmailInput"),
       input: document.getElementById("affiliateKeyInput"),
       output: document.getElementById("affiliateLinkOutput"),
       status: document.getElementById("affiliateCopyStatus")
@@ -1408,6 +1410,52 @@ document.addEventListener("DOMContentLoaded", () => {
     return link;
   }
 
+  async function lookupAffiliateLink(){
+    const { email, input, output } = getAffiliatePortalNodes();
+    if(!email || !output) return "";
+
+    const cleanEmail = String(email.value || "").trim().toLowerCase();
+
+    if(!cleanEmail || !cleanEmail.includes("@")){
+      setAffiliatePortalStatus("Enter the email used for your Payhip affiliate signup.", "warn");
+      showToast("<strong>Email needed.</strong><br>Enter the email used for your Payhip affiliate signup.");
+      return "";
+    }
+
+    setAffiliatePortalStatus("Checking referral email...", "good");
+
+    try{
+      const response = await fetch(REFERRALS_API_URL + "?email=" + encodeURIComponent(cleanEmail), {
+        cache: "no-store"
+      });
+      const data = await response.json().catch(() => null);
+
+      if(!response.ok || !data || data.ok !== true){
+        throw new Error(data?.error || "Referral lookup failed.");
+      }
+
+      if(!data.found || !data.referral?.referralLink){
+        setAffiliatePortalStatus("No referral saved for that email yet.", "warn");
+        showToast("<strong>No referral found.</strong><br>Ask EMX support to approve/save your affiliate key, or paste your key here.");
+        return "";
+      }
+
+      output.value = data.referral.referralLink;
+
+      if(input && data.referral.affiliateKey){
+        input.value = data.referral.affiliateKey;
+      }
+
+      setAffiliatePortalStatus("Referral found. Link ready to copy.", "good");
+      showToast("<strong>Referral Found!</strong><br>Your EMX creator link is ready to copy.");
+      return data.referral.referralLink;
+    }catch(error){
+      setAffiliatePortalStatus("Lookup is unavailable right now.", "warn");
+      showToast("<strong>Lookup failed.</strong><br>" + escapeHtml(error.message || "Try again in a moment."));
+      return "";
+    }
+  }
+
   function copyAffiliateLink(){
     const { output } = getAffiliatePortalNodes();
     if(!output) return;
@@ -1440,7 +1488,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setupAffiliatePortal(){
-    const { input } = getAffiliatePortalNodes();
+    const { email, input } = getAffiliatePortalNodes();
+    if(!email && !input) return;
+
+    if(email){
+      email.addEventListener("keydown", event => {
+        if(event.key === "Enter"){
+          event.preventDefault();
+          lookupAffiliateLink();
+        }
+      });
+    }
+
     if(!input) return;
 
     input.addEventListener("keydown", event => {
@@ -1829,6 +1888,10 @@ document.addEventListener("DOMContentLoaded", () => {
         generateAffiliateLink();
       }
 
+      if(action === "lookup-affiliate-link"){
+        lookupAffiliateLink();
+      }
+
       if(action === "copy-affiliate-link"){
         copyAffiliateLink();
       }
@@ -1842,6 +1905,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if(action === "scroll-bundle"){
         document.querySelector(".bundle-card")?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+
+      if(action === "scroll-affiliate-portal"){
+        document.getElementById("affiliatePortal")?.scrollIntoView({
           behavior: "smooth",
           block: "center"
         });
@@ -2255,6 +2325,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if(action === "bundle"){
           document.querySelector(".bundle-card")?.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }
+
+        if(action === "referrals"){
+          document.getElementById("affiliatePortal")?.scrollIntoView({
             behavior: "smooth",
             block: "center"
           });

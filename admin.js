@@ -1,4 +1,6 @@
 const API_URL = "/api/products";
+const REFERRALS_API_URL = "/api/referrals";
+const SITE_BASE_URL = "https://efect-macros-x-tweaks.vercel.app/";
 const CHECKOUT_BASE = "https://payhip.com/buy";
 
 let products = [];
@@ -11,6 +13,9 @@ const statusPill = document.getElementById("statusPill");
 const productList = document.getElementById("productList");
 const previewBox = document.getElementById("previewBox");
 const galleryPreviewBox = document.getElementById("galleryPreviewBox");
+const referralEmailField = document.getElementById("referralEmailField");
+const referralKeyField = document.getElementById("referralKeyField");
+const referralList = document.getElementById("referralList");
 
 const fields = {
   id: document.getElementById("idField"),
@@ -485,11 +490,13 @@ function setupAdminTabs() {
   const editorCard = fields.id?.closest("section") || fields.id?.parentElement;
   const previewCard = previewBox?.closest("section") || previewBox?.parentElement;
   const mediaCard = document.getElementById("mediaLibraryPanel");
+  const referralsCard = referralList?.closest(".card") || referralList?.parentElement;
   
   adminSections.products = productsCard;
   adminSections.editor = editorCard;
   adminSections.preview = previewCard;
   adminSections.media = mediaCard;
+  adminSections.referrals = referralsCard;
   
   const settingsPanel = document.createElement("section");
   settingsPanel.id = "adminSettingsPanel";
@@ -566,6 +573,11 @@ function setupAdminTabs() {
     <button type="button" data-admin-tab="preview">
       <span>◉</span>
       Preview
+    </button>
+
+    <button type="button" data-admin-tab="referrals">
+      <span>Link</span>
+      Referrals
     </button>
 
     <button type="button" data-admin-tab="settings">
@@ -758,6 +770,11 @@ function showAdminTab(tabName) {
     renderPreview();
     target = previewBox;
   }
+
+  if (tabName === "referrals") {
+    target = referralList || referralEmailField;
+    loadReferrals().catch(error => toast("<b>Referral load failed:</b><br>" + escapeHtml(error.message)));
+  }
   
   if (tabName === "settings") {
   openAdminSettingsModal();
@@ -801,6 +818,24 @@ function escapeHtml(value){
 
 function money(value){
   return "$" + Number(value || 0).toFixed(2);
+}
+
+function normalizeEmail(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function cleanReferralKey(value) {
+  return String(value || "")
+    .trim()
+    .replace(/^@+/, "")
+    .replace(/[^\w.-]/g, "")
+    .slice(0, 64);
+}
+
+function referralLinkForKey(key) {
+  const target = new URL(SITE_BASE_URL);
+  target.searchParams.set("ref", key);
+  return target.toString();
 }
 
 function cleanId(value){
@@ -904,6 +939,128 @@ async function saveProducts(){
   renderPreview();
 
   toast("<b>Saved live.</b><br>Your Vercel database was updated.");
+}
+
+function renderReferralList(referrals = []) {
+  if (!referralList) return;
+
+  if (!referrals.length) {
+    referralList.innerHTML = `
+      <div class="product-btn">
+        <span>
+          <b>No saved referrals yet</b>
+          <small>Add an affiliate email and key above.</small>
+        </span>
+      </div>
+    `;
+    return;
+  }
+
+  referralList.innerHTML = referrals.map(referral => `
+    <button class="product-btn" type="button" data-referral-email="${escapeHtml(referral.email)}" data-referral-key="${escapeHtml(referral.affiliateKey)}">
+      <span>
+        <b>${escapeHtml(referral.email)}</b>
+        <small>${escapeHtml(referral.referralLink || referralLinkForKey(referral.affiliateKey))}</small>
+      </span>
+      <em class="status">Saved</em>
+    </button>
+  `).join("");
+
+  referralList.querySelectorAll("[data-referral-email]").forEach(button => {
+    button.addEventListener("click", () => {
+      if (referralEmailField) referralEmailField.value = button.dataset.referralEmail || "";
+      if (referralKeyField) referralKeyField.value = button.dataset.referralKey || "";
+      toast("Referral loaded for editing.");
+    });
+  });
+}
+
+async function loadReferrals() {
+  if (!referralList) return;
+
+  const response = await fetch(REFERRALS_API_URL, {
+    cache: "no-store",
+    headers: {
+      "x-admin-password": adminPassword
+    }
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok || !data || data.ok !== true) {
+    throw new Error(data && data.error ? data.error : "Could not load referrals.");
+  }
+
+  renderReferralList(Array.isArray(data.referrals) ? data.referrals : []);
+}
+
+async function saveReferral() {
+  const email = normalizeEmail(referralEmailField?.value);
+  const affiliateKey = cleanReferralKey(referralKeyField?.value);
+
+  if (!email || !email.includes("@")) {
+    toast("Enter the affiliate email.");
+    return;
+  }
+
+  if (!affiliateKey) {
+    toast("Enter the Payhip affiliate key.");
+    return;
+  }
+
+  const response = await fetch(REFERRALS_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-password": adminPassword
+    },
+    body: JSON.stringify({
+      email,
+      affiliateKey
+    })
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok || !data || data.ok !== true) {
+    throw new Error(data && data.error ? data.error : "Could not save referral.");
+  }
+
+  toast("<b>Referral saved.</b><br>" + escapeHtml(data.referral.referralLink));
+  await loadReferrals();
+}
+
+async function deleteReferral() {
+  const email = normalizeEmail(referralEmailField?.value);
+
+  if (!email || !email.includes("@")) {
+    toast("Enter the affiliate email to delete.");
+    return;
+  }
+
+  const response = await fetch(REFERRALS_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-admin-password": adminPassword
+    },
+    body: JSON.stringify({
+      email,
+      delete: true
+    })
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok || !data || data.ok !== true) {
+    throw new Error(data && data.error ? data.error : "Could not delete referral.");
+  }
+
+  if (referralEmailField) referralEmailField.value = "";
+  if (referralKeyField) referralKeyField.value = "";
+
+  toast("Referral deleted.");
+  await loadReferrals();
 }
 
 function renderProductList() {
@@ -1163,6 +1320,7 @@ function unlock() {
       setupAdminTabs();
       showAdminTab("products");
       toast("Admin unlocked. Products loaded.");
+      loadReferrals().catch(error => toast("<b>Referral load failed:</b><br>" + escapeHtml(error.message)));
     })
     .catch(error => {
       toast("<b>Load error:</b><br>" + escapeHtml(error.message));
@@ -1206,6 +1364,17 @@ document.getElementById("duplicateBtn").addEventListener("click", duplicateProdu
 document.getElementById("deleteBtn").addEventListener("click", deleteProduct);
 document.getElementById("upBtn").addEventListener("click", () => moveSelected(-1));
 document.getElementById("downBtn").addEventListener("click", () => moveSelected(1));
+document.getElementById("saveReferralBtn")?.addEventListener("click", () => {
+  saveReferral().catch(error => toast("<b>Referral save failed:</b><br>" + escapeHtml(error.message)));
+});
+document.getElementById("reloadReferralsBtn")?.addEventListener("click", () => {
+  loadReferrals()
+    .then(() => toast("Reloaded referrals."))
+    .catch(error => toast("<b>Referral reload failed:</b><br>" + escapeHtml(error.message)));
+});
+document.getElementById("deleteReferralBtn")?.addEventListener("click", () => {
+  deleteReferral().catch(error => toast("<b>Referral delete failed:</b><br>" + escapeHtml(error.message)));
+});
 document.getElementById("clearGalleryBtn")?.addEventListener("click", () => {
   fields.gallery.value = "";
   renderPreview();

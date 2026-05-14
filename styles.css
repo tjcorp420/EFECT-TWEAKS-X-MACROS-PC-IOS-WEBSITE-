@@ -2196,6 +2196,7 @@ main{
     inset 0 1px 0 rgba(255,255,255,.08);
 }
 
+.affiliate-lookup-btn,
 .affiliate-generate-btn,
 .affiliate-copy-btn{
   min-height:52px;
@@ -2207,12 +2208,42 @@ main{
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 
+.affiliate-lookup-btn{
+  color:#fff;
+  background:
+    linear-gradient(135deg, rgba(162,12,255,.38), rgba(36,255,36,.14)),
+    rgba(0,0,0,.30);
+  border:1px solid rgba(162,12,255,.38);
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.28),
+    0 0 22px rgba(162,12,255,.14);
+}
+
 .affiliate-generate-btn{
   color:#030303;
   background:linear-gradient(135deg, var(--green), #83ff67);
   box-shadow:
     0 14px 34px rgba(36,255,36,.22),
     0 0 24px rgba(36,255,36,.16);
+}
+
+.affiliate-divider{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:rgba(255,255,255,.52);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.affiliate-divider::before,
+.affiliate-divider::after{
+  content:"";
+  height:1px;
+  flex:1;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
 }
 
 .affiliate-copy-row{
@@ -2234,6 +2265,7 @@ main{
     0 0 22px rgba(162,12,255,.12);
 }
 
+.affiliate-lookup-btn:hover,
 .affiliate-generate-btn:hover,
 .affiliate-copy-btn:hover{
   transform:translateY(-1px);
@@ -2265,6 +2297,8 @@ main{
   }
 
   .affiliate-output-field,
+  .affiliate-lookup-field,
+  .affiliate-divider,
   .affiliate-copy-row{
     grid-column:1 / -1;
   }
@@ -2283,6 +2317,7 @@ main{
 
   .affiliate-field input,
   .affiliate-field textarea,
+  .affiliate-lookup-btn,
   .affiliate-generate-btn,
   .affiliate-copy-btn{
     min-height:48px;

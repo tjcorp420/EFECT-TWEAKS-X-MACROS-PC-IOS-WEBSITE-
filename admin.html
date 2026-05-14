@@ -461,6 +461,25 @@
           <h2>Preview</h2>
           <div id="previewBox" class="preview"></div>
         </div>
+
+        <div class="card">
+          <h2>Affiliate Referrals</h2>
+          <p>Save the Payhip affiliate email and key so creators can look up their EMX referral link on the public site.</p>
+
+          <label>Affiliate Email</label>
+          <input id="referralEmailField" type="email" placeholder="creator@email.com" />
+
+          <label>Payhip Affiliate Key</label>
+          <input id="referralKeyField" placeholder="af6a0647dbb7a48" />
+
+          <div class="actions">
+            <button id="saveReferralBtn" type="button">Save Referral</button>
+            <button id="reloadReferralsBtn" class="secondary" type="button">Reload</button>
+            <button id="deleteReferralBtn" class="danger wide" type="button">Delete Email</button>
+          </div>
+
+          <div id="referralList" class="list"></div>
+        </div>
       </main>
     </section>
   </div>

@@ -221,6 +221,10 @@
                 View Bundle
               </button>
 
+              <button class="btn-outline play-click hero-referral-btn" type="button" data-action="scroll-affiliate-portal">
+                Referral Portal
+              </button>
+
               <a class="btn-outline play-click hero-map-btn" href="https://www.fortnite.com/@efect.lit?lang=en-US" target="_blank" rel="noopener">
                 EMX Fortnite Maps
               </a>
@@ -432,11 +436,31 @@
           <div class="section-kicker">Creator Portal</div>
           <h2 class="section-title" id="affiliatePortalTitle">Affiliate <span>Link Generator</span></h2>
           <p class="section-copy">
-            Paste your Payhip affiliate key and generate a clean EMX creator link for your bio, Discord, TikTok, or YouTube description.
+            Look up your EMX creator link with the email used for Payhip, or paste your Payhip affiliate key to generate a clean link for your bio.
           </p>
         </div>
 
         <div class="affiliate-generator" aria-label="Affiliate link generator">
+          <label class="affiliate-field affiliate-lookup-field">
+            <span>Payhip Affiliate Email</span>
+            <input
+              id="affiliateEmailInput"
+              type="email"
+              inputmode="email"
+              autocomplete="email"
+              spellcheck="false"
+              placeholder="creator@email.com"
+            >
+          </label>
+
+          <button class="affiliate-lookup-btn play-click" type="button" data-action="lookup-affiliate-link">
+            Find My Link
+          </button>
+
+          <div class="affiliate-divider" aria-hidden="true">
+            <span>or paste key</span>
+          </div>
+
           <label class="affiliate-field">
             <span>Payhip Affiliate Key</span>
             <input
@@ -1037,6 +1061,11 @@
   <button class="dock-command dock-main play-click" type="button" data-dock-action="bundle">
     <span class="dock-icon">🔥</span>
     <span class="dock-label">Bundle</span>
+  </button>
+
+  <button class="dock-command play-click" type="button" data-dock-action="referrals">
+    <span class="dock-icon">Link</span>
+    <span class="dock-label">Refs</span>
   </button>
 
   <a class="dock-command dock-map play-click" href="https://www.fortnite.com/@efect.lit?lang=en-US" target="_blank" rel="noopener" data-dock-action="maps">
