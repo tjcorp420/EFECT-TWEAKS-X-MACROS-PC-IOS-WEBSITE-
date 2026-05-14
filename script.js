@@ -227,7 +227,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const REFERRAL_STORAGE_KEY = "emx_referral";
   const REFERRAL_TIMESTAMP_KEY = "emx_referral_saved_at";
   const REFERRAL_TTL_MS = 30 * 24 * 60 * 60 * 1000;
-  const AFFILIATE_PARAM = "affiliate";
+  const PAYHIP_AFFILIATE_PARAM = "af";
+  const LEGACY_AFFILIATE_PARAM = "affiliate";
 
   const bootAudio = document.getElementById("bootAudio");
   const clickAudio = document.getElementById("clickAudio");
@@ -355,7 +356,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function saveReferralFromUrl(){
     try{
       const params = new URLSearchParams(window.location.search);
-      const referral = params.get("ref") || params.get(AFFILIATE_PARAM);
+      const referral =
+        params.get("ref") ||
+        params.get(PAYHIP_AFFILIATE_PARAM) ||
+        params.get(LEGACY_AFFILIATE_PARAM);
 
       if(!referral) return getStoredReferral();
 
@@ -374,6 +378,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function hasPayhipAffiliate(target){
+    const pathParts = target.pathname.split("/").filter(Boolean);
+    const hasProductPathAffiliate = pathParts[0] === "b" && pathParts.length >= 3;
+
+    return Boolean(
+      hasProductPathAffiliate ||
+      target.searchParams.has(PAYHIP_AFFILIATE_PARAM) ||
+      target.searchParams.has(LEGACY_AFFILIATE_PARAM)
+    );
+  }
+
+  function buildPayhipProductAffiliateUrl(productKey, referral){
+    const target = new URL("https://payhip.com/b/" + encodeURIComponent(productKey));
+    target.pathname = target.pathname.replace(/\/$/, "") + "/" + encodeURIComponent(referral);
+    return target.toString();
+  }
+
   function appendAffiliateToPayhipUrl(url){
     const referral = getStoredReferral();
 
@@ -383,12 +404,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try{
       const target = new URL(url, window.location.origin);
+      const pathParts = target.pathname.split("/").filter(Boolean);
 
-      if(target.searchParams.has(AFFILIATE_PARAM)){
+      if(hasPayhipAffiliate(target)){
         return target.toString();
       }
 
-      target.searchParams.set(AFFILIATE_PARAM, referral);
+      if(pathParts[0] === "b" && pathParts[1]){
+        target.pathname = target.pathname.replace(/\/$/, "") + "/" + encodeURIComponent(referral);
+        return target.toString();
+      }
+
+      if(pathParts[0] === "buy"){
+        const directProductKey = target.searchParams.get("link");
+
+        if(directProductKey){
+          return buildPayhipProductAffiliateUrl(directProductKey, referral);
+        }
+      }
+
+      target.searchParams.set(PAYHIP_AFFILIATE_PARAM, referral);
       return target.toString();
     }catch(error){
       return url;
