@@ -79,6 +79,7 @@
   <div id="instantBlackout"></div>
   
   <canvas id="galaxyCanvas"></canvas>
+  <canvas id="emxRainCanvas"></canvas>
   <div class="page-glow"></div>
 
   <audio id="bootAudio" src="efectboot.mp3" preload="auto"></audio>
@@ -172,53 +173,114 @@
     </div>
 
     <div class="header-actions">
-      <button class="icon-btn play-click" id="searchToggle" type="button" aria-label="Search">🔍</button>
+      <button class="icon-btn play-click" id="searchToggle" type="button" aria-label="Search" title="Search">
+        <span class="header-action-icon">⌕</span>
+        <span class="header-action-label">Search</span>
+      </button>
 
-      <button class="icon-btn play-click" id="cartToggle" type="button" aria-label="Cart">
-        🛒
+      <button class="icon-btn play-click" id="cartToggle" type="button" aria-label="Cart" title="Cart">
+        <span class="header-action-icon">Cart</span>
+        <span class="header-action-label">Cart</span>
         <span class="cart-count" id="cartCount">0</span>
       </button>
 
-      <button class="icon-btn play-click" id="installTestBtn" type="button" aria-label="Install App">⬇</button>
+      <button class="icon-btn play-click" id="installTestBtn" type="button" aria-label="Install App" title="Install app">
+        <span class="header-action-icon">App</span>
+        <span class="header-action-label">Install</span>
+      </button>
 
-      <button class="icon-btn play-click" id="menuBtn" type="button" aria-label="Menu">☰</button>
+      <button class="icon-btn play-click" id="menuBtn" type="button" aria-label="Menu" title="Menu">
+        <span class="header-action-icon">Menu</span>
+        <span class="header-action-label">Info</span>
+      </button>
     </div>
   </header>
 
   <main>
     <section class="hero">
       <div class="hero-card">
-        <div class="hero-logo-float">
-          <img src="emx-logo.png" alt="EMX EFECT Logo">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <div class="hero-kicker"><i></i> EMX COMMAND CENTER</div>
+
+            <h1>
+              Premium tweaks.<br>
+              <span>Built for cleaner play.</span>
+            </h1>
+
+            <p>
+              The official EMX hub for PC optimization packs, keyboard and mouse tools, FPS-focused setup, and EFECT Fortnite maps.
+            </p>
+
+            <div class="hero-actions">
+              <button class="btn-filled play-click hero-store-btn" type="button" data-action="scroll-products">
+                Shop EMX Tools
+              </button>
+
+              <button class="btn-outline green play-click hero-products-btn" type="button" data-action="scroll-bundle">
+                View Bundle
+              </button>
+
+              <a class="btn-outline play-click hero-map-btn" href="https://www.fortnite.com/@efect.lit?lang=en-US" target="_blank" rel="noopener">
+                EMX Fortnite Maps
+              </a>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-logo-float">
+              <img src="emx-logo.png" alt="">
+            </div>
+
+            <div class="hero-system-panel">
+              <div class="system-panel-head">
+                <span>EMX BOOST</span>
+                <strong>LIVE</strong>
+              </div>
+
+              <div class="system-meter"><i style="width:96%"></i></div>
+              <div class="system-meter purple"><i style="width:88%"></i></div>
+              <div class="system-meter"><i style="width:92%"></i></div>
+
+              <div class="system-tags">
+                <span>KBM</span>
+                <span>FPS</span>
+                <span>MAPS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <strong>3</strong>
+              <span>Products</span>
+            </div>
+
+            <div class="hero-stat">
+              <strong>24/7</strong>
+              <span>Access</span>
+            </div>
+
+            <div class="hero-stat">
+              <strong>EMX</strong>
+              <span>Brand</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fortnite-map-section" id="fortniteMaps">
+      <div class="fortnite-map-card">
+        <div class="map-card-copy">
+          <div class="map-kicker">EMX CREATOR HUB</div>
+          <h2>EMX Fortnite Maps</h2>
+          <p>Jump into EFECT practice maps, creator updates, and Fortnite experiences from the same EMX hub.</p>
         </div>
 
-        <div class="hero-kicker"><i></i> EFECT DIGITAL STORE</div>
-
-        <h1>
-          Pro tools.<br>
-          <span>Secure checkout.</span>
-        </h1>
-
-        <p>
-          Clean EFECT-branded storefront for FPS improvement tools, keyboard profile controls, and Windows optimization packs. Preview every product, add items to cart, or buy instantly through secure Payhip checkout.
-        </p>
-
-        <div class="hero-stats">
-          <div class="hero-stat">
-            <strong>3</strong>
-            <span>Products</span>
-          </div>
-
-          <div class="hero-stat">
-            <strong>24/7</strong>
-            <span>Access</span>
-          </div>
-
-          <div class="hero-stat">
-            <strong>EMX</strong>
-            <span>Brand</span>
-          </div>
-        </div>
+        <a class="map-card-button play-click" href="https://www.fortnite.com/@efect.lit?lang=en-US" target="_blank" rel="noopener">
+          Open Fortnite Maps
+        </a>
       </div>
     </section>
 
@@ -272,8 +334,22 @@
 
   <section class="card-container" id="productGrid"></section>
 
-<section class="premium-section">
-  <div class="bundle-card">
+<section class="premium-section bundle-premium-section">
+  <div class="bundle-card bundle-spotlight">
+    <div class="bundle-orbit" aria-hidden="true"></div>
+
+    <div class="bundle-hero-head">
+      <div>
+        <div class="section-kicker">Best Value Drop</div>
+        <h2 class="section-title">EMX <span>Ultimate Bundle</span></h2>
+      </div>
+
+      <div class="bundle-head-pill">
+        <strong>Full Setup</strong>
+        <span>One checkout</span>
+      </div>
+    </div>
+
     <div class="bundle-layout">
       <div>
         <div class="bundle-badge" data-bundle-eyebrow>Best Value Bundle</div>
@@ -300,6 +376,13 @@
         <p class="bundle-copy" data-bundle-description>
           Built for buyers who want the full EMX setup instead of grabbing one product at a time. Includes the optimizer, FPS pack, keyboard profile dashboard, and priority setup guidance.
         </p>
+
+        <div class="bundle-bonus-grid">
+          <span>PC Optimization</span>
+          <span>KBM Macro Pack</span>
+          <span>FPS Setup</span>
+          <span>Priority Help</span>
+        </div>
         
         <ul class="bundle-includes" data-bundle-features>
           <li><i>✓</i> Zero Delay Optimizer for cleanup, presets, and system responsiveness</li>
@@ -317,9 +400,25 @@
         <span class="bundle-old" data-bundle-old-price>$101.98 separate value</span>
         
         <span class="discount-badge" data-bundle-discount>Bundle Deal</span>
+
+        <div class="bundle-value-compare">
+          <div>
+            <span>Separate</span>
+            <strong data-bundle-old-price>$101.98</strong>
+          </div>
+
+          <div>
+            <span>Bundle</span>
+            <strong data-bundle-price>$50.99</strong>
+          </div>
+        </div>
+
+        <div class="bundle-secure-note">
+          Secure Payhip checkout with digital delivery and EMX support path.
+        </div>
         
         <div class="bundle-buttons">
-          <button class="btn-filled play-click" type="button" data-action="buy-bundle">Buy Full Pack →</button>
+          <button class="btn-filled play-click" type="button" data-action="buy-bundle">Buy Full Pack</button>
           <button class="btn-outline green play-click" type="button" data-action="add-bundle">Add Bundle To Cart</button>
         </div>
       </div>
@@ -388,6 +487,23 @@
             <span>Average Feedback</span>
           </div>
         </div>
+
+        <div class="proof-signal-row" aria-label="EFECT proof signals">
+          <div class="proof-signal">
+            <strong>Buyer Proof</strong>
+            <span>Screenshots, vouch previews, and Discord feedback link buyers can inspect.</span>
+          </div>
+
+          <div class="proof-signal">
+            <strong>Support Proof</strong>
+            <span>Clear support path for access, setup, and purchase verification after checkout.</span>
+          </div>
+
+          <div class="proof-signal">
+            <strong>Brand Proof</strong>
+            <span>Premium previews, product details, and live Payhip checkout in one store flow.</span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -396,7 +512,7 @@
         <div class="vouch-card">
           <div class="vouch-top">
             <div class="vouch-avatar">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jayden&backgroundColor=0b0f0b" alt="Jayden R avatar">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jayden&backgroundColor=0b0f0b" alt="Jayden R avatar" loading="lazy" decoding="async">
             </div>
 
             <div>
@@ -415,7 +531,7 @@
         <div class="vouch-card">
           <div class="vouch-top">
             <div class="vouch-avatar">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Malik&backgroundColor=101010" alt="Malik T avatar">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Malik&backgroundColor=101010" alt="Malik T avatar" loading="lazy" decoding="async">
             </div>
 
             <div>
@@ -434,7 +550,7 @@
         <div class="vouch-card">
           <div class="vouch-top">
             <div class="vouch-avatar">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Carter&backgroundColor=070707" alt="Carter S avatar">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Carter&backgroundColor=070707" alt="Carter S avatar" loading="lazy" decoding="async">
             </div>
 
             <div>
@@ -462,6 +578,23 @@
   <p class="vouch-proof-copy">
     The reviews below show product-style feedback, but the real proof is inside the EFECT Discord vouches channel with buyer screenshots, support messages, and community feedback.
   </p>
+
+  <div class="vouch-trust-strip" aria-label="EFECT trust highlights">
+    <div class="vouch-trust-stat">
+      <strong>Proof</strong>
+      <span>Buyer screenshots</span>
+    </div>
+
+    <div class="vouch-trust-stat">
+      <strong>Support</strong>
+      <span>Setup help path</span>
+    </div>
+
+    <div class="vouch-trust-stat">
+      <strong>Payhip</strong>
+      <span>Secure checkout</span>
+    </div>
+  </div>
   
   <div class="vouch-proof-grid">
   <button
@@ -471,7 +604,7 @@
     data-title="Buyer Screenshots"
     data-preview-src="./vouch1.png"
   >
-    <img src="./vouch1.png" alt="Buyer screenshots">
+    <img src="./vouch1.png" alt="Buyer screenshots" loading="lazy" decoding="async">
     <div class="vouch-proof-overlay">
       <strong>01</strong>
       <span>Buyer screenshots</span>
@@ -485,7 +618,7 @@
     data-title="Discord Feedback"
     data-preview-src="./vouch2.png"
   >
-    <img src="./vouch2.png" alt="Discord feedback">
+    <img src="./vouch2.png" alt="Discord feedback" loading="lazy" decoding="async">
     <div class="vouch-proof-overlay">
       <strong>02</strong>
       <span>Discord feedback</span>
@@ -499,7 +632,7 @@
     data-title="Setup Support Proof"
     data-preview-src="./vouch3.png"
   >
-    <img src="./vouch3.png" alt="Setup support proof">
+    <img src="./vouch3.png" alt="Setup support proof" loading="lazy" decoding="async">
     <div class="vouch-proof-overlay">
       <strong>03</strong>
       <span>Setup support proof</span>
@@ -513,7 +646,7 @@
     data-title="Community Trust"
     data-preview-src="./vouch4.png"
   >
-    <img src="./vouch4.png" alt="Community trust">
+    <img src="./vouch4.png" alt="Community trust" loading="lazy" decoding="async">
     <div class="vouch-proof-overlay">
       <strong>04</strong>
       <span>Community trust</span>
@@ -586,14 +719,30 @@
   <div id="media-modal">
     <button class="close-modal play-click" id="modalClose" type="button" aria-label="Close preview">&times;</button>
 
-    <div class="modal-title" id="modalTitle">Product Preview</div>
+    <div class="preview-modal-card">
+      <div class="preview-modal-head">
+        <div>
+          <div class="preview-modal-kicker" id="previewTypeLabel">EMX Preview</div>
+          <div class="modal-title" id="modalTitle">Product Preview</div>
+        </div>
 
-    <img id="modal-img" src="" alt="Fullscreen Preview" style="display:none;">
+        <div class="preview-sound-hint" id="previewSoundHint">Tap video for sound</div>
+      </div>
 
-    <video id="modal-video" controls playsinline style="display:none;">
-      <source id="video-source" src="" type="video/mp4">
-      Your browser does not support HTML5 video.
-    </video>
+      <div class="preview-stage">
+        <img id="modal-img" src="" alt="Fullscreen Preview" style="display:none;">
+
+        <video id="modal-video" controls playsinline preload="auto" style="display:none;">
+          <source id="video-source" src="" type="video/mp4">
+          Your browser does not support HTML5 video.
+        </video>
+      </div>
+
+      <div class="preview-modal-actions" id="previewModalActions">
+        <button class="btn-outline green play-click" type="button" id="previewAddBtn">Add To Cart</button>
+        <button class="btn-filled play-click" type="button" id="previewBuyBtn">Buy Now</button>
+      </div>
+    </div>
   </div>
 
   <!-- PRODUCT DETAIL MODAL -->
@@ -668,6 +817,17 @@
       <button class="btn-filled play-click" id="checkoutBtn" type="button" data-action="checkout">
   Proceed To Secure Checkout →
 </button>
+
+      <div class="checkout-confidence" aria-label="Checkout trust notes">
+        <span>Secure Payhip</span>
+        <span>Digital access</span>
+        <span>EMX support</span>
+      </div>
+
+      <div class="cart-policy-card">
+        <strong>Checkout Confidence</strong>
+        <p>Payments open through Payhip. EMX does not store card info, and digital access/support instructions are handled after purchase.</p>
+      </div>
 
       <button class="btn-outline play-click" id="clearCartBtn" type="button">
         Clear Cart
@@ -831,6 +991,11 @@
     <span class="dock-icon">🔥</span>
     <span class="dock-label">Bundle</span>
   </button>
+
+  <a class="dock-command dock-map play-click" href="https://www.fortnite.com/@efect.lit?lang=en-US" target="_blank" rel="noopener" data-dock-action="maps">
+    <span class="dock-icon">🗺</span>
+    <span class="dock-label">Maps</span>
+  </a>
   
   <button class="dock-command play-click" type="button" data-dock-action="faq">
     <span class="dock-icon">❓</span>
