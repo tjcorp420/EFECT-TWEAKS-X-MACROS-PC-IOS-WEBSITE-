@@ -2085,6 +2085,211 @@ main{
   }
 }
 
+.affiliate-portal-section{
+  padding:12px 16px 20px;
+}
+
+.affiliate-portal-card{
+  position:relative;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(36,255,36,.16), transparent 34%),
+    radial-gradient(circle at 95% 8%, rgba(162,12,255,.22), transparent 42%),
+    linear-gradient(145deg, rgba(13,15,20,.78), rgba(3,4,6,.66));
+  box-shadow:
+    0 24px 72px rgba(0,0,0,.58),
+    0 0 34px rgba(36,255,36,.08),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  padding:22px;
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+}
+
+.affiliate-portal-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(36,255,36,.42), transparent 24%, transparent 76%, rgba(162,12,255,.40));
+  opacity:.24;
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  -webkit-mask-composite:xor;
+  padding:1px;
+}
+
+.affiliate-portal-copy,
+.affiliate-generator{
+  position:relative;
+  z-index:2;
+}
+
+.affiliate-portal-copy .section-title{
+  margin-bottom:10px;
+}
+
+.affiliate-generator{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+.affiliate-field{
+  display:grid;
+  gap:8px;
+  min-width:0;
+}
+
+.affiliate-field span{
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.affiliate-field input,
+.affiliate-field textarea{
+  width:100%;
+  min-height:52px;
+  border:1px solid rgba(36,255,36,.24);
+  border-radius:16px;
+  outline:none;
+  background:rgba(0,0,0,.34);
+  color:#fff;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.03),
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 0 24px rgba(36,255,36,.06);
+  padding:14px 15px;
+  font:700 14px/1.35 var(--font);
+  letter-spacing:0;
+  transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.affiliate-field textarea{
+  min-height:76px;
+  resize:none;
+}
+
+.affiliate-field input::placeholder,
+.affiliate-field textarea::placeholder{
+  color:rgba(255,255,255,.42);
+}
+
+.affiliate-field input:focus,
+.affiliate-field textarea:focus{
+  border-color:rgba(36,255,36,.62);
+  background:rgba(0,0,0,.44);
+  box-shadow:
+    0 0 0 1px rgba(36,255,36,.16),
+    0 0 26px rgba(36,255,36,.16),
+    0 0 34px rgba(162,12,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.affiliate-generate-btn,
+.affiliate-copy-btn{
+  min-height:52px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:950;
+  letter-spacing:0;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.affiliate-generate-btn{
+  color:#030303;
+  background:linear-gradient(135deg, var(--green), #83ff67);
+  box-shadow:
+    0 14px 34px rgba(36,255,36,.22),
+    0 0 24px rgba(36,255,36,.16);
+}
+
+.affiliate-copy-row{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+}
+
+.affiliate-copy-btn{
+  flex:1 1 190px;
+  border:1px solid rgba(162,12,255,.38);
+  color:#fff;
+  background:
+    linear-gradient(135deg, rgba(162,12,255,.28), rgba(36,255,36,.12)),
+    rgba(0,0,0,.24);
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.28),
+    0 0 22px rgba(162,12,255,.12);
+}
+
+.affiliate-generate-btn:hover,
+.affiliate-copy-btn:hover{
+  transform:translateY(-1px);
+}
+
+.affiliate-copy-status{
+  min-height:22px;
+  color:var(--green);
+  font-size:13px;
+  font-weight:900;
+  text-shadow:0 0 12px rgba(36,255,36,.26);
+}
+
+.affiliate-copy-status[data-tone="warn"]{
+  color:#ffdf6b;
+  text-shadow:0 0 12px rgba(255,223,107,.20);
+}
+
+@media (min-width:860px){
+  .affiliate-portal-card{
+    grid-template-columns:.95fr 1.05fr;
+    align-items:center;
+    padding:26px;
+  }
+
+  .affiliate-generator{
+    grid-template-columns:1fr auto;
+    align-items:end;
+  }
+
+  .affiliate-output-field,
+  .affiliate-copy-row{
+    grid-column:1 / -1;
+  }
+}
+
+@media (max-width:520px){
+  .affiliate-portal-section{
+    padding-left:12px;
+    padding-right:12px;
+  }
+
+  .affiliate-portal-card{
+    border-radius:22px;
+    padding:16px;
+  }
+
+  .affiliate-field input,
+  .affiliate-field textarea,
+  .affiliate-generate-btn,
+  .affiliate-copy-btn{
+    min-height:48px;
+    font-size:13px;
+  }
+}
+
 .bundle-badge{
   display:inline-flex;
   align-items:center;

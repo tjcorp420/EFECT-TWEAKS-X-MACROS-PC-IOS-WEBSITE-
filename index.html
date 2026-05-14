@@ -426,6 +426,53 @@
   </div>
 </section>
 
+    <section class="affiliate-portal-section" id="affiliatePortal" aria-labelledby="affiliatePortalTitle">
+      <div class="affiliate-portal-card">
+        <div class="affiliate-portal-copy">
+          <div class="section-kicker">Creator Portal</div>
+          <h2 class="section-title" id="affiliatePortalTitle">Affiliate <span>Link Generator</span></h2>
+          <p class="section-copy">
+            Paste your Payhip affiliate key and generate a clean EMX creator link for your bio, Discord, TikTok, or YouTube description.
+          </p>
+        </div>
+
+        <div class="affiliate-generator" aria-label="Affiliate link generator">
+          <label class="affiliate-field">
+            <span>Payhip Affiliate Key</span>
+            <input
+              id="affiliateKeyInput"
+              type="text"
+              inputmode="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="af6a0647dbb7a48"
+            >
+          </label>
+
+          <button class="affiliate-generate-btn play-click" type="button" data-action="generate-affiliate-link">
+            Generate Link
+          </button>
+
+          <label class="affiliate-field affiliate-output-field">
+            <span>Your EMX Referral Link</span>
+            <textarea
+              id="affiliateLinkOutput"
+              readonly
+              rows="2"
+              placeholder="Your link will appear here."
+            ></textarea>
+          </label>
+
+          <div class="affiliate-copy-row">
+            <button class="affiliate-copy-btn play-click" type="button" data-action="copy-affiliate-link">
+              Copy to Clipboard
+            </button>
+            <span class="affiliate-copy-status" id="affiliateCopyStatus" aria-live="polite"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section-head">
       <div>
         <div class="section-kicker">Why EFECT</div>

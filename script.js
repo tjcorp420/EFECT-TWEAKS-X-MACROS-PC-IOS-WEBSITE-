@@ -221,6 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "<strong>Support Reminder</strong><br>Need help after purchase? Contact EFECT through Discord."
   ];
 
+  const SITE_BASE_URL = "https://efect-macros-x-tweaks.vercel.app/";
   const CHECKOUT_BASE = "https://payhip.com/buy";
   const CART_STORAGE_KEY = "efect_cart_v3";
   const INSTALL_POPUP_KEY = "emx_install_popup_seen_v1";
@@ -1332,6 +1333,124 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function getAffiliatePortalNodes(){
+    return {
+      input: document.getElementById("affiliateKeyInput"),
+      output: document.getElementById("affiliateLinkOutput"),
+      status: document.getElementById("affiliateCopyStatus")
+    };
+  }
+
+  function normalizeAffiliateKey(value){
+    const raw = String(value ?? "").trim();
+
+    if(!raw) return "";
+
+    try{
+      const parsed = new URL(raw);
+      const afParam = parsed.searchParams.get(PAYHIP_AFFILIATE_PARAM);
+      const refParam = parsed.searchParams.get("ref");
+      const legacyParam = parsed.searchParams.get(LEGACY_AFFILIATE_PARAM);
+      const pathParts = parsed.pathname.split("/").filter(Boolean);
+
+      return cleanReferralValue(
+        afParam ||
+        refParam ||
+        legacyParam ||
+        (pathParts[0] === "b" && pathParts.length >= 3 ? pathParts[pathParts.length - 1] : "")
+      );
+    }catch(error){
+      return cleanReferralValue(raw);
+    }
+  }
+
+  function buildCreatorReferralLink(key){
+    const referral = normalizeAffiliateKey(key);
+
+    if(!referral) return "";
+
+    const target = new URL(SITE_BASE_URL);
+    target.searchParams.set("ref", referral);
+    return target.toString();
+  }
+
+  function setAffiliatePortalStatus(message, tone = "good"){
+    const { status } = getAffiliatePortalNodes();
+    if(!status) return;
+
+    status.textContent = message;
+    status.dataset.tone = tone;
+
+    if(message){
+      window.clearTimeout(setAffiliatePortalStatus.timer);
+      setAffiliatePortalStatus.timer = window.setTimeout(() => {
+        status.textContent = "";
+        delete status.dataset.tone;
+      }, 2600);
+    }
+  }
+
+  function generateAffiliateLink(){
+    const { input, output } = getAffiliatePortalNodes();
+    if(!input || !output) return "";
+
+    const link = buildCreatorReferralLink(input.value);
+
+    if(!link){
+      output.value = "";
+      setAffiliatePortalStatus("Paste your Payhip affiliate key first.", "warn");
+      showToast("<strong>Affiliate key needed.</strong><br>Paste your Payhip affiliate key to generate a link.");
+      return "";
+    }
+
+    output.value = link;
+    setAffiliatePortalStatus("Link ready.", "good");
+    return link;
+  }
+
+  function copyAffiliateLink(){
+    const { output } = getAffiliatePortalNodes();
+    if(!output) return;
+
+    const link = output.value.trim() || generateAffiliateLink();
+
+    if(!link){
+      return;
+    }
+
+    const onSuccess = () => {
+      setAffiliatePortalStatus("Link Copied!", "good");
+      showToast("<strong>Link Copied!</strong><br>Your EMX creator referral link is ready to share.");
+    };
+
+    if(navigator.clipboard?.writeText){
+      navigator.clipboard.writeText(link).then(onSuccess).catch(() => {
+        output.focus();
+        output.select();
+        document.execCommand("copy");
+        onSuccess();
+      });
+      return;
+    }
+
+    output.focus();
+    output.select();
+    document.execCommand("copy");
+    onSuccess();
+  }
+
+  function setupAffiliatePortal(){
+    const { input } = getAffiliatePortalNodes();
+    if(!input) return;
+
+    input.addEventListener("keydown", event => {
+      if(event.key === "Enter"){
+        event.preventDefault();
+        generateAffiliateLink();
+      }
+    });
+  }
+
   function shareProduct(key){
     const product = getProductByKey(key);
 
@@ -1704,6 +1823,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if(action === "faq-toggle"){
         toggleFaq(actionTarget);
+      }
+
+      if(action === "generate-affiliate-link"){
+        generateAffiliateLink();
+      }
+
+      if(action === "copy-affiliate-link"){
+        copyAffiliateLink();
       }
 
       if(action === "scroll-products"){
@@ -2297,6 +2424,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ".section-head",
       ".product-card",
       ".bundle-card",
+      ".affiliate-portal-card",
       ".proof-card",
       ".trust-metric",
       ".vouch-card",
@@ -2585,6 +2713,7 @@ document.addEventListener("DOMContentLoaded", () => {
     preloadPreviewVideos();
     updateCartUI();
     setupEvents();
+    setupAffiliatePortal();
     setupProCommandDock();
     setupProductPowerMeters();
     setupProductCardPolish();
