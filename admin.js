@@ -14,6 +14,7 @@ const productList = document.getElementById("productList");
 const previewBox = document.getElementById("previewBox");
 const galleryPreviewBox = document.getElementById("galleryPreviewBox");
 const referralEmailField = document.getElementById("referralEmailField");
+const referralDisplayField = document.getElementById("referralDisplayField");
 const referralKeyField = document.getElementById("referralKeyField");
 const referralList = document.getElementById("referralList");
 
@@ -832,9 +833,23 @@ function cleanReferralKey(value) {
     .slice(0, 64);
 }
 
-function referralLinkForKey(key) {
+function cleanDisplayName(value) {
+  return String(value || "")
+    .trim()
+    .replace(/[<>]/g, "")
+    .replace(/\s+/g, " ")
+    .slice(0, 32);
+}
+
+function referralLinkForKey(key, displayName = "") {
   const target = new URL(SITE_BASE_URL);
   target.searchParams.set("ref", key);
+  const display = cleanDisplayName(displayName);
+
+  if (display) {
+    target.searchParams.set("creator", display);
+  }
+
   return target.toString();
 }
 
@@ -957,10 +972,10 @@ function renderReferralList(referrals = []) {
   }
 
   referralList.innerHTML = referrals.map(referral => `
-    <button class="product-btn" type="button" data-referral-email="${escapeHtml(referral.email)}" data-referral-key="${escapeHtml(referral.affiliateKey)}">
+    <button class="product-btn" type="button" data-referral-email="${escapeHtml(referral.email)}" data-referral-display="${escapeHtml(referral.displayName || "")}" data-referral-key="${escapeHtml(referral.affiliateKey)}">
       <span>
-        <b>${escapeHtml(referral.email)}</b>
-        <small>${escapeHtml(referral.referralLink || referralLinkForKey(referral.affiliateKey))}</small>
+        <b>${escapeHtml(referral.displayName || referral.email)}</b>
+        <small>${escapeHtml(referral.referralLink || referralLinkForKey(referral.affiliateKey, referral.displayName))}</small>
       </span>
       <em class="status">Saved</em>
     </button>
@@ -969,6 +984,7 @@ function renderReferralList(referrals = []) {
   referralList.querySelectorAll("[data-referral-email]").forEach(button => {
     button.addEventListener("click", () => {
       if (referralEmailField) referralEmailField.value = button.dataset.referralEmail || "";
+      if (referralDisplayField) referralDisplayField.value = button.dataset.referralDisplay || "";
       if (referralKeyField) referralKeyField.value = button.dataset.referralKey || "";
       toast("Referral loaded for editing.");
     });
@@ -996,6 +1012,7 @@ async function loadReferrals() {
 
 async function saveReferral() {
   const email = normalizeEmail(referralEmailField?.value);
+  const displayName = cleanDisplayName(referralDisplayField?.value);
   const affiliateKey = cleanReferralKey(referralKeyField?.value);
 
   if (!email || !email.includes("@")) {
@@ -1016,6 +1033,7 @@ async function saveReferral() {
     },
     body: JSON.stringify({
       email,
+      displayName,
       affiliateKey
     })
   });
@@ -1057,6 +1075,7 @@ async function deleteReferral() {
   }
 
   if (referralEmailField) referralEmailField.value = "";
+  if (referralDisplayField) referralDisplayField.value = "";
   if (referralKeyField) referralKeyField.value = "";
 
   toast("Referral deleted.");

@@ -22,7 +22,77 @@ window.addEventListener("load", () => {
 setTimeout(removeInstantBlackout, 1400);
 
 document.addEventListener("DOMContentLoaded", () => {
-      let PRODUCTS = window.EMX_PRODUCTS || [];
+      const OPTIMIZER_APP_GALLERY = [
+        "./app-screenshots/optimizer-01-dashboard.png",
+        "./app-screenshots/optimizer-02-benchmark.png",
+        "./app-screenshots/optimizer-03-appearance.png",
+        "./app-screenshots/optimizer-04-emx-link.png",
+        "./app-screenshots/optimizer-05-net-route.png",
+        "./app-screenshots/optimizer-06-tweaks-fortnite.png",
+        "./app-screenshots/optimizer-07-gpu-tweaks.png",
+        "./app-screenshots/optimizer-08-advanced.png",
+        "./app-screenshots/optimizer-09-network-opt.png",
+        "./app-screenshots/optimizer-10-system-disk.png",
+        "./app-screenshots/optimizer-11-services.png",
+        "./zero-delay-optimizer.png"
+      ];
+      const MACRO_APP_GALLERY = [
+        "./app-screenshots/emx-tweaks-full-03-macros.png",
+        "./app-screenshots/emx-tweaks-full-04-keybinds.png",
+        "./app-screenshots/emx-tweaks-full-05-crosshair.png",
+        "./app-screenshots/emx-tweaks-full-01-dashboard.png",
+        "./app-screenshots/emx-tweaks-full-02-emx-link.png",
+        "./app-screenshots/emx-tweaks-full-06-settings.png",
+        "./keyboard-macro.png"
+      ];
+      const FPS_APP_GALLERY = [
+        "./app-screenshots/fps-booster-01-boost.png",
+        "./app-screenshots/fps-booster-02-system.png",
+        "./app-screenshots/fps-booster-03-network.png",
+        "./app-screenshots/fps-booster-04-profiles.png",
+        "./app-screenshots/fps-booster-05-logs.png",
+        "./app-screenshots/fps-booster-06-settings.png",
+        "./fps-booster-emx.png"
+      ];
+      const PRODUCT_IMAGE_OVERRIDES = {
+        optimizer: {
+          image: "./app-screenshots/optimizer-01-dashboard.png",
+          gallery: OPTIMIZER_APP_GALLERY,
+          previewType: "image",
+          previewSrc: "./app-screenshots/optimizer-01-dashboard.png",
+          fallbackPreview: "./zero-delay-optimizer.png"
+        },
+        macro: {
+          image: "./app-screenshots/emx-tweaks-full-03-macros.png",
+          gallery: MACRO_APP_GALLERY,
+          previewType: "image",
+          previewSrc: "./app-screenshots/emx-tweaks-full-03-macros.png",
+          fallbackPreview: "./keyboard-macro.png"
+        },
+        fps: {
+          image: "./app-screenshots/fps-booster-01-boost.png",
+          gallery: FPS_APP_GALLERY,
+          previewType: "image",
+          previewSrc: "./app-screenshots/fps-booster-01-boost.png",
+          fallbackPreview: "./fps-booster-emx.png"
+        },
+        bundle: {
+          image: "./emx-ultimate-bundle.png",
+          gallery: ["./emx-ultimate-bundle.png", "./app-screenshots/optimizer-01-dashboard.png", "./app-screenshots/emx-tweaks-full-03-macros.png", "./app-screenshots/fps-booster-01-boost.png"],
+          previewType: "image",
+          previewSrc: "./emx-ultimate-bundle.png",
+          fallbackPreview: "./emx-ultimate-bundle.png"
+        }
+      };
+
+      function applyProductImageOverrides(products){
+        return (Array.isArray(products) ? products : []).map(product => ({
+          ...product,
+          ...(PRODUCT_IMAGE_OVERRIDES[product.id] || {})
+        }));
+      }
+
+      let PRODUCTS = applyProductImageOverrides(window.EMX_PRODUCTS || []);
       
       async function loadProductsFromApi() {
     try{
@@ -37,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const liveProducts = await response.json();
 
       if(Array.isArray(liveProducts) && liveProducts.length > 0){
-        PRODUCTS = liveProducts;
+        PRODUCTS = applyProductImageOverrides(liveProducts);
       }
     }catch(error){
       console.warn("Using local products.js fallback:", error);
@@ -228,6 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const INSTALL_POPUP_KEY = "emx_install_popup_seen_v1";
   const REFERRAL_STORAGE_KEY = "emx_referral";
   const REFERRAL_TIMESTAMP_KEY = "emx_referral_saved_at";
+  const REFERRAL_DISPLAY_STORAGE_KEY = "emx_referral_display";
   const REFERRAL_TTL_MS = 30 * 24 * 60 * 60 * 1000;
   const PAYHIP_AFFILIATE_PARAM = "af";
   const LEGACY_AFFILIATE_PARAM = "affiliate";
@@ -309,10 +380,19 @@ document.addEventListener("DOMContentLoaded", () => {
       .slice(0, 64);
   }
 
+  function cleanReferralDisplayName(value){
+    return String(value ?? "")
+      .trim()
+      .replace(/[<>]/g, "")
+      .replace(/\s+/g, " ")
+      .slice(0, 32);
+  }
+
   function clearStoredReferral(){
     try{
       localStorage.removeItem(REFERRAL_STORAGE_KEY);
       localStorage.removeItem(REFERRAL_TIMESTAMP_KEY);
+      localStorage.removeItem(REFERRAL_DISPLAY_STORAGE_KEY);
     }catch(error){
       // Storage can be unavailable in strict privacy contexts.
     }
@@ -339,14 +419,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function saveStoredReferral(value){
+  function getStoredReferralDisplay(){
+    const referral = getStoredReferral();
+
+    if(!referral) return "";
+
+    try{
+      return cleanReferralDisplayName(localStorage.getItem(REFERRAL_DISPLAY_STORAGE_KEY));
+    }catch(error){
+      return "";
+    }
+  }
+
+  function saveStoredReferral(value, displayName = ""){
     const referral = cleanReferralValue(value);
+    const cleanDisplay = cleanReferralDisplayName(displayName);
 
     if(!referral) return "";
 
     try{
       localStorage.setItem(REFERRAL_STORAGE_KEY, referral);
       localStorage.setItem(REFERRAL_TIMESTAMP_KEY, String(Date.now()));
+      if(cleanDisplay){
+        localStorage.setItem(REFERRAL_DISPLAY_STORAGE_KEY, cleanDisplay);
+      }else{
+        localStorage.removeItem(REFERRAL_DISPLAY_STORAGE_KEY);
+      }
       console.log("[EMX Affiliate] Referral saved:", referral);
     }catch(error){
       return "";
@@ -362,12 +460,41 @@ document.addEventListener("DOMContentLoaded", () => {
         params.get("ref") ||
         params.get(PAYHIP_AFFILIATE_PARAM) ||
         params.get(LEGACY_AFFILIATE_PARAM);
+      const displayName =
+        params.get("creator") ||
+        params.get("username") ||
+        params.get("display") ||
+        params.get("name");
 
       if(!referral) return getStoredReferral();
 
-      return saveStoredReferral(referral);
+      return saveStoredReferral(referral, displayName);
     }catch(error){
       return getStoredReferral();
+    }
+  }
+
+  async function hydrateReferralDisplayFromApi(){
+    const referral = getStoredReferral();
+
+    if(!referral || getStoredReferralDisplay()) return "";
+
+    try{
+      const response = await fetch(REFERRALS_API_URL + "?key=" + encodeURIComponent(referral), {
+        cache: "no-store"
+      });
+      const data = await response.json().catch(() => null);
+      const displayName = cleanReferralDisplayName(data?.referral?.displayName);
+
+      if(!response.ok || !data || data.ok !== true || !displayName){
+        return "";
+      }
+
+      saveStoredReferral(referral, displayName);
+      showReferralBanner();
+      return displayName;
+    }catch(error){
+      return "";
     }
   }
 
@@ -448,6 +575,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function showReferralBanner(){
     const referral = getStoredReferral();
+    const displayName = getStoredReferralDisplay() || referral;
     removeReferralBanner();
 
     if(!referral) return;
@@ -466,7 +594,7 @@ document.addEventListener("DOMContentLoaded", () => {
     icon.textContent = "🔥";
 
     label.textContent = "Supporting Creator:";
-    creator.textContent = referral;
+    creator.textContent = displayName;
 
     banner.append(icon, label, creator);
     document.body.appendChild(banner);
@@ -479,6 +607,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function setupAffiliateDebug(){
     window.EMXAffiliateDebug = {
       getReferral: getStoredReferral,
+      getDisplayName: getStoredReferralDisplay,
       clearReferral: () => {
         clearStoredReferral();
         removeReferralBanner();
@@ -1337,6 +1466,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function getAffiliatePortalNodes(){
     return {
       email: document.getElementById("affiliateEmailInput"),
+      display: document.getElementById("affiliateDisplayNameInput"),
       input: document.getElementById("affiliateKeyInput"),
       output: document.getElementById("affiliateLinkOutput"),
       status: document.getElementById("affiliateCopyStatus")
@@ -1366,13 +1496,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function buildCreatorReferralLink(key){
+  function buildCreatorReferralLink(key, displayName = ""){
     const referral = normalizeAffiliateKey(key);
+    const display = cleanReferralDisplayName(displayName);
 
     if(!referral) return "";
 
     const target = new URL(SITE_BASE_URL);
     target.searchParams.set("ref", referral);
+    if(display){
+      target.searchParams.set("creator", display);
+    }
     return target.toString();
   }
 
@@ -1393,10 +1527,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function generateAffiliateLink(){
-    const { input, output } = getAffiliatePortalNodes();
+    const { display, input, output } = getAffiliatePortalNodes();
     if(!input || !output) return "";
 
-    const link = buildCreatorReferralLink(input.value);
+    const link = buildCreatorReferralLink(input.value, display?.value);
 
     if(!link){
       output.value = "";
@@ -1411,7 +1545,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function lookupAffiliateLink(){
-    const { email, input, output } = getAffiliatePortalNodes();
+    const { email, display, input, output } = getAffiliatePortalNodes();
     if(!email || !output) return "";
 
     const cleanEmail = String(email.value || "").trim().toLowerCase();
@@ -1446,6 +1580,10 @@ document.addEventListener("DOMContentLoaded", () => {
         input.value = data.referral.affiliateKey;
       }
 
+      if(display && data.referral.displayName){
+        display.value = data.referral.displayName;
+      }
+
       setAffiliatePortalStatus("Referral found. Link ready to copy.", "good");
       showToast("<strong>Referral Found!</strong><br>Your EMX creator link is ready to copy.");
       return data.referral.referralLink;
@@ -1457,10 +1595,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function copyAffiliateLink(){
-    const { output } = getAffiliatePortalNodes();
+    const { input, output } = getAffiliatePortalNodes();
     if(!output) return;
 
-    const link = output.value.trim() || generateAffiliateLink();
+    const link = input?.value ? generateAffiliateLink() : output.value.trim();
 
     if(!link){
       return;
@@ -1488,7 +1626,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setupAffiliatePortal(){
-    const { email, input } = getAffiliatePortalNodes();
+    const { email, display, input } = getAffiliatePortalNodes();
     if(!email && !input) return;
 
     if(email){
@@ -1501,6 +1639,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if(!input) return;
+
+    if(display){
+      display.addEventListener("keydown", event => {
+        if(event.key === "Enter"){
+          event.preventDefault();
+          generateAffiliateLink();
+        }
+      });
+    }
 
     input.addEventListener("keydown", event => {
       if(event.key === "Enter"){
@@ -2783,6 +2930,7 @@ document.addEventListener("DOMContentLoaded", () => {
     saveReferralFromUrl();
     setupAffiliateDebug();
     showReferralBanner();
+    hydrateReferralDisplayFromApi();
     await loadProductsFromApi();
 
     renderProducts();

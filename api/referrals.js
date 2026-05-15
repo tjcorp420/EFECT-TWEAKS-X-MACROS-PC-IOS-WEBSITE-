@@ -59,9 +59,23 @@ function cleanReferralKey(value) {
     .slice(0, 64);
 }
 
-function buildReferralLink(key) {
+function cleanDisplayName(value) {
+  return String(value || "")
+    .trim()
+    .replace(/[<>]/g, "")
+    .replace(/\s+/g, " ")
+    .slice(0, 32);
+}
+
+function buildReferralLink(key, displayName = "") {
   const target = new URL(SITE_BASE_URL);
   target.searchParams.set("ref", key);
+  const display = cleanDisplayName(displayName);
+
+  if (display) {
+    target.searchParams.set("creator", display);
+  }
+
   return target.toString();
 }
 
@@ -85,25 +99,45 @@ function getPasswordFromRequest(req) {
   return req.headers["x-admin-password"] || "";
 }
 
-function publicReferral(referral) {
+function publicReferral(referral, options = {}) {
   if (!referral) return null;
 
-  return {
-    email: referral.email,
+  const payload = {
+    displayName: cleanDisplayName(referral.displayName),
     affiliateKey: referral.affiliateKey,
-    referralLink: buildReferralLink(referral.affiliateKey),
+    referralLink: buildReferralLink(referral.affiliateKey, referral.displayName),
     updatedAt: referral.updatedAt
   };
+
+  if (options.includeEmail !== false) {
+    payload.email = referral.email;
+  }
+
+  return payload;
 }
 
 module.exports = async function handler(req, res) {
   try {
     if (req.method === "GET") {
       const email = normalizeEmail(req.query?.email);
+      const key = cleanReferralKey(req.query?.key);
       const referrals = await loadReferrals();
 
       if (email) {
         const referral = publicReferral(referrals[email]);
+
+        return sendJson(res, 200, {
+          ok: true,
+          found: Boolean(referral),
+          referral
+        });
+      }
+
+      if (key) {
+        const referral = publicReferral(
+          Object.values(referrals).find(item => cleanReferralKey(item?.affiliateKey) === key),
+          { includeEmail: false }
+        );
 
         return sendJson(res, 200, {
           ok: true,
@@ -145,6 +179,7 @@ module.exports = async function handler(req, res) {
       const body = req.body || {};
       const email = normalizeEmail(body.email);
       const affiliateKey = cleanReferralKey(body.affiliateKey);
+      const displayName = cleanDisplayName(body.displayName || body.username);
 
       if (!email || !email.includes("@")) {
         return sendJson(res, 400, {
@@ -175,6 +210,7 @@ module.exports = async function handler(req, res) {
 
       const referral = {
         email,
+        displayName,
         affiliateKey,
         updatedAt: new Date().toISOString()
       };

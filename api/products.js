@@ -9,9 +9,24 @@ const STARTER_PRODUCTS = [
     eyebrow: "Optimization Pack",
     price: 25.0,
     oldPrice: 50.0,
-    image: "./optimizer.png",
+    image: "./app-screenshots/optimizer-01-dashboard.png",
+    gallery: [
+      "./app-screenshots/optimizer-01-dashboard.png",
+      "./app-screenshots/optimizer-02-benchmark.png",
+      "./app-screenshots/optimizer-03-appearance.png",
+      "./app-screenshots/optimizer-04-emx-link.png",
+      "./app-screenshots/optimizer-05-net-route.png",
+      "./app-screenshots/optimizer-06-tweaks-fortnite.png",
+      "./app-screenshots/optimizer-07-gpu-tweaks.png",
+      "./app-screenshots/optimizer-08-advanced.png",
+      "./app-screenshots/optimizer-09-network-opt.png",
+      "./app-screenshots/optimizer-10-system-disk.png",
+      "./app-screenshots/optimizer-11-services.png",
+      "./zero-delay-optimizer.png"
+    ],
     previewType: "image",
-    previewSrc: "./optimizer.png",
+    previewSrc: "./app-screenshots/optimizer-01-dashboard.png",
+    fallbackPreview: "./zero-delay-optimizer.png",
     description:
       "Windows optimization pack focused on reducing background load, cleaning startup behavior, tightening process priority, and applying performance presets for a smoother low-latency desktop and gaming setup.",
     features: [
@@ -30,10 +45,19 @@ const STARTER_PRODUCTS = [
     eyebrow: "Control Pack",
     price: 15.0,
     oldPrice: 30.0,
-    image: "./macro.png",
-    previewType: "video",
-    previewSrc: "./preview.mp4",
-    fallbackPreview: "./macro.png",
+    image: "./app-screenshots/emx-tweaks-full-03-macros.png",
+    gallery: [
+      "./app-screenshots/emx-tweaks-full-03-macros.png",
+      "./app-screenshots/emx-tweaks-full-04-keybinds.png",
+      "./app-screenshots/emx-tweaks-full-05-crosshair.png",
+      "./app-screenshots/emx-tweaks-full-01-dashboard.png",
+      "./app-screenshots/emx-tweaks-full-02-emx-link.png",
+      "./app-screenshots/emx-tweaks-full-06-settings.png",
+      "./keyboard-macro.png"
+    ],
+    previewType: "image",
+    previewSrc: "./app-screenshots/emx-tweaks-full-03-macros.png",
+    fallbackPreview: "./keyboard-macro.png",
     description:
       "EFECT keyboard profile interface built for saved binds, clean toggle controls, delay adjustment, and fast profile switching. Designed for simple setup, organized controls, and a polished EMX dashboard feel.",
     features: [
@@ -52,9 +76,19 @@ const STARTER_PRODUCTS = [
     eyebrow: "Performance Pack",
     price: 10.99,
     oldPrice: 21.98,
-    image: "./fps.png",
+    image: "./app-screenshots/fps-booster-01-boost.png",
+    gallery: [
+      "./app-screenshots/fps-booster-01-boost.png",
+      "./app-screenshots/fps-booster-02-system.png",
+      "./app-screenshots/fps-booster-03-network.png",
+      "./app-screenshots/fps-booster-04-profiles.png",
+      "./app-screenshots/fps-booster-05-logs.png",
+      "./app-screenshots/fps-booster-06-settings.png",
+      "./fps-booster-emx.png"
+    ],
     previewType: "image",
-    previewSrc: "./fps.png",
+    previewSrc: "./app-screenshots/fps-booster-01-boost.png",
+    fallbackPreview: "./fps-booster-emx.png",
     description:
       "Performance booster pack made for smoother gameplay feel through game profile tuning, background app reduction, display-priority settings, and lightweight optimization presets.",
     features: [
@@ -62,6 +96,34 @@ const STARTER_PRODUCTS = [
       "Background app reduction guide",
       "Display and smoothness tuning",
       "Lightweight setup workflow"
+    ],
+    visible: true
+  },
+  {
+    id: "bundle",
+    key: "bundle",
+    productUrl: "https://payhip.com/buy?link=Bundle",
+    title: "EMX Ultimate Tweak Pack",
+    eyebrow: "Best Value Bundle",
+    price: 59.99,
+    oldPrice: 109.99,
+    image: "./emx-ultimate-bundle.png",
+    gallery: [
+      "./emx-ultimate-bundle.png",
+      "./app-screenshots/optimizer-01-dashboard.png",
+      "./app-screenshots/emx-tweaks-full-03-macros.png",
+      "./app-screenshots/fps-booster-01-boost.png"
+    ],
+    previewType: "image",
+    previewSrc: "./emx-ultimate-bundle.png",
+    fallbackPreview: "./emx-ultimate-bundle.png",
+    description:
+      "Built for buyers who want the full EMX setup in one pack. Includes the Zero Delay Optimizer, FPS Booster, and keyboard macro dashboard in one checkout flow.",
+    features: [
+      "Zero Delay Optimizer",
+      "FPS Booster",
+      "Keyboard Macro dashboard",
+      "One EMX bundle checkout"
     ],
     visible: true
   }

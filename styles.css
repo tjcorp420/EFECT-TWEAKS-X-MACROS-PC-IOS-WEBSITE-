@@ -4043,7 +4043,7 @@ main{
   overflow:hidden;
   color:var(--green);
   text-overflow:ellipsis;
-  text-transform:uppercase;
+  text-transform:none;
   letter-spacing:0;
   text-shadow:0 0 12px rgba(36,255,36,.42);
 }
