@@ -67,15 +67,22 @@ function cleanDisplayName(value) {
     .slice(0, 32);
 }
 
+function creatorSlug(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+}
+
 function buildReferralLink(key, displayName = "") {
-  const target = new URL(SITE_BASE_URL);
-  target.searchParams.set("ref", key);
   const display = cleanDisplayName(displayName);
+  const slug = creatorSlug(display || key);
+  const target = new URL(slug ? `r/${encodeURIComponent(slug)}` : "", SITE_BASE_URL);
 
-  if (display) {
-    target.searchParams.set("creator", display);
-  }
-
+  target.searchParams.set("ref", key);
   return target.toString();
 }
 
@@ -104,6 +111,7 @@ function publicReferral(referral, options = {}) {
 
   const payload = {
     displayName: cleanDisplayName(referral.displayName),
+    displaySlug: creatorSlug(referral.displayName || referral.affiliateKey),
     affiliateKey: referral.affiliateKey,
     referralLink: buildReferralLink(referral.affiliateKey, referral.displayName),
     updatedAt: referral.updatedAt
@@ -121,6 +129,7 @@ module.exports = async function handler(req, res) {
     if (req.method === "GET") {
       const email = normalizeEmail(req.query?.email);
       const key = cleanReferralKey(req.query?.key);
+      const slug = creatorSlug(req.query?.slug);
       const referrals = await loadReferrals();
 
       if (email) {
@@ -136,6 +145,19 @@ module.exports = async function handler(req, res) {
       if (key) {
         const referral = publicReferral(
           Object.values(referrals).find(item => cleanReferralKey(item?.affiliateKey) === key),
+          { includeEmail: false }
+        );
+
+        return sendJson(res, 200, {
+          ok: true,
+          found: Boolean(referral),
+          referral
+        });
+      }
+
+      if (slug) {
+        const referral = publicReferral(
+          Object.values(referrals).find(item => creatorSlug(item?.displayName || item?.affiliateKey) === slug),
           { includeEmail: false }
         );
 

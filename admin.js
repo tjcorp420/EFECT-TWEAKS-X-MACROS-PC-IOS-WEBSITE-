@@ -841,15 +841,22 @@ function cleanDisplayName(value) {
     .slice(0, 32);
 }
 
+function creatorSlug(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+}
+
 function referralLinkForKey(key, displayName = "") {
-  const target = new URL(SITE_BASE_URL);
-  target.searchParams.set("ref", key);
   const display = cleanDisplayName(displayName);
+  const slug = creatorSlug(display || key);
+  const target = new URL(slug ? "r/" + encodeURIComponent(slug) : "", SITE_BASE_URL);
 
-  if (display) {
-    target.searchParams.set("creator", display);
-  }
-
+  target.searchParams.set("ref", key);
   return target.toString();
 }
 

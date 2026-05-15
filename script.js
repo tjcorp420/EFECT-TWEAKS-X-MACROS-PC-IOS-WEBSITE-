@@ -388,6 +388,30 @@ document.addEventListener("DOMContentLoaded", () => {
       .slice(0, 32);
   }
 
+  function creatorSlug(value){
+    return String(value ?? "")
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 40);
+  }
+
+  function displayNameFromSlug(slug){
+    return String(slug || "")
+      .split("-")
+      .filter(Boolean)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ")
+      .slice(0, 32);
+  }
+
+  function getReferralRouteSlug(){
+    const parts = window.location.pathname.split("/").filter(Boolean);
+    return parts[0] === "r" && parts[1] ? creatorSlug(decodeURIComponent(parts[1])) : "";
+  }
+
   function clearStoredReferral(){
     try{
       localStorage.removeItem(REFERRAL_STORAGE_KEY);
@@ -456,15 +480,19 @@ document.addEventListener("DOMContentLoaded", () => {
   function saveReferralFromUrl(){
     try{
       const params = new URLSearchParams(window.location.search);
+      const routeSlug = getReferralRouteSlug();
       const referral =
         params.get("ref") ||
+        params.get("r") ||
         params.get(PAYHIP_AFFILIATE_PARAM) ||
         params.get(LEGACY_AFFILIATE_PARAM);
       const displayName =
         params.get("creator") ||
+        params.get("c") ||
         params.get("username") ||
         params.get("display") ||
-        params.get("name");
+        params.get("name") ||
+        displayNameFromSlug(routeSlug);
 
       if(!referral) return getStoredReferral();
 
@@ -476,23 +504,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function hydrateReferralDisplayFromApi(){
     const referral = getStoredReferral();
+    const routeSlug = getReferralRouteSlug();
 
-    if(!referral || getStoredReferralDisplay()) return "";
+    if(!referral && !routeSlug) return "";
+    if(referral && getStoredReferralDisplay()) return "";
 
     try{
-      const response = await fetch(REFERRALS_API_URL + "?key=" + encodeURIComponent(referral), {
+      const query = referral
+        ? "?key=" + encodeURIComponent(referral)
+        : "?slug=" + encodeURIComponent(routeSlug);
+      const response = await fetch(REFERRALS_API_URL + query, {
         cache: "no-store"
       });
       const data = await response.json().catch(() => null);
+      const affiliateKey = cleanReferralValue(data?.referral?.affiliateKey);
       const displayName = cleanReferralDisplayName(data?.referral?.displayName);
 
-      if(!response.ok || !data || data.ok !== true || !displayName){
+      if(!response.ok || !data || data.ok !== true || !affiliateKey){
         return "";
       }
 
-      saveStoredReferral(referral, displayName);
+      saveStoredReferral(affiliateKey, displayName || displayNameFromSlug(routeSlug));
       showReferralBanner();
-      return displayName;
+      return displayName || displayNameFromSlug(routeSlug);
     }catch(error){
       return "";
     }
@@ -1499,14 +1533,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function buildCreatorReferralLink(key, displayName = ""){
     const referral = normalizeAffiliateKey(key);
     const display = cleanReferralDisplayName(displayName);
+    const slug = creatorSlug(display || referral);
 
     if(!referral) return "";
 
-    const target = new URL(SITE_BASE_URL);
+    const target = new URL(slug ? "r/" + encodeURIComponent(slug) : "", SITE_BASE_URL);
     target.searchParams.set("ref", referral);
-    if(display){
-      target.searchParams.set("creator", display);
-    }
     return target.toString();
   }
 
