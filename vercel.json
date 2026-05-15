@@ -3,6 +3,10 @@
     {
       "source": "/r/:creator",
       "destination": "/index.html"
+    },
+    {
+      "source": "/r/:creator/:path*",
+      "destination": "/:path*"
     }
   ]
 }
