@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/links",
+      "destination": "/links.html"
+    },
+    {
       "source": "/r/:creator",
       "destination": "/index.html"
     },
