@@ -1,0 +1,1407 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="EMX Links">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <meta property="og:title" content="EMX Command Hub">
+  <meta property="og:description" content="Official EMX quick links for products, keys, PC analyzer, Fortnite maps, affiliates, and support.">
+  <meta property="og:image" content="emx-logo.png">
+  <meta property="og:type" content="website">
+
+  <link rel="apple-touch-icon" href="emx-logo.png">
+  <link rel="icon" type="image/png" href="emx-logo.png">
+  <link rel="manifest" href="links.webmanifest">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+  <title>EMX Command Hub</title>
+
+  <style>
+    :root{
+      --green:#24ff24;
+      --green-soft:#7eff5f;
+      --purple:#a20cff;
+      --blue:#7ea2ff;
+      --bg:#000;
+      --panel:rgba(4,6,8,.72);
+      --line:rgba(36,255,36,.26);
+      --white:#fff;
+      --muted:rgba(255,255,255,.66);
+      --mx:50%;
+      --my:18%;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    html,
+    body{
+      margin:0;
+      min-height:100%;
+      background:#000;
+      color:#fff;
+      font-family:Inter, Arial, sans-serif;
+      overflow-x:hidden;
+    }
+
+    body{
+      min-height:100vh;
+      padding:18px;
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(36,255,36,.20), transparent 18rem),
+        radial-gradient(circle at calc(100% - var(--mx)) calc(100% - var(--my)), rgba(162,12,255,.18), transparent 20rem),
+        linear-gradient(135deg, #020502, #030005 60%, #0b0010);
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(rgba(36,255,36,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(36,255,36,.08) 1px, transparent 1px);
+      background-size:46px 46px;
+      mask-image:linear-gradient(to bottom, rgba(0,0,0,.96), rgba(0,0,0,.38));
+      opacity:.72;
+      z-index:0;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(110deg, rgba(255,255,255,.06), transparent 23%, transparent 73%, rgba(255,255,255,.035)),
+        radial-gradient(circle at 50% 115%, rgba(36,255,36,.08), transparent 24rem);
+      z-index:1;
+    }
+
+    a,
+    button{
+      font:inherit;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    #linkBg{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      opacity:.72;
+      z-index:0;
+    }
+
+    .link-shell{
+      position:relative;
+      z-index:2;
+      width:min(1040px, 100%);
+      margin:0 auto;
+      padding:18px 0 34px;
+    }
+
+    .link-hero{
+      position:relative;
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      gap:16px;
+      align-items:center;
+      padding:18px;
+      min-height:142px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:28px;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.08), transparent 28%),
+        radial-gradient(circle at 82% 20%, rgba(162,12,255,.18), transparent 32%),
+        rgba(0,0,0,.52);
+      box-shadow:
+        0 26px 80px rgba(0,0,0,.58),
+        inset 0 0 0 1px rgba(36,255,36,.08);
+      overflow:hidden;
+    }
+
+    .link-hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(100deg, transparent, rgba(36,255,36,.11), transparent);
+      transform:translateX(-110%);
+      animation:emxSweep 4.4s ease-in-out infinite;
+    }
+
+    .logo-orb{
+      position:relative;
+      width:102px;
+      aspect-ratio:1;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
+      border:1px solid rgba(36,255,36,.26);
+      background:
+        radial-gradient(circle at 45% 38%, rgba(36,255,36,.14), transparent 42%),
+        radial-gradient(circle at 68% 64%, rgba(162,12,255,.18), transparent 45%),
+        rgba(0,0,0,.52);
+      box-shadow:
+        0 0 42px rgba(36,255,36,.14),
+        0 0 50px rgba(162,12,255,.12);
+      overflow:hidden;
+    }
+
+    .logo-orb img{
+      width:74%;
+      height:74%;
+      object-fit:contain;
+      filter:drop-shadow(0 0 18px rgba(36,255,36,.36));
+      animation:emxFloat 4.8s ease-in-out infinite;
+    }
+
+    .hero-copy{
+      position:relative;
+      min-width:0;
+    }
+
+    .hero-copy span{
+      display:block;
+      color:var(--green);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:0;
+      text-transform:uppercase;
+    }
+
+    .hero-copy h1{
+      margin:5px 0 8px;
+      color:#fff;
+      font-size:42px;
+      line-height:.98;
+      font-weight:900;
+      letter-spacing:0;
+    }
+
+    .hero-copy h1 b{
+      color:var(--green);
+      font-weight:900;
+      text-shadow:0 0 28px rgba(36,255,36,.34);
+    }
+
+    .hero-copy p{
+      max-width:710px;
+      margin:0;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.5;
+      font-weight:800;
+    }
+
+    .mini-status{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:10px;
+      margin:14px 0;
+    }
+
+    .mini-status span{
+      min-height:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      background:rgba(0,0,0,.42);
+      color:rgba(255,255,255,.76);
+      font-size:12px;
+      font-weight:900;
+      box-shadow:inset 0 0 0 1px rgba(36,255,36,.045);
+    }
+
+    .spotlight-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .link-card{
+      --accent:var(--green);
+      position:relative;
+      min-height:112px;
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr) auto;
+      gap:14px;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:22px;
+      padding:16px;
+      background:
+        radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 35%),
+        linear-gradient(125deg, rgba(255,255,255,.07), transparent 36%),
+        rgba(0,0,0,.58);
+      box-shadow:
+        0 20px 60px rgba(0,0,0,.40),
+        inset 0 0 0 1px color-mix(in srgb, var(--accent) 13%, transparent);
+      overflow:hidden;
+      isolation:isolate;
+      transform:translateZ(0);
+      transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
+      color:#fff;
+      text-align:left;
+      cursor:pointer;
+    }
+
+    .link-card::before{
+      content:"";
+      position:absolute;
+      inset:-45%;
+      background:
+        linear-gradient(115deg, transparent 0 42%, color-mix(in srgb, var(--accent) 20%, transparent) 48%, transparent 56% 100%);
+      opacity:0;
+      transform:translateX(-24%);
+      transition:opacity .22s ease, transform .38s ease;
+      z-index:-1;
+    }
+
+    .link-card:hover,
+    .link-card:focus-visible{
+      border-color:color-mix(in srgb, var(--accent) 56%, rgba(255,255,255,.14));
+      box-shadow:
+        0 24px 76px rgba(0,0,0,.54),
+        0 0 38px color-mix(in srgb, var(--accent) 18%, transparent);
+      transform:translateY(-4px) scale(1.012);
+      outline:none;
+    }
+
+    .link-card:hover::before,
+    .link-card:focus-visible::before{
+      opacity:1;
+      transform:translateX(24%);
+    }
+
+    .link-card.primary{
+      min-height:156px;
+      grid-row:span 2;
+    }
+
+    .link-card.purple{
+      --accent:var(--purple);
+    }
+
+    .link-card.blue{
+      --accent:var(--blue);
+    }
+
+    .link-card.green{
+      --accent:var(--green);
+    }
+
+    .link-card.aim-free{
+      --accent:var(--green);
+      background:
+        radial-gradient(circle at 94% 0%, rgba(255,0,212,.19), transparent 34%),
+        radial-gradient(circle at 0% 100%, rgba(36,255,36,.21), transparent 42%),
+        linear-gradient(125deg, rgba(255,255,255,.08), transparent 36%),
+        rgba(0,0,0,.60);
+      border-color:rgba(36,255,36,.32);
+    }
+
+    .link-card.aim-free .card-mark{
+      background:
+        radial-gradient(circle at 50% 24%, rgba(255,0,212,.22), transparent 55%),
+        linear-gradient(135deg, rgba(36,255,36,.18), rgba(162,12,255,.14));
+    }
+
+    .link-card.dark{
+      --accent:#ffffff;
+    }
+
+    .card-mark{
+      width:54px;
+      height:54px;
+      display:grid;
+      place-items:center;
+      border-radius:16px;
+      border:1px solid color-mix(in srgb, var(--accent) 36%, transparent);
+      background:
+        radial-gradient(circle at 50% 24%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 58%),
+        rgba(255,255,255,.055);
+      color:var(--accent);
+      font-size:15px;
+      font-weight:900;
+      box-shadow:0 0 24px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+
+    .link-card.primary .card-mark{
+      width:72px;
+      height:72px;
+      border-radius:22px;
+      font-size:18px;
+    }
+
+    .card-copy{
+      min-width:0;
+    }
+
+    .card-copy span{
+      display:block;
+      color:var(--accent);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:0;
+      text-transform:uppercase;
+    }
+
+    .card-copy strong{
+      display:block;
+      margin-top:4px;
+      color:#fff;
+      font-size:22px;
+      line-height:1.06;
+      font-weight:900;
+      letter-spacing:0;
+    }
+
+    .link-card.primary .card-copy strong{
+      font-size:31px;
+    }
+
+    .card-copy p{
+      margin:8px 0 0;
+      color:rgba(255,255,255,.64);
+      font-size:13px;
+      line-height:1.36;
+      font-weight:800;
+    }
+
+    .card-arrow{
+      width:42px;
+      height:42px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      border:1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+      color:#000;
+      background:linear-gradient(135deg, var(--accent), #fff);
+      font-size:20px;
+      font-weight:900;
+      box-shadow:0 0 25px color-mix(in srgb, var(--accent) 24%, transparent);
+    }
+
+    .quick-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .utility-row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .utility-card{
+      min-height:86px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:20px;
+      background:
+        linear-gradient(135deg, rgba(36,255,36,.08), rgba(162,12,255,.08)),
+        rgba(0,0,0,.50);
+      color:#fff;
+      padding:15px;
+      text-align:left;
+      cursor:pointer;
+      transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+    }
+
+    .utility-card:hover,
+    .utility-card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(36,255,36,.38);
+      box-shadow:0 0 34px rgba(36,255,36,.13);
+      outline:none;
+    }
+
+    .utility-card span{
+      display:block;
+      color:var(--green);
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    .utility-card strong{
+      display:block;
+      margin-top:6px;
+      font-size:17px;
+      line-height:1.15;
+      font-weight:900;
+    }
+
+    .social-dock{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      background:rgba(0,0,0,.46);
+      box-shadow:inset 0 0 0 1px rgba(36,255,36,.06);
+    }
+
+    .social-dock a,
+    .social-dock button{
+      min-height:54px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:17px;
+      background:rgba(255,255,255,.045);
+      color:#fff;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:13px;
+      font-weight:900;
+      transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .social-dock a:hover,
+    .social-dock button:hover,
+    .social-dock a:focus-visible,
+    .social-dock button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(36,255,36,.40);
+      box-shadow:0 0 22px rgba(36,255,36,.12);
+      outline:none;
+    }
+
+    .flow-modal{
+      position:fixed;
+      inset:0;
+      z-index:20;
+      display:grid;
+      place-items:center;
+      padding:18px;
+      background:rgba(0,0,0,.72);
+      backdrop-filter:blur(18px);
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transition:opacity .2s ease, visibility .2s ease;
+    }
+
+    .flow-modal.show{
+      opacity:1;
+      visibility:visible;
+      pointer-events:auto;
+    }
+
+    .flow-card{
+      width:min(680px, 100%);
+      border:1px solid rgba(36,255,36,.28);
+      border-radius:26px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(162,12,255,.16), transparent 38%),
+        linear-gradient(135deg, rgba(255,255,255,.07), transparent 34%),
+        rgba(0,0,0,.88);
+      box-shadow:0 32px 100px rgba(0,0,0,.75), 0 0 70px rgba(36,255,36,.14);
+      padding:22px;
+      animation:emxModalIn .24s ease both;
+    }
+
+    .flow-head{
+      display:flex;
+      align-items:start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .flow-head h2{
+      margin:0;
+      font-size:30px;
+      line-height:1;
+      font-weight:900;
+    }
+
+    .flow-head h2 span{
+      color:var(--green);
+    }
+
+    .flow-close{
+      width:44px;
+      height:44px;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:14px;
+      background:rgba(255,255,255,.07);
+      color:#fff;
+      cursor:pointer;
+      font-size:24px;
+      font-weight:900;
+    }
+
+    .flow-steps{
+      display:grid;
+      gap:10px;
+    }
+
+    .flow-step{
+      display:grid;
+      grid-template-columns:54px minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+      padding:13px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.045);
+    }
+
+    .flow-step b{
+      width:44px;
+      height:44px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      background:linear-gradient(135deg, var(--green), #fff);
+      color:#000;
+      font-size:16px;
+      font-weight:900;
+    }
+
+    .flow-step strong{
+      display:block;
+      color:#fff;
+      font-size:16px;
+      font-weight:900;
+    }
+
+    .flow-step p{
+      margin:4px 0 0;
+      color:rgba(255,255,255,.65);
+      font-size:13px;
+      line-height:1.42;
+      font-weight:800;
+    }
+
+    .flow-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .flow-actions a{
+      min-height:52px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border-radius:16px;
+      font-weight:900;
+    }
+
+    .flow-actions a:first-child{
+      background:linear-gradient(135deg, var(--green), #72ff58);
+      color:#000;
+    }
+
+    .flow-actions a:last-child{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+    }
+
+    .aim-trainer-card{
+      width:min(940px, 100%);
+      max-height:calc(100vh - 36px);
+      overflow:auto;
+    }
+
+    .aim-intro{
+      display:grid;
+      grid-template-columns:minmax(0, .92fr) minmax(300px, 1.08fr);
+      gap:16px;
+      align-items:stretch;
+      margin-bottom:14px;
+    }
+
+    .aim-copy{
+      min-height:100%;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      padding:16px;
+      background:
+        radial-gradient(circle at 0% 100%, rgba(36,255,36,.14), transparent 45%),
+        rgba(255,255,255,.045);
+    }
+
+    .aim-copy p{
+      margin:10px 0 0;
+      color:rgba(255,255,255,.68);
+      font-size:14px;
+      line-height:1.48;
+      font-weight:800;
+    }
+
+    .aim-badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .aim-badges span{
+      border:1px solid rgba(36,255,36,.30);
+      border-radius:999px;
+      background:rgba(36,255,36,.08);
+      color:var(--green);
+      padding:8px 10px;
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    .aim-preview{
+      min-height:248px;
+      border:1px solid rgba(36,255,36,.20);
+      border-radius:22px;
+      overflow:hidden;
+      background:rgba(0,0,0,.55);
+      box-shadow:0 0 48px rgba(36,255,36,.10);
+    }
+
+    .aim-preview img{
+      width:100%;
+      height:100%;
+      min-height:248px;
+      display:block;
+      object-fit:cover;
+      object-position:center top;
+    }
+
+    .aim-feature-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .aim-feature{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:13px;
+      background:rgba(255,255,255,.045);
+    }
+
+    .aim-feature b{
+      display:block;
+      color:var(--green);
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+    }
+
+    .aim-feature span{
+      display:block;
+      margin-top:6px;
+      color:rgba(255,255,255,.70);
+      font-size:13px;
+      line-height:1.34;
+      font-weight:800;
+    }
+
+    .aim-actions{
+      display:grid;
+      grid-template-columns:1.25fr 1fr 1fr;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .aim-actions a{
+      min-height:52px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border-radius:16px;
+      font-weight:900;
+    }
+
+    .aim-actions a:first-child{
+      background:linear-gradient(135deg, var(--green), #fff, #ff00d4);
+      color:#000;
+      box-shadow:0 0 34px rgba(36,255,36,.18);
+    }
+
+    .aim-actions a:not(:first-child){
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.05);
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:24px;
+      z-index:30;
+      min-width:220px;
+      max-width:calc(100vw - 36px);
+      transform:translate(-50%, 24px);
+      border:1px solid rgba(36,255,36,.32);
+      border-radius:18px;
+      background:rgba(0,0,0,.88);
+      color:#fff;
+      padding:12px 16px;
+      text-align:center;
+      font-size:13px;
+      font-weight:900;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .2s ease, transform .2s ease;
+      box-shadow:0 0 42px rgba(36,255,36,.12);
+    }
+
+    .toast.show{
+      opacity:1;
+      transform:translate(-50%, 0);
+    }
+
+    @keyframes emxSweep{
+      0%, 55%{ transform:translateX(-110%); }
+      100%{ transform:translateX(110%); }
+    }
+
+    @keyframes emxFloat{
+      0%, 100%{ transform:translateY(0) scale(1); }
+      50%{ transform:translateY(-5px) scale(1.04); }
+    }
+
+    @keyframes emxModalIn{
+      from{ opacity:0; transform:translateY(18px) scale(.96); }
+      to{ opacity:1; transform:translateY(0) scale(1); }
+    }
+
+    @media (max-width:860px){
+      body{
+        padding:12px;
+      }
+
+      .link-hero,
+      .spotlight-grid,
+      .utility-row{
+        grid-template-columns:1fr;
+      }
+
+      .logo-orb{
+        width:88px;
+      }
+
+      .hero-copy h1{
+        font-size:34px;
+      }
+
+      .quick-grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .social-dock{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media (max-width:520px){
+      .link-shell{
+        padding-top:6px;
+      }
+
+      .link-hero{
+        min-height:0;
+        grid-template-columns:86px minmax(0,1fr);
+        padding:14px;
+        border-radius:24px;
+      }
+
+      .logo-orb{
+        width:76px;
+      }
+
+      .hero-copy h1{
+        font-size:28px;
+      }
+
+      .hero-copy p{
+        font-size:13px;
+      }
+
+      .mini-status,
+      .quick-grid,
+      .social-dock,
+      .flow-actions,
+      .aim-intro,
+      .aim-feature-grid,
+      .aim-actions{
+        grid-template-columns:1fr;
+      }
+
+      .link-card,
+      .link-card.primary{
+        min-height:104px;
+        grid-template-columns:auto minmax(0,1fr);
+      }
+
+      .card-arrow{
+        display:none;
+      }
+
+      .link-card.primary .card-copy strong,
+      .card-copy strong{
+        font-size:21px;
+      }
+
+      .card-mark,
+      .link-card.primary .card-mark{
+        width:50px;
+        height:50px;
+        border-radius:16px;
+        font-size:14px;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        animation:none !important;
+        transition:none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="linkBg" aria-hidden="true"></canvas>
+
+  <main class="link-shell">
+    <header class="link-hero">
+      <div class="logo-orb">
+        <img src="./emx-logo.png" alt="EMX logo">
+      </div>
+      <div class="hero-copy">
+        <span>Official EMX Quick Launch</span>
+        <h1>EMX <b>Command Hub</b></h1>
+        <p>Fast access to EMX products, license keys, PC analyzer, Fortnite maps, affiliate tools, Payhip checkout help, TikTok, and support.</p>
+      </div>
+    </header>
+
+    <section class="mini-status" aria-label="EMX status">
+      <span>Auto Keys Live</span>
+      <span>Controller Macro Live</span>
+      <span>EMX Volt Live</span>
+      <span>Free Aim Trainer Live</span>
+      <span>Secure Payhip Checkout</span>
+      <span>Discord Support Ready</span>
+    </section>
+
+    <section class="spotlight-grid" aria-label="Main EMX links">
+      <a class="link-card primary green" href="./products.html">
+        <div class="card-mark">SHOP</div>
+        <div class="card-copy">
+          <span>Main Website</span>
+          <strong>Open EMX Tweaks Store</strong>
+          <p>Products, previews, vouches, bundles, checkout, support, and full EMX storefront flow.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </a>
+
+      <a class="link-card purple" href="./license.html">
+        <div class="card-mark">KEY</div>
+        <div class="card-copy">
+          <span>After Purchase</span>
+          <strong>Claim Or Recover Key</strong>
+          <p>Use Payhip email plus receipt transaction ID to get your EMX license.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </a>
+
+      <a class="link-card blue" href="./analyzer.html">
+        <div class="card-mark">SCAN</div>
+        <div class="card-copy">
+          <span>Free Tool</span>
+          <strong>Run PC Analyzer</strong>
+          <p>Check browser-visible hardware signals and get an EMX setup path.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </a>
+    </section>
+
+    <section class="quick-grid" aria-label="EMX product shortcuts">
+      <button class="link-card aim-free" type="button" id="aimTrainerButton">
+        <div class="card-mark">AIM</div>
+        <div class="card-copy">
+          <span>Free Windows Trainer</span>
+          <strong>Free EMX Aim Trainer</strong>
+          <p>Download the official EMX trainer with 48 modules, custom armory, reports, and built-in patch checking.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </button>
+
+      <button class="link-card purple" type="button" id="voltMacroButton">
+        <div class="card-mark">VOLT</div>
+        <div class="card-copy">
+          <span>New Desktop Macro</span>
+          <strong>EMX VOLT MACRO</strong>
+          <p>Rust-powered Windows macro app with glass UI, Payhip license keys, auto updates, and lifetime single-PC access.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </button>
+
+      <a class="link-card green" href="./bundle.html">
+        <div class="card-mark">PACK</div>
+        <div class="card-copy">
+          <span>Bundles</span>
+          <strong>Macros X Tweaks Bundles</strong>
+          <p>Open EMX bundle deals and shared license checkout options.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </a>
+
+      <a class="link-card purple" href="./macros.html">
+        <div class="card-mark">KBM</div>
+        <div class="card-copy">
+          <span>Macro Product</span>
+          <strong>EMX KBM Macro</strong>
+          <p>Jump straight to the keyboard and mouse macro product page.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </a>
+
+      <a class="link-card green" href="./products.html#product-controller_macro">
+        <div class="card-mark">PAD</div>
+        <div class="card-copy">
+          <span>Controller Macro</span>
+          <strong>EMX Elite Controller Macro</strong>
+          <p>Native Windows controller macro dashboard with Double Edit, Hex/SCUF support path, and Payhip checkout.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </a>
+
+      <a class="link-card green" href="./custom-os.html">
+        <div class="card-mark">OS</div>
+        <div class="card-copy">
+          <span>Custom OS</span>
+          <strong>EMX Custom OS</strong>
+          <p>Windows 11 gaming optimization package with Smart profiles.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </a>
+
+      <a class="link-card blue" href="https://www.fortnite.com/@efect.lit?lang=en-US" target="_blank" rel="noopener">
+        <div class="card-mark">MAP</div>
+        <div class="card-copy">
+          <span>Fortnite</span>
+          <strong>EFECT.LIT Maps</strong>
+          <p>Open the official Fortnite creator page for maps and updates.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </a>
+
+      <a class="link-card purple" href="./affiliate.html">
+        <div class="card-mark">REF</div>
+        <div class="card-copy">
+          <span>Approved Affiliates</span>
+          <strong>Referral Link Generator</strong>
+          <p>Create your EMX website link with your Payhip affiliate key attached.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </a>
+
+      <a class="link-card green" href="https://payhip.com/auth/register/af6971382b8fe76" target="_blank" rel="noopener">
+        <div class="card-mark">AF</div>
+        <div class="card-copy">
+          <span>Payhip Affiliate</span>
+          <strong>Apply To Promote EMX</strong>
+          <p>Sign up through Payhip, then generate your creator link after approval.</p>
+        </div>
+        <div class="card-arrow">></div>
+      </a>
+    </section>
+
+    <section class="utility-row" aria-label="Helpful EMX actions">
+      <button class="utility-card" type="button" id="flowButton">
+        <span>Buyer Guide</span>
+        <strong>Show Payhip Checkout Flow</strong>
+      </button>
+      <a class="utility-card" href="./faq.html">
+        <span>Quick Answers</span>
+        <strong>Open EMX FAQ</strong>
+      </a>
+    </section>
+
+    <section class="social-dock" aria-label="Social and support links">
+      <a href="https://discord.gg/puaZFNfNKW" target="_blank" rel="noopener">Discord Support</a>
+      <a href="https://www.tiktok.com/@efect2lit" target="_blank" rel="noopener">TikTok Efect2lit</a>
+      <a href="./vouches.html">Reviews And Vouches</a>
+      <button type="button" id="shareButton">Share Hub</button>
+    </section>
+  </main>
+
+  <div class="flow-modal" id="flowModal" role="dialog" aria-modal="true" aria-labelledby="flowTitle">
+    <div class="flow-card">
+      <div class="flow-head">
+        <h2 id="flowTitle">Checkout <span>Flow</span></h2>
+        <button class="flow-close" type="button" id="flowClose" aria-label="Close checkout flow">&times;</button>
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <b>01</b>
+          <div>
+            <strong>Choose Product Or Bundle</strong>
+            <p>Pick EMX Custom OS, KBM Macro, bundle deals, optimizer, FPS booster, or another live EMX product.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <b>02</b>
+          <div>
+            <strong>Pay Through Payhip</strong>
+            <p>Checkout happens on Payhip. EMX does not store card info, and the Payhip receipt is your order proof.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <b>03</b>
+          <div>
+            <strong>Claim Your EMX Key</strong>
+            <p>Open the Claim Key page and enter the same Payhip email plus transaction ID from the receipt.</p>
+          </div>
+        </div>
+        <div class="flow-step">
+          <b>04</b>
+          <div>
+            <strong>Download, Install, Get Help</strong>
+            <p>Use Payhip delivery files, keep your license saved, and join Discord support if anything needs help.</p>
+          </div>
+        </div>
+      </div>
+      <div class="flow-actions">
+        <a href="./license.html">Claim Key</a>
+        <a href="./products.html">Shop EMX</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-modal" id="aimTrainerModal" role="dialog" aria-modal="true" aria-labelledby="aimTrainerTitle">
+    <div class="flow-card aim-trainer-card">
+      <div class="flow-head">
+        <h2 id="aimTrainerTitle">Free <span>EMX Aim Trainer</span></h2>
+        <button class="flow-close" type="button" id="aimTrainerClose" aria-label="Close EMX Aim Trainer modal">&times;</button>
+      </div>
+      <div class="aim-intro">
+        <div class="aim-copy">
+          <div class="card-copy">
+            <span>Official EMX Training Suite</span>
+            <strong>Installable Windows aim trainer with auto-updates.</strong>
+          </div>
+          <p>Built for fast flick practice, precision drills, tracking rhythm, and repeatable warmups. It runs as a desktop app instead of a browser tab, saves your progress, and checks the official EMX patch feed when you hit Check For Patch.</p>
+          <div class="aim-badges" aria-label="EMX Aim Trainer details">
+            <span>Version 0.3.0</span>
+            <span>Windows Setup EXE</span>
+            <span>Free Download</span>
+            <span>Auto Updater</span>
+          </div>
+        </div>
+        <div class="aim-preview">
+          <img src="./emx-aim-trainer-command-center.png" alt="EMX Aim Trainer command center preview">
+        </div>
+      </div>
+      <div class="aim-actions">
+        <a href="/download/aim-trainer?source=links">Download Free</a>
+        <a href="https://discord.gg/puaZFNfNKW" target="_blank" rel="noopener">Join Discord</a>
+        <a href="./aim-trainer.html">Aim Trainer Tab</a>
+      </div>
+      <div class="aim-feature-grid" aria-label="EMX Aim Trainer features">
+        <div class="aim-feature">
+          <b>48 Modules</b>
+          <span>Flick, precision, reaction, timing, tracking, and dynamic routines.</span>
+        </div>
+        <div class="aim-feature">
+          <b>Progress Reports</b>
+          <span>Score, accuracy, combo, XP, ranks, hit mix, and session feedback.</span>
+        </div>
+        <div class="aim-feature">
+          <b>Custom Armory</b>
+          <span>Weapon feel, audio, laser feedback, sensitivity, and trainer settings.</span>
+        </div>
+        <div class="aim-feature">
+          <b>Desktop Performance</b>
+          <span>Made for the installable app flow so practice feels smoother than browser play.</span>
+        </div>
+        <div class="aim-feature">
+          <b>Saved Settings</b>
+          <span>Keeps customizer choices and progress so setup does not reset every run.</span>
+        </div>
+        <div class="aim-feature">
+          <b>EMX Links</b>
+          <span>Direct access to EMX Official and Discord support from inside the trainer.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow-modal" id="voltMacroModal" role="dialog" aria-modal="true" aria-labelledby="voltMacroTitle">
+    <div class="flow-card aim-trainer-card">
+      <div class="flow-head">
+        <h2 id="voltMacroTitle">EMX <span>VOLT MACRO</span></h2>
+        <button class="flow-close" type="button" id="voltMacroClose" aria-label="Close EMX VOLT MACRO modal">&times;</button>
+      </div>
+      <div class="aim-intro">
+        <div class="aim-copy">
+          <div class="card-copy">
+            <span>Lifetime single-PC access</span>
+            <strong>Premium Windows desktop macro dashboard with Payhip receipt keys.</strong>
+          </div>
+          <p>EMX VOLT MACRO is the newest EMX desktop app built with a Tauri + Rust engine, clean neon glass controls, saved binds, update checking, tray controls, and license activation through Payhip keys.</p>
+          <div class="aim-badges" aria-label="EMX VOLT details">
+            <span>$25</span>
+            <span>Windows Setup</span>
+            <span>Payhip Key</span>
+            <span>Auto Updates</span>
+          </div>
+        </div>
+        <div class="aim-preview">
+          <img src="./app-screenshots/emx-volt-dashboard-real.png" alt="EMX VOLT MACRO dashboard preview">
+        </div>
+      </div>
+      <div class="aim-actions">
+        <a href="https://payhip.com/b/Oqz73" target="_blank" rel="noopener">Buy EMX VOLT</a>
+        <a href="https://discord.gg/J7AucBXMRH" target="_blank" rel="noopener">Join Discord</a>
+        <a href="./products.html">Open Store</a>
+      </div>
+      <div class="aim-feature-grid" aria-label="EMX VOLT features">
+        <div class="aim-feature">
+          <b>Rust Engine</b>
+          <span>Built as a native Windows desktop app with a fast Rust runtime and React/Tauri interface.</span>
+        </div>
+        <div class="aim-feature">
+          <b>Custom Binds</b>
+          <span>Edit/select/place/build inputs, macro hotkeys, mouse buttons, and saved profiles.</span>
+        </div>
+        <div class="aim-feature">
+          <b>Timing Control</b>
+          <span>Clean slider controls for timing values while keeping the stable engine behavior locked.</span>
+        </div>
+        <div class="aim-feature">
+          <b>License Locked</b>
+          <span>Payhip receipt keys unlock through EMX auth and bind to one PC for lifetime access.</span>
+        </div>
+        <div class="aim-feature">
+          <b>Updater</b>
+          <span>Built-in update checker with EMX release notes and one-click upgrade flow.</span>
+        </div>
+        <div class="aim-feature">
+          <b>Safety Controls</b>
+          <span>Disable, emergency stop, tray quit cleanup, and focus guard controls are built in.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const root = document.documentElement;
+    const canvas = document.getElementById("linkBg");
+    const ctx = canvas.getContext("2d");
+    const flowModal = document.getElementById("flowModal");
+    const flowButton = document.getElementById("flowButton");
+    const flowClose = document.getElementById("flowClose");
+    const aimTrainerModal = document.getElementById("aimTrainerModal");
+    const aimTrainerButton = document.getElementById("aimTrainerButton");
+    const aimTrainerClose = document.getElementById("aimTrainerClose");
+    const voltMacroModal = document.getElementById("voltMacroModal");
+    const voltMacroButton = document.getElementById("voltMacroButton");
+    const voltMacroClose = document.getElementById("voltMacroClose");
+    const shareButton = document.getElementById("shareButton");
+    const toast = document.getElementById("toast");
+    const particles = [];
+    const pointer = { x: .5, y: .18 };
+    let toastTimer = null;
+    let animationId = null;
+
+    function showToast(message){
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function resizeCanvas(){
+      const ratio = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = Math.floor(window.innerWidth * ratio);
+      canvas.height = Math.floor(window.innerHeight * ratio);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+      particles.length = 0;
+      const count = window.innerWidth < 560 ? 44 : 82;
+      for(let i = 0; i < count; i += 1){
+        particles.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          r: Math.random() * 1.8 + .5,
+          vx: (Math.random() - .5) * .18,
+          vy: (Math.random() - .5) * .18,
+          color: Math.random() > .58 ? "rgba(36,255,36,.72)" : "rgba(162,12,255,.62)"
+        });
+      }
+    }
+
+    function drawBg(){
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      const glow = ctx.createRadialGradient(
+        pointer.x * window.innerWidth,
+        pointer.y * window.innerHeight,
+        0,
+        pointer.x * window.innerWidth,
+        pointer.y * window.innerHeight,
+        Math.max(window.innerWidth, window.innerHeight) * .58
+      );
+      glow.addColorStop(0, "rgba(36,255,36,.16)");
+      glow.addColorStop(.38, "rgba(162,12,255,.07)");
+      glow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = glow;
+      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+      particles.forEach(particle => {
+        particle.x += particle.vx + (pointer.x - .5) * .08;
+        particle.y += particle.vy + (pointer.y - .5) * .08;
+
+        if(particle.x < -20) particle.x = window.innerWidth + 20;
+        if(particle.x > window.innerWidth + 20) particle.x = -20;
+        if(particle.y < -20) particle.y = window.innerHeight + 20;
+        if(particle.y > window.innerHeight + 20) particle.y = -20;
+
+        ctx.beginPath();
+        ctx.fillStyle = particle.color;
+        ctx.shadowColor = particle.color;
+        ctx.shadowBlur = 12;
+        ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.shadowBlur = 0;
+      animationId = requestAnimationFrame(drawBg);
+    }
+
+    function setPointer(event){
+      const touch = event.touches?.[0] || event;
+      pointer.x = Math.max(0, Math.min(1, touch.clientX / window.innerWidth));
+      pointer.y = Math.max(0, Math.min(1, touch.clientY / window.innerHeight));
+      root.style.setProperty("--mx", (pointer.x * 100).toFixed(2) + "%");
+      root.style.setProperty("--my", (pointer.y * 100).toFixed(2) + "%");
+    }
+
+    document.addEventListener("pointermove", setPointer, { passive:true });
+    document.addEventListener("touchmove", setPointer, { passive:true });
+
+    document.querySelectorAll(".link-card, .utility-card, .social-dock a, .social-dock button").forEach((element, index) => {
+      element.style.animation = `emxModalIn .38s ease ${(index * 45) + 80}ms both`;
+    });
+
+    flowButton.addEventListener("click", () => {
+      flowModal.classList.add("show");
+    });
+
+    flowClose.addEventListener("click", () => {
+      flowModal.classList.remove("show");
+    });
+
+    flowModal.addEventListener("click", event => {
+      if(event.target === flowModal){
+        flowModal.classList.remove("show");
+      }
+    });
+
+    aimTrainerButton.addEventListener("click", () => {
+      aimTrainerModal.classList.add("show");
+    });
+
+    aimTrainerClose.addEventListener("click", () => {
+      aimTrainerModal.classList.remove("show");
+    });
+
+    aimTrainerModal.addEventListener("click", event => {
+      if(event.target === aimTrainerModal){
+        aimTrainerModal.classList.remove("show");
+      }
+    });
+
+    voltMacroButton.addEventListener("click", () => {
+      voltMacroModal.classList.add("show");
+    });
+
+    voltMacroClose.addEventListener("click", () => {
+      voltMacroModal.classList.remove("show");
+    });
+
+    voltMacroModal.addEventListener("click", event => {
+      if(event.target === voltMacroModal){
+        voltMacroModal.classList.remove("show");
+      }
+    });
+
+    document.addEventListener("keydown", event => {
+      if(event.key === "Escape"){
+        flowModal.classList.remove("show");
+        aimTrainerModal.classList.remove("show");
+        voltMacroModal.classList.remove("show");
+      }
+    });
+
+    shareButton.addEventListener("click", async () => {
+      const shareUrl = "https://efect-macros-x-tweaks.vercel.app/links";
+      const shareData = {
+        title: "EMX Command Hub",
+        text: "Official EMX quick links for products, keys, analyzer, maps, affiliates, and support.",
+        url: shareUrl
+      };
+
+      try{
+        if(navigator.share){
+          await navigator.share(shareData);
+          showToast("EMX hub shared");
+          return;
+        }
+
+        await navigator.clipboard.writeText(shareUrl);
+        showToast("EMX hub link copied");
+      }catch(error){
+        try{
+          await navigator.clipboard.writeText(shareUrl);
+          showToast("EMX hub link copied");
+        }catch(copyError){
+          showToast("Share blocked by browser");
+        }
+      }
+    });
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+    drawBg();
+
+    window.addEventListener("pagehide", () => {
+      if(animationId) cancelAnimationFrame(animationId);
+    });
+  </script>
+</body>
+</html>
+

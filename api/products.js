@@ -69,6 +69,36 @@ const STARTER_PRODUCTS = [
     visible: true
   },
   {
+    id: "volt",
+    key: "Oqz73",
+    productUrl: "https://payhip.com/b/Oqz73",
+    title: "EMX VOLT MACRO",
+    eyebrow: "NEW Rust Engine Drop",
+    price: 25.0,
+    oldPrice: 50.0,
+    image: "./app-screenshots/emx-volt-dashboard-real.png",
+    gallery: [
+      "./app-screenshots/emx-volt-dashboard-real.png",
+      "./app-screenshots/emx-volt-macros-real.png",
+      "./app-screenshots/emx-volt-binds-real.png",
+      "./app-screenshots/emx-volt-support-real.png"
+    ],
+    previewType: "image",
+    previewSrc: "./app-screenshots/emx-volt-dashboard-real.png",
+    fallbackPreview: "./app-screenshots/emx-volt-dashboard-real.png",
+    description:
+      "EMX VOLT MACRO is the newest EMX Windows desktop macro app with a Rust-powered runtime, premium glass UI, saved binds, timing controls, tray support, emergency stop, Payhip license keys, and built-in update checking.",
+    features: [
+      "Tauri + Rust Windows desktop engine",
+      "Lifetime single-PC Payhip license access",
+      "Saved keybinds, mouse buttons, and timing controls",
+      "Built-in updater, tray controls, and emergency stop"
+    ],
+    featured: true,
+    saleBadge: "NEW",
+    visible: true
+  },
+  {
     id: "fps",
     key: "EQIrd",
     productUrl: "https://payhip.com/b/EQIrd",
@@ -183,7 +213,12 @@ async function loadProducts() {
     return STARTER_PRODUCTS;
   }
 
-  return JSON.parse(saved);
+  const savedProducts = JSON.parse(saved);
+  const starterById = new Map(STARTER_PRODUCTS.map((product) => [product.id, product]));
+  const savedIds = new Set(savedProducts.map((product) => product.id));
+  const missingStarters = [...starterById.values()].filter((product) => !savedIds.has(product.id));
+
+  return [...savedProducts, ...missingStarters];
 }
 
 async function saveProducts(products) {

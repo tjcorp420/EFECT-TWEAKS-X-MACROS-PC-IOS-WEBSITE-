@@ -45,6 +45,12 @@ document.addEventListener("DOMContentLoaded", () => {
         "./app-screenshots/emx-tweaks-full-06-settings.png",
         "./keyboard-macro.png"
       ];
+      const VOLT_APP_GALLERY = [
+        "./app-screenshots/emx-volt-dashboard-real.png",
+        "./app-screenshots/emx-volt-macros-real.png",
+        "./app-screenshots/emx-volt-binds-real.png",
+        "./app-screenshots/emx-volt-support-real.png"
+      ];
       const FPS_APP_GALLERY = [
         "./app-screenshots/fps-booster-01-boost.png",
         "./app-screenshots/fps-booster-02-system.png",
@@ -68,6 +74,13 @@ document.addEventListener("DOMContentLoaded", () => {
           previewType: "image",
           previewSrc: "./app-screenshots/emx-tweaks-full-03-macros.png",
           fallbackPreview: "./keyboard-macro.png"
+        },
+        volt: {
+          image: "./app-screenshots/emx-volt-dashboard-real.png",
+          gallery: VOLT_APP_GALLERY,
+          previewType: "image",
+          previewSrc: "./app-screenshots/emx-volt-dashboard-real.png",
+          fallbackPreview: "./app-screenshots/emx-volt-dashboard-real.png"
         },
         fps: {
           image: "./app-screenshots/fps-booster-01-boost.png",
@@ -153,6 +166,26 @@ document.addEventListener("DOMContentLoaded", () => {
         "Windows desktop setup",
         "User is responsible for game and platform rules",
         "Support available for access and setup questions"
+      ]
+    },
+    volt: {
+      includes: [
+        "EMX VOLT MACRO Windows setup installer",
+        "Rust-powered Tauri desktop app with premium EMX glass UI",
+        "Saved binds, timing controls, tray controls, and emergency stop",
+        "Payhip receipt license key with lifetime single-PC access"
+      ],
+      setup: [
+        "Purchase through secure Payhip checkout",
+        "Download and run the EMX VOLT setup file",
+        "Paste the Payhip receipt license key into the EMX VOLT Access screen",
+        "First successful unlock binds the key to that PC"
+      ],
+      compatibility: [
+        "Windows desktop app",
+        "One license key is intended for one user and one PC",
+        "Keep your Payhip receipt and license key private",
+        "Use responsibly and follow platform rules"
       ]
     },
     fps: {
