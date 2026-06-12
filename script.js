@@ -13,11 +13,16 @@ function removeInstantBlackout() {
   }
 }
 
-function forceClearIntroOverlays() {
+function forceClearIntroOverlays(options = {}) {
+  const keepBooting = options.keepBooting === true;
+
   document.documentElement.classList.add("emx-ready");
   document.documentElement.classList.remove("emx-preboot");
   document.body?.classList.add("app-ready");
-  document.body?.classList.remove("booting", "no-scroll");
+
+  if (!keepBooting) {
+    document.body?.classList.remove("booting", "no-scroll");
+  }
 
   ["instantBlackout", "boot-screen", "emxLaunchOverlay"].forEach(id => {
     const element = document.getElementById(id);
@@ -35,19 +40,35 @@ function forceClearIntroOverlays() {
   });
 }
 
+function scheduleIntroFailOpen() {
+  setTimeout(() => {
+    if (!document.body?.classList.contains("app-ready")) {
+      forceClearIntroOverlays();
+    }
+  }, 3600);
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   setTimeout(removeInstantBlackout, 450);
+  scheduleIntroFailOpen();
 });
 
 window.addEventListener("load", () => {
   setTimeout(removeInstantBlackout, 450);
+  setTimeout(() => forceClearIntroOverlays({ keepBooting: document.body?.classList.contains("booting") }), 5200);
 });
 
 setTimeout(removeInstantBlackout, 1400);
-setTimeout(forceClearIntroOverlays, 7200);
+setTimeout(forceClearIntroOverlays, 6500);
 
 window.addEventListener("pageshow", () => {
-  setTimeout(forceClearIntroOverlays, 7200);
+  setTimeout(forceClearIntroOverlays, 1800);
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    setTimeout(forceClearIntroOverlays, 900);
+  }
 });
 
 document.addEventListener("DOMContentLoaded", () => {

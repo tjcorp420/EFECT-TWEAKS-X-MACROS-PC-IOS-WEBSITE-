@@ -1906,7 +1906,7 @@ main{
   }
 
   .home-proof-gallery{
-    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-columns:repeat(5,minmax(0,1fr));
   }
 }
 
@@ -6568,7 +6568,7 @@ body.booting #supportWidget {
 
 @media (min-width: 720px) {
   .vouch-proof-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 /* PROOF HUB PHOTO BOXES */
@@ -12094,4 +12094,15 @@ body.emx-subpage-bundle .floating-footer{
     filter:blur(8px) brightness(.48);
     z-index:1;
   }
+}
+
+body:not(.app-ready):not(.booting) header,
+body:not(.app-ready):not(.booting) main,
+body:not(.app-ready):not(.booting) .floating-footer,
+body:not(.app-ready):not(.booting) .floating-share,
+body:not(.app-ready):not(.booting) #proCommandDock,
+body:not(.app-ready):not(.booting) #supportWidget {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
 }
