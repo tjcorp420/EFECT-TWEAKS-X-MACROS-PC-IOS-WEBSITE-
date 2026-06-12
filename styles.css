@@ -11150,9 +11150,19 @@ body.emx-home-page main > section{
 }
 
 body.emx-home-page .hero,
+body.emx-home-page .fortnite-map-section,
+body.emx-home-page .search-panel,
 body.emx-home-page .trust-strip,
+body.emx-home-page .section-head,
+body.emx-home-page #customOsDrop,
+body.emx-home-page .premium-section,
+body.emx-home-page .bundle-premium-section,
 body.emx-home-page .legal-section{
   display:block !important;
+}
+
+body.emx-home-page #productGrid{
+  display:grid !important;
 }
 
 body.emx-home-page .hero{
