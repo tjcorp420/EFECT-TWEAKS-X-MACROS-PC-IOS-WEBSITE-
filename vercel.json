@@ -1,8 +1,44 @@
 {
   "rewrites": [
     {
+      "source": "/API/PAYHIP-WEBHOOK",
+      "destination": "/api/payhip-webhook"
+    },
+    {
       "source": "/links",
       "destination": "/links.html"
+    },
+    {
+      "source": "/aim-trainer",
+      "destination": "/aim-trainer.html"
+    },
+    {
+      "source": "/download/aim-trainer",
+      "destination": "/api/aim-trainer-download"
+    },
+    {
+      "source": "/linktree",
+      "destination": "/links.html"
+    },
+    {
+      "source": "/hub",
+      "destination": "/links.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/c/:creator",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/c/:creator/:path*",
+      "destination": "/:path*"
     },
     {
       "source": "/r/:creator",

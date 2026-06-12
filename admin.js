@@ -26,6 +26,12 @@ const fields = {
   price: document.getElementById("priceField"),
   oldPrice: document.getElementById("oldPriceField"),
   productUrl: document.getElementById("urlField"),
+  type: document.getElementById("typeField"),
+  page: document.getElementById("pageField"),
+  homepage: document.getElementById("homepageField"),
+  featured: document.getElementById("featuredField"),
+  bestSeller: document.getElementById("bestSellerField"),
+  saleBadge: document.getElementById("saleBadgeField"),
   image: document.getElementById("imageField"),
   gallery: document.getElementById("galleryField"),
   previewType: document.getElementById("previewTypeField"),
@@ -33,6 +39,11 @@ const fields = {
   fallbackPreview: document.getElementById("fallbackField"),
   description: document.getElementById("descriptionField"),
   features: document.getElementById("featuresField"),
+  tags: document.getElementById("tagsField"),
+  bundleItems: document.getElementById("bundleItemsField"),
+  modalTitle: document.getElementById("modalTitleField"),
+  modalSubtitle: document.getElementById("modalSubtitleField"),
+  ctaLabel: document.getElementById("ctaLabelField"),
   visible: document.getElementById("visibleField")
 };
 
@@ -411,6 +422,7 @@ async function uploadSelectedFile(file) {
       method: "POST",
       headers: {
         "Content-Type": file.type || "application/octet-stream",
+        "x-admin-password": adminPassword,
         "x-file-name": file.name || `emx-upload-${Date.now()}`
       },
       body: file
@@ -845,8 +857,7 @@ function creatorSlug(value) {
   return String(value || "")
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/[^a-zA-Z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 40);
 }
@@ -854,9 +865,9 @@ function creatorSlug(value) {
 function referralLinkForKey(key, displayName = "") {
   const display = cleanDisplayName(displayName);
   const slug = creatorSlug(display || key);
-  const target = new URL(slug ? "r/" + encodeURIComponent(slug) : "", SITE_BASE_URL);
+  const target = new URL(slug ? "c/" + encodeURIComponent(slug) : "", SITE_BASE_URL);
 
-  target.searchParams.set("ref", key);
+  target.searchParams.set("af", key);
   return target.toString();
 }
 
@@ -867,6 +878,23 @@ function cleanId(value){
     .replace(/[^a-z0-9-_]/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
+}
+
+function linesFromField(field) {
+  return String(field?.value || "")
+    .split("\n")
+    .map(item => item.trim())
+    .filter(Boolean);
+}
+
+function linesToField(field, value) {
+  if (!field) return;
+  field.value = Array.isArray(value) ? value.join("\n") : "";
+}
+
+function setSelectValue(field, value, fallback = "") {
+  if (!field) return;
+  field.value = value == null || value === "" ? fallback : String(value);
 }
 
 function setStatus(text){
@@ -882,6 +910,8 @@ function newProduct(){
     productUrl: "",
     title: "New EMX Product",
     eyebrow: "EMX Product",
+    type: "product",
+    page: "products",
     price: 0,
     oldPrice: 0,
     image: "./emx-logo.png",
@@ -897,6 +927,17 @@ function newProduct(){
       "Feature two",
       "Feature three"
     ],
+    tags: [
+      "EMX"
+    ],
+    bundleItems: [],
+    homepage: true,
+    featured: false,
+    bestSeller: false,
+    saleBadge: "",
+    modalTitle: "",
+    modalSubtitle: "",
+    ctaLabel: "Buy Now",
     visible: true
   };
 }
@@ -1094,11 +1135,14 @@ function renderProductList() {
     const active = index === selectedIndex ? "active" : "";
     const hiddenClass = product.visible === false ? "hidden-product" : "";
     const status = product.visible === false ? "Hidden" : "Live";
+    const typeLabel = product.type === "bundle" ? "Bundle" : (product.type || "Product");
+    const tagCount = Array.isArray(product.tags) ? product.tags.length : 0;
     
     return `
       <button class="product-btn ${active}" type="button" data-index="${index}">
         <span>
           <b>${escapeHtml(product.title)}</b>
+          <small>${escapeHtml(typeLabel)}${tagCount ? " - " + tagCount + " tags" : ""}</small>
           <small>${escapeHtml(product.eyebrow)} • ${money(product.price)}</small>
         </span>
         <em class="status ${hiddenClass}">${status}</em>
@@ -1132,6 +1176,12 @@ function loadSelectedProduct(){
   fields.price.value = product.price ?? 0;
   fields.oldPrice.value = product.oldPrice ?? 0;
   fields.productUrl.value = product.productUrl || "";
+  setSelectValue(fields.type, product.type || (product.id && product.id.includes("bundle") ? "bundle" : "product"), "product");
+  setSelectValue(fields.page, product.page || "", "");
+  setSelectValue(fields.homepage, product.homepage === false ? "false" : "true", "true");
+  setSelectValue(fields.featured, product.featured === true ? "true" : "false", "false");
+  setSelectValue(fields.bestSeller, product.bestSeller === true ? "true" : "false", "false");
+  fields.saleBadge.value = product.saleBadge || "";
   fields.image.value = product.image || "";
 fields.gallery.value = Array.isArray(product.gallery) ? product.gallery.join("\n") : "";
 fields.previewType.value = product.previewType || "image";
@@ -1139,6 +1189,11 @@ fields.previewType.value = product.previewType || "image";
   fields.fallbackPreview.value = product.fallbackPreview || "";
   fields.description.value = product.description || "";
   fields.features.value = Array.isArray(product.features) ? product.features.join("\n") : "";
+  linesToField(fields.tags, product.tags);
+  linesToField(fields.bundleItems, product.bundleItems);
+  fields.modalTitle.value = product.modalTitle || "";
+  fields.modalSubtitle.value = product.modalSubtitle || "";
+  fields.ctaLabel.value = product.ctaLabel || "";
   fields.visible.value = product.visible === false ? "false" : "true";
 }
 
@@ -1152,6 +1207,8 @@ function readProductFromForm(){
     productUrl: productUrl || (key ? CHECKOUT_BASE + "?link=" + encodeURIComponent(key) : ""),
     title: fields.title.value.trim() || "Untitled Product",
     eyebrow: fields.eyebrow.value.trim() || "EMX Product",
+    type: fields.type?.value || "product",
+    page: fields.page?.value || "",
     price: Number(fields.price.value || 0),
     oldPrice: Number(fields.oldPrice.value || 0),
     image: fields.image.value.trim() || "./emx-logo.png",
@@ -1167,6 +1224,15 @@ function readProductFromForm(){
       .split("\n")
       .map(item => item.trim())
       .filter(Boolean),
+    tags: linesFromField(fields.tags),
+    bundleItems: linesFromField(fields.bundleItems),
+    homepage: fields.homepage?.value !== "false",
+    featured: fields.featured?.value === "true",
+    bestSeller: fields.bestSeller?.value === "true",
+    saleBadge: fields.saleBadge?.value.trim() || "",
+    modalTitle: fields.modalTitle?.value.trim() || "",
+    modalSubtitle: fields.modalSubtitle?.value.trim() || "",
+    ctaLabel: fields.ctaLabel?.value.trim() || "",
     visible: fields.visible.value !== "false"
   };
 }
@@ -1219,6 +1285,14 @@ function renderPreview() {
   const discount = oldPrice > price && oldPrice > 0
     ? Math.round((1 - price / oldPrice) * 100)
     : 0;
+  const adminTags = [
+    product.type ? product.type : "",
+    product.homepage === false ? "Homepage hidden" : "Homepage",
+    product.featured ? "Featured" : "",
+    product.bestSeller ? "Best Seller" : "",
+    product.saleBadge ? product.saleBadge : "",
+    ...(Array.isArray(product.tags) ? product.tags : [])
+  ].filter(Boolean);
 
   previewBox.innerHTML = `
     <div class="preview-top">
@@ -1234,6 +1308,12 @@ function renderPreview() {
       ${oldPrice > 0 ? `<del>${money(product.oldPrice)}</del>` : ""}
       ${discount > 0 ? `<span class="status">${discount}% OFF</span>` : ""}
     </div>
+
+    ${adminTags.length ? `
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;">
+        ${adminTags.map(tag => `<span class="status">${escapeHtml(tag)}</span>`).join("")}
+      </div>
+    ` : ""}
 
     ${Array.isArray(product.gallery) && product.gallery.length ? `
   <div style="display:flex;gap:8px;overflow-x:auto;margin:14px 0;padding-bottom:6px;">
@@ -1253,6 +1333,10 @@ function renderPreview() {
 <ul>
   ${product.features.map(feature => `<li>${escapeHtml(feature)}</li>`).join("")}
 </ul>
+
+${Array.isArray(product.bundleItems) && product.bundleItems.length ? `
+  <p><b>Bundle includes:</b> ${escapeHtml(product.bundleItems.join(", "))}</p>
+` : ""}
   `;
 }
 

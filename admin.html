@@ -79,8 +79,6 @@
   padding: 4px 0 0;
 }
 
-@media(max-width:800px){
-
     .wrap{max-width:1100px;margin:0 auto}
 
     .top{
@@ -408,10 +406,66 @@
 
           <div class="row">
             <div>
-              <label>Image Path<label>Image Path</label>
+              <label>Product Type</label>
+              <select id="typeField">
+                <option value="product">Single Product</option>
+                <option value="bundle">Bundle</option>
+                <option value="tool">Tool / Utility</option>
+                <option value="map">Fortnite Map</option>
+                <option value="service">Service</option>
+                <option value="freebie">Free Download</option>
+              </select>
+            </div>
+            <div>
+              <label>Page Placement</label>
+              <select id="pageField">
+                <option value="">Auto</option>
+                <option value="products">Products Page</option>
+                <option value="bundle">Bundle Page</option>
+                <option value="macros">Macros Page</option>
+                <option value="custom-os">Custom OS Page</option>
+                <option value="hidden">Hidden From Pages</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label>Show On Homepage</label>
+              <select id="homepageField">
+                <option value="true">Show</option>
+                <option value="false">Hide</option>
+              </select>
+            </div>
+            <div>
+              <label>Featured Product</label>
+              <select id="featuredField">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label>Best Seller Badge</label>
+              <select id="bestSellerField">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label>Sale Badge Text</label>
+              <input id="saleBadgeField" placeholder="Launch Deal" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label>Image Path / Uploaded URL</label>
 <input id="imageField" placeholder="./optimizer.png" />
 
-<label>Gallery Images — one per line</label>
+<label>Gallery Images - one per line</label>
 <textarea id="galleryField" placeholder="./macro.png&#10;./macro-2.png&#10;./macro-3.png"></textarea>
 
 <div class="actions" style="margin-top:10px;">
@@ -439,8 +493,23 @@
           <label>Description</label>
           <textarea id="descriptionField"></textarea>
 
-          <label>Features — one per line</label>
+          <label>Features - one per line</label>
           <textarea id="featuresField"></textarea>
+
+          <label>Tags - one per line</label>
+          <textarea id="tagsField" placeholder="zero delay&#10;custom os&#10;kbm macro"></textarea>
+
+          <label>Bundle Items - product IDs or Payhip keys, one per line</label>
+          <textarea id="bundleItemsField" placeholder="custom_os&#10;macro"></textarea>
+
+          <label>Modal Title Override</label>
+          <input id="modalTitleField" placeholder="Leave blank to use product title" />
+
+          <label>Modal Subtitle / Setup Note</label>
+          <textarea id="modalSubtitleField" placeholder="What buyers should know before checkout or install."></textarea>
+
+          <label>Buy Button Label</label>
+          <input id="ctaLabelField" placeholder="Buy Now" />
 
           <label>Visible On Store</label>
           <select id="visibleField">

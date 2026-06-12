@@ -1,0 +1,83 @@
+<meta name="theme-color" content="#050805">
+<style>
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    opacity: 0;
+  }
+
+  body.emx-ready {
+    opacity: 1;
+    transition: opacity 520ms ease;
+  }
+
+  .emx-page-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 32% 20%, rgba(52, 255, 52, 0.22), transparent 24%),
+      radial-gradient(circle at 72% 28%, rgba(166, 43, 255, 0.2), transparent 28%),
+      #020402;
+    display: grid;
+    place-items: center;
+    transition: opacity 520ms ease, visibility 520ms ease;
+  }
+
+  .emx-page-loader:before {
+    content: "EMX";
+    color: #34ff34;
+    font: 900 42px/1 Arial, sans-serif;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 18px rgba(52, 255, 52, 0.9), 0 0 32px rgba(166, 43, 255, 0.55);
+  }
+
+  .emx-page-loader:after {
+    content: "";
+    position: absolute;
+    width: min(360px, 62vw);
+    height: 4px;
+    margin-top: 92px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, transparent, #34ff34, #a62bff, transparent);
+    box-shadow: 0 0 22px rgba(52, 255, 52, 0.68);
+    animation: emxLoaderSweep 900ms ease-in-out infinite;
+  }
+
+  body.emx-ready .emx-page-loader {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  @keyframes emxLoaderSweep {
+    0%, 100% { transform: scaleX(0.42); opacity: 0.58; }
+    50% { transform: scaleX(1); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    body,
+    body.emx-ready,
+    .emx-page-loader {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+</style>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var loader = document.createElement("div");
+    loader.className = "emx-page-loader";
+    document.body.appendChild(loader);
+
+    window.setTimeout(function () {
+      document.body.classList.add("emx-ready");
+    }, 420);
+  });
+</script>

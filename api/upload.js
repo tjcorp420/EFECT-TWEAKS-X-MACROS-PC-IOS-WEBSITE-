@@ -1,66 +1,151 @@
 const { put } = require("@vercel/blob");
 
-module.exports.config = {
-  api: {
-    bodyParser: false
-  }
-};
+const MAX_UPLOAD_BYTES = 45 * 1024 * 1024;
+const ALLOWED_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/svg+xml",
+  "video/mp4",
+  "video/webm",
+  "video/quicktime"
+]);
 
-async function readRequestBody(request) {
-  const chunks = [];
-  
-  for await (const chunk of request) {
-    chunks.push(chunk);
+function sendJson(res, response, status = 200) {
+  res.statusCode = status;
+  res.setHeader("content-type", "application/json; charset=utf-8");
+  res.setHeader("cache-control", "no-store");
+  res.end(JSON.stringify(response));
+}
+
+function requireAdmin(req) {
+  const expected = process.env.ADMIN_PASSWORD || "";
+  const actual = req.headers["x-admin-password"] || "";
+
+  return Boolean(expected && actual && expected === actual);
+}
+
+function safeFileName(value) {
+  const fileName = String(value || "emx-upload")
+    .trim()
+    .replace(/[\\/]/g, "-")
+    .replace(/[^a-zA-Z0-9._-]/g, "-")
+    .replace(/-+/g, "-")
+    .slice(0, 120);
+
+  return fileName || "emx-upload";
+}
+
+function extensionForContentType(contentType) {
+  if (contentType === "image/jpeg") return ".jpg";
+  if (contentType === "image/png") return ".png";
+  if (contentType === "image/webp") return ".webp";
+  if (contentType === "image/gif") return ".gif";
+  if (contentType === "image/svg+xml") return ".svg";
+  if (contentType === "video/mp4") return ".mp4";
+  if (contentType === "video/webm") return ".webm";
+  if (contentType === "video/quicktime") return ".mov";
+  return "";
+}
+
+async function readRequestBuffer(req) {
+  if (Buffer.isBuffer(req.body)) return req.body;
+
+  if (typeof req.body === "string") {
+    return Buffer.from(req.body);
   }
-  
+
+  if (req.body && typeof req.body === "object" && req.body.type === "Buffer" && Array.isArray(req.body.data)) {
+    return Buffer.from(req.body.data);
+  }
+
+  const chunks = [];
+  let total = 0;
+
+  for await (const chunk of req) {
+    const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+    total += buffer.length;
+
+    if (total > MAX_UPLOAD_BYTES) {
+      throw new Error("Upload is too large. Keep media under 45 MB.");
+    }
+
+    chunks.push(buffer);
+  }
+
   return Buffer.concat(chunks);
 }
 
-module.exports = async function handler(request, response) {
+async function handler(req, res) {
   try {
-    if (request.method !== "POST") {
-      return response.status(405).json({
-        ok: false,
-        error: "Method not allowed."
-      });
+    if (req.method === "OPTIONS") {
+      return sendJson(res, { ok: true });
     }
-    
+
+    if (req.method !== "POST") {
+      return sendJson(res, { ok: false, error: "Method not allowed." }, 405);
+    }
+
+    if (!requireAdmin(req)) {
+      return sendJson(res, { ok: false, error: "Unauthorized." }, 401);
+    }
+
     if (!process.env.BLOB_READ_WRITE_TOKEN) {
-      return response.status(500).json({
+      return sendJson(res, {
         ok: false,
-        error: "Missing BLOB_READ_WRITE_TOKEN."
-      });
+        error: "BLOB_READ_WRITE_TOKEN is not configured in Vercel. Add Vercel Blob storage before uploading media."
+      }, 500);
     }
-    
-    const fileName = request.headers["x-file-name"] || `emx-upload-${Date.now()}.png`;
-    const contentType = request.headers["content-type"] || "application/octet-stream";
-    
-    const safeName = String(fileName)
-      .replace(/[^a-zA-Z0-9._-]/g, "-")
-      .toLowerCase();
-    
-    const body = await readRequestBody(request);
-    
-    if (!body || body.length === 0) {
-      return response.status(400).json({
+
+    const contentType = String(req.headers["content-type"] || "application/octet-stream").split(";")[0].trim().toLowerCase();
+
+    if (!ALLOWED_TYPES.has(contentType)) {
+      return sendJson(res, {
         ok: false,
-        error: "No file uploaded."
-      });
+        error: "Unsupported file type. Upload JPG, PNG, WEBP, GIF, SVG, MP4, WEBM, or MOV."
+      }, 400);
     }
-    
-    const blob = await put(`emx-products/${Date.now()}-${safeName}`, body, {
+
+    const buffer = await readRequestBuffer(req);
+
+    if (!buffer.length) {
+      return sendJson(res, { ok: false, error: "Upload was empty." }, 400);
+    }
+
+    if (buffer.length > MAX_UPLOAD_BYTES) {
+      return sendJson(res, { ok: false, error: "Upload is too large. Keep media under 45 MB." }, 413);
+    }
+
+    const originalName = safeFileName(req.headers["x-file-name"]);
+    const hasExtension = /\.[a-z0-9]{2,5}$/i.test(originalName);
+    const fileName = hasExtension ? originalName : `${originalName}${extensionForContentType(contentType)}`;
+    const pathname = `emx-store/${Date.now()}-${fileName}`;
+
+    const blob = await put(pathname, buffer, {
       access: "public",
-      contentType
+      contentType,
+      addRandomSuffix: true
     });
-    
-    return response.status(200).json({
+
+    return sendJson(res, {
       ok: true,
-      url: blob.url
+      url: blob.url,
+      pathname: blob.pathname,
+      contentType,
+      size: buffer.length
     });
   } catch (error) {
-    return response.status(500).json({
+    return sendJson(res, {
       ok: false,
-      error: error.message || "Upload failed."
-    });
+      error: error instanceof Error ? error.message : "Upload failed."
+    }, 500);
+  }
+}
+
+module.exports = handler;
+module.exports.config = {
+  api: {
+    bodyParser: false
   }
 };

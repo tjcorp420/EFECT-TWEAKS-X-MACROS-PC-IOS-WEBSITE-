@@ -1,4 +1,6 @@
 function removeInstantBlackout() {
+  sessionStorage.removeItem("emxRouteSwap");
+  document.documentElement.classList.remove("emx-route-arrive");
   document.documentElement.classList.add("emx-ready");
   document.documentElement.classList.remove("emx-preboot");
   
@@ -11,6 +13,28 @@ function removeInstantBlackout() {
   }
 }
 
+function forceClearIntroOverlays() {
+  document.documentElement.classList.add("emx-ready");
+  document.documentElement.classList.remove("emx-preboot");
+  document.body?.classList.add("app-ready");
+  document.body?.classList.remove("booting", "no-scroll");
+
+  ["instantBlackout", "boot-screen", "emxLaunchOverlay"].forEach(id => {
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    element.classList.add("exit");
+    element.classList.remove("show", "cinematic-launch");
+    element.style.opacity = "0";
+    element.style.visibility = "hidden";
+    element.style.pointerEvents = "none";
+
+    if (id === "instantBlackout") {
+      element.remove();
+    }
+  });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
   setTimeout(removeInstantBlackout, 450);
 });
@@ -20,92 +44,16 @@ window.addEventListener("load", () => {
 });
 
 setTimeout(removeInstantBlackout, 1400);
+setTimeout(forceClearIntroOverlays, 7200);
+
+window.addEventListener("pageshow", () => {
+  setTimeout(forceClearIntroOverlays, 7200);
+});
 
 document.addEventListener("DOMContentLoaded", () => {
-      const OPTIMIZER_APP_GALLERY = [
-        "./app-screenshots/optimizer-01-dashboard.png",
-        "./app-screenshots/optimizer-02-benchmark.png",
-        "./app-screenshots/optimizer-03-appearance.png",
-        "./app-screenshots/optimizer-04-emx-link.png",
-        "./app-screenshots/optimizer-05-net-route.png",
-        "./app-screenshots/optimizer-06-tweaks-fortnite.png",
-        "./app-screenshots/optimizer-07-gpu-tweaks.png",
-        "./app-screenshots/optimizer-08-advanced.png",
-        "./app-screenshots/optimizer-09-network-opt.png",
-        "./app-screenshots/optimizer-10-system-disk.png",
-        "./app-screenshots/optimizer-11-services.png",
-        "./zero-delay-optimizer.png"
-      ];
-      const MACRO_APP_GALLERY = [
-        "./app-screenshots/emx-tweaks-full-03-macros.png",
-        "./app-screenshots/emx-tweaks-full-04-keybinds.png",
-        "./app-screenshots/emx-tweaks-full-05-crosshair.png",
-        "./app-screenshots/emx-tweaks-full-01-dashboard.png",
-        "./app-screenshots/emx-tweaks-full-02-emx-link.png",
-        "./app-screenshots/emx-tweaks-full-06-settings.png",
-        "./keyboard-macro.png"
-      ];
-      const VOLT_APP_GALLERY = [
-        "./app-screenshots/emx-volt-dashboard-real.png",
-        "./app-screenshots/emx-volt-macros-real.png",
-        "./app-screenshots/emx-volt-binds-real.png",
-        "./app-screenshots/emx-volt-support-real.png"
-      ];
-      const FPS_APP_GALLERY = [
-        "./app-screenshots/fps-booster-01-boost.png",
-        "./app-screenshots/fps-booster-02-system.png",
-        "./app-screenshots/fps-booster-03-network.png",
-        "./app-screenshots/fps-booster-04-profiles.png",
-        "./app-screenshots/fps-booster-05-logs.png",
-        "./app-screenshots/fps-booster-06-settings.png",
-        "./fps-booster-emx.png"
-      ];
-      const PRODUCT_IMAGE_OVERRIDES = {
-        optimizer: {
-          image: "./app-screenshots/optimizer-01-dashboard.png",
-          gallery: OPTIMIZER_APP_GALLERY,
-          previewType: "image",
-          previewSrc: "./app-screenshots/optimizer-01-dashboard.png",
-          fallbackPreview: "./zero-delay-optimizer.png"
-        },
-        macro: {
-          image: "./app-screenshots/emx-tweaks-full-03-macros.png",
-          gallery: MACRO_APP_GALLERY,
-          previewType: "image",
-          previewSrc: "./app-screenshots/emx-tweaks-full-03-macros.png",
-          fallbackPreview: "./keyboard-macro.png"
-        },
-        volt: {
-          image: "./app-screenshots/emx-volt-dashboard-real.png",
-          gallery: VOLT_APP_GALLERY,
-          previewType: "image",
-          previewSrc: "./app-screenshots/emx-volt-dashboard-real.png",
-          fallbackPreview: "./app-screenshots/emx-volt-dashboard-real.png"
-        },
-        fps: {
-          image: "./app-screenshots/fps-booster-01-boost.png",
-          gallery: FPS_APP_GALLERY,
-          previewType: "image",
-          previewSrc: "./app-screenshots/fps-booster-01-boost.png",
-          fallbackPreview: "./fps-booster-emx.png"
-        },
-        bundle: {
-          image: "./emx-ultimate-bundle.png",
-          gallery: ["./emx-ultimate-bundle.png", "./app-screenshots/optimizer-01-dashboard.png", "./app-screenshots/emx-tweaks-full-03-macros.png", "./app-screenshots/fps-booster-01-boost.png"],
-          previewType: "image",
-          previewSrc: "./emx-ultimate-bundle.png",
-          fallbackPreview: "./emx-ultimate-bundle.png"
-        }
-      };
-
-      function applyProductImageOverrides(products){
-        return (Array.isArray(products) ? products : []).map(product => ({
-          ...product,
-          ...(PRODUCT_IMAGE_OVERRIDES[product.id] || {})
-        }));
-      }
-
-      let PRODUCTS = applyProductImageOverrides(window.EMX_PRODUCTS || []);
+      let PRODUCTS = window.EMX_PRODUCTS || [];
+      const DISCORD_INVITE_URL = "https://discord.gg/puaZFNfNKW";
+      const LICENSE_CLAIM_URL = "./license.html";
       
       async function loadProductsFromApi() {
     try{
@@ -120,7 +68,32 @@ document.addEventListener("DOMContentLoaded", () => {
       const liveProducts = await response.json();
 
       if(Array.isArray(liveProducts) && liveProducts.length > 0){
-        PRODUCTS = applyProductImageOverrides(liveProducts);
+        const localProducts = window.EMX_PRODUCTS || [];
+        const liveById = new Map(liveProducts.map(product => [product.id, product]));
+        const mergedProducts = [];
+
+        localProducts.forEach(localProduct => {
+          const liveProduct = liveById.get(localProduct.id);
+
+          if(!liveProduct){
+            mergedProducts.push(localProduct);
+            return;
+          }
+
+          mergedProducts.push({
+            ...localProduct,
+            ...liveProduct,
+            image: liveProduct.image || localProduct.image,
+            gallery: Array.isArray(liveProduct.gallery) && liveProduct.gallery.length ? liveProduct.gallery : localProduct.gallery,
+            previewType: liveProduct.previewType || localProduct.previewType,
+            previewSrc: liveProduct.previewSrc || localProduct.previewSrc,
+            fallbackPreview: liveProduct.fallbackPreview || localProduct.fallbackPreview
+          });
+
+          liveById.delete(localProduct.id);
+        });
+
+        PRODUCTS = mergedProducts.concat([...liveById.values()]);
       }
     }catch(error){
       console.warn("Using local products.js fallback:", error);
@@ -128,6 +101,27 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const PRODUCT_DETAILS = {
+    custom_os: {
+      includes: [
+        "EMX Custom OS installer package",
+        "README-FIRST and SHA256 checksum files",
+        "Smart, Safe, Balanced, and Extreme profile controls",
+        "EMX branding, wallpaper, launcher, restore, logs, and support export tools"
+      ],
+      setup: [
+        "Purchase through secure Payhip checkout",
+        "Claim your EMX license with the same Payhip email and transaction ID from your receipt",
+        "Download and unzip the EMX Custom OS package from Payhip delivery",
+        "Run EMX-Installer.exe as Administrator",
+        "Start with Smart profile, apply, restart when ready, then test games, Discord, OBS, audio, controller, Windows Security, and Windows Update"
+      ],
+      compatibility: [
+        "Windows 11 23H2 or 24H2 recommended",
+        "Designed for broad Intel, AMD, NVIDIA, and Radeon gaming PCs",
+        "Keeps Defender, Windows Update, audio, Bluetooth, networking, printer, and Xbox/controller compatibility paths",
+        "Does not edit game files, inject DLLs, spoof HWIDs, install kernel drivers, or bypass anti-cheat"
+      ]
+    },
     optimizer: {
       includes: [
         "Windows cleanup checklist and optimization path",
@@ -137,7 +131,8 @@ document.addEventListener("DOMContentLoaded", () => {
       ],
       setup: [
         "Purchase through secure Payhip checkout",
-        "Download or follow delivery instructions",
+        "Claim or recover your EMX license from the License Claim page after Payhip confirms the order",
+        "Download or follow Payhip delivery instructions",
         "Apply presets carefully and restart when needed",
         "Contact EFECT Discord support for access help"
       ],
@@ -157,8 +152,9 @@ document.addEventListener("DOMContentLoaded", () => {
       ],
       setup: [
         "Purchase through Payhip",
+        "Claim or recover your EMX license with your Payhip receipt details",
         "Download the product package",
-        "Open the dashboard and configure binds",
+        "Open the dashboard, sign in, and configure binds",
         "Save profiles and test settings carefully"
       ],
       compatibility: [
@@ -166,6 +162,27 @@ document.addEventListener("DOMContentLoaded", () => {
         "Windows desktop setup",
         "User is responsible for game and platform rules",
         "Support available for access and setup questions"
+      ]
+    },
+    controller_macro: {
+      includes: [
+        "EMX Elite Controller Macro portable Windows EXE",
+        "Native controller dashboard with Double Edit preset",
+        "Real macro dashboard preview assets",
+        "Customer README and setup notes"
+      ],
+      setup: [
+        "Purchase through Payhip and keep your receipt",
+        "Download the EMX Elite Controller Macro package from Payhip",
+        "Open the portable EXE on Windows",
+        "Connect your controller, bind your macro trigger, and test in Creative first",
+        "Tune speed/catch controls to match your controller and in-game binds"
+      ],
+      compatibility: [
+        "Windows 10 and Windows 11",
+        "Built for native controller input without DS4Windows",
+        "Tested path for Hex-style Sony HID and SCUF-style controllers",
+        "Use responsibly and follow game, platform, and tournament rules"
       ]
     },
     volt: {
@@ -196,7 +213,8 @@ document.addEventListener("DOMContentLoaded", () => {
         "Lightweight setup process"
       ],
       setup: [
-        "Purchase and follow Payhip delivery",
+        "Purchase through Payhip and keep the receipt transaction ID",
+        "Claim or recover your EMX license from the License Claim page",
         "Close unnecessary background apps",
         "Apply performance-focused settings",
         "Restart, test, and adjust per system"
@@ -206,6 +224,27 @@ document.addEventListener("DOMContentLoaded", () => {
         "Works best with updated drivers",
         "No fixed FPS number guaranteed",
         "Results vary by PC and game configuration"
+      ]
+    },
+    os_macro_bundle: {
+      includes: [
+        "EMX Custom OS installer package",
+        "Smart OS profile controls, updater, restore tools, logs, and support export",
+        "EMX Premium KBM Macro dashboard",
+        "Saved bind profiles, toggles, and delay controls"
+      ],
+      setup: [
+        "Purchase through the dedicated bundle checkout",
+        "Claim one shared EMX license with the Payhip email and transaction ID from your receipt",
+        "Download both product packages from Payhip delivery",
+        "Install EMX Custom OS first, then restart when ready",
+        "Open the macro dashboard, sign in with the same EMX license, and configure binds"
+      ],
+      compatibility: [
+        "Windows 11 gaming PCs for the OS package",
+        "Windows desktop setup for the KBM macro dashboard",
+        "One shared EMX license can unlock both products after purchase",
+        "Use responsibly and follow platform rules"
       ]
     },
     bundle: {
@@ -218,7 +257,8 @@ document.addEventListener("DOMContentLoaded", () => {
       setup: [
         "Press bundle checkout",
         "Complete secure Payhip cart checkout",
-        "Follow delivery instructions for each item",
+        "Claim or recover your EMX license with the same Payhip email and transaction ID from your receipt",
+        "Follow Payhip delivery instructions for each item",
         "Contact EFECT Discord support for help"
       ],
       compatibility: [
@@ -247,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p>This site links to Payhip, TikTok, and Discord-related support. Once you leave this website, those platforms operate under their own privacy policies and terms.</p>
 
         <h3>5. Support</h3>
-        <p>For support, contact EFECT through the Discord username shown on this storefront. Do not send private payment card information through Discord messages.</p>
+        <p>For support, use the EMX Discord server linked on this storefront. Do not send private payment card information through Discord messages.</p>
       `
     },
     faq: {
@@ -255,12 +295,27 @@ document.addEventListener("DOMContentLoaded", () => {
       html: `
         <div class="faq-item">
           <h3>How do I receive my product?</h3>
-          <p>After purchasing through Payhip, follow the download or delivery instructions shown by Payhip. For access help, contact the EFECT Discord username listed on this storefront.</p>
+          <p>After purchasing through Payhip, open the EMX License Claim page and enter the same Payhip email plus the transaction ID from your receipt. Payhip still handles downloads and order files, while EMX handles the license key lookup.</p>
         </div>
 
         <div class="faq-item">
           <h3>Are purchases instant?</h3>
-          <p>Checkout is direct through Payhip. Digital delivery is normally available after payment confirmation, depending on the product setup and verification process.</p>
+          <p>Checkout is direct through Payhip. Once Payhip confirms the order, the EMX claim page can show the license connected to that receipt. If it does not appear right away, wait a minute and try again or message Discord support.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>How does automatic key delivery work?</h3>
+          <p>After Payhip confirms the order, EMX connects the buyer email and Payhip transaction ID to a license key. Buyers open the EMX License Claim page, enter the same checkout email plus the order ID from the Payhip receipt, then save the key shown on screen.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Where is the Payhip transaction ID?</h3>
+          <p>Payhip shows it in the receipt email and order details. It can be called Order ID, Transaction ID, or purchase ID depending on the Payhip view.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>What if the key says not found?</h3>
+          <p>Use the exact same email used at checkout, copy the order ID from the receipt, wait around 60 seconds, and try again. If it still does not show, join Discord support with the Payhip email, order ID, and product name.</p>
         </div>
 
         <div class="faq-item">
@@ -289,11 +344,43 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `
     },
+    keys: {
+      title: "Product Keys & Access",
+      html: `
+        <h3>1. Digital Access</h3>
+        <p>Payhip handles checkout, receipts, and product delivery. EMX license keys are claimed or recovered on the EMX License Claim page using the same Payhip email and transaction ID from the receipt.</p>
+
+        <h3>2. Keep Access Private</h3>
+        <p>Do not share, resell, leak, or repost any download links, private files, access keys, or setup instructions provided after purchase.</p>
+
+        <h3>3. Proof Of Purchase</h3>
+        <p>Support may ask for your Payhip email, transaction ID, product name, and screenshots before helping with downloads, missing access, setup issues, or product replacement.</p>
+
+        <h3>4. Lost Access</h3>
+        <p>If you lose access, use the License Claim page again with your Payhip receipt details. Never post order details publicly.</p>
+      `
+    },
+    terms: {
+      title: "Terms Of Service",
+      html: `
+        <h3>1. Digital Product Terms</h3>
+        <p>All products are digital. Results can vary by hardware, drivers, Windows version, background apps, game settings, and network conditions.</p>
+
+        <h3>2. Responsible Use</h3>
+        <p>You are responsible for using EFECT tools only where allowed and for following all game, platform, tournament, and service rules.</p>
+
+        <h3>3. No Result Guarantee</h3>
+        <p>EFECT does not guarantee a specific FPS number, ping number, input delay result, rank, earnings, or competitive outcome.</p>
+
+        <h3>4. Support Scope</h3>
+        <p>Support covers delivery and reasonable setup help. It does not include account recovery, bypassing platform rules, or modifying third-party services.</p>
+      `
+    },
     agreement: {
       title: "User Agreement",
       html: `
         <h3>1. Digital Product Terms</h3>
-        <p>All EFECT products are digital items. By purchasing, you understand that access, downloads, files, keys, or setup instructions may be delivered digitally.</p>
+        <p>All EFECT products are digital items. By purchasing, you understand that Payhip handles checkout and delivery while EMX uses your Payhip receipt details to claim or recover your license key.</p>
 
         <h3>2. Personal Use License</h3>
         <p>Products are provided for your personal use only. You may not resell, leak, redistribute, re-upload, share license keys, or claim EFECT files as your own.</p>
@@ -321,23 +408,31 @@ document.addEventListener("DOMContentLoaded", () => {
     "<strong>Popular Pick</strong><br>FPS Booster is trending with performance-focused setups.",
     "<strong>EMX Notice</strong><br>Keyboard Macro profile pack is getting attention right now.",
     "<strong>Secure Checkout Ready</strong><br>Buy Now and cart checkout are connected to Payhip.",
+    "<strong>Auto Keys Live</strong><br>Buyers can claim EMX keys with their Payhip email and order ID.",
     "<strong>Support Reminder</strong><br>Need help after purchase? Contact EFECT through Discord."
   ];
 
-  const SITE_BASE_URL = "https://efect-macros-x-tweaks.vercel.app/";
-  const REFERRALS_API_URL = "/api/referrals";
   const CHECKOUT_BASE = "https://payhip.com/buy";
+  const SITE_BASE_URL = "https://efect-macros-x-tweaks.vercel.app/";
   const CART_STORAGE_KEY = "efect_cart_v3";
   const INSTALL_POPUP_KEY = "emx_install_popup_seen_v1";
-  const REFERRAL_STORAGE_KEY = "emx_referral";
-  const REFERRAL_TIMESTAMP_KEY = "emx_referral_saved_at";
-  const REFERRAL_DISPLAY_STORAGE_KEY = "emx_referral_display";
-  const REFERRAL_TTL_MS = 30 * 24 * 60 * 60 * 1000;
-  const PAYHIP_AFFILIATE_PARAM = "af";
-  const LEGACY_AFFILIATE_PARAM = "affiliate";
+  const AFFILIATE_REF_STORAGE_KEY = "emx_active_affiliate_ref_v1";
+  const AFFILIATE_CREATOR_STORAGE_KEY = "emx_active_affiliate_creator_v1";
+  const AFFILIATE_PROFILE_STORAGE_KEY = "emx_affiliate_profile_v1";
 
   const bootAudio = document.getElementById("bootAudio");
   const clickAudio = document.getElementById("clickAudio");
+
+  const EMX_BOOT_VOLUME = 0.14;
+  const EMX_CLICK_VOLUME = 0.055;
+
+  if(bootAudio){
+    bootAudio.volume = EMX_BOOT_VOLUME;
+  }
+
+  if(clickAudio){
+    clickAudio.volume = EMX_CLICK_VOLUME;
+  }
 
   const productGrid = document.getElementById("productGrid");
   const cartCount = document.getElementById("cartCount");
@@ -350,6 +445,28 @@ document.addEventListener("DOMContentLoaded", () => {
   let activityIndex = 0;
   let activityTimer = null;
   let isLaunching = false;
+  let analyzerMode = "gaming";
+  let currentAnalyzerResult = null;
+  let analyzerScanTimer = null;
+  let analyzerHasRun = false;
+
+  const ANALYZER_MODES = {
+    gaming: {
+      label: "Gaming",
+      copy: "Lowest practical latency path with Smart profile first, startup trim, GPU checks, and game-session stability.",
+      boost: 1.08
+    },
+    streaming: {
+      label: "Gaming + Stream",
+      copy: "Keeps OBS, Discord, capture, mic, and audio compatibility while still trimming background load.",
+      boost: .92
+    },
+    safe: {
+      label: "Safe Daily",
+      copy: "Compatibility-first plan for school, work, controller, Bluetooth, security, updates, and shared PCs.",
+      boost: .74
+    }
+  };
 
   function applyPerformanceMode(){
     const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
@@ -405,282 +522,418 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll("'", "&#039;");
   }
 
-  function cleanReferralValue(value){
-    return String(value ?? "")
+  function normalizeEmail(value) {
+    return String(value || "").trim().toLowerCase();
+  }
+
+  function cleanReferralKey(value) {
+    return String(value || "")
       .trim()
       .replace(/^@+/, "")
       .replace(/[^\w.-]/g, "")
       .slice(0, 64);
   }
 
-  function cleanReferralDisplayName(value){
-    return String(value ?? "")
+  function cleanDisplayName(value) {
+    return String(value || "")
       .trim()
       .replace(/[<>]/g, "")
       .replace(/\s+/g, " ")
       .slice(0, 32);
   }
 
-  function creatorSlug(value){
-    return String(value ?? "")
+  function creatorSlug(value) {
+    return String(value || "")
       .normalize("NFKD")
       .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/[^a-zA-Z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "")
       .slice(0, 40);
   }
 
-  function displayNameFromSlug(slug){
-    return String(slug || "")
-      .split("-")
-      .filter(Boolean)
-      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-      .join(" ")
-      .slice(0, 32);
-  }
+  function referralLinkForKey(key, displayName = "") {
+    const cleanKey = cleanReferralKey(key);
+    const display = cleanDisplayName(displayName);
+    const slug = creatorSlug(display || cleanKey);
+    const target = new URL(slug ? "c/" + encodeURIComponent(slug) : "", SITE_BASE_URL);
 
-  function getReferralRouteSlug(){
-    const parts = window.location.pathname.split("/").filter(Boolean);
-    return parts[0] === "r" && parts[1] ? creatorSlug(decodeURIComponent(parts[1])) : "";
-  }
-
-  function clearStoredReferral(){
-    try{
-      localStorage.removeItem(REFERRAL_STORAGE_KEY);
-      localStorage.removeItem(REFERRAL_TIMESTAMP_KEY);
-      localStorage.removeItem(REFERRAL_DISPLAY_STORAGE_KEY);
-    }catch(error){
-      // Storage can be unavailable in strict privacy contexts.
-    }
-  }
-
-  function getStoredReferral(){
-    try{
-      const referral = cleanReferralValue(localStorage.getItem(REFERRAL_STORAGE_KEY));
-      const savedAt = Number(localStorage.getItem(REFERRAL_TIMESTAMP_KEY));
-
-      if(!referral){
-        clearStoredReferral();
-        return "";
-      }
-
-      if(!Number.isFinite(savedAt) || Date.now() - savedAt > REFERRAL_TTL_MS){
-        clearStoredReferral();
-        return "";
-      }
-
-      return referral;
-    }catch(error){
-      return "";
-    }
-  }
-
-  function getStoredReferralDisplay(){
-    const referral = getStoredReferral();
-
-    if(!referral) return "";
-
-    try{
-      return cleanReferralDisplayName(localStorage.getItem(REFERRAL_DISPLAY_STORAGE_KEY));
-    }catch(error){
-      return "";
-    }
-  }
-
-  function saveStoredReferral(value, displayName = ""){
-    const referral = cleanReferralValue(value);
-    const cleanDisplay = cleanReferralDisplayName(displayName);
-
-    if(!referral) return "";
-
-    try{
-      localStorage.setItem(REFERRAL_STORAGE_KEY, referral);
-      localStorage.setItem(REFERRAL_TIMESTAMP_KEY, String(Date.now()));
-      if(cleanDisplay){
-        localStorage.setItem(REFERRAL_DISPLAY_STORAGE_KEY, cleanDisplay);
-      }else{
-        localStorage.removeItem(REFERRAL_DISPLAY_STORAGE_KEY);
-      }
-      console.log("[EMX Affiliate] Referral saved:", referral);
-    }catch(error){
-      return "";
-    }
-
-    return referral;
-  }
-
-  function saveReferralFromUrl(){
-    try{
-      const params = new URLSearchParams(window.location.search);
-      const routeSlug = getReferralRouteSlug();
-      const referral =
-        params.get("ref") ||
-        params.get("r") ||
-        params.get(PAYHIP_AFFILIATE_PARAM) ||
-        params.get(LEGACY_AFFILIATE_PARAM);
-      const displayName =
-        params.get("creator") ||
-        params.get("c") ||
-        params.get("username") ||
-        params.get("display") ||
-        params.get("name") ||
-        displayNameFromSlug(routeSlug);
-
-      if(!referral) return getStoredReferral();
-
-      return saveStoredReferral(referral, displayName);
-    }catch(error){
-      return getStoredReferral();
-    }
-  }
-
-  async function hydrateReferralDisplayFromApi(){
-    const referral = getStoredReferral();
-    const routeSlug = getReferralRouteSlug();
-
-    if(!referral && !routeSlug) return "";
-    if(referral && getStoredReferralDisplay()) return "";
-
-    try{
-      const query = referral
-        ? "?key=" + encodeURIComponent(referral)
-        : "?slug=" + encodeURIComponent(routeSlug);
-      const response = await fetch(REFERRALS_API_URL + query, {
-        cache: "no-store"
-      });
-      const data = await response.json().catch(() => null);
-      const affiliateKey = cleanReferralValue(data?.referral?.affiliateKey);
-      const displayName = cleanReferralDisplayName(data?.referral?.displayName);
-
-      if(!response.ok || !data || data.ok !== true || !affiliateKey){
-        return "";
-      }
-
-      saveStoredReferral(affiliateKey, displayName || displayNameFromSlug(routeSlug));
-      showReferralBanner();
-      return displayName || displayNameFromSlug(routeSlug);
-    }catch(error){
-      return "";
-    }
-  }
-
-  function isPayhipUrl(url){
-    try{
-      const target = new URL(url, window.location.origin);
-      return /(^|\.)payhip\.com$/i.test(target.hostname);
-    }catch(error){
-      return false;
-    }
-  }
-
-  function hasPayhipAffiliate(target){
-    const pathParts = target.pathname.split("/").filter(Boolean);
-    const hasProductPathAffiliate = pathParts[0] === "b" && pathParts.length >= 3;
-
-    return Boolean(
-      hasProductPathAffiliate ||
-      target.searchParams.has(PAYHIP_AFFILIATE_PARAM) ||
-      target.searchParams.has(LEGACY_AFFILIATE_PARAM)
-    );
-  }
-
-  function buildPayhipProductAffiliateUrl(productKey, referral){
-    const target = new URL("https://payhip.com/b/" + encodeURIComponent(productKey));
-    target.pathname = target.pathname.replace(/\/$/, "") + "/" + encodeURIComponent(referral);
+    target.searchParams.set("af", cleanKey);
     return target.toString();
   }
 
-  function appendAffiliateToPayhipUrl(url){
-    const referral = getStoredReferral();
+  function getUrlReferralKey() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return cleanReferralKey(params.get("af") || params.get("ref") || params.get("affiliate") || params.get("affiliateKey") || "");
+    } catch (error) {
+      return "";
+    }
+  }
 
-    if(!url || !referral || !isPayhipUrl(url)){
-      return url || "";
+  function syncReferralFromUrl() {
+    const key = getUrlReferralKey();
+    if (!key) return "";
+
+    localStorage.setItem(AFFILIATE_REF_STORAGE_KEY, key);
+
+    const params = new URLSearchParams(window.location.search);
+    const pathParts = window.location.pathname.split("/").filter(Boolean);
+    const isCreatorPath = pathParts[0] === "r" || pathParts[0] === "c";
+    const creatorFromPath = isCreatorPath ? decodeURIComponent(pathParts[1] || "") : "";
+    const creatorName = cleanDisplayName(params.get("creator") || creatorFromPath.replace(/-/g, " "));
+
+    if (creatorName) {
+      localStorage.setItem(AFFILIATE_CREATOR_STORAGE_KEY, creatorName);
     }
 
-    try{
-      const target = new URL(url, window.location.origin);
-      const pathParts = target.pathname.split("/").filter(Boolean);
+    return key;
+  }
 
-      if(hasPayhipAffiliate(target)){
-        return target.toString();
-      }
+  function getActiveReferralKey() {
+    return syncReferralFromUrl() || cleanReferralKey(localStorage.getItem(AFFILIATE_REF_STORAGE_KEY) || "");
+  }
 
-      if(pathParts[0] === "b" && pathParts[1]){
-        target.pathname = target.pathname.replace(/\/$/, "") + "/" + encodeURIComponent(referral);
-        return target.toString();
-      }
+  function appendReferralParam(url) {
+    const key = getActiveReferralKey();
+    if (!key) return url;
 
-      if(pathParts[0] === "buy"){
-        const directProductKey = target.searchParams.get("link");
-
-        if(directProductKey){
-          return buildPayhipProductAffiliateUrl(directProductKey, referral);
-        }
-      }
-
-      target.searchParams.set(PAYHIP_AFFILIATE_PARAM, referral);
+    try {
+      const target = new URL(url, window.location.href);
+      target.searchParams.set("af", key);
       return target.toString();
-    }catch(error){
+    } catch (error) {
       return url;
     }
   }
 
-  function goToAffiliatePayhip(url){
-    const checkoutUrl = appendAffiliateToPayhipUrl(url);
+  function getActiveCreatorName() {
+    return cleanDisplayName(localStorage.getItem(AFFILIATE_CREATOR_STORAGE_KEY) || "");
+  }
 
-    if(isPayhipUrl(checkoutUrl)){
-      console.log("[EMX Affiliate] Checkout URL:", checkoutUrl);
+  function renderSupportingCreatorBanner() {
+    const key = getActiveReferralKey();
+    const creatorName = getActiveCreatorName();
+    let banner = document.getElementById("supportingCreatorBanner");
+
+    if (document.body.classList.contains("emx-subpage-affiliate") || !key || !creatorName) {
+      if (banner) banner.remove();
+      return;
     }
 
-    window.location.assign(checkoutUrl);
+    if (!banner) {
+      banner = document.createElement("div");
+      banner.id = "supportingCreatorBanner";
+      banner.className = "supporting-creator-banner";
+      banner.innerHTML = `
+        <span>Supporting Creator</span>
+        <strong></strong>
+      `;
+      document.body.appendChild(banner);
+    }
+
+    const nameTarget = banner.querySelector("strong");
+    if (nameTarget) nameTarget.textContent = creatorName;
   }
 
-  function removeReferralBanner(){
-    document.getElementById("emxAffiliateBanner")?.remove();
+  function renderAutoKeyGuide() {
+    if (document.getElementById("autoKeyGuide")) return;
+    if (document.body.classList.contains("emx-subpage-license")) return;
+
+    const anchor = document.querySelector(".trust-strip") || document.querySelector(".hero");
+    if (!anchor) return;
+
+    const guide = document.createElement("section");
+    guide.id = "autoKeyGuide";
+    guide.className = "auto-key-guide emx-reveal";
+    guide.setAttribute("aria-label", "Automatic EMX license key checkout flow");
+    guide.innerHTML = `
+      <div class="auto-key-copy">
+        <div class="section-kicker">Auto Keys Are Live</div>
+        <h2>Buy On Payhip. <span>Claim Your EMX Key.</span></h2>
+        <p>After checkout, Payhip sends a receipt. Use the same Payhip email and order ID on the EMX License Claim page to get or recover your key.</p>
+      </div>
+
+      <div class="auto-key-flow" aria-label="Automatic key delivery steps">
+        <div>
+          <strong>01</strong>
+          <span>Checkout</span>
+          <p>Pay securely through Payhip.</p>
+        </div>
+        <div>
+          <strong>02</strong>
+          <span>Receipt</span>
+          <p>Keep the Payhip order ID.</p>
+        </div>
+        <div>
+          <strong>03</strong>
+          <span>Claim</span>
+          <p>Enter email and order ID.</p>
+        </div>
+        <div>
+          <strong>04</strong>
+          <span>Install</span>
+          <p>Save your key and setup files.</p>
+        </div>
+      </div>
+
+      <div class="auto-key-actions">
+        <a class="btn-filled play-click" href="${LICENSE_CLAIM_URL}">Claim Key</a>
+        <a class="btn-outline play-click" href="${DISCORD_INVITE_URL}" target="_blank" rel="noopener">Discord Help</a>
+      </div>
+
+      <div class="auto-key-note">
+        <strong>Need-to-know:</strong>
+        use the exact checkout email, copy the Payhip order ID from the receipt, and wait around 60 seconds before retrying if Payhip is still processing.
+      </div>
+    `;
+
+    anchor.insertAdjacentElement("afterend", guide);
   }
 
-  function showReferralBanner(){
-    const referral = getStoredReferral();
-    const displayName = getStoredReferralDisplay() || referral;
-    removeReferralBanner();
+  function setupAffiliateNav() {
+    const nav = document.querySelector(".site-nav-tabs");
 
-    if(!referral) return;
+    if (nav && !nav.querySelector("[data-nav-aim-trainer]")) {
+      const link = document.createElement("a");
+      link.className = "play-click";
+      link.href = "./aim-trainer.html";
+      link.dataset.navAimTrainer = "true";
+      link.textContent = "Aim Trainer";
 
-    const banner = document.createElement("div");
-    const icon = document.createElement("span");
-    const label = document.createElement("span");
-    const creator = document.createElement("strong");
+      if (document.body.classList.contains("emx-subpage-aim-trainer")) {
+        link.setAttribute("aria-current", "page");
+      }
 
-    banner.id = "emxAffiliateBanner";
-    banner.className = "emx-affiliate-banner";
-    banner.setAttribute("role", "status");
-    banner.setAttribute("aria-live", "polite");
+      const aboutLink = Array.from(nav.querySelectorAll("a")).find(item => item.textContent.trim().toLowerCase() === "about");
+      nav.insertBefore(link, aboutLink || null);
+    }
 
-    icon.className = "emx-affiliate-banner-icon";
-    icon.textContent = "🔥";
+    if (nav && !nav.querySelector("[data-nav-affiliate]")) {
+      const link = document.createElement("a");
+      link.className = "play-click";
+      link.href = "./affiliate.html";
+      link.dataset.navAffiliate = "true";
+      link.textContent = "Ref Link";
 
-    label.textContent = "Supporting Creator:";
-    creator.textContent = displayName;
+      if (document.body.classList.contains("emx-subpage-affiliate")) {
+        link.setAttribute("aria-current", "page");
+      }
 
-    banner.append(icon, label, creator);
-    document.body.appendChild(banner);
+      const faqLink = Array.from(nav.querySelectorAll("a")).find(item => item.textContent.trim().toLowerCase() === "faq");
+      nav.insertBefore(link, faqLink || null);
+    }
 
-    requestAnimationFrame(() => {
-      banner.classList.add("show");
+    if (nav && !nav.querySelector("[data-nav-license]")) {
+      const link = document.createElement("a");
+      link.className = "play-click";
+      link.href = "./license.html";
+      link.dataset.navLicense = "true";
+      link.textContent = "Claim Key";
+
+      if (document.body.classList.contains("emx-subpage-license")) {
+        link.setAttribute("aria-current", "page");
+      }
+
+      const faqLink = Array.from(nav.querySelectorAll("a")).find(item => item.textContent.trim().toLowerCase() === "faq");
+      nav.insertBefore(link, faqLink || null);
+    }
+  }
+
+  function setupAffiliateGenerator() {
+    const form = document.getElementById("affiliateForm");
+    if (!form) return;
+
+    const codeInput = document.getElementById("affiliateCodeInput");
+    const emailInput = document.getElementById("affiliateEmailInput");
+    const usernameInput = document.getElementById("affiliateUsernameInput");
+    const linkOutput = document.getElementById("affiliateLinkOutput");
+    const copyBtn = document.getElementById("affiliateCopyBtn");
+    const openBtn = document.getElementById("affiliateOpenBtn");
+    const status = document.getElementById("affiliateStatus");
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(AFFILIATE_PROFILE_STORAGE_KEY) || "{}");
+      if (codeInput && saved.affiliateKey) codeInput.value = saved.affiliateKey;
+      if (emailInput && saved.email) emailInput.value = saved.email;
+      if (usernameInput && saved.displayName) usernameInput.value = saved.displayName;
+    } catch (error) {}
+
+    const urlKey = getUrlReferralKey();
+    if (urlKey && codeInput) {
+      codeInput.value = urlKey;
+    }
+
+    function setAffiliateStatus(message, state = "") {
+      if (!status) return;
+
+      status.textContent = message;
+      status.dataset.state = state;
+    }
+
+    function setGeneratedLink(link) {
+      if (linkOutput) linkOutput.value = link;
+      if (copyBtn) copyBtn.disabled = !link;
+      if (openBtn) openBtn.disabled = !link;
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const affiliateKey = cleanReferralKey(codeInput?.value);
+      const email = normalizeEmail(emailInput?.value);
+      const displayName = cleanDisplayName(usernameInput?.value);
+
+      if (!affiliateKey) {
+        setAffiliateStatus("Enter the Payhip affiliate code first.", "error");
+        codeInput?.focus();
+        return;
+      }
+
+      if (!email || !email.includes("@")) {
+        setAffiliateStatus("Enter the email used for the Payhip affiliate account.", "error");
+        emailInput?.focus();
+        return;
+      }
+
+      if (displayName.length < 2) {
+        setAffiliateStatus("Pick a creator username with at least 2 characters.", "error");
+        usernameInput?.focus();
+        return;
+      }
+
+      setAffiliateStatus("Generating Payhip affiliate link...", "");
+
+      const link = referralLinkForKey(affiliateKey, displayName);
+
+      localStorage.setItem(AFFILIATE_REF_STORAGE_KEY, affiliateKey);
+      localStorage.setItem(AFFILIATE_CREATOR_STORAGE_KEY, displayName);
+      localStorage.setItem(AFFILIATE_PROFILE_STORAGE_KEY, JSON.stringify({
+        affiliateKey,
+        email,
+        displayName
+      }));
+
+      setGeneratedLink(link);
+      renderSupportingCreatorBanner();
+      setAffiliateStatus("Referral link ready. Payhip will credit valid approved affiliate keys at checkout.", "success");
+      showToast("<strong>Referral link generated.</strong><br>Payhip tracks the affiliate key when buyers open checkout.");
     });
+
+    copyBtn?.addEventListener("click", () => {
+      const link = linkOutput?.value || "";
+      if (!link) return;
+
+      navigator.clipboard.writeText(link)
+        .then(() => {
+          setAffiliateStatus("Referral link copied.", "success");
+          showToast("Referral link copied.");
+        })
+        .catch(() => {
+          linkOutput?.select();
+          setAffiliateStatus("Copy failed. Select the link and copy it manually.", "error");
+        });
+    });
+
+    openBtn?.addEventListener("click", () => {
+      const link = linkOutput?.value || "";
+      if (!link) return;
+
+      window.open(link, "_blank", "noopener");
+    });
+
+    if (codeInput?.value && emailInput?.value && usernameInput?.value) {
+      const link = referralLinkForKey(codeInput.value, usernameInput.value);
+      setGeneratedLink(link);
+    }
   }
 
-  function setupAffiliateDebug(){
-    window.EMXAffiliateDebug = {
-      getReferral: getStoredReferral,
-      getDisplayName: getStoredReferralDisplay,
-      clearReferral: () => {
-        clearStoredReferral();
-        removeReferralBanner();
-      },
-      testUrl: appendAffiliateToPayhipUrl
-    };
+  function setupLicenseLookup() {
+    const form = document.getElementById("licenseLookupForm");
+    if (!form) return;
+
+    const emailInput = document.getElementById("licenseEmailInput");
+    const orderInput = document.getElementById("licenseOrderInput");
+    const keyOutput = document.getElementById("licenseKeyOutput");
+    const copyBtn = document.getElementById("licenseCopyBtn");
+    const status = document.getElementById("affiliateStatus");
+    const submitBtn = document.getElementById("licenseLookupSubmit");
+
+    function setLicenseStatus(message, state = "") {
+      if (!status) return;
+
+      status.textContent = message;
+      status.dataset.state = state;
+    }
+
+    function setLicenseKey(value = "") {
+      if (keyOutput) keyOutput.value = value;
+      if (copyBtn) copyBtn.disabled = !value;
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const email = normalizeEmail(emailInput?.value);
+      const orderId = String(orderInput?.value || "").trim();
+
+      if (!email || !email.includes("@")) {
+        setLicenseStatus("Enter the email used at Payhip checkout.", "error");
+        emailInput?.focus();
+        return;
+      }
+
+      if (orderId.length < 4) {
+        setLicenseStatus("Enter the Payhip transaction or order ID from the receipt.", "error");
+        orderInput?.focus();
+        return;
+      }
+
+      setLicenseKey("");
+      setLicenseStatus("Checking secure EMX license records...", "");
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const response = await fetch("/api/license-lookup", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            orderId
+          })
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (!response.ok || !result.ok || !result.license?.licenseKey) {
+          throw new Error(result.error || "No license found for that receipt yet.");
+        }
+
+        setLicenseKey(result.license.licenseKey);
+        setLicenseStatus("License found. Copy this key and use it inside your EMX product login.", "success");
+        showToast("<strong>License key found.</strong><br>Copy it before opening the installer.");
+      } catch (error) {
+        setLicenseStatus(error instanceof Error ? error.message : "License lookup failed. Try again or contact Discord support.", "error");
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+
+    copyBtn?.addEventListener("click", () => {
+      const key = keyOutput?.value || "";
+      if (!key) return;
+
+      navigator.clipboard.writeText(key)
+        .then(() => {
+          setLicenseStatus("License key copied.", "success");
+          showToast("License key copied.");
+        })
+        .catch(() => {
+          keyOutput?.select();
+          setLicenseStatus("Copy failed. Select the key and copy it manually.", "error");
+        });
+    });
   }
 
   const preloadedPreviewVideos = new Set();
@@ -734,11 +987,67 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getBundleProduct(){
-    return PRODUCTS.find(product => product.id === "bundle");
+    return PRODUCTS.find(product => product.id === "bundle")
+      || PRODUCTS.find(product => product.type === "bundle" && product.page === "bundle");
+  }
+
+  const BUNDLE_INCLUDED_PRODUCT_IDS = {
+    os_macro_bundle: ["custom_os", "macro"],
+    bundle: ["optimizer", "macro", "fps"]
+  };
+
+  function isBundleProduct(product){
+    return Boolean(product && (product.type === "bundle" || BUNDLE_INCLUDED_PRODUCT_IDS[product.id]));
+  }
+
+  function getBundleIncludedProductIds(product){
+    const configuredItems = Array.isArray(product?.bundleItems) ? product.bundleItems : [];
+    const rawItems = configuredItems.length ? configuredItems : (BUNDLE_INCLUDED_PRODUCT_IDS[product?.id] || []);
+
+    return rawItems
+      .map(item => {
+        const cleanItem = String(item || "").trim();
+        const matched = PRODUCTS.find(candidate => candidate.id === cleanItem || candidate.key === cleanItem);
+        return matched ? matched.id : cleanItem;
+      })
+      .filter(Boolean);
+  }
+
+  function getCartProducts(){
+    return cart
+      .map(key => PRODUCTS.find(product => product.key === key))
+      .filter(Boolean);
+  }
+
+  function cartHasBundleSelection(){
+    return getCartProducts().some(isBundleProduct);
+  }
+
+  function cartBundleCoversProduct(productId){
+    return getCartProducts().some(product => getBundleIncludedProductIds(product).includes(productId));
+  }
+
+  function getFullPackProducts(){
+    const bundle = getBundleProduct();
+    const configuredIds = getBundleIncludedProductIds(bundle);
+    const fullPackIds = new Set(configuredIds.length ? configuredIds : ["optimizer", "macro", "fps"]);
+    return PRODUCTS.filter(product => fullPackIds.has(product.id) && product.visible !== false);
+  }
+
+  function getBundleOptions(){
+    const bundleIds = new Set(["bundle", "os_macro_bundle"]);
+    return PRODUCTS.filter(product =>
+      (bundleIds.has(product.id) || product.type === "bundle" || product.page === "bundle") &&
+      product.visible !== false
+    );
   }
 
   function getStoreProducts(){
-    return PRODUCTS.filter(product => product.id !== "bundle" && product.visible !== false);
+    return PRODUCTS.filter(product =>
+      product.id !== "bundle" &&
+      product.page !== "hidden" &&
+      product.visible !== false
+    );
   }
 
   function getHomeProducts(){
@@ -762,7 +1071,22 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    productGrid.innerHTML = homeProducts.map(product => {
+    const productsForPage = document.body.classList.contains("emx-subpage-macros")
+      ? homeProducts.filter(product => product.id === "macro" || product.id === "controller_macro" || product.id === "volt")
+      : homeProducts;
+
+    const productHeading = document.getElementById("productGrid")?.previousElementSibling?.previousElementSibling;
+    if(document.body.classList.contains("emx-subpage-macros") && productHeading?.classList.contains("section-head")){
+      const kicker = productHeading.querySelector(".section-kicker");
+      const title = productHeading.querySelector(".section-title");
+      const copy = productHeading.querySelector(".section-copy");
+
+      if(kicker) kicker.textContent = "KBM Macro Pack";
+      if(title) title.innerHTML = "EMX <span>Premium Macros</span>";
+      if(copy) copy.textContent = "Go straight to the EMX KBM and Controller Macro lineup with previews, details, checkout, and setup support.";
+    }
+
+    productGrid.innerHTML = productsForPage.map(product => {
       const oldPrice = Number(product.oldPrice || 0);
       const price = Number(product.price || 0);
       const discount = oldPrice > price && oldPrice > 0
@@ -776,7 +1100,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ].filter(Boolean);
 
       return `
-        <article class="product-card premium-product-card ${product.featured ? "is-featured-product" : ""}" data-search="${escapeHtml(`${product.title} ${product.description} ${product.eyebrow} ${premiumBadges.join(" ")}`.toLowerCase())}">
+        <article id="product-${escapeHtml(product.id)}" class="product-card premium-product-card ${product.featured ? "is-featured-product" : ""}" data-product-id="${escapeHtml(product.id)}" data-search="${escapeHtml(`${product.title} ${product.description} ${product.eyebrow} ${premiumBadges.join(" ")} ${(product.tags || []).join(" ")}`.toLowerCase())}">
           <div class="product-premium-rail" aria-hidden="true"></div>
           ${premiumBadges.length ? `
             <div class="product-admin-badges">
@@ -812,7 +1136,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div class="product-value-row">
-            <span>Premium Download</span>
+            <span>License Claim</span>
             <span>${escapeHtml(previewLabel)}</span>
             <span>EMX Support</span>
           </div>
@@ -825,7 +1149,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <div class="product-trust-row">
   <span>🔒 Secure Payhip Checkout</span>
-  <span>⚡ Instant Digital Delivery</span>
+  <span>⚡ Key Claim After Checkout</span>
   <span>🛠 Setup Support</span>
   <span>✅ Verified</span>
 </div>
@@ -911,6 +1235,24 @@ document.addEventListener("DOMContentLoaded", () => {
         </article>
       `;
     }).join("");
+
+    scrollToProductHash();
+  }
+
+  function scrollToProductHash(){
+    const productId = decodeURIComponent((window.location.hash || "").replace(/^#/, "")).replace(/^product-/, "");
+
+    if(!productId) return;
+
+    const card = document.getElementById(`product-${productId}`);
+
+    if(!card) return;
+
+    setTimeout(() => {
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      card.classList.add("product-card-pulse");
+      setTimeout(() => card.classList.remove("product-card-pulse"), 1600);
+    }, 120);
   }
 
   function addToCart(key){
@@ -919,6 +1261,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if(!product || product.id === "bundle"){
       showToast("Product not found.");
       return;
+    }
+
+    if(!isBundleProduct(product) && cartBundleCoversProduct(product.id)){
+      showToast("<strong>Already covered.</strong><br>" + escapeHtml(product.title) + " is included in your selected bundle.");
+      return;
+    }
+
+    if(isBundleProduct(product)){
+      const includedIds = new Set(getBundleIncludedProductIds(product));
+      cart = cart.filter(itemKey => {
+        const item = getProductByKey(itemKey);
+        return !item || !includedIds.has(item.id);
+      });
     }
 
     if(!cart.includes(key)){
@@ -972,7 +1327,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(!overlay){
       setTimeout(() => {
-        goToAffiliatePayhip(url);
+        window.location.href = url;
       }, 650);
       return;
     }
@@ -1033,7 +1388,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1450);
 
     setTimeout(() => {
-      goToAffiliatePayhip(url);
+      window.location.href = url;
     }, 1650);
   }
 
@@ -1043,6 +1398,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   window.__emxCheckoutLocked = true;
+  const checkoutUrl = appendReferralParam(url);
   
   setCheckoutLoading(button);
   
@@ -1055,7 +1411,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.remove("no-scroll");
   
   setTimeout(() => {
-    goToAffiliatePayhip(url);
+    window.location.assign(checkoutUrl);
   }, 220);
 }
 
@@ -1085,7 +1441,7 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
   function buyBundle(button){
-    cart = getStoreProducts().map(product => product.key);
+    cart = getFullPackProducts().map(product => product.key);
     saveCart();
     updateCartUI();
     goToPayhip(cartCheckoutUrl(), button);
@@ -1109,7 +1465,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function addBundleToCart(){
-    getStoreProducts().forEach(product => {
+    if(cartHasBundleSelection()){
+      showToast("<strong>Bundle already selected.</strong><br>Your cart already has a bundle checkout ready.");
+      return;
+    }
+
+    getFullPackProducts().forEach(product => {
       if(!cart.includes(product.key)){
         cart.push(product.key);
       }
@@ -1123,9 +1484,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateCartUI(){
     if(!cartCount || !cartList || !cartTotal) return;
 
-    const items = cart
-      .map(key => getStoreProducts().find(product => product.key === key))
+    const items = getCartProducts()
+      .filter(product => getStoreProducts().some(storeProduct => storeProduct.key === product.key))
       .filter(Boolean);
+    const hasBundleInCart = items.some(isBundleProduct);
+    const hasFullPackInCart = getFullPackProducts().every(product => cart.includes(product.key));
+    const showBundleUpgrade = items.length > 0 && !hasBundleInCart && !hasFullPackInCart;
 
     cartCount.textContent = items.length;
     cartCount.classList.toggle("show", items.length > 0);
@@ -1135,7 +1499,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="cart-empty">
           <div>
             <strong style="color:white;font-size:20px;">Cart is empty</strong><br><br>
-            Add a product, then proceed directly to secure Payhip checkout.
+            Add a product, then proceed through Payhip and claim your EMX key from the receipt.
           </div>
         </div>
       `;
@@ -1146,15 +1510,15 @@ document.addEventListener("DOMContentLoaded", () => {
           <div>
             <h4>${escapeHtml(product.title)}</h4>
             <p>${money(product.price)}</p>
-            <span class="cart-item-note">Secure Payhip digital product</span>
+            <span class="cart-item-note">Payhip checkout + EMX key claim</span>
           </div>
           <button class="remove-btn play-click" type="button" data-action="remove" data-key="${escapeHtml(product.key)}">×</button>
         </div>
       `).join("") + `
-        <div class="cart-upgrade-note">
+        <div class="cart-upgrade-note ${showBundleUpgrade ? "" : "is-hidden"}">
           <div>
-            <strong>Want the whole EMX setup?</strong>
-            <span>Add every live product in one tap.</span>
+            <strong>Want the optimizer pack?</strong>
+            <span>Add Optimizer, FPS Booster, and KBM Macro in one tap.</span>
           </div>
           <button class="play-click" type="button" data-action="cart-bundle">Add Bundle</button>
         </div>
@@ -1218,6 +1582,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if(type === "video"){
       video.preload = "auto";
       video.crossOrigin = "anonymous";
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
       videoSource.src = src;
       video.load();
       video.style.display = "block";
@@ -1234,6 +1601,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeModal(){
     const modal = document.getElementById("media-modal");
     const video = document.getElementById("modal-video");
+
+    stopPreviewPhotoReel();
 
     if(modal) modal.classList.remove("show");
 
@@ -1257,7 +1626,8 @@ document.addEventListener("DOMContentLoaded", () => {
     includes: product.features || [],
     setup: [
       "Purchase through secure checkout",
-      "Follow delivery instructions",
+      "Claim your EMX license with your Payhip email and receipt transaction ID",
+      "Follow Payhip delivery instructions",
       "Contact support if needed"
     ],
     compatibility: [
@@ -1283,7 +1653,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   if (detailTitle) {
-    detailTitle.innerHTML = escapeHtml(product.title || "")
+    detailTitle.innerHTML = escapeHtml(product.modalTitle || product.title || "")
       .replace("EMX", "<span>EMX</span>")
       .replace("Efect", "<span>Efect</span>")
       .replace("EFECT", "<span>EFECT</span>")
@@ -1291,7 +1661,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   if (detailDescription) {
-    detailDescription.textContent = product.description || "";
+    detailDescription.textContent = product.modalSubtitle || product.description || "";
   }
   
   if (detailImage) {
@@ -1302,7 +1672,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   if (detailIncludes) {
-    detailIncludes.innerHTML = detail.includes
+    const includes = Array.isArray(product.bundleItems) && product.bundleItems.length
+      ? product.bundleItems.map(item => {
+        const matched = PRODUCTS.find(candidate => candidate.id === item || candidate.key === item);
+        return matched ? matched.title : item;
+      })
+      : detail.includes;
+
+    detailIncludes.innerHTML = includes
       .map(item => `<li>${escapeHtml(item)}</li>`)
       .join("");
   }
@@ -1334,7 +1711,7 @@ document.addEventListener("DOMContentLoaded", () => {
     upgradePanel.innerHTML = `
       <div class="detail-trust-badges">
         <span>🔒 Secure Payhip</span>
-        <span>📲 Digital Instant Delivery</span>
+        <span>📲 License Claim</span>
         <span>🛠 Setup Support</span>
         <span>✅ EFECT Verified</span>
       </div>
@@ -1345,8 +1722,8 @@ document.addEventListener("DOMContentLoaded", () => {
           <strong>${escapeHtml(product.bestSeller ? "Popular EMX buyers" : product.featured ? "Featured setups" : "Focused PC upgrades")}</strong>
         </div>
         <div>
-          <span>Delivery</span>
-          <strong>Digital access</strong>
+          <span>Access</span>
+          <strong>License claim</strong>
         </div>
         <div>
           <span>Support</span>
@@ -1357,8 +1734,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="detail-after-checkout">
         <div class="detail-after-head">
           <span>POST CHECKOUT FLOW</span>
-          <h3>What Happens After Checkout?</h3>
-          <p>Buyers get a clear delivery path after purchase, with support available if setup help is needed.</p>
+          <h3>What Happens After Checkout</h3>
+          <p>Buyers pay through Payhip, then use the receipt details to claim or recover the EMX license connected to that order.</p>
         </div>
 
         <div class="detail-flow-grid">
@@ -1370,14 +1747,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div class="detail-flow-step">
             <strong>02</strong>
-            <span>Access Instructions</span>
-            <p>After payment, follow the product download or delivery instructions.</p>
+            <span>Claim EMX Key</span>
+            <p>Use the same Payhip email and transaction ID on the EMX License Claim page.</p>
           </div>
 
           <div class="detail-flow-step">
             <strong>03</strong>
-            <span>Save Purchase Proof</span>
-            <p>Keep your Payhip receipt or proof of purchase for support verification.</p>
+            <span>Save Receipt</span>
+            <p>Keep the Payhip receipt because it recovers your key and verifies support requests.</p>
           </div>
 
           <div class="detail-flow-step">
@@ -1441,16 +1818,877 @@ document.addEventListener("DOMContentLoaded", () => {
     unlockBodyIfSafe();
   }
 
+  function openPcAnalyzer(runScan = false){
+    const modal = document.getElementById("pc-analyzer-modal");
+    if(!modal) return;
+
+    modal.classList.add("show");
+    document.body.classList.add("no-scroll");
+
+    if(runScan){
+      runPcAnalyzer();
+    }
+  }
+
+  function closePcAnalyzer(){
+    const modal = document.getElementById("pc-analyzer-modal");
+    if(modal) modal.classList.remove("show");
+    unlockBodyIfSafe();
+  }
+
+  function getGpuRenderer(){
+    try{
+      const canvas = document.createElement("canvas");
+      const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+      if(!gl) return "Browser GPU details locked";
+
+      const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+      if(!debugInfo) return "GPU renderer hidden by browser";
+
+      return gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || "GPU renderer unavailable";
+    }catch(error){
+      return "GPU renderer unavailable";
+    }
+  }
+
+  function clampNumber(value, min, max){
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function percentText(value){
+    return String(Math.round(value)) + "%";
+  }
+
+  function getBrowserName(ua){
+    if(/edg/i.test(ua)) return "Microsoft Edge";
+    if(/opr|opera/i.test(ua)) return "Opera";
+    if(/firefox/i.test(ua)) return "Firefox";
+    if(/crios|chrome/i.test(ua)) return "Chrome";
+    if(/safari/i.test(ua)) return "Safari";
+    return "Browser hidden";
+  }
+
+  function getOsName(ua, platform){
+    const raw = `${ua} ${platform}`.toLowerCase();
+    if(/iphone|ipad|ipod/.test(raw)) return "iOS / iPadOS";
+    if(/android/.test(raw)) return "Android";
+    if(/mac/.test(raw)) return "macOS";
+    if(/win/.test(raw)) return "Windows";
+    if(/linux|cros/.test(raw)) return "Linux / ChromeOS";
+    return "OS hidden";
+  }
+
+  function metricScore(value, rules){
+    for(const rule of rules){
+      if(rule.test(value)) return rule.score;
+    }
+
+    return 50;
+  }
+
+  function estimateBoostRange(score, lowSpec, hasDiscreteGpu, isWindows, isMobile, mode){
+    if(isMobile){
+      return {
+        fps: "Run on Windows PC",
+        edit: "Preview only",
+        latency: "Preview only",
+        note: "Phone scans are great for previewing the flow, but install estimates should be checked on the Windows PC that will use EMX."
+      };
+    }
+
+    if(!isWindows){
+      return {
+        fps: "Windows only",
+        edit: "Windows only",
+        latency: "Windows only",
+        note: "EMX Custom OS is a Windows-focused product. Re-run this analyzer on the target Windows PC for the real install plan."
+      };
+    }
+
+    let fpsLow = lowSpec ? 7 : score < 76 ? 5 : hasDiscreteGpu ? 3 : 4;
+    let fpsHigh = lowSpec ? 18 : score < 76 ? 14 : hasDiscreteGpu ? 9 : 11;
+    let editLow = lowSpec ? 6 : 3;
+    let editHigh = lowSpec ? 15 : hasDiscreteGpu ? 8 : 11;
+    let latencyLow = lowSpec ? 4 : 2;
+    let latencyHigh = lowSpec ? 10 : hasDiscreteGpu ? 6 : 8;
+    const multiplier = ANALYZER_MODES[mode]?.boost || 1;
+
+    fpsLow = Math.max(1, Math.round(fpsLow * multiplier));
+    fpsHigh = Math.max(fpsLow + 2, Math.round(fpsHigh * multiplier));
+    editLow = Math.max(1, Math.round(editLow * multiplier));
+    editHigh = Math.max(editLow + 2, Math.round(editHigh * multiplier));
+    latencyLow = Math.max(1, Math.round(latencyLow * multiplier));
+    latencyHigh = Math.max(latencyLow + 2, Math.round(latencyHigh * multiplier));
+
+    return {
+      fps: `${fpsLow}-${fpsHigh}% smoother FPS potential`,
+      edit: `${editLow}-${editHigh}% faster edit feel potential`,
+      latency: `${latencyLow}-${latencyHigh}% lower input-delay feel potential`,
+      note: "Estimated from browser-visible hardware signals. Not guaranteed; real results depend on drivers, Windows state, games, background apps, and network."
+    };
+  }
+
+  function buildAnalyzerTweaks(result){
+    const modeCopy = ANALYZER_MODES[result.mode]?.label || "Gaming";
+    const base = [
+      {
+        title: "Restore point first",
+        impact: "Safety",
+        detail: "Create a recovery point before changing Windows settings so the setup stays reversible."
+      },
+      {
+        title: "Smart profile selection",
+        impact: "Core plan",
+        detail: `${modeCopy} mode starts with Smart so EMX can avoid unsupported or risky changes.`
+      },
+      {
+        title: "Startup and background trim",
+        impact: result.lowSpec ? "High" : "Medium",
+        detail: "Reduce unnecessary startup load, launchers, overlays, and idle background tasks before gaming."
+      },
+      {
+        title: "Power and responsiveness pass",
+        impact: result.isWindows ? "Medium" : "Preview",
+        detail: "Tune Windows power behavior and foreground responsiveness without breaking daily-driver compatibility."
+      },
+      {
+        title: "GPU and display check",
+        impact: result.hasDiscreteGpu ? "Medium" : "Safe",
+        detail: result.hasDiscreteGpu
+          ? "Confirm GPU driver path, game mode, hardware scheduling fit, and display refresh behavior."
+          : "Keep visual settings conservative until the target PC confirms the real GPU."
+      },
+      {
+        title: "Network stability pass",
+        impact: result.connectionQuality === "Weak" ? "High" : "Low",
+        detail: "Check adapter, DNS, background downloads, and Discord/game network stability before ranked sessions."
+      }
+    ];
+
+    if(result.mode === "streaming"){
+      base.splice(3, 0, {
+        title: "OBS and audio compatibility",
+        impact: "High",
+        detail: "Preserve capture, microphone, Discord, audio devices, and controller services while tuning."
+      });
+    }
+
+    if(result.mode === "safe"){
+      base.splice(2, 0, {
+        title: "Shared PC compatibility",
+        impact: "High",
+        detail: "Keep Windows Security, updates, Bluetooth, printers, Xbox/controller paths, and school/work basics intact."
+      });
+    }
+
+    return base;
+  }
+
+  function detectPcProfile(mode = analyzerMode){
+    const cores = Number(navigator.hardwareConcurrency || 0);
+    const memory = Number(navigator.deviceMemory || 0);
+    const connection = navigator.connection || {};
+    const ua = navigator.userAgent || "";
+    const platform = navigator.platform || "";
+    const gpu = getGpuRenderer();
+    const gpuLower = gpu.toLowerCase();
+    const hasDiscreteGpu = /nvidia|geforce|rtx|gtx|radeon|amd|arc/i.test(gpuLower);
+    const isAppleGpu = /apple|a[0-9]{1,2} gpu|m[0-9]/i.test(gpuLower);
+    const isWindows = /win/i.test(platform || ua);
+    const isIOS = /iphone|ipad|ipod/i.test(`${ua} ${platform}`);
+    const isAndroid = /android/i.test(ua);
+    const isMobile = isIOS || isAndroid || /mobile/i.test(ua) || (navigator.maxTouchPoints > 1 && !isWindows);
+    const osName = getOsName(ua, platform);
+    const browserName = getBrowserName(ua);
+    const screenPixels = Math.round((screen.width || 0) * (screen.height || 0) / 1000000);
+    const downlink = Number(connection.downlink || 0);
+    const connectionQuality = !downlink
+      ? "Hidden"
+      : downlink >= 60
+        ? "Excellent"
+        : downlink >= 20
+          ? "Good"
+          : downlink >= 8
+            ? "Usable"
+            : "Weak";
+    const cpuScore = metricScore(cores, [
+      { test: value => value >= 16, score: 95 },
+      { test: value => value >= 12, score: 88 },
+      { test: value => value >= 8, score: 78 },
+      { test: value => value >= 4, score: 62 },
+      { test: value => value > 0, score: 48 }
+    ]);
+    const memoryScore = metricScore(memory, [
+      { test: value => value >= 32, score: 96 },
+      { test: value => value >= 16, score: 86 },
+      { test: value => value >= 8, score: 70 },
+      { test: value => value >= 4, score: 54 },
+      { test: value => value > 0, score: 46 }
+    ]);
+    const gpuScore = hasDiscreteGpu ? 86 : isAppleGpu ? 74 : /intel|uhd|iris/i.test(gpuLower) ? 62 : 58;
+    const osScore = isWindows ? 94 : isMobile ? 64 : 58;
+    const netScore = connectionQuality === "Excellent" ? 90 : connectionQuality === "Good" ? 78 : connectionQuality === "Usable" ? 64 : connectionQuality === "Weak" ? 48 : 60;
+    let score = Math.round(cpuScore * .24 + memoryScore * .24 + gpuScore * .20 + osScore * .20 + netScore * .12);
+
+    if(screenPixels >= 2) score += 3;
+    if(mode === "streaming" && (memory < 16 || cores < 8)) score -= 5;
+    if(mode === "safe") score += 2;
+    if(isMobile) score = Math.min(score, 78);
+    score = clampNumber(score, 42, 99);
+
+    const lowSpec = (cores > 0 && cores <= 4) || (memory > 0 && memory <= 4);
+    const plan = isMobile
+      ? "EMX Mobile Preview - Scan Target PC Next"
+      : lowSpec
+        ? "EMX Custom OS - Smart Safe Path"
+        : hasDiscreteGpu
+          ? mode === "streaming"
+            ? "EMX Custom OS - Smart Stream-Safe Path"
+            : "EMX Custom OS - Smart Balanced Path"
+          : "EMX Custom OS - Smart Compatibility Path";
+
+    const label = isMobile ? "Preview Scan" : score >= 88 ? "Strong Fit" : score >= 74 ? "Good Fit" : "Safe Fit";
+    const reason = isMobile
+      ? "This device can preview the analyzer, but the best install recommendation should be generated from the Windows PC that will run EMX."
+      : lowSpec
+        ? "This PC should start with Smart so EMX can stay conservative and prioritize compatibility."
+        : mode === "streaming"
+          ? "This PC can tune for gaming while keeping OBS, Discord, audio, and capture stability in the plan."
+          : hasDiscreteGpu
+            ? "This PC looks ready for Smart to resolve into Balanced after the installer confirms hardware."
+            : "This PC should use Smart so EMX can keep daily-driver compatibility first.";
+    const boost = estimateBoostRange(score, lowSpec, hasDiscreteGpu, isWindows, isMobile, mode);
+    const metrics = [
+      { label: "CPU Headroom", value: cpuScore, detail: cores ? `${cores} browser-visible threads` : "Hidden by browser" },
+      { label: "Memory Room", value: memoryScore, detail: memory ? `${memory} GB browser estimate` : "Hidden by browser" },
+      { label: "Graphics Path", value: gpuScore, detail: hasDiscreteGpu ? "Discrete GPU signal" : isAppleGpu ? "Apple GPU signal" : "Integrated/hidden signal" },
+      { label: "OS Fit", value: osScore, detail: osName },
+      { label: "Network Hint", value: netScore, detail: `${connection.effectiveType || "hidden"} / ${downlink ? downlink + " Mbps" : "hidden"}` }
+    ];
+    const bottlenecks = [];
+
+    if(!isWindows) bottlenecks.push("Run again on the target Windows PC before installing EMX.");
+    if(memory && memory < 8) bottlenecks.push("Low browser-reported memory: use Smart/Safe first.");
+    if(cores && cores < 6) bottlenecks.push("Lower CPU thread count: prioritize startup and background trims.");
+    if(!hasDiscreteGpu && !isMobile) bottlenecks.push("GPU is integrated or hidden: keep graphics tweaks conservative.");
+    if(connectionQuality === "Weak") bottlenecks.push("Network looks limited: avoid background downloads while gaming.");
+
+    const setupSteps = isMobile
+      ? [
+        "Use this as a preview scan only.",
+        "Open the analyzer on the Windows PC that will use EMX.",
+        "Complete Payhip checkout and keep the receipt order ID.",
+        "Claim the EMX license with the same Payhip email and order ID.",
+        "Run Smart first on the PC, then choose Balanced only if the installer confirms it fits."
+      ]
+      : [
+        "Complete Payhip checkout and keep your receipt order ID.",
+        "Claim your EMX license on the License Claim page.",
+        "Download EMX Custom OS from Payhip.",
+        "Run EMX-Installer.exe as Administrator.",
+        mode === "streaming"
+          ? "Use Smart Stream-Safe so OBS, Discord, audio, and capture stay working."
+          : lowSpec
+            ? "Use Smart first and let EMX choose the safer profile."
+            : "Use Smart first and let EMX choose Balanced only when it fits.",
+        "Restart when ready, then test your game, Discord, OBS/audio, controller, security, and updates."
+      ];
+
+    const result = {
+      cores,
+      memory,
+      gpu,
+      connection: connection.effectiveType || "browser hidden",
+      downlink: connection.downlink ? connection.downlink + " Mbps estimate" : "browser hidden",
+      platform: platform || "browser hidden",
+      osName,
+      browserName,
+      screen: `${screen.width || "--"} x ${screen.height || "--"}`,
+      score,
+      label,
+      plan,
+      reason,
+      boost,
+      metrics,
+      bottlenecks,
+      setupSteps,
+      tweaks: [],
+      mode,
+      modeLabel: ANALYZER_MODES[mode]?.label || "Gaming",
+      modeCopy: ANALYZER_MODES[mode]?.copy || "",
+      lowSpec,
+      hasDiscreteGpu,
+      isWindows,
+      isMobile,
+      connectionQuality
+    };
+
+    result.tweaks = buildAnalyzerTweaks(result);
+    return result;
+  }
+
+  function ensurePcAnalyzerEnhancements(){
+    const card = document.querySelector("#pc-analyzer-modal .pc-analyzer-card");
+    const actions = document.querySelector("#pc-analyzer-modal .pc-analyzer-actions");
+
+    if(!card || !actions) return;
+
+    if(!document.getElementById("pcAnalyzerModeBar")){
+      const modeBar = document.createElement("div");
+      modeBar.id = "pcAnalyzerModeBar";
+      modeBar.className = "pc-analyzer-modebar";
+      modeBar.innerHTML = Object.entries(ANALYZER_MODES).map(([key, mode]) => `
+        <button class="play-click ${key === analyzerMode ? "active" : ""}" type="button" data-action="analyzer-mode" data-mode="${escapeHtml(key)}">
+          <strong>${escapeHtml(mode.label)}</strong>
+          <span>${escapeHtml(mode.copy)}</span>
+        </button>
+      `).join("");
+
+      const grid = card.querySelector(".pc-analyzer-grid");
+      grid?.insertAdjacentElement("beforebegin", modeBar);
+    }
+
+    if(!document.getElementById("pcAnalyzerDeepGrid")){
+      const deepGrid = document.createElement("div");
+      deepGrid.id = "pcAnalyzerDeepGrid";
+      deepGrid.className = "pc-analyzer-deep-grid";
+      deepGrid.innerHTML = `
+        <div class="pc-analyzer-panel pc-analyzer-lift-panel">
+          <span>Estimated Performance Lift</span>
+          <div id="pcAnalyzerLift" class="pc-analyzer-lift">
+            <div><strong>--</strong><p>FPS smoothness</p></div>
+            <div><strong>--</strong><p>Edit feel</p></div>
+            <div><strong>--</strong><p>Latency feel</p></div>
+          </div>
+          <p id="pcAnalyzerLiftNote">Run the analyzer for safe estimated ranges. These are never guaranteed numbers.</p>
+        </div>
+
+        <div class="pc-analyzer-panel">
+          <span>Score Breakdown</span>
+          <div id="pcAnalyzerBreakdown" class="pc-analyzer-breakdown">
+            <div class="pc-analyzer-meter"><b>Waiting</b><i><em style="width:0%"></em></i><small>Run scan</small></div>
+          </div>
+        </div>
+      `;
+
+      actions.insertAdjacentElement("beforebegin", deepGrid);
+    }
+
+    if(!document.getElementById("pcAnalyzerTweaksPanel")){
+      const tweaksPanel = document.createElement("div");
+      tweaksPanel.id = "pcAnalyzerTweaksPanel";
+      tweaksPanel.className = "pc-analyzer-tweaks-panel";
+      tweaksPanel.innerHTML = `
+        <div class="pc-analyzer-panel">
+          <span>Recommended Tweaks</span>
+          <div id="pcAnalyzerTweaks" class="pc-analyzer-tweaks">
+            <button type="button">Run analyzer to build tweak list</button>
+          </div>
+        </div>
+
+        <div class="pc-analyzer-panel">
+          <span>Risk Notes</span>
+          <ul id="pcAnalyzerRisks">
+            <li>No scan has been run yet.</li>
+          </ul>
+        </div>
+      `;
+
+      actions.insertAdjacentElement("beforebegin", tweaksPanel);
+    }
+
+    if(!document.getElementById("pcAnalyzerDownloadBtn")){
+      const downloadBtn = document.createElement("button");
+      downloadBtn.id = "pcAnalyzerDownloadBtn";
+      downloadBtn.className = "btn-outline green play-click";
+      downloadBtn.type = "button";
+      downloadBtn.dataset.action = "download-pc-report";
+      downloadBtn.textContent = "Download EMX Report PNG";
+
+      const copyBtn = document.createElement("button");
+      copyBtn.id = "pcAnalyzerCopyBtn";
+      copyBtn.className = "btn-outline play-click";
+      copyBtn.type = "button";
+      copyBtn.dataset.action = "copy-pc-report";
+      copyBtn.textContent = "Copy Report Text";
+
+      actions.append(downloadBtn, copyBtn);
+    }
+  }
+
+  function updatePcAnalyzerModeButtons(){
+    document.querySelectorAll("[data-action='analyzer-mode']").forEach(button => {
+      button.classList.toggle("active", button.dataset.mode === analyzerMode);
+    });
+  }
+
+  function setAnalyzerReportActionsEnabled(enabled){
+    document.querySelectorAll("[data-action='download-pc-report'], [data-action='copy-pc-report']").forEach(button => {
+      button.disabled = !enabled;
+      button.setAttribute("aria-disabled", String(!enabled));
+    });
+  }
+
+  function renderAnalyzerReadyState(){
+    ensurePcAnalyzerEnhancements();
+    updatePcAnalyzerModeButtons();
+    currentAnalyzerResult = null;
+    analyzerHasRun = false;
+
+    const card = document.querySelector("#pc-analyzer-modal .pc-analyzer-card");
+    const scoreEl = document.getElementById("pcAnalyzerScore");
+    const labelEl = document.getElementById("pcAnalyzerLabel");
+    const planEl = document.getElementById("pcAnalyzerPlan");
+    const reasonEl = document.getElementById("pcAnalyzerReason");
+    const specsEl = document.getElementById("pcAnalyzerSpecs");
+    const stepsEl = document.getElementById("pcAnalyzerSteps");
+    const breakdown = document.getElementById("pcAnalyzerBreakdown");
+    const lift = document.getElementById("pcAnalyzerLift");
+    const liftNote = document.getElementById("pcAnalyzerLiftNote");
+    const tweaks = document.getElementById("pcAnalyzerTweaks");
+    const risks = document.getElementById("pcAnalyzerRisks");
+
+    card?.classList.remove("scanning");
+    if(scoreEl) scoreEl.textContent = "--";
+    if(labelEl) labelEl.textContent = "Ready";
+    if(planEl) planEl.textContent = "Press Analyze";
+    if(reasonEl) reasonEl.textContent = "Choose a mode, press Analyze, then EMX will reveal CPU, RAM, GPU, OS, browser, screen, connection hints, tweak recommendations, and report tools.";
+    if(specsEl){
+      specsEl.innerHTML = [
+        "CPU: hidden until scan",
+        "GPU: hidden until scan",
+        "RAM: hidden until scan",
+        "OS / Browser: hidden until scan"
+      ].map(item => `<li class="pc-analyzer-locked">${escapeHtml(item)}</li>`).join("");
+    }
+    if(stepsEl){
+      stepsEl.innerHTML = [
+        "Pick Gaming, Gaming + Stream, or Safe Daily.",
+        "Press Analyze This PC.",
+        "Wait for the EMX scan animation to finish.",
+        "Review specs, tweaks, and download your report."
+      ].map(item => `<li>${escapeHtml(item)}</li>`).join("");
+    }
+    if(lift){
+      lift.innerHTML = `
+        <div><strong>Locked</strong><p>FPS smoothness</p></div>
+        <div><strong>Locked</strong><p>Edit feel</p></div>
+        <div><strong>Locked</strong><p>Latency feel</p></div>
+      `;
+    }
+    if(liftNote) liftNote.textContent = "Estimated ranges unlock after scan. No FPS, ping, or edit-delay number is guaranteed.";
+    if(breakdown){
+      breakdown.innerHTML = `
+        <div class="pc-analyzer-meter"><b>Waiting For Scan</b><i><em style="width:0%"></em></i><small>Press Analyze This PC</small></div>
+      `;
+    }
+    if(tweaks){
+      tweaks.innerHTML = `<button type="button" disabled>Analyze first to unlock recommended tweaks</button>`;
+    }
+    if(risks){
+      risks.innerHTML = `<li>No scan has been run yet.</li>`;
+    }
+    setAnalyzerReportActionsEnabled(false);
+  }
+
+  function renderAnalyzerScanningState(){
+    ensurePcAnalyzerEnhancements();
+    updatePcAnalyzerModeButtons();
+    currentAnalyzerResult = null;
+
+    const card = document.querySelector("#pc-analyzer-modal .pc-analyzer-card");
+    const scoreEl = document.getElementById("pcAnalyzerScore");
+    const labelEl = document.getElementById("pcAnalyzerLabel");
+    const planEl = document.getElementById("pcAnalyzerPlan");
+    const reasonEl = document.getElementById("pcAnalyzerReason");
+    const specsEl = document.getElementById("pcAnalyzerSpecs");
+    const stepsEl = document.getElementById("pcAnalyzerSteps");
+    const breakdown = document.getElementById("pcAnalyzerBreakdown");
+    const lift = document.getElementById("pcAnalyzerLift");
+    const liftNote = document.getElementById("pcAnalyzerLiftNote");
+    const tweaks = document.getElementById("pcAnalyzerTweaks");
+    const risks = document.getElementById("pcAnalyzerRisks");
+
+    card?.classList.add("scanning");
+    if(scoreEl) scoreEl.textContent = "...";
+    if(labelEl) labelEl.textContent = "Scanning";
+    if(planEl) planEl.textContent = "EMX is analyzing this device";
+    if(reasonEl) reasonEl.textContent = "Reading safe browser-visible signals. No files are scanned, nothing is installed, and no private files leave the device.";
+    if(specsEl){
+      specsEl.innerHTML = [
+        "Reading CPU thread count",
+        "Estimating memory class",
+        "Checking browser GPU renderer",
+        "Detecting OS, browser, screen, and connection hints"
+      ].map(item => `
+        <li class="pc-analyzer-loading-row">
+          <i></i>
+          <span>${escapeHtml(item)}</span>
+        </li>
+      `).join("");
+    }
+    if(stepsEl){
+      stepsEl.innerHTML = [
+        "Building recommended EMX path",
+        "Scoring compatibility and performance headroom",
+        "Preparing tweak list and report tools"
+      ].map(item => `<li class="pc-analyzer-skeleton">${escapeHtml(item)}</li>`).join("");
+    }
+    if(lift){
+      lift.innerHTML = `
+        <div class="pc-analyzer-skeleton"><strong>Scanning</strong><p>FPS smoothness</p></div>
+        <div class="pc-analyzer-skeleton"><strong>Scanning</strong><p>Edit feel</p></div>
+        <div class="pc-analyzer-skeleton"><strong>Scanning</strong><p>Latency feel</p></div>
+      `;
+    }
+    if(liftNote) liftNote.textContent = "Calculating estimated ranges...";
+    if(breakdown){
+      breakdown.innerHTML = ["CPU Headroom", "Memory Room", "Graphics Path", "OS Fit", "Network Hint"].map((label, index) => `
+        <div class="pc-analyzer-meter pc-analyzer-skeleton">
+          <b>${escapeHtml(label)}</b>
+          <i><em style="width:${18 + index * 13}%"></em></i>
+          <small>Scanning...</small>
+        </div>
+      `).join("");
+    }
+    if(tweaks){
+      tweaks.innerHTML = `
+        <button class="pc-analyzer-skeleton" type="button" disabled>Finding safest tweak path...</button>
+        <button class="pc-analyzer-skeleton" type="button" disabled>Checking compatibility notes...</button>
+      `;
+    }
+    if(risks){
+      risks.innerHTML = `<li class="pc-analyzer-loading-row"><i></i><span>Looking for browser-visible bottlenecks...</span></li>`;
+    }
+    setAnalyzerReportActionsEnabled(false);
+  }
+
+  function renderAnalyzerMetrics(result){
+    const breakdown = document.getElementById("pcAnalyzerBreakdown");
+    const lift = document.getElementById("pcAnalyzerLift");
+    const liftNote = document.getElementById("pcAnalyzerLiftNote");
+    const tweaks = document.getElementById("pcAnalyzerTweaks");
+    const risks = document.getElementById("pcAnalyzerRisks");
+
+    if(breakdown){
+      breakdown.innerHTML = result.metrics.map(metric => `
+        <div class="pc-analyzer-meter">
+          <b>${escapeHtml(metric.label)}</b>
+          <i><em style="width:${clampNumber(metric.value, 0, 100)}%"></em></i>
+          <small>${escapeHtml(percentText(metric.value))} - ${escapeHtml(metric.detail)}</small>
+        </div>
+      `).join("");
+    }
+
+    if(lift){
+      lift.innerHTML = `
+        <div><strong>${escapeHtml(result.boost.fps)}</strong><p>FPS smoothness</p></div>
+        <div><strong>${escapeHtml(result.boost.edit)}</strong><p>Edit feel</p></div>
+        <div><strong>${escapeHtml(result.boost.latency)}</strong><p>Latency feel</p></div>
+      `;
+    }
+
+    if(liftNote){
+      liftNote.textContent = result.boost.note;
+    }
+
+    if(tweaks){
+      tweaks.innerHTML = result.tweaks.map((tweak, index) => `
+        <button class="play-click" type="button" data-action="analyzer-tweak" data-tweak-index="${index}">
+          <span>${escapeHtml(tweak.impact)}</span>
+          <strong>${escapeHtml(tweak.title)}</strong>
+          <p>${escapeHtml(tweak.detail)}</p>
+        </button>
+      `).join("");
+    }
+
+    if(risks){
+      const items = result.bottlenecks.length
+        ? result.bottlenecks
+        : ["No major browser-visible bottleneck found. Still test after restart before ranked or paid work."];
+
+      risks.innerHTML = items.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+    }
+  }
+
+  function buildAnalyzerReportText(result = currentAnalyzerResult){
+    if(!result) return "Run the EMX analyzer first.";
+
+    return [
+      "EMX PC Analyzer Report",
+      `Fit Score: ${result.score} / 100 (${result.label})`,
+      `Mode: ${result.modeLabel}`,
+      `Recommended Plan: ${result.plan}`,
+      `Reason: ${result.reason}`,
+      "",
+      "Detected:",
+      `CPU threads: ${result.cores || "hidden"}`,
+      `RAM estimate: ${result.memory ? result.memory + " GB" : "hidden"}`,
+      `GPU: ${result.gpu}`,
+      `OS: ${result.osName}`,
+      `Browser: ${result.browserName}`,
+      `Platform: ${result.platform}`,
+      `Screen: ${result.screen}`,
+      `Connection: ${result.connection} / ${result.downlink}`,
+      "",
+      "Estimated Lift:",
+      `FPS: ${result.boost.fps}`,
+      `Edit feel: ${result.boost.edit}`,
+      `Latency feel: ${result.boost.latency}`,
+      `Note: ${result.boost.note}`,
+      "",
+      "Recommended Tweaks:",
+      ...result.tweaks.map((tweak, index) => `${index + 1}. ${tweak.title} (${tweak.impact}) - ${tweak.detail}`),
+      "",
+      "Next Steps:",
+      ...result.setupSteps.map((step, index) => `${index + 1}. ${step}`),
+      "",
+      "Generated by EMX Tweaks"
+    ].join("\n");
+  }
+
+  function downloadAnalyzerReport(){
+    if(!currentAnalyzerResult){
+      showToast("<strong>Analyze first</strong><br>Run the EMX PC scan before downloading a report.");
+      return;
+    }
+
+    const result = currentAnalyzerResult;
+    const canvas = document.createElement("canvas");
+    const width = 1200;
+    const height = 1900;
+    const ratio = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+    const ctx = canvas.getContext("2d");
+
+    if(!ctx) return;
+
+    ctx.scale(ratio, ratio);
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, "#061107");
+    gradient.addColorStop(.5, "#050607");
+    gradient.addColorStop(1, "#17041f");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.strokeStyle = "rgba(36,255,36,.14)";
+    ctx.lineWidth = 1;
+    for(let x = 0; x < width; x += 44){
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, height);
+      ctx.stroke();
+    }
+    for(let y = 0; y < height; y += 44){
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "#24ff24";
+    ctx.font = "900 34px Arial";
+    ctx.fillText("EMX", 70, 82);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "900 70px Arial";
+    ctx.fillText("PC Analyzer Report", 70, 165);
+    ctx.font = "900 38px Arial";
+    ctx.fillStyle = "#24ff24";
+    ctx.fillText(`${result.score}/100 - ${result.label}`, 70, 230);
+    ctx.fillStyle = "rgba(255,255,255,.75)";
+    ctx.font = "700 26px Arial";
+    let yCursor = wrapCanvasText(ctx, result.plan, 70, 285, 1040, 34) + 22;
+    yCursor = wrapCanvasText(ctx, result.reason, 70, yCursor, 1040, 32) + 54;
+
+    const boxes = [
+      ["Mode", result.modeLabel],
+      ["FPS Estimate", result.boost.fps],
+      ["Edit Feel", result.boost.edit],
+      ["Latency Feel", result.boost.latency]
+    ];
+
+    let boxX = 70;
+    let boxY = Math.max(470, yCursor);
+    boxes.forEach((box, index) => {
+      const x = boxX + (index % 2) * 535;
+      const y = boxY + Math.floor(index / 2) * 150;
+      ctx.fillStyle = "rgba(0,0,0,.42)";
+      roundRect(ctx, x, y, 500, 120, 26, true, false);
+      ctx.strokeStyle = "rgba(36,255,36,.30)";
+      roundRect(ctx, x, y, 500, 120, 26, false, true);
+      ctx.fillStyle = "rgba(255,255,255,.58)";
+      ctx.font = "900 18px Arial";
+      ctx.fillText(box[0].toUpperCase(), x + 26, y + 38);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "900 28px Arial";
+      wrapCanvasText(ctx, box[1], x + 26, y + 78, 445, 30);
+    });
+
+    yCursor = boxY + 330;
+    ctx.fillStyle = "#24ff24";
+    ctx.font = "900 28px Arial";
+    ctx.fillText("Detected System", 70, yCursor);
+    yCursor += 50;
+    ctx.fillStyle = "rgba(255,255,255,.76)";
+    ctx.font = "700 22px Arial";
+    [
+      `CPU threads: ${result.cores || "hidden"}`,
+      `RAM estimate: ${result.memory ? result.memory + " GB" : "hidden"}`,
+      `GPU: ${result.gpu}`,
+      `OS: ${result.osName} / ${result.browserName}`,
+      `Platform: ${result.platform}`,
+      `Screen: ${result.screen}`,
+      `Connection: ${result.connection} / ${result.downlink}`
+    ].forEach(line => {
+      yCursor = wrapCanvasText(ctx, line, 70, yCursor, 1040, 30) + 8;
+    });
+
+    yCursor += 36;
+    ctx.fillStyle = "#24ff24";
+    ctx.font = "900 28px Arial";
+    ctx.fillText("Recommended Tweaks", 70, yCursor);
+    yCursor += 48;
+    ctx.fillStyle = "rgba(255,255,255,.80)";
+    ctx.font = "700 21px Arial";
+    result.tweaks.slice(0, 7).forEach((tweak, index) => {
+      yCursor = wrapCanvasText(ctx, `${index + 1}. ${tweak.title}: ${tweak.detail}`, 70, yCursor, 1040, 28) + 14;
+    });
+
+    yCursor += 26;
+    ctx.fillStyle = "#24ff24";
+    ctx.font = "900 25px Arial";
+    ctx.fillText("Report Note", 70, yCursor);
+    yCursor += 42;
+    ctx.fillStyle = "rgba(255,255,255,.52)";
+    ctx.font = "700 20px Arial";
+    yCursor = wrapCanvasText(ctx, result.boost.note, 70, yCursor, 1040, 26) + 14;
+    wrapCanvasText(ctx, "Browser-visible estimates only. Real results depend on drivers, Windows state, games, background apps, and network.", 70, yCursor, 1040, 26);
+
+    const link = document.createElement("a");
+    link.download = `EMX-PC-Analyzer-${Date.now()}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    showToast("<strong>EMX report ready</strong><br>Your branded PNG report was downloaded.");
+  }
+
+  function roundRect(ctx, x, y, width, height, radius, fill, stroke){
+    const r = Math.min(radius, width / 2, height / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + width, y, x + width, y + height, r);
+    ctx.arcTo(x + width, y + height, x, y + height, r);
+    ctx.arcTo(x, y + height, x, y, r);
+    ctx.arcTo(x, y, x + width, y, r);
+    ctx.closePath();
+    if(fill) ctx.fill();
+    if(stroke) ctx.stroke();
+  }
+
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight){
+    const words = String(text || "").trim().split(/\s+/).filter(Boolean);
+    let line = "";
+    let currentY = y;
+
+    if(!words.length) return currentY;
+
+    words.forEach(word => {
+      const test = line ? `${line} ${word}` : word;
+      if(ctx.measureText(test).width > maxWidth && line){
+        ctx.fillText(line, x, currentY);
+        line = word;
+        currentY += lineHeight;
+      }else{
+        line = test;
+      }
+    });
+
+    if(line) ctx.fillText(line, x, currentY);
+    return currentY + lineHeight;
+  }
+
+  async function copyAnalyzerReport(){
+    if(!currentAnalyzerResult){
+      showToast("<strong>Analyze first</strong><br>Run the EMX PC scan before copying a report.");
+      return;
+    }
+
+    const text = buildAnalyzerReportText();
+
+    try{
+      await navigator.clipboard.writeText(text);
+      showToast("<strong>Report copied</strong><br>Paste it into Discord or notes.");
+    }catch(error){
+      showToast("<strong>Copy blocked</strong><br>Your browser blocked clipboard access. Use the PNG download instead.");
+    }
+  }
+
+  function renderAnalyzerResult(result){
+    const card = document.querySelector("#pc-analyzer-modal .pc-analyzer-card");
+    const scoreEl = document.getElementById("pcAnalyzerScore");
+    const labelEl = document.getElementById("pcAnalyzerLabel");
+    const planEl = document.getElementById("pcAnalyzerPlan");
+    const reasonEl = document.getElementById("pcAnalyzerReason");
+    const specsEl = document.getElementById("pcAnalyzerSpecs");
+    const stepsEl = document.getElementById("pcAnalyzerSteps");
+
+    card?.classList.remove("scanning");
+    analyzerHasRun = true;
+    setAnalyzerReportActionsEnabled(true);
+
+    if(scoreEl) scoreEl.textContent = result.score;
+    if(labelEl) labelEl.textContent = result.label;
+    if(planEl) planEl.textContent = result.plan;
+    if(reasonEl) reasonEl.textContent = result.reason;
+
+    if(specsEl){
+      specsEl.innerHTML = [
+        `CPU threads: ${result.cores || "hidden"}`,
+        `RAM estimate: ${result.memory ? result.memory + " GB" : "hidden"}`,
+        `GPU: ${result.gpu}`,
+        `OS / Browser: ${result.osName} / ${result.browserName}`,
+        `Platform: ${result.platform}`,
+        `Screen: ${result.screen}`,
+        `Connection: ${result.connection} / ${result.downlink}`
+      ].map(item => `<li>${escapeHtml(item)}</li>`).join("");
+    }
+
+    if(stepsEl){
+      stepsEl.innerHTML = result.setupSteps.map(item => `<li>${escapeHtml(item)}</li>`).join("");
+    }
+
+    renderAnalyzerMetrics(result);
+  }
+
+  function runPcAnalyzer(){
+    ensurePcAnalyzerEnhancements();
+    updatePcAnalyzerModeButtons();
+    openPcAnalyzer(false);
+    renderAnalyzerScanningState();
+    showToast("<strong>EMX Analyzer</strong><br>Reading safe browser-visible system signals.");
+
+    if(analyzerScanTimer){
+      clearTimeout(analyzerScanTimer);
+    }
+
+    analyzerScanTimer = setTimeout(() => {
+      currentAnalyzerResult = detectPcProfile(analyzerMode);
+      renderAnalyzerResult(currentAnalyzerResult);
+      showToast("<strong>Scan complete</strong><br>Specs, tweaks, and report tools are ready.");
+    }, 1200);
+  }
+
   function unlockBodyIfSafe(){
     const mediaOpen = document.getElementById("media-modal")?.classList.contains("show");
     const legalOpen = document.getElementById("legal-modal")?.classList.contains("show");
     const detailOpen = document.getElementById("detail-modal")?.classList.contains("show");
+    const analyzerOpen = document.getElementById("pc-analyzer-modal")?.classList.contains("show");
     const installOpen = document.getElementById("installAppPopup")?.classList.contains("show");
     const cartOpen = cartDrawer?.classList.contains("show");
     const booting = document.body.classList.contains("booting");
     const payOpen = document.getElementById("emxPayLoading")?.classList.contains("show");
 
-    if(!mediaOpen && !legalOpen && !detailOpen && !installOpen && !cartOpen && !booting && !payOpen){
+    if(!mediaOpen && !legalOpen && !detailOpen && !analyzerOpen && !installOpen && !cartOpen && !booting && !payOpen){
       document.body.classList.remove("no-scroll");
     }
   }
@@ -1494,232 +2732,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 26000);
   }
 
-  function showDiscordToast(){
-    const container = document.getElementById("toast-container");
-    if(!container) return;
-
-    const toast = document.createElement("div");
-
-    toast.className = "toast";
-    toast.innerHTML = `
-      <strong style="font-size:18px;">👾 Join the Discord</strong><br><br>
-      Add me to ask for access to the server.<br>
-      <span style="color:var(--green);font-weight:900;margin:10px 0;display:block;font-size:20px;letter-spacing:.04em;">Ur_not_himfr</span>
-      <button class="toast-copy-btn play-click" data-action="copy-discord" type="button">Copy Username</button>
-    `;
-
-    container.appendChild(toast);
-
-    requestAnimationFrame(() => {
-      toast.classList.add("show");
-    });
-
-    setTimeout(() => {
-      if(toast.parentElement){
-        toast.classList.remove("show");
-        setTimeout(() => toast.remove(), 260);
-      }
-    }, 8000);
-  }
-
-  function copyDiscord(username){
-    navigator.clipboard.writeText(username).then(() => {
-      showToast("Discord username copied.");
-    }).catch(() => {
-      showToast("Copy failed. Username: <strong>" + escapeHtml(username) + "</strong>");
-    });
-  }
-
-  function getAffiliatePortalNodes(){
-    return {
-      email: document.getElementById("affiliateEmailInput"),
-      display: document.getElementById("affiliateDisplayNameInput"),
-      input: document.getElementById("affiliateKeyInput"),
-      output: document.getElementById("affiliateLinkOutput"),
-      status: document.getElementById("affiliateCopyStatus")
-    };
-  }
-
-  function normalizeAffiliateKey(value){
-    const raw = String(value ?? "").trim();
-
-    if(!raw) return "";
-
-    try{
-      const parsed = new URL(raw);
-      const afParam = parsed.searchParams.get(PAYHIP_AFFILIATE_PARAM);
-      const refParam = parsed.searchParams.get("ref");
-      const legacyParam = parsed.searchParams.get(LEGACY_AFFILIATE_PARAM);
-      const pathParts = parsed.pathname.split("/").filter(Boolean);
-
-      return cleanReferralValue(
-        afParam ||
-        refParam ||
-        legacyParam ||
-        (pathParts[0] === "b" && pathParts.length >= 3 ? pathParts[pathParts.length - 1] : "")
-      );
-    }catch(error){
-      return cleanReferralValue(raw);
-    }
-  }
-
-  function buildCreatorReferralLink(key, displayName = ""){
-    const referral = normalizeAffiliateKey(key);
-    const display = cleanReferralDisplayName(displayName);
-    const slug = creatorSlug(display || referral);
-
-    if(!referral) return "";
-
-    const target = new URL(slug ? "r/" + encodeURIComponent(slug) : "", SITE_BASE_URL);
-    target.searchParams.set("ref", referral);
-    return target.toString();
-  }
-
-  function setAffiliatePortalStatus(message, tone = "good"){
-    const { status } = getAffiliatePortalNodes();
-    if(!status) return;
-
-    status.textContent = message;
-    status.dataset.tone = tone;
-
-    if(message){
-      window.clearTimeout(setAffiliatePortalStatus.timer);
-      setAffiliatePortalStatus.timer = window.setTimeout(() => {
-        status.textContent = "";
-        delete status.dataset.tone;
-      }, 2600);
-    }
-  }
-
-  function generateAffiliateLink(){
-    const { display, input, output } = getAffiliatePortalNodes();
-    if(!input || !output) return "";
-
-    const link = buildCreatorReferralLink(input.value, display?.value);
-
-    if(!link){
-      output.value = "";
-      setAffiliatePortalStatus("Paste your Payhip affiliate key first.", "warn");
-      showToast("<strong>Affiliate key needed.</strong><br>Paste your Payhip affiliate key to generate a link.");
-      return "";
-    }
-
-    output.value = link;
-    setAffiliatePortalStatus("Link ready.", "good");
-    return link;
-  }
-
-  async function lookupAffiliateLink(){
-    const { email, display, input, output } = getAffiliatePortalNodes();
-    if(!email || !output) return "";
-
-    const cleanEmail = String(email.value || "").trim().toLowerCase();
-
-    if(!cleanEmail || !cleanEmail.includes("@")){
-      setAffiliatePortalStatus("Enter the email used for your Payhip affiliate signup.", "warn");
-      showToast("<strong>Email needed.</strong><br>Enter the email used for your Payhip affiliate signup.");
-      return "";
-    }
-
-    setAffiliatePortalStatus("Checking referral email...", "good");
-
-    try{
-      const response = await fetch(REFERRALS_API_URL + "?email=" + encodeURIComponent(cleanEmail), {
-        cache: "no-store"
-      });
-      const data = await response.json().catch(() => null);
-
-      if(!response.ok || !data || data.ok !== true){
-        throw new Error(data?.error || "Referral lookup failed.");
-      }
-
-      if(!data.found || !data.referral?.referralLink){
-        setAffiliatePortalStatus("No referral saved for that email yet.", "warn");
-        showToast("<strong>No referral found.</strong><br>Ask EMX support to approve/save your affiliate key, or paste your key here.");
-        return "";
-      }
-
-      output.value = data.referral.referralLink;
-
-      if(input && data.referral.affiliateKey){
-        input.value = data.referral.affiliateKey;
-      }
-
-      if(display && data.referral.displayName){
-        display.value = data.referral.displayName;
-      }
-
-      setAffiliatePortalStatus("Referral found. Link ready to copy.", "good");
-      showToast("<strong>Referral Found!</strong><br>Your EMX creator link is ready to copy.");
-      return data.referral.referralLink;
-    }catch(error){
-      setAffiliatePortalStatus("Lookup is unavailable right now.", "warn");
-      showToast("<strong>Lookup failed.</strong><br>" + escapeHtml(error.message || "Try again in a moment."));
-      return "";
-    }
-  }
-
-  function copyAffiliateLink(){
-    const { input, output } = getAffiliatePortalNodes();
-    if(!output) return;
-
-    const link = input?.value ? generateAffiliateLink() : output.value.trim();
-
-    if(!link){
-      return;
-    }
-
-    const onSuccess = () => {
-      setAffiliatePortalStatus("Link Copied!", "good");
-      showToast("<strong>Link Copied!</strong><br>Your EMX creator referral link is ready to share.");
-    };
-
-    if(navigator.clipboard?.writeText){
-      navigator.clipboard.writeText(link).then(onSuccess).catch(() => {
-        output.focus();
-        output.select();
-        document.execCommand("copy");
-        onSuccess();
-      });
-      return;
-    }
-
-    output.focus();
-    output.select();
-    document.execCommand("copy");
-    onSuccess();
-  }
-
-  function setupAffiliatePortal(){
-    const { email, display, input } = getAffiliatePortalNodes();
-    if(!email && !input) return;
-
-    if(email){
-      email.addEventListener("keydown", event => {
-        if(event.key === "Enter"){
-          event.preventDefault();
-          lookupAffiliateLink();
-        }
-      });
-    }
-
-    if(!input) return;
-
-    if(display){
-      display.addEventListener("keydown", event => {
-        if(event.key === "Enter"){
-          event.preventDefault();
-          generateAffiliateLink();
-        }
-      });
-    }
-
-    input.addEventListener("keydown", event => {
-      if(event.key === "Enter"){
-        event.preventDefault();
-        generateAffiliateLink();
-      }
-    });
+  function openDiscordServer(){
+    window.open(DISCORD_INVITE_URL, "_blank", "noopener");
+    showToast("Opening EMX Discord server.");
   }
 
   function shareProduct(key){
@@ -1731,7 +2746,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const productLink = product.productUrl || productCheckoutUrl(product.key);
-    const shareText = `${product.title} — ${product.eyebrow} by EFECT`;
+    const shareText = `${product.title} - ${product.eyebrow} by EFECT`;
 
     if(navigator.share){
       navigator.share({
@@ -1752,7 +2767,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(navigator.share){
       navigator.share({
         title: "EMX TWEAKS",
-        text: "EFECT digital storefront with direct Payhip checkout.",
+        text: "EFECT digital storefront with Payhip checkout and EMX license claim.",
         url: window.location.href
       }).catch(() => {});
     }else{
@@ -1792,9 +2807,34 @@ document.addEventListener("DOMContentLoaded", () => {
   function playClickSound(){
     try{
       if(!clickAudio) return;
+      clickAudio.volume = EMX_CLICK_VOLUME;
       clickAudio.currentTime = 0;
       clickAudio.play().catch(() => {});
     }catch(error){}
+  }
+
+  function spawnScreenStreak(event){
+    const target = event?.target?.closest?.("[data-action], .product-card, .custom-os-preview");
+    if(!target) return;
+
+    const action = target.dataset?.action || "";
+    const shouldLaunch = ["preview", "detail", "buy", "run-pc-analyzer"].includes(action);
+    if(!shouldLaunch) return;
+
+    const point = event.touches?.[0] || event;
+    const x = Number(point.clientX || window.innerWidth / 2);
+    const y = Number(point.clientY || window.innerHeight / 2);
+    const streak = document.createElement("span");
+
+    streak.className = "emx-screen-streak";
+    streak.style.left = x + "px";
+    streak.style.top = y + "px";
+
+    document.body.appendChild(streak);
+
+    setTimeout(() => {
+      streak.remove();
+    }, 760);
   }
 
   function isStandaloneApp(){
@@ -1852,6 +2892,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try{
       if(bootAudio){
+        bootAudio.volume = EMX_BOOT_VOLUME;
         bootAudio.currentTime = 0;
         await bootAudio.play();
       }
@@ -1859,6 +2900,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(launchOverlay){
       launchOverlay.classList.remove("exit", "launch-complete");
+      launchOverlay.classList.add("cinematic-launch");
       launchOverlay.classList.add("show");
     }
 
@@ -1867,11 +2909,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if(launchBarFill) launchBarFill.style.width = "0%";
 
     const stages = [
-      { percent: 8, text: "INITIALIZING EMX CORE" },
-      { percent: 22, text: "VERIFYING STORE UI" },
-      { percent: 41, text: "LOADING PRODUCT CARDS" },
-      { percent: 63, text: "LINKING SECURE PAYHIP" },
-      { percent: 82, text: "SYNCING EMX DOMAIN" },
+      { percent: 10, text: "WAKING EMX CORE" },
+      { percent: 26, text: "LOADING VISUAL ENGINE" },
+      { percent: 45, text: "ARMING CUSTOM OS DROP" },
+      { percent: 66, text: "SYNCING SMART ANALYZER" },
+      { percent: 84, text: "VERIFYING SECURE PAYHIP" },
       { percent: 100, text: "LAUNCHING STORE" }
     ];
 
@@ -1895,15 +2937,17 @@ document.addEventListener("DOMContentLoaded", () => {
           if(launchOverlay){
             launchOverlay.classList.add("launch-complete");
           }
-        }, 250);
+        }, 180);
 
         setTimeout(() => {
           if(launchOverlay){
             launchOverlay.classList.add("exit");
             launchOverlay.classList.remove("show");
+            launchOverlay.classList.remove("cinematic-launch");
           }
 
           document.body.classList.add("app-ready");
+          document.body.classList.add("emx-site-reveal");
           document.body.classList.remove("booting");
           document.body.classList.remove("no-scroll");
 
@@ -1911,15 +2955,29 @@ document.addEventListener("DOMContentLoaded", () => {
           isLaunching = false;
 
           startActivityToasts();
-        }, 900);
+          setTimeout(() => {
+            document.body.classList.remove("emx-site-reveal");
+          }, 1900);
+        }, 620);
       }
-    }, 430);
+    }, 300);
+  }
+
+  function scheduleAutoIntro(){
+    const btn = document.getElementById("enterBtn");
+    if(!btn) return;
+
+    btn.textContent = "Launching EMX Domain";
+
+    setTimeout(() => {
+      if(isLaunching || document.body.classList.contains("app-ready")) return;
+      enterDomain();
+    }, 520);
   }
 
   function setupSupportWidget(){
     const widget = document.getElementById("supportWidget");
     const fab = document.getElementById("supportFab");
-    const copyBtn = document.getElementById("supportCopyDiscord");
     const faqBtn = document.getElementById("supportOpenFaq");
     const bundleBtn = document.getElementById("supportViewBundle");
 
@@ -1929,28 +2987,15 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    if(copyBtn){
-      copyBtn.addEventListener("click", () => {
-        copyDiscord("Ur_not_himfr");
-      });
-    }
-
     if(faqBtn){
       faqBtn.addEventListener("click", () => {
-        openLegal("faq");
+        window.location.href = "./faq.html";
       });
     }
 
     if(bundleBtn){
       bundleBtn.addEventListener("click", () => {
-        document.querySelector(".bundle-card")?.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-
-        if(widget){
-          widget.classList.remove("open");
-        }
+        window.location.href = "./bundle.html";
       });
     }
   }
@@ -2027,6 +3072,55 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
       `).join("");
     }
+
+    renderBundleOptions();
+  }
+
+  function renderBundleOptions(){
+    const grid = document.getElementById("bundleChoiceGrid");
+    if(!grid) return;
+
+    const options = getBundleOptions();
+
+    grid.innerHTML = options.map(product => {
+      const isFullPack = product.id === "bundle";
+      const action = isFullPack ? "buy-bundle" : "buy";
+      const addAction = isFullPack ? "add-bundle" : "add";
+      const image = product.image || product.fallbackPreview || "emx-logo.png";
+      const value = product.oldPrice && product.oldPrice > product.price
+        ? `${money(product.oldPrice)} value`
+        : "Bundle checkout";
+
+      return `
+        <article class="bundle-option-card ${isFullPack ? "is-full-pack" : "is-os-macro"}">
+          <div class="bundle-option-media">
+            <img src="${escapeHtml(image)}" alt="${escapeHtml(product.title || "EMX Bundle")}" loading="lazy" decoding="async">
+          </div>
+
+          <div class="bundle-option-copy">
+            <span>${escapeHtml(product.eyebrow || "EMX Bundle")}</span>
+            <h3>${formatTitle(escapeHtml(product.title || "EMX Bundle"))}</h3>
+            <p>${escapeHtml(product.description || "")}</p>
+          </div>
+
+          <div class="bundle-option-bottom">
+            <div>
+              <strong>${money(product.price || 0)}</strong>
+              <small>${escapeHtml(value)}</small>
+            </div>
+
+            <div class="bundle-option-actions">
+              <button class="btn-filled play-click" type="button" data-action="${action}" data-key="${escapeHtml(product.key)}">
+                ${isFullPack ? "Buy Full Pack" : "Buy OS + Macro"}
+              </button>
+              <button class="btn-outline green play-click" type="button" data-action="${addAction}" data-key="${escapeHtml(product.key)}">
+                Add
+              </button>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join("");
   }
 
   function setupEvents(){
@@ -2036,12 +3130,56 @@ document.addEventListener("DOMContentLoaded", () => {
       enterBtn.addEventListener("click", enterDomain);
     }
 
+    function isInternalPageLink(link){
+      if(!link || !link.href || link.target || link.hasAttribute("download")) return false;
+
+      const url = new URL(link.href, window.location.href);
+      if(url.origin !== window.location.origin) return false;
+      if(url.pathname === window.location.pathname && url.hash) return false;
+
+      return /\.(html)?$/i.test(url.pathname) || url.pathname.endsWith("/");
+    }
+
+    function animateToPage(href){
+      if(document.body.classList.contains("emx-route-leaving")) return;
+
+      sessionStorage.setItem("emxRouteSwap", "1");
+      document.body.classList.add("emx-route-leaving");
+
+      let wipe = document.getElementById("emxRouteWipe");
+
+      if(!wipe){
+        wipe = document.createElement("div");
+        wipe.id = "emxRouteWipe";
+        wipe.className = "emx-route-wipe";
+        wipe.innerHTML = "<span>EMX</span>";
+        document.body.appendChild(wipe);
+      }
+
+      requestAnimationFrame(() => {
+        wipe.classList.add("show");
+      });
+
+      setTimeout(() => {
+        window.location.href = href;
+      }, 760);
+    }
+
     document.addEventListener("click", event => {
       const clickTarget = event.target.closest(".play-click");
 
       if(clickTarget && clickTarget.id !== "enterBtn"){
         playClickSound();
       }
+
+      const pageLink = event.target.closest("a.play-click[href]");
+      if(pageLink && isInternalPageLink(pageLink)){
+        event.preventDefault();
+        animateToPage(pageLink.href);
+        return;
+      }
+
+      spawnScreenStreak(event);
 
       const actionTarget = event.target.closest("[data-action]");
 
@@ -2065,7 +3203,8 @@ document.addEventListener("DOMContentLoaded", () => {
   event.preventDefault();
   event.stopPropagation();
   
-  const proofButtons = Array.from(document.querySelectorAll('[data-action="proof-preview"]'));
+  const proofButtons = Array.from(document.querySelectorAll('[data-action="proof-preview"]'))
+    .filter(button => button === actionTarget || button.getClientRects().length > 0);
   
   currentPreviewItems = proofButtons.map(button => ({
     type: "image",
@@ -2088,24 +3227,22 @@ document.addEventListener("DOMContentLoaded", () => {
         shareProduct(actionTarget.dataset.key);
       }
 
+      if(action === "scroll-top"){
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      }
+
       if(action === "detail"){
+        if(actionTarget.closest("#pc-analyzer-modal")){
+          closePcAnalyzer();
+        }
         openProductDetails(actionTarget.dataset.key);
       }
 
       if(action === "faq-toggle"){
         toggleFaq(actionTarget);
-      }
-
-      if(action === "generate-affiliate-link"){
-        generateAffiliateLink();
-      }
-
-      if(action === "lookup-affiliate-link"){
-        lookupAffiliateLink();
-      }
-
-      if(action === "copy-affiliate-link"){
-        copyAffiliateLink();
       }
 
       if(action === "scroll-products"){
@@ -2115,15 +3252,53 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      if(action === "scroll-bundle"){
-        document.querySelector(".bundle-card")?.scrollIntoView({
+      if(action === "scroll-custom-os"){
+        document.getElementById("customOsDrop")?.scrollIntoView({
           behavior: "smooth",
           block: "center"
         });
       }
 
-      if(action === "scroll-affiliate-portal"){
-        document.getElementById("affiliatePortal")?.scrollIntoView({
+      if(action === "scroll-vouches"){
+        document.querySelector(".vouch-proof-hub")?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+
+      if(action === "run-pc-analyzer"){
+        runPcAnalyzer();
+      }
+
+      if(action === "analyzer-mode"){
+        analyzerMode = actionTarget.dataset.mode || "gaming";
+        updatePcAnalyzerModeButtons();
+        if(analyzerHasRun){
+          runPcAnalyzer();
+        }else{
+          renderAnalyzerReadyState();
+        }
+      }
+
+      if(action === "download-pc-report"){
+        downloadAnalyzerReport();
+      }
+
+      if(action === "copy-pc-report"){
+        copyAnalyzerReport();
+      }
+
+      if(action === "analyzer-tweak"){
+        const index = Number(actionTarget.dataset.tweakIndex || 0);
+        const tweak = currentAnalyzerResult?.tweaks?.[index];
+
+        if(tweak){
+          showToast(`<strong>${escapeHtml(tweak.title)}</strong><br>${escapeHtml(tweak.detail)}`);
+        }
+      }
+
+      if(action === "scroll-bundle"){
+        document.querySelector(".bundle-card")?.scrollIntoView({
           behavior: "smooth",
           block: "center"
         });
@@ -2159,7 +3334,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if(action === "copy-discord"){
-        copyDiscord("Ur_not_himfr");
+        openDiscordServer();
       }
 
       if(action === "legal"){
@@ -2184,7 +3359,6 @@ document.addEventListener("DOMContentLoaded", () => {
       openLegal("faq");
     });
 
-    document.getElementById("discordBtn")?.addEventListener("click", showDiscordToast);
     document.getElementById("shareBtn")?.addEventListener("click", shareApp);
 
     document.getElementById("installTestBtn")?.addEventListener("click", () => {
@@ -2204,6 +3378,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    document.getElementById("pc-analyzer-modal")?.addEventListener("click", event => {
+      if(event.target.id === "pc-analyzer-modal"){
+        closePcAnalyzer();
+      }
+    });
+
     document.getElementById("detail-modal")?.addEventListener("click", event => {
       if(event.target.id === "detail-modal"){
         closeProductDetails();
@@ -2213,6 +3393,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("modalClose")?.addEventListener("click", closeModal);
     document.getElementById("legalClose")?.addEventListener("click", closeLegal);
     document.getElementById("detailClose")?.addEventListener("click", closeProductDetails);
+    document.getElementById("pcAnalyzerClose")?.addEventListener("click", closePcAnalyzer);
 
     document.getElementById("detailAddBtn")?.addEventListener("click", event => {
       addToCart(event.currentTarget.dataset.key);
@@ -2237,6 +3418,7 @@ document.addEventListener("DOMContentLoaded", () => {
         closeModal();
         closeLegal();
         closeProductDetails();
+        closePcAnalyzer();
         closeCart();
         closeInstallPopup();
       }
@@ -2521,6 +3703,10 @@ document.addEventListener("DOMContentLoaded", () => {
         void button.offsetWidth;
         button.classList.add("dock-pulse");
 
+        if(button.matches("a[href]")){
+          return;
+        }
+
         if(action === "top"){
           window.scrollTo({
             top: 0,
@@ -2535,15 +3721,15 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         }
 
-        if(action === "bundle"){
-          document.querySelector(".bundle-card")?.scrollIntoView({
+        if(action === "custom-os"){
+          document.getElementById("customOsDrop")?.scrollIntoView({
             behavior: "smooth",
             block: "center"
           });
         }
 
-        if(action === "referrals"){
-          document.getElementById("affiliatePortal")?.scrollIntoView({
+        if(action === "bundle"){
+          document.querySelector(".bundle-card")?.scrollIntoView({
             behavior: "smooth",
             block: "center"
           });
@@ -2574,6 +3760,12 @@ document.addEventListener("DOMContentLoaded", () => {
         { label: "Macro Count", value: 98 },
         { label: "Keybind Setup", value: 99 },
         { label: "Speed & Latency", value: 99 }
+      ],
+      custom_os: [
+        { label: "Smart Scan", value: 96 },
+        { label: "Safe Defaults", value: 98 },
+        { label: "Game Readiness", value: 94 },
+        { label: "Update Support", value: 95 }
       ],
       fps: [
         { label: "Game Smoothness", value: 92 },
@@ -2713,7 +3905,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ".section-head",
       ".product-card",
       ".bundle-card",
-      ".affiliate-portal-card",
       ".proof-card",
       ".trust-metric",
       ".vouch-card",
@@ -2751,6 +3942,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let currentPreviewIndex = 0;
   let currentPreviewItems = [];
+  let previewReelTimer = null;
+
+  function stopPreviewPhotoReel(){
+    if(previewReelTimer){
+      clearInterval(previewReelTimer);
+      previewReelTimer = null;
+    }
+
+    document.getElementById("media-modal")?.classList.remove("preview-reel-open");
+  }
+
+  function startPreviewPhotoReel(){
+    stopPreviewPhotoReel();
+
+    const modal = document.getElementById("media-modal");
+    const imageItems = currentPreviewItems.filter(item => item.type !== "video");
+
+    if(!modal || imageItems.length < 2) return;
+
+    modal.classList.add("preview-reel-open");
+
+    previewReelTimer = setInterval(() => {
+      if(!modal.classList.contains("show")){
+        stopPreviewPhotoReel();
+        return;
+      }
+
+      openPreviewItemByIndex(currentPreviewIndex + 1);
+    }, 2600);
+  }
 
   function getProductMediaItems(product){
     if(!product) return [];
@@ -2817,6 +4038,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentPreviewIndex = startIndex >= 0 ? startIndex : 0;
 
     openPreviewItemByIndex(currentPreviewIndex);
+    startPreviewPhotoReel();
   }
 
   function openPreviewItemByIndex(index){
@@ -2992,24 +4214,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function initStore(){
     applyPerformanceMode();
-    saveReferralFromUrl();
-    setupAffiliateDebug();
-    showReferralBanner();
-    hydrateReferralDisplayFromApi();
     await loadProductsFromApi();
+    syncReferralFromUrl();
+    setupAffiliateNav();
+    renderSupportingCreatorBanner();
+    renderAutoKeyGuide();
 
     renderProducts();
     renderBundleFromAdmin();
     preloadPreviewVideos();
     updateCartUI();
     setupEvents();
-    setupAffiliatePortal();
     setupProCommandDock();
     setupProductPowerMeters();
     setupProductCardPolish();
     setupTapParticles();
     setupScrollRevealGlow();
     setupPreviewUpgrade();
+    setupAffiliateGenerator();
+    setupLicenseLookup();
 
     createGalaxy("galaxyCanvas", {
       count: document.body.classList.contains("performance-lite") ? 58 : 118,
@@ -3036,6 +4259,15 @@ document.addEventListener("DOMContentLoaded", () => {
       speed: .19,
       glow: 15
     });
+
+    if(document.body.classList.contains("emx-subpage-analyzer")){
+      renderAnalyzerReadyState();
+      forceClearIntroOverlays();
+    }else if(document.body.className.includes("emx-subpage-")){
+      forceClearIntroOverlays();
+    }else{
+      scheduleAutoIntro();
+    }
   }
 
   initStore();
