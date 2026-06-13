@@ -6,7 +6,7 @@ const PRODUCTS_KEY = "emx:products:v1";
 const CHECKOUT_BASE = "https://payhip.com/buy";
 const DEFAULT_BUNDLE_ITEMS = {
   os_macro_bundle: ["custom_os", "macro"],
-  bundle: ["optimizer", "macro", "fps"]
+  bundle: ["windows_tweak_dashboard", "macro", "fps"]
 };
 
 function sendJson(res, response, status = 200) {

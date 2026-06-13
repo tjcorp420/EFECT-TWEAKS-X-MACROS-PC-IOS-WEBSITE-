@@ -72,9 +72,47 @@ document.addEventListener("visibilitychange", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-      let PRODUCTS = window.EMX_PRODUCTS || [];
+      let PRODUCTS = normalizeProductCatalog(window.EMX_PRODUCTS || []);
       const DISCORD_INVITE_URL = "https://discord.gg/puaZFNfNKW";
       const LICENSE_CLAIM_URL = "./license.html";
+
+      function normalizeProductCatalog(products) {
+        return (Array.isArray(products) ? products : [])
+          .filter(product => product?.id !== "optimizer" && product?.key !== "KQLzN")
+          .map(product => {
+            if(product?.id !== "bundle") return product;
+
+            const bundleItems = (Array.isArray(product.bundleItems) && product.bundleItems.length
+              ? product.bundleItems
+              : ["windows_tweak_dashboard", "macro", "fps"])
+              .map(item => item === "optimizer" || item === "KQLzN" ? "windows_tweak_dashboard" : item);
+
+            const gallery = (Array.isArray(product.gallery) && product.gallery.length
+              ? product.gallery
+              : [
+                "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
+                "./macro.png",
+                "./fps.png"
+              ])
+              .map(src => String(src || "").includes("optimizer")
+                ? "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png"
+                : src);
+
+            return {
+              ...product,
+              bundleItems,
+              gallery,
+              description: String(product.description || "")
+                .replace(/the optimizer/gi, "the Windows Tweak Dashboard")
+                .replace(/optimizer/gi, "Windows Tweak Dashboard"),
+              features: Array.isArray(product.features)
+                ? product.features.map(feature => String(feature || "")
+                    .replace(/Zero Delay Optimizer for cleanup, presets, and system responsiveness/gi, "EMX Windows Tweak Dashboard for safe reversible tuning, profiles, backups, and restore tools")
+                    .replace(/optimizer/gi, "Windows Tweak Dashboard"))
+                : product.features
+            };
+          });
+      }
       
       async function loadProductsFromApi() {
     try{
@@ -114,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
           liveById.delete(localProduct.id);
         });
 
-        PRODUCTS = mergedProducts.concat([...liveById.values()]);
+        PRODUCTS = normalizeProductCatalog(mergedProducts.concat([...liveById.values()]));
       }
     }catch(error){
       console.warn("Using local products.js fallback:", error);
@@ -141,27 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
         "Designed for broad Intel, AMD, NVIDIA, and Radeon gaming PCs",
         "Keeps Defender, Windows Update, audio, Bluetooth, networking, printer, and Xbox/controller compatibility paths",
         "Does not edit game files, inject DLLs, spoof HWIDs, install kernel drivers, or bypass anti-cheat"
-      ]
-    },
-    optimizer: {
-      includes: [
-        "Windows cleanup checklist and optimization path",
-        "Startup and background load reduction steps",
-        "Process priority and responsiveness presets",
-        "Network and system behavior tuning guidance"
-      ],
-      setup: [
-        "Purchase through secure Payhip checkout",
-        "Claim or recover your EMX license from the License Claim page after Payhip confirms the order",
-        "Download or follow Payhip delivery instructions",
-        "Apply presets carefully and restart when needed",
-        "Contact EFECT Discord support for access help"
-      ],
-      compatibility: [
-        "Windows 10 / Windows 11 focused",
-        "Best for gaming PCs and laptops",
-        "Results depend on hardware and current settings",
-        "Use responsibly and follow platform rules"
       ]
     },
     macro: {
@@ -291,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     bundle: {
       includes: [
-        "Zero Delay Optimizer access",
+        "EMX Windows Tweak Dashboard access",
         "FPS Booster access",
         "Keyboard Macro dashboard access",
         "Priority setup support path"
@@ -361,8 +378,8 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
 
         <div class="faq-item">
-          <h3>What does the optimizer do?</h3>
-          <p>The optimizer focuses on Windows cleanup, background load reduction, startup behavior, priority presets, and performance-focused settings for smoother system responsiveness.</p>
+          <h3>What does the Windows Tweak Dashboard do?</h3>
+          <p>The Windows Tweak Dashboard focuses on safe reversible tuning, low-latency settings, startup cleanup, game session preparation, FPS reporting, network checks, guided profiles, backups, and restore tools.</p>
         </div>
 
         <div class="faq-item">
@@ -446,7 +463,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const ACTIVITY_TOASTS = [
-    "<strong>Live Store Activity</strong><br>Zero Delay Optimizer is one of the most viewed packs today.",
+    "<strong>Live Store Activity</strong><br>EMX Windows Tweak Dashboard is one of the most viewed packs today.",
     "<strong>Popular Pick</strong><br>FPS Booster is trending with performance-focused setups.",
     "<strong>EMX Notice</strong><br>Keyboard Macro profile pack is getting attention right now.",
     "<strong>Secure Checkout Ready</strong><br>Buy Now and cart checkout are connected to Payhip.",
@@ -1035,7 +1052,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const BUNDLE_INCLUDED_PRODUCT_IDS = {
     os_macro_bundle: ["custom_os", "macro"],
-    bundle: ["optimizer", "macro", "fps"]
+    bundle: ["windows_tweak_dashboard", "macro", "fps"]
   };
 
   function isBundleProduct(product){
@@ -1072,7 +1089,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function getFullPackProducts(){
     const bundle = getBundleProduct();
     const configuredIds = getBundleIncludedProductIds(bundle);
-    const fullPackIds = new Set(configuredIds.length ? configuredIds : ["optimizer", "macro", "fps"]);
+    const fullPackIds = new Set(configuredIds.length ? configuredIds : ["windows_tweak_dashboard", "macro", "fps"]);
     return PRODUCTS.filter(product => fullPackIds.has(product.id) && product.visible !== false);
   }
 
@@ -1559,8 +1576,8 @@ document.addEventListener("DOMContentLoaded", () => {
       `).join("") + `
         <div class="cart-upgrade-note ${showBundleUpgrade ? "" : "is-hidden"}">
           <div>
-            <strong>Want the optimizer pack?</strong>
-            <span>Add Optimizer, FPS Booster, and KBM Macro in one tap.</span>
+            <strong>Want the full tweaks pack?</strong>
+            <span>Add Windows Tweak Dashboard, FPS Booster, and KBM Macro in one tap.</span>
           </div>
           <button class="play-click" type="button" data-action="cart-bundle">Add Bundle</button>
         </div>
@@ -3791,10 +3808,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setupProductPowerMeters(){
     const productStats = {
-      optimizer: [
-        { label: "Setup Speed", value: 90 },
-        { label: "System Cleanup", value: 95 },
-        { label: "Responsiveness", value: 97 },
+      windows_tweak_dashboard: [
+        { label: "Safe Reversibility", value: 96 },
+        { label: "Game Readiness", value: 94 },
+        { label: "Restore Tools", value: 97 },
         { label: "Ease Of Use", value: 93 }
       ],
       macro: [

@@ -68,28 +68,6 @@ window.EMX_PRODUCTS = [
     visible: true
   },
   {
-    id: "optimizer",
-    key: "KQLzN",
-    productUrl: "https://payhip.com/b/KQLzN",
-    title: "EMX Ultimate Tweak Utility",
-    eyebrow: "Zero Delay Premium",
-    price: 25.00,
-    oldPrice: 50.00,
-    image: "./optimizer.png",
-    gallery: ["./optimizer.png", "./optimizer-report-before.png", "./optimizer-report-after.png"],
-    previewType: "image",
-    previewSrc: "./optimizer.png",
-    fallbackPreview: "./optimizer.png",
-    description: "Windows optimization pack focused on reducing background load, cleaning startup behavior, tightening process priority, and applying performance presets for a smoother low-latency desktop and gaming setup. After checkout, buyers claim their EMX license with their Payhip receipt details.",
-    features: [
-      "Startup and background load cleanup",
-      "Process priority and service presets",
-      "Network and responsiveness tuning",
-      "Step-by-step performance setup"
-    ],
-    visible: true
-  },
-  {
     id: "macro",
     key: "0TOjr",
     productUrl: "https://payhip.com/b/0TOjr",
@@ -230,13 +208,17 @@ window.EMX_PRODUCTS = [
     price: 59.99,
     oldPrice: 109.99,
     image: "./emx-logo.png",
-    gallery: ["./macro.png", "./optimizer.png", "./fps.png"],
+    gallery: [
+      "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
+      "./macro.png",
+      "./fps.png"
+    ],
     previewType: "image",
     previewSrc: "./emx-logo.png",
     fallbackPreview: "./emx-logo.png",
-    description: "Built for buyers who want the full EMX setup in one pack with the optimizer, FPS booster, and EFECT Pro Keyboard Macro dashboard. Buyers claim or recover their EMX license from the Payhip receipt after checkout.",
+    description: "Built for buyers who want the full EMX setup in one pack with the Windows Tweak Dashboard, FPS booster, and EFECT Pro Keyboard Macro dashboard. Buyers claim or recover their EMX license from the Payhip receipt after checkout.",
     features: [
-      "Zero Delay Optimizer for cleanup, presets, and system responsiveness",
+      "EMX Windows Tweak Dashboard for safe reversible tuning, profiles, backups, and restore tools",
       "FPS Booster for smoother gameplay profile setup and background reduction",
       "EFECT Pro Keyboard Macro dashboard with saved bind controls",
       "Priority support guidance"
