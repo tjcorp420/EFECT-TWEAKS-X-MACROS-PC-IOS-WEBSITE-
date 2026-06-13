@@ -34,6 +34,40 @@ window.EMX_PRODUCTS = [
     visible: true
   },
   {
+    id: "windows_tweak_dashboard",
+    key: "TJFav",
+    productUrl: "https://payhip.com/b/TJFav",
+    title: "EMX Windows Tweak Dashboard",
+    eyebrow: "Safe Reversible Windows Tweaks",
+    price: 20.99,
+    oldPrice: 0,
+    image: "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
+    gallery: [
+      "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
+      "./app-screenshots/emx-windows-tweak-dashboard-02-low-latency.png",
+      "./app-screenshots/emx-windows-tweak-dashboard-03-performance-tools.png",
+      "./app-screenshots/emx-windows-tweak-dashboard-04-game-session.png",
+      "./app-screenshots/emx-windows-tweak-dashboard-05-qol.png",
+      "./app-screenshots/emx-windows-tweak-dashboard-06-startup.png",
+      "./app-screenshots/emx-windows-tweak-dashboard-07-profiles.png",
+      "./app-screenshots/emx-windows-tweak-dashboard-08-backups.png",
+      "./app-screenshots/emx-windows-tweak-dashboard-09-logs.png"
+    ],
+    previewType: "image",
+    previewSrc: "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
+    fallbackPreview: "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
+    description: "EMX Windows Tweak Dashboard is a safe, reversible Windows optimization toolkit for smoother gaming, cleaner startup, low-latency tuning, Game Session Mode, before/after FPS reports, network checks, guided profiles, backups, and restore tools.",
+    features: [
+      "Safe reversible tweak dashboard with backups before changes",
+      "Low-latency, power plan, timer, startup, and network tuning tools",
+      "Game Session Mode plus before/after FPS benchmark reporting",
+      "Guided profiles, Undo Center, action logs, and one-PC license activation"
+    ],
+    featured: true,
+    saleBadge: "NEW TWEAKS",
+    visible: true
+  },
+  {
     id: "optimizer",
     key: "KQLzN",
     productUrl: "https://payhip.com/b/KQLzN",

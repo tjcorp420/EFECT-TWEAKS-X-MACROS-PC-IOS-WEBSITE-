@@ -226,6 +226,27 @@ document.addEventListener("DOMContentLoaded", () => {
         "Use responsibly and follow platform rules"
       ]
     },
+    windows_tweak_dashboard: {
+      includes: [
+        "EMX Windows Tweak Dashboard setup installer",
+        "Start Here guide, Fortnite settings cheat sheet, wallpapers, and support links",
+        "Low-latency, power, timer, startup, network, profile, backup, and log tabs",
+        "Payhip license activation for one PC"
+      ],
+      setup: [
+        "Purchase through secure Payhip checkout",
+        "Download and unzip the EMX Windows Tweak Dashboard package",
+        "Run EMX-Windows-Tweak-Dashboard-Setup-0.3.0.exe",
+        "Open EMX from the desktop and activate with your license key",
+        "Start with the Profiles tab and apply Fortnite Safe Starter before testing more advanced tools"
+      ],
+      compatibility: [
+        "Windows desktop gaming PCs",
+        "Creates backups before changes and includes restore tools",
+        "Does not modify game files, bypass anti-cheat, or guarantee specific FPS or ping results",
+        "Results vary by hardware, drivers, Windows state, network, and game settings"
+      ]
+    },
     fps: {
       includes: [
         "Game-focused performance preset guidance",
@@ -1152,7 +1173,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <div class="price-row">
             <span class="current-price">${money(product.price)}</span>
-            <span class="old-price">${money(product.oldPrice)}</span>
+            ${oldPrice > price && oldPrice > 0 ? `<span class="old-price">${money(product.oldPrice)}</span>` : ""}
             <span class="discount-badge">${discount > 0 ? discount + "% OFF" : "DEAL"}</span>
           </div>
 
