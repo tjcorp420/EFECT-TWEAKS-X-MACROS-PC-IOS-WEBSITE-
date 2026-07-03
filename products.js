@@ -71,8 +71,8 @@ window.EMX_PRODUCTS = [
     id: "macro",
     key: "0TOjr",
     productUrl: "https://payhip.com/b/0TOjr",
-    title: "EMX Premium KBM Macro",
-    eyebrow: "Best Seller",
+    title: "EMX Premium KBM Macro (Retired)",
+    eyebrow: "Retired Product",
     price: 15.00,
     oldPrice: 35.00,
     image: "./macro.png",
@@ -87,14 +87,16 @@ window.EMX_PRODUCTS = [
       "Adjustable delay settings",
       "Low-latency timing controls"
     ],
-    visible: true
+    homepage: false,
+    visible: false,
+    retired: true
   },
   {
     id: "controller_macro",
     key: "ArZlF",
     productUrl: "https://payhip.com/b/ArZlF",
-    title: "EMX Elite Controller Macro",
-    eyebrow: "Native Controller Macro",
+    title: "EMX Elite Controller Macro (Retired)",
+    eyebrow: "Retired Product",
     price: 29.99,
     oldPrice: 49.99,
     image: "./controller-macro.png",
@@ -117,7 +119,9 @@ window.EMX_PRODUCTS = [
       "No DS4Windows requirement"
     ],
     saleBadge: "New Controller Drop",
-    visible: true
+    homepage: false,
+    visible: false,
+    retired: true
   },
   {
     id: "volt",
@@ -174,8 +178,8 @@ window.EMX_PRODUCTS = [
     id: "os_macro_bundle",
     key: "By7FV",
     productUrl: "https://payhip.com/b/By7FV",
-    title: "EMX Custom OS + KBM Macro Bundle",
-    eyebrow: "OS + Macro Bundle",
+    title: "EMX Custom OS + KBM Macro Bundle (Retired)",
+    eyebrow: "Retired Bundle",
     price: 39.99,
     oldPrice: 84.99,
     image: "./emx-os-macro-bundle.png",
@@ -197,7 +201,8 @@ window.EMX_PRODUCTS = [
       "Discord setup support for OS install and macro access"
     ],
     homepage: false,
-    visible: true
+    visible: false,
+    retired: true
   },
   {
     id: "bundle",
@@ -223,6 +228,8 @@ window.EMX_PRODUCTS = [
       "EFECT Pro Keyboard Macro dashboard with saved bind controls",
       "Priority support guidance"
     ],
-    visible: false
+    homepage: false,
+    visible: false,
+    retired: true
   }
 ];

@@ -8,6 +8,7 @@ const DEFAULT_BUNDLE_ITEMS = {
   os_macro_bundle: ["custom_os", "macro"],
   bundle: ["windows_tweak_dashboard", "macro", "fps"]
 };
+const RETIRED_PRODUCT_IDS = new Set(["macro", "controller_macro", "os_macro_bundle", "bundle"]);
 
 function sendJson(res, response, status = 200) {
   res.statusCode = status;
@@ -207,7 +208,9 @@ async function loadProducts() {
     products = loadSeedProducts();
   }
 
-  return products.map(normalizeProduct);
+  return products
+    .map(normalizeProduct)
+    .filter(product => !RETIRED_PRODUCT_IDS.has(product.id));
 }
 
 async function saveProducts(products) {
@@ -217,7 +220,8 @@ async function saveProducts(products) {
 
   const normalized = products
     .slice(0, 80)
-    .map((product, index) => normalizeProduct(product || {}, index));
+    .map((product, index) => normalizeProduct(product || {}, index))
+    .filter(product => !RETIRED_PRODUCT_IDS.has(product.id));
 
   const seen = new Set();
   for (const product of normalized) {

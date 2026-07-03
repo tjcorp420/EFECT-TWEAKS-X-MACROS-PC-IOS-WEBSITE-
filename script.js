@@ -1046,13 +1046,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getBundleProduct(){
-    return PRODUCTS.find(product => product.id === "bundle")
-      || PRODUCTS.find(product => product.type === "bundle" && product.page === "bundle");
+    return PRODUCTS.find(product => product.id === "bundle" && product.visible !== false)
+      || PRODUCTS.find(product => product.type === "bundle" && product.page === "bundle" && product.visible !== false);
   }
 
   const BUNDLE_INCLUDED_PRODUCT_IDS = {
-    os_macro_bundle: ["custom_os", "macro"],
-    bundle: ["windows_tweak_dashboard", "macro", "fps"]
+    os_macro_bundle: ["custom_os", "volt"],
+    bundle: ["windows_tweak_dashboard", "volt", "fps"]
   };
 
   function isBundleProduct(product){
@@ -1089,7 +1089,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function getFullPackProducts(){
     const bundle = getBundleProduct();
     const configuredIds = getBundleIncludedProductIds(bundle);
-    const fullPackIds = new Set(configuredIds.length ? configuredIds : ["windows_tweak_dashboard", "macro", "fps"]);
+    const fullPackIds = new Set(configuredIds.length ? configuredIds : ["windows_tweak_dashboard", "volt", "fps"]);
     return PRODUCTS.filter(product => fullPackIds.has(product.id) && product.visible !== false);
   }
 
@@ -1131,7 +1131,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const productsForPage = document.body.classList.contains("emx-subpage-macros")
-      ? homeProducts.filter(product => product.id === "macro" || product.id === "controller_macro" || product.id === "volt")
+      ? homeProducts.filter(product => product.id === "volt")
       : homeProducts;
 
     const productHeading = document.getElementById("productGrid")?.previousElementSibling?.previousElementSibling;
@@ -1140,9 +1140,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const title = productHeading.querySelector(".section-title");
       const copy = productHeading.querySelector(".section-copy");
 
-      if(kicker) kicker.textContent = "KBM Macro Pack";
-      if(title) title.innerHTML = "EMX <span>Premium Macros</span>";
-      if(copy) copy.textContent = "Go straight to the EMX KBM and Controller Macro lineup with previews, details, checkout, and setup support.";
+      if(kicker) kicker.textContent = "VOLT Macro";
+      if(title) title.innerHTML = "EMX <span>VOLT MACRO</span>";
+      if(copy) copy.textContent = "Go straight to the current EMX VOLT macro with previews, checkout, Xbox support notes, and setup help.";
     }
 
     productGrid.innerHTML = productsForPage.map(product => {
@@ -1548,7 +1548,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .filter(Boolean);
     const hasBundleInCart = items.some(isBundleProduct);
     const hasFullPackInCart = getFullPackProducts().every(product => cart.includes(product.key));
-    const showBundleUpgrade = items.length > 0 && !hasBundleInCart && !hasFullPackInCart;
+    const showBundleUpgrade = Boolean(getBundleProduct()) && items.length > 0 && !hasBundleInCart && !hasFullPackInCart;
 
     cartCount.textContent = items.length;
     cartCount.classList.toggle("show", items.length > 0);
@@ -1577,7 +1577,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="cart-upgrade-note ${showBundleUpgrade ? "" : "is-hidden"}">
           <div>
             <strong>Want the full tweaks pack?</strong>
-            <span>Add Windows Tweak Dashboard, FPS Booster, and KBM Macro in one tap.</span>
+            <span>Add the live full-pack checkout in one tap.</span>
           </div>
           <button class="play-click" type="button" data-action="cart-bundle">Add Bundle</button>
         </div>
@@ -3054,15 +3054,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if(bundleBtn){
       bundleBtn.addEventListener("click", () => {
-        window.location.href = "./bundle.html";
+        window.location.href = "./products.html#product-volt";
       });
     }
   }
 
   function renderBundleFromAdmin(){
     const bundle = getBundleProduct();
+    const bundleSection = document.querySelector(".bundle-premium-section");
 
-    if(!bundle) return;
+    if(!bundle){
+      if(bundleSection) bundleSection.hidden = true;
+      return;
+    }
+
+    if(bundleSection) bundleSection.hidden = false;
 
     const bundleCard = document.querySelector(".bundle-card");
     if(!bundleCard) return;
@@ -3357,9 +3363,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if(action === "scroll-bundle"){
-        document.querySelector(".bundle-card")?.scrollIntoView({
+        const bundleTarget = document.querySelector(".bundle-card");
+        const fallbackTarget = document.getElementById("productGrid");
+        (bundleTarget || fallbackTarget)?.scrollIntoView({
           behavior: "smooth",
-          block: "center"
+          block: bundleTarget ? "center" : "start"
         });
       }
 
@@ -3788,9 +3796,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if(action === "bundle"){
-          document.querySelector(".bundle-card")?.scrollIntoView({
+          const bundleTarget = document.querySelector(".bundle-card");
+          const fallbackTarget = document.getElementById("productGrid");
+          (bundleTarget || fallbackTarget)?.scrollIntoView({
             behavior: "smooth",
-            block: "center"
+            block: bundleTarget ? "center" : "start"
           });
         }
 
@@ -3819,6 +3829,12 @@ document.addEventListener("DOMContentLoaded", () => {
         { label: "Macro Count", value: 98 },
         { label: "Keybind Setup", value: 99 },
         { label: "Speed & Latency", value: 99 }
+      ],
+      volt: [
+        { label: "Rust Runtime", value: 97 },
+        { label: "Xbox Support", value: 95 },
+        { label: "Updater Ready", value: 98 },
+        { label: "Timing Control", value: 96 }
       ],
       custom_os: [
         { label: "Smart Scan", value: 96 },
