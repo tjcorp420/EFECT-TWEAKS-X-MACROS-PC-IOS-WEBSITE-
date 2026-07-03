@@ -197,6 +197,7 @@ function normalizeProduct(product, index) {
 
 async function loadProducts() {
   let products = null;
+  const seedProducts = loadSeedProducts();
 
   try {
     products = await kvGet(PRODUCTS_KEY);
@@ -205,7 +206,11 @@ async function loadProducts() {
   }
 
   if (!Array.isArray(products) || products.length === 0) {
-    products = loadSeedProducts();
+    products = seedProducts;
+  } else {
+    const productIds = new Set(products.map(product => cleanId(product.id, "")));
+    const missingSeedProducts = seedProducts.filter(product => !productIds.has(cleanId(product.id, "")));
+    products = [...products, ...missingSeedProducts];
   }
 
   return products
