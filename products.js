@@ -31,6 +31,7 @@ window.EMX_PRODUCTS = [
     featured: true,
     bestSeller: true,
     saleBadge: "New OS Drop",
+    tags: ["Windows 11", "Smart profiles", "Restore-first"],
     visible: true
   },
   {
@@ -65,6 +66,7 @@ window.EMX_PRODUCTS = [
     ],
     featured: true,
     saleBadge: "NEW TWEAKS",
+    tags: ["Reversible", "Low latency", "Backups"],
     visible: true
   },
   {
@@ -150,6 +152,8 @@ window.EMX_PRODUCTS = [
     ],
     featured: true,
     saleBadge: "NEW",
+    tags: ["Macro", "Rust runtime", "Saved binds"],
+    homepage: false,
     visible: true
   },
   {
@@ -172,37 +176,40 @@ window.EMX_PRODUCTS = [
       "Display responsiveness and smoothness optimization presets",
       "Simple performance setup flow"
     ],
+    tags: ["Gaming", "Cleanup", "Smoothness"],
     visible: true
   },
   {
     id: "os_macro_bundle",
     key: "By7FV",
     productUrl: "https://payhip.com/b/By7FV",
-    title: "EMX Custom OS + KBM Macro Bundle (Retired)",
-    eyebrow: "Retired Bundle",
+    title: "EMX Windows Tweaks + VOLT Bundle",
+    eyebrow: "Current Bundle Deal",
     price: 39.99,
     oldPrice: 84.99,
-    image: "./emx-os-macro-bundle.png",
+    image: "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
     gallery: [
-      "./emx-custom-os-hero.png",
-      "./emx-smart-profile.png",
-      "./macro.png",
-      "./macro2.png",
-      "./macro3.png"
+      "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
+      "./app-screenshots/emx-windows-tweak-dashboard-02-low-latency.png",
+      "./app-screenshots/emx-volt-dashboard-real.png",
+      "./app-screenshots/emx-volt-macros-real.png",
+      "./app-screenshots/emx-volt-binds-real.png"
     ],
     previewType: "image",
-    previewSrc: "./emx-os-macro-bundle.png",
-    fallbackPreview: "./emx-os-macro-bundle.png",
-    description: "A two-product EMX bundle with the Windows 11 Custom OS package and the EMX Premium KBM Macro dashboard in one checkout. One shared EMX license can be claimed with the Payhip email and receipt transaction ID.",
+    previewSrc: "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
+    fallbackPreview: "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
+    description: "A current two-product EMX bundle for the Windows Tweak Dashboard and EMX VOLT MACRO. One Payhip checkout keeps the performance tools and macro setup together with a shared EMX license claim path.",
     features: [
-      "EMX Custom OS installer, Smart profiles, updater, logs, and restore-first safety tools",
-      "EMX Premium KBM Macro dashboard with saved bind profiles and delay controls",
+      "EMX Windows Tweak Dashboard with reversible tuning, profiles, backups, and restore tools",
+      "EMX VOLT MACRO with saved bind profiles, timing controls, and updater support",
       "One shared EMX license claim flow for both products",
       "Discord setup support for OS install and macro access"
     ],
+    tags: ["Bundle", "Windows tweaks", "VOLT macro"],
+    type: "bundle",
+    page: "bundle",
     homepage: false,
-    visible: false,
-    retired: true
+    visible: true
   },
   {
     id: "bundle",
