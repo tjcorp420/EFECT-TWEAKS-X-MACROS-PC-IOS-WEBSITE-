@@ -1051,7 +1051,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const BUNDLE_INCLUDED_PRODUCT_IDS = {
-    os_macro_bundle: ["custom_os", "volt"],
+    os_macro_bundle: ["windows_tweak_dashboard", "volt"],
     bundle: ["windows_tweak_dashboard", "volt", "fps"]
   };
 
@@ -1103,10 +1103,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getStoreProducts(){
     return PRODUCTS.filter(product =>
-      product.id !== "bundle" &&
+      !isBundleProduct(product) &&
       product.page !== "hidden" &&
       product.visible !== false
     );
+  }
+
+  const PRODUCT_FACTS = {
+    custom_os: {
+      category: "tweaks",
+      facts: [["Platform", "Windows 11"], ["Format", "Digital package"], ["Setup", "Guided profile"], ["Support", "Updates + Discord"]]
+    },
+    windows_tweak_dashboard: {
+      category: "tweaks",
+      facts: [["Platform", "Windows PC"], ["Changes", "Reversible"], ["Recovery", "Backup + restore"], ["Delivery", "Payhip download"]]
+    },
+    volt: {
+      category: "macro",
+      facts: [["Platform", "Windows desktop"], ["Engine", "Tauri + Rust"], ["License", "Lifetime / one PC"], ["Updates", "Built-in updater"]]
+    },
+    fps: {
+      category: "performance",
+      facts: [["Platform", "Windows PC"], ["Focus", "System cleanup"], ["Access", "Receipt claim"], ["Setup", "Guided support"]]
+    }
+  };
+
+  function getProductCategory(product){
+    return PRODUCT_FACTS[product?.id]?.category || "other";
+  }
+
+  function getProductFacts(product){
+    return PRODUCT_FACTS[product?.id]?.facts || [["Platform", "Windows PC"], ["Delivery", "Digital download"], ["Access", "One-time purchase"], ["Support", "EMX Discord"]];
   }
 
   function getHomeProducts(){
@@ -1116,7 +1143,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderProducts(){
     if(!productGrid) return;
 
-    const homeProducts = getHomeProducts();
+    const homeProducts = document.body.classList.contains("emx-subpage-products")
+      ? getStoreProducts()
+      : getHomeProducts();
 
     if(!homeProducts.length){
       productGrid.innerHTML = `
@@ -1159,7 +1188,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ].filter(Boolean);
 
       return `
-        <article id="product-${escapeHtml(product.id)}" class="product-card premium-product-card ${product.featured ? "is-featured-product" : ""}" data-product-id="${escapeHtml(product.id)}" data-search="${escapeHtml(`${product.title} ${product.description} ${product.eyebrow} ${premiumBadges.join(" ")} ${(product.tags || []).join(" ")}`.toLowerCase())}">
+        <article id="product-${escapeHtml(product.id)}" class="product-card premium-product-card ${product.featured ? "is-featured-product" : ""}" data-product-id="${escapeHtml(product.id)}" data-category="${escapeHtml(getProductCategory(product))}" data-search="${escapeHtml(`${product.title} ${product.description} ${product.eyebrow} ${premiumBadges.join(" ")} ${(product.tags || []).join(" ")}`.toLowerCase())}">
           <div class="product-premium-rail" aria-hidden="true"></div>
           ${premiumBadges.length ? `
             <div class="product-admin-badges">
@@ -1214,6 +1243,18 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
 
           <p class="description-block">${escapeHtml(product.description)}</p>
+
+          ${Array.isArray(product.tags) && product.tags.length ? `
+            <div class="product-tags" aria-label="${escapeHtml(product.title)} tags">
+              ${product.tags.map(tag => `<span>${escapeHtml(tag)}</span>`).join("")}
+            </div>
+          ` : ""}
+
+          <div class="product-fact-grid" aria-label="${escapeHtml(product.title)} technical facts">
+            ${getProductFacts(product).map(([label, value]) => `
+              <span><small>${escapeHtml(label)}</small><strong>${escapeHtml(value)}</strong></span>
+            `).join("")}
+          </div>
 
           <div class="preview-wrap">
             <button
@@ -2854,13 +2895,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  let catalogCurrentFilter = "all";
+
+  function updateCatalogVisibleCount(){
+    const output = document.getElementById("catalogVisibleCount");
+    if(!output) return;
+    output.textContent = String([...document.querySelectorAll("#productGrid .product-card")].filter(card => !card.classList.contains("hidden")).length);
+  }
+
   function filterProducts(value){
     const query = value.trim().toLowerCase();
 
     document.querySelectorAll(".product-card").forEach(card => {
       const haystack = card.dataset.search || "";
-      card.classList.toggle("hidden", Boolean(query) && !haystack.includes(query));
+      const matchesQuery = !query || haystack.includes(query);
+      const matchesCategory = catalogCurrentFilter === "all" || card.dataset.category === catalogCurrentFilter;
+      card.classList.toggle("hidden", !(matchesQuery && matchesCategory));
     });
+
+    updateCatalogVisibleCount();
+  }
+
+  function setupCatalogFilters(){
+    const controls = [...document.querySelectorAll("[data-catalog-filter]")];
+    if(!controls.length){
+      updateCatalogVisibleCount();
+      return;
+    }
+
+    controls.forEach(control => {
+      control.addEventListener("click", () => {
+        catalogCurrentFilter = control.dataset.catalogFilter || "all";
+        controls.forEach(item => {
+          const isActive = item === control;
+          item.classList.toggle("is-active", isActive);
+          item.setAttribute("aria-pressed", String(isActive));
+        });
+        const searchInput = document.getElementById("searchInput");
+        filterProducts(searchInput?.value || "");
+      });
+    });
+
+    updateCatalogVisibleCount();
   }
 
   function playClickSound(){
@@ -3825,7 +3901,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { label: "Ease Of Use", value: 93 }
       ],
       macro: [
-        { label: "Undetectable", value: 100 },
+        { label: "Profile Controls", value: 96 },
         { label: "Macro Count", value: 98 },
         { label: "Keybind Setup", value: 99 },
         { label: "Speed & Latency", value: 99 }
@@ -4296,6 +4372,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderAutoKeyGuide();
 
     renderProducts();
+    setupCatalogFilters();
     renderBundleFromAdmin();
     preloadPreviewVideos();
     updateCartUI();

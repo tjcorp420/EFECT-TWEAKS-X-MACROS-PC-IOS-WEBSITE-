@@ -93,7 +93,10 @@
   html.emx-ready #instantBlackout {
     opacity: 0;
   }
-</style>
+  </style>
+  <link rel="stylesheet" href="products-clean.css">
+  <link rel="stylesheet" href="emx-flow.css">
+  <script defer src="emx-flow.js"></script>
 
 <script>
   document.documentElement.classList.add("emx-preboot");
@@ -187,8 +190,33 @@
     </div>
   </section>
 
-  <!-- HEADER -->
-  <header>
+  <header class="clean-store-nav">
+    <a class="clean-brand" href="./index.html" aria-label="EMX Tweaks home">
+      <span class="clean-brand-mark"><img src="emx-logo.png" alt=""></span>
+      <span>EMX <b>TWEAKS</b></span>
+    </a>
+
+    <nav class="clean-store-links" aria-label="Store navigation">
+      <a href="./index.html">Home</a>
+      <a class="is-active" href="./products.html">Products</a>
+      <a href="./bundles.html">Bundles</a>
+      <a href="https://emx-macros.vercel.app/" target="_blank" rel="noopener noreferrer">Macros</a>
+      <a href="./index.html#free-tools">Free apps</a>
+      <a href="./aim-trainer.html">Aim trainer</a>
+      <a href="./license.html">Claim key</a>
+    </nav>
+
+    <div class="clean-store-actions">
+      <button class="clean-cart-button" id="cartToggle" type="button" aria-label="Open cart">
+        <span aria-hidden="true">Cart</span>
+        <span class="clean-cart-count" id="cartCount">0</span>
+      </button>
+      <a class="clean-discord-link" href="https://discord.gg/puaZFNfNKW" target="_blank" rel="noopener noreferrer"><i></i> Discord</a>
+    </div>
+  </header>
+
+  <!-- Legacy header stays in the document only for old script compatibility. -->
+  <header class="legacy-products-header" aria-hidden="true">
     <div class="header-left">
       <div class="header-logo-img-wrap">
         <img src="emx-logo.png" alt="EMX Logo" class="header-logo-img">
@@ -219,10 +247,10 @@
         <span class="header-action-label">Search</span>
       </button>
 
-      <button class="icon-btn play-click" id="cartToggle" type="button" aria-label="Cart" title="Cart">
+      <button class="icon-btn play-click" id="legacyCartToggle" type="button" aria-label="Cart" title="Cart">
         <span class="header-action-icon" aria-hidden="true">&#128722;</span>
         <span class="header-action-label">Cart</span>
-        <span class="cart-count" id="cartCount">0</span>
+        <span class="cart-count" id="legacyCartCount">0</span>
       </button>
 
       <button class="icon-btn play-click" id="installTestBtn" type="button" aria-label="Install App" title="Install app">
@@ -238,6 +266,52 @@
   </header>
 
   <main>
+    <section class="clean-products-hero" aria-labelledby="clean-products-title">
+      <div class="clean-products-copy">
+        <p class="clean-eyebrow"><span></span> EMX PERFORMANCE CATALOG</p>
+        <h1 id="clean-products-title">Find the software<br>for your <em>edge.</em></h1>
+        <p>Real Windows tools, clear previews, and a direct secure checkout path. Pick the part of your setup you want to level up, then see exactly what it does before you buy.</p>
+        <div class="clean-hero-actions">
+          <a class="clean-primary-button" href="#productGrid">Browse products <span aria-hidden="true">↘</span></a>
+          <a class="clean-secondary-button" href="./license.html">Claim a license</a>
+        </div>
+        <div class="clean-hero-points">
+          <span><b>01</b> Real app previews</span>
+          <span><b>02</b> Secure Payhip checkout</span>
+          <span><b>03</b> Discord setup support</span>
+        </div>
+      </div>
+      <div class="clean-products-visual" aria-label="EMX desktop software preview">
+        <div class="clean-visual-orbit orbit-a"></div>
+        <div class="clean-visual-orbit orbit-b"></div>
+        <div class="clean-app-frame">
+          <div class="clean-app-bar"><span></span><span></span><span></span><b>EMX // PRODUCT PREVIEW</b><i>LIVE</i></div>
+          <img src="app-screenshots/emx-volt-dashboard-real.png" alt="EMX VOLT application dashboard">
+        </div>
+        <div class="clean-visual-chip chip-one"><b>REAL INTERFACES</b><span>Preview before checkout</span></div>
+        <div class="clean-visual-chip chip-two"><b>EMX</b><span>Windows-first software</span></div>
+      </div>
+    </section>
+
+    <section class="clean-catalog-intro" aria-labelledby="catalog-heading">
+      <div>
+        <p class="clean-eyebrow"><span></span> THE FULL EMX LINEUP</p>
+        <h2 id="catalog-heading">Choose your <em>next upgrade.</em></h2>
+      </div>
+      <p>Open a real preview, read the complete details, add products to one cart, or go straight to the product checkout.</p>
+    </section>
+
+    <section class="catalog-filter-bar" aria-label="Filter the EMX catalog">
+      <div class="catalog-filter-scroll" role="group" aria-label="Product categories">
+        <button class="catalog-filter is-active" type="button" data-catalog-filter="all" aria-pressed="true">All products</button>
+        <button class="catalog-filter" type="button" data-catalog-filter="tweaks" aria-pressed="false">Windows tweaks</button>
+        <button class="catalog-filter" type="button" data-catalog-filter="macro" aria-pressed="false">VOLT macro</button>
+        <button class="catalog-filter" type="button" data-catalog-filter="performance" aria-pressed="false">Performance</button>
+        <a class="catalog-filter catalog-filter-link" href="./bundles.html">Current bundle <span aria-hidden="true">↗</span></a>
+      </div>
+      <p><strong id="catalogVisibleCount">0</strong> current products</p>
+    </section>
+
     <section class="hero">
       <div class="hero-card">
         <div class="hero-grid">
@@ -432,7 +506,7 @@
       </div>
     </section>
 
-    <section class="section-head">
+    <section class="section-head legacy-product-heading" style="display: none !important;" aria-hidden="true">
       <div>
         <div class="section-kicker">Choose Your Edge</div>
         <h2 class="section-title">Pick Your <span>Performance Pack</span></h2>
@@ -505,7 +579,21 @@
 
   <section class="card-container" id="productGrid"></section>
 
-<section class="premium-section bundle-premium-section" hidden>
+  <footer class="clean-products-footer">
+    <a class="clean-brand" href="./index.html">
+      <span class="clean-brand-mark"><img src="emx-logo.png" alt=""></span>
+      <span>EMX <b>TWEAKS</b></span>
+    </a>
+    <p>Windows performance tools, desktop software, and real setup previews.</p>
+    <div>
+      <a href="./updates.html">Updates</a>
+      <a href="./faq.html">FAQ</a>
+      <a href="./contact.html">Support</a>
+      <a href="https://discord.gg/puaZFNfNKW" target="_blank" rel="noopener noreferrer">Discord</a>
+    </div>
+  </footer>
+
+<section class="premium-section bundle-premium-section" id="bundles" hidden>
   <div class="bundle-card bundle-spotlight">
     <div class="bundle-orbit" aria-hidden="true"></div>
 

@@ -1,4 +1,23 @@
 {
+  "headers": [
+    {
+      "source": "/downloads/EMX-Window-Deck_0.4.2_CUSTOMER-PACKAGE.zip",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/zip"
+        },
+        {
+          "key": "Content-Disposition",
+          "value": "attachment; filename=\"EMX-Window-Deck_0.4.2_CUSTOMER-PACKAGE.zip\""
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/API/PAYHIP-WEBHOOK",
