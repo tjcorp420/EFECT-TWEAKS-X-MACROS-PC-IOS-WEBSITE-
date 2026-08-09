@@ -69,6 +69,40 @@ window.EMX_PRODUCTS = [
     visible: true
   },
   {
+    id: "clips",
+    key: "8vBPZ",
+    productUrl: "https://payhip.com/b/8vBPZ",
+    title: "EMX Clips",
+    eyebrow: "Instant Replay for Windows",
+    price: 1.00,
+    oldPrice: 0,
+    image: "./assets/emx-clips/emx-clips-cover.png",
+    gallery: [
+      "./assets/emx-clips/emx-clips-cover.png",
+      "./assets/emx-clips/emx-clips-ready.png",
+      "./assets/emx-clips/emx-clips-library.png",
+      "./assets/emx-clips/emx-clips-settings.png"
+    ],
+    previewType: "image",
+    previewSrc: "./assets/emx-clips/emx-clips-cover.png",
+    fallbackPreview: "./assets/emx-clips/emx-clips-cover.png",
+    description: "EMX Clips is a local-first Windows instant replay app for Fortnite and competitive PC gameplay. Keep replay armed, press your own global hotkey after a moment worth saving, and manage the finished clip from a clean EMX library.",
+    features: [
+      "Replay can arm automatically on launch and stays ready after every saved clip",
+      "Press-to-bind global hotkeys for saving clips and showing or hiding the app",
+      "In-game notifications confirm when replay is ready and when a clip is saved",
+      "NVIDIA NVENC capture with system audio and optional microphone recording",
+      "Local clip library with previews, favorites, storage controls, and share-ready file copying",
+      "No account, telemetry, or automatic cloud uploads"
+    ],
+    featured: true,
+    saleBadge: "NEW RELEASE",
+    tags: ["Instant replay", "NVENC", "Local-first", "Windows"],
+    homepage: false,
+    licenseClaim: false,
+    visible: true
+  },
+  {
     id: "macro",
     key: "0TOjr",
     productUrl: "https://payhip.com/b/0TOjr",

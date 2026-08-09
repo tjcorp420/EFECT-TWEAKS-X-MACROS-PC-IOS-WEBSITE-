@@ -264,6 +264,27 @@ document.addEventListener("DOMContentLoaded", () => {
         "Results vary by hardware, drivers, Windows state, network, and game settings"
       ]
     },
+    clips: {
+      includes: [
+        "EMX Clips Windows setup installer",
+        "Automatic replay arming with continuous ready state after each saved clip",
+        "Rebindable global save and show/hide hotkeys with in-game notifications",
+        "Local clip library with playback, favorites, storage controls, and share-ready file copying"
+      ],
+      setup: [
+        "Purchase through secure Payhip checkout",
+        "Download EMX Clips and open the included How to Use guide",
+        "Run the setup installer and launch EMX Clips",
+        "Choose your replay length, audio options, and hotkeys in Settings",
+        "Leave replay recording enabled, then press your save hotkey after a moment worth keeping"
+      ],
+      compatibility: [
+        "Windows 10 22H2 or Windows 11, 64-bit",
+        "NVIDIA graphics card with NVENC support",
+        "Captures system audio with optional microphone recording",
+        "Clips stay on the PC unless the user chooses to copy or share them"
+      ]
+    },
     fps: {
       includes: [
         "Game-focused performance preset guidance",
@@ -1118,6 +1139,10 @@ document.addEventListener("DOMContentLoaded", () => {
       category: "tweaks",
       facts: [["Platform", "Windows PC"], ["Changes", "Reversible"], ["Recovery", "Backup + restore"], ["Delivery", "Payhip download"]]
     },
+    clips: {
+      category: "capture",
+      facts: [["Platform", "Windows 10/11"], ["Encoder", "NVIDIA NVENC"], ["Storage", "Local clips"], ["Delivery", "Instant download"]]
+    },
     volt: {
       category: "macro",
       facts: [["Platform", "Windows desktop"], ["Engine", "Tauri + Rust"], ["License", "Lifetime / one PC"], ["Updates", "Built-in updater"]]
@@ -1186,6 +1211,13 @@ document.addEventListener("DOMContentLoaded", () => {
         product.bestSeller ? "Best Seller" : "",
         product.saleBadge ? product.saleBadge : ""
       ].filter(Boolean);
+      const requiresLicenseClaim = product.licenseClaim !== false;
+      const valueLabels = requiresLicenseClaim
+        ? ["License Claim", previewLabel, "EMX Support"]
+        : ["Instant Download", previewLabel, "Local Capture"];
+      const trustLabels = requiresLicenseClaim
+        ? ["🔒 Secure Payhip Checkout", "⚡ Key Claim After Checkout", "🛠 Setup Support", "✅ Verified"]
+        : ["🔒 Secure Payhip Checkout", "⚡ Instant Download", "🛠 Setup Guide Included", "🔐 Local-First"];
 
       return `
         <article id="product-${escapeHtml(product.id)}" class="product-card premium-product-card ${product.featured ? "is-featured-product" : ""}" data-product-id="${escapeHtml(product.id)}" data-category="${escapeHtml(getProductCategory(product))}" data-search="${escapeHtml(`${product.title} ${product.description} ${product.eyebrow} ${premiumBadges.join(" ")} ${(product.tags || []).join(" ")}`.toLowerCase())}">
@@ -1224,9 +1256,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
 
           <div class="product-value-row">
-            <span>License Claim</span>
-            <span>${escapeHtml(previewLabel)}</span>
-            <span>EMX Support</span>
+            ${valueLabels.map(label => `<span>${escapeHtml(label)}</span>`).join("")}
           </div>
 
           <div class="meta-info">
@@ -1236,10 +1266,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
 
 <div class="product-trust-row">
-  <span>🔒 Secure Payhip Checkout</span>
-  <span>⚡ Key Claim After Checkout</span>
-  <span>🛠 Setup Support</span>
-  <span>✅ Verified</span>
+  ${trustLabels.map(label => `<span>${escapeHtml(label)}</span>`).join("")}
 </div>
 
           <p class="description-block">${escapeHtml(product.description)}</p>
@@ -1797,6 +1824,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   const detailCard = modal.querySelector(".detail-card");
+  const requiresLicenseClaim = product.licenseClaim !== false;
   
   if (detailCard) {
     const oldUpgrade = document.getElementById("detailCheckoutFlow");
@@ -1807,8 +1835,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const upgradePanel = document.createElement("div");
     upgradePanel.id = "detailCheckoutFlow";
     upgradePanel.className = "detail-checkout-upgrade";
-    
-    upgradePanel.innerHTML = `
+
+    upgradePanel.innerHTML = requiresLicenseClaim ? `
       <div class="detail-trust-badges">
         <span>🔒 Secure Payhip</span>
         <span>📲 License Claim</span>
@@ -1861,6 +1889,62 @@ document.addEventListener("DOMContentLoaded", () => {
             <strong>04</strong>
             <span>EFECT Support</span>
             <p>Contact EFECT support through Discord if you need access or setup help.</p>
+          </div>
+        </div>
+      </div>
+    ` : `
+      <div class="detail-trust-badges">
+        <span>🔒 Secure Payhip</span>
+        <span>⚡ Instant Download</span>
+        <span>🛠 Setup Guide</span>
+        <span>🔐 Local-First</span>
+      </div>
+
+      <div class="detail-premium-summary">
+        <div>
+          <span>Best For</span>
+          <strong>Gameplay creators</strong>
+        </div>
+        <div>
+          <span>Access</span>
+          <strong>Instant download</strong>
+        </div>
+        <div>
+          <span>Privacy</span>
+          <strong>Local clips</strong>
+        </div>
+      </div>
+
+      <div class="detail-after-checkout">
+        <div class="detail-after-head">
+          <span>POST CHECKOUT FLOW</span>
+          <h3>What Happens After Checkout</h3>
+          <p>Payhip delivers the EMX Clips installer and guide directly after checkout. No EMX license-key claim is required.</p>
+        </div>
+
+        <div class="detail-flow-grid">
+          <div class="detail-flow-step">
+            <strong>01</strong>
+            <span>Secure Checkout Opens</span>
+            <p>Buy Now opens the official EMX Clips listing on Payhip.</p>
+          </div>
+
+          <div class="detail-flow-step">
+            <strong>02</strong>
+            <span>Download The App</span>
+            <p>Use the Payhip download page or receipt email to get the installer package.</p>
+          </div>
+
+          <div class="detail-flow-step">
+            <strong>03</strong>
+            <span>Install And Configure</span>
+            <p>Follow the included guide, then choose capture, audio, and hotkey settings.</p>
+          </div>
+
+          <div class="detail-flow-step">
+            <strong>04</strong>
+            <span>Keep Your Receipt</span>
+            <p>Save the Payhip receipt for future downloads and EMX support.</p>
           </div>
         </div>
       </div>
@@ -3917,6 +4001,12 @@ document.addEventListener("DOMContentLoaded", () => {
         { label: "Safe Defaults", value: 98 },
         { label: "Game Readiness", value: 94 },
         { label: "Update Support", value: 95 }
+      ],
+      clips: [
+        { label: "Replay Workflow", value: 97 },
+        { label: "Hotkey Control", value: 98 },
+        { label: "Local Privacy", value: 100 },
+        { label: "Setup Clarity", value: 95 }
       ],
       fps: [
         { label: "Game Smoothness", value: 92 },
