@@ -12,9 +12,9 @@
     /(?:^|\/)(?:optimizer(?:\d+)?|zero-delay-optimizer)(?:[-_.]|$)/i;
   const IMAGE_OVERRIDES = Object.freeze({
     custom_os: {
-      src: "./assets/emx-os/emx-os-v1320-home-960.webp",
+      src: "./assets/emx-os/emx-custom-os-overview-960.webp",
       srcset:
-        "./assets/emx-os/emx-os-v1320-home-640.webp 640w, ./assets/emx-os/emx-os-v1320-home-960.webp 960w",
+        "./assets/emx-os/emx-custom-os-overview-640.webp 640w, ./assets/emx-os/emx-custom-os-overview-960.webp 960w",
     },
     windows_tweak_dashboard: {
       src: "./app-screenshots/emx-windows-tweak-dashboard-01-overview-960.webp",
@@ -64,17 +64,10 @@
     if (deliberateReload) return true;
     if (reduced) return false;
     if (internal) return false;
-    if (settings.replayMode === "always") return true;
-    const key =
-      settings.replayMode === "hours" ? "emx_intro_last" : "emx_intro_session";
-    const storage =
-      settings.replayMode === "hours" ? localStorage : sessionStorage;
-    const last = Number(storage.getItem(key) || 0);
-    return (
-      !last ||
-      (settings.replayMode === "hours" &&
-        Date.now() - last > settings.replayHours * 3600000)
-    );
+    // A fresh direct or external entry should always receive the storefront
+    // introduction. Session memory only protects in-site navigation from
+    // repeatedly interrupting the visitor.
+    return true;
   }
 
   function remember(settings) {

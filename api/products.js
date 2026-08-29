@@ -6,10 +6,33 @@ const { requireAdmin } = require("./_lib/admin-auth");
 const PRODUCTS_KEY = "emx:products:v1";
 const CHECKOUT_BASE = "https://payhip.com/buy";
 const DEFAULT_BUNDLE_ITEMS = {
-  os_macro_bundle: ["custom_os", "macro"],
+  os_macro_bundle: ["windows_tweak_dashboard", "volt"],
   bundle: ["windows_tweak_dashboard", "macro", "fps"]
 };
-const RETIRED_PRODUCT_IDS = new Set(["macro", "controller_macro", "bundle"]);
+const RETIRED_PRODUCT_IDS = new Set(["optimizer", "macro", "controller_macro", "bundle"]);
+const CANONICAL_PRODUCT_FIELDS = {
+  custom_os: ["image", "gallery", "previewSrc", "fallbackPreview"],
+  volt: ["image", "gallery", "previewSrc", "fallbackPreview"],
+  os_macro_bundle: [
+    "key",
+    "productUrl",
+    "title",
+    "eyebrow",
+    "type",
+    "page",
+    "price",
+    "oldPrice",
+    "image",
+    "gallery",
+    "previewType",
+    "previewSrc",
+    "fallbackPreview",
+    "description",
+    "features",
+    "tags",
+    "bundleItems"
+  ]
+};
 
 function sendJson(res, response, status = 200) {
   res.statusCode = status;
@@ -235,15 +258,14 @@ async function loadProducts() {
     const id = cleanId(product.id, "");
     const seed = seedById.get(id);
     if (!seed) return product;
+    const canonicalFields = CANONICAL_PRODUCT_FIELDS[id] || [];
+    const canonicalValues = Object.fromEntries(
+      canonicalFields.map(field => [field, seed[field]])
+    );
     return {
       ...seed,
       ...product,
-      ...( ["volt", "os_macro_bundle"].includes(id) ? {
-        image: seed.image,
-        gallery: seed.gallery,
-        previewSrc: seed.previewSrc,
-        fallbackPreview: seed.fallbackPreview
-      } : {}),
+      ...canonicalValues,
       version: product.version || seed.version,
       lastVerified: product.lastVerified || seed.lastVerified,
       platform: product.platform || seed.platform,

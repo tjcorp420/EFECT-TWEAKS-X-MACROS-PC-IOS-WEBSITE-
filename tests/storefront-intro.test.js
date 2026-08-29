@@ -168,7 +168,7 @@ test("cinematic intro excludes retired optimizer imagery and keeps four flagship
   assert.ok(intro);
   assert.doesNotMatch(intro.innerHTML, /Retired Optimizer|optimizer\.png/i);
   assert.match(intro.innerHTML, /EMX Custom OS/);
-  assert.match(intro.innerHTML, /emx-os-v1320-home-960\.webp/);
+  assert.match(intro.innerHTML, /emx-custom-os-overview-960\.webp/);
   assert.equal(
     (intro.innerHTML.match(/class="cinematic-product"/g) || []).length,
     4,
@@ -180,6 +180,15 @@ test("a deliberate desktop reload replays the intro even after session memory", 
   const appended = await renderIntro({
     navigationType: "reload",
     referrer: "https://emx.example/products.html",
+    session: { emx_intro_session: String(Date.now()) },
+  });
+  assert.equal(appended.length, 1);
+});
+
+test("a fresh desktop entry plays even when an older session marker exists", async () => {
+  const appended = await renderIntro({
+    navigationType: "navigate",
+    referrer: "https://search.example/results",
     session: { emx_intro_session: String(Date.now()) },
   });
   assert.equal(appended.length, 1);

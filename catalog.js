@@ -127,7 +127,7 @@
       featureList.appendChild(make("li", "", feature)),
     );
     details.append(summary, featureList);
-    const galleryImages = (product.gallery || []).filter(Boolean).slice(0, 6);
+    const galleryImages = (product.gallery || []).filter(Boolean).slice(0, 24);
     const galleryDetails = make("details", "product-gallery-details");
     const gallerySummary = make(
       "summary",
