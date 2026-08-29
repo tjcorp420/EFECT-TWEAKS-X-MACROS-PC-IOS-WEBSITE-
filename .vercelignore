@@ -5,7 +5,6 @@ node_modules
 window-deck-preview-*.png
 emx-app-tab-screenshots.zip
 docs
-scripts
 tests
 dist
 *.md
