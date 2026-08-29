@@ -1,6 +1,15 @@
 {
   "headers": [
     {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), geolocation=(), microphone=()" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+      ]
+    },
+    {
       "source": "/downloads/EMX-Window-Deck_0.4.2_CUSTOMER-PACKAGE.zip",
       "headers": [
         {
@@ -28,6 +37,10 @@
       "destination": "/links.html"
     },
     {
+      "source": "/affiliate",
+      "destination": "/affiliate.html"
+    },
+    {
       "source": "/aim-trainer",
       "destination": "/aim-trainer.html"
     },
@@ -46,6 +59,18 @@
     {
       "source": "/admin",
       "destination": "/admin.html"
+    },
+    {
+      "source": "/product-control",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/affiliate-admin",
+      "destination": "/affiliate-admin.html"
+    },
+    {
+      "source": "/affiliate-command",
+      "destination": "/affiliate-admin.html"
     },
     {
       "source": "/dashboard",

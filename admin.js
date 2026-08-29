@@ -1,11 +1,11 @@
 const API_URL = "/api/products";
-const REFERRALS_API_URL = "/api/referrals";
-const SITE_BASE_URL = "https://efect-macros-x-tweaks.vercel.app/";
 const CHECKOUT_BASE = "https://payhip.com/buy";
 
 let products = [];
 let selectedIndex = 0;
-let adminPassword = sessionStorage.getItem("emx_admin_password") || "";
+// Keep the admin credential in memory only. A page refresh intentionally locks
+// the console again so the password is never persisted in browser storage.
+let adminPassword = "";
 
 const loginBox = document.getElementById("loginBox");
 const adminApp = document.getElementById("adminApp");
@@ -13,10 +13,6 @@ const statusPill = document.getElementById("statusPill");
 const productList = document.getElementById("productList");
 const previewBox = document.getElementById("previewBox");
 const galleryPreviewBox = document.getElementById("galleryPreviewBox");
-const referralEmailField = document.getElementById("referralEmailField");
-const referralDisplayField = document.getElementById("referralDisplayField");
-const referralKeyField = document.getElementById("referralKeyField");
-const referralList = document.getElementById("referralList");
 
 const fields = {
   id: document.getElementById("idField"),
@@ -38,6 +34,23 @@ const fields = {
   previewSrc: document.getElementById("previewSrcField"),
   fallbackPreview: document.getElementById("fallbackField"),
   description: document.getElementById("descriptionField"),
+  fullDescription: document.getElementById("fullDescriptionField"),
+  category: document.getElementById("categoryField"),
+  version: document.getElementById("versionField"),
+  deliveryType: document.getElementById("deliveryTypeField"),
+  deliveryUrl: document.getElementById("deliveryUrlField"),
+  deliveryFileName: document.getElementById("deliveryFileNameField"),
+  docsUrl: document.getElementById("docsUrlField"),
+  supportUrl: document.getElementById("supportUrlField"),
+  requirements: document.getElementById("requirementsField"),
+  knownLimitations: document.getElementById("knownLimitationsField"),
+  recovery: document.getElementById("recoveryField"),
+  installation: document.getElementById("installationField"),
+  changelog: document.getElementById("changelogField"),
+  publishStatus: document.getElementById("publishStatusField"),
+  sortPriority: document.getElementById("sortPriorityField"),
+  showInIntro: document.getElementById("showInIntroField"),
+  introOrder: document.getElementById("introOrderField"),
   features: document.getElementById("featuresField"),
   tags: document.getElementById("tagsField"),
   bundleItems: document.getElementById("bundleItemsField"),
@@ -503,13 +516,11 @@ function setupAdminTabs() {
   const editorCard = fields.id?.closest("section") || fields.id?.parentElement;
   const previewCard = previewBox?.closest("section") || previewBox?.parentElement;
   const mediaCard = document.getElementById("mediaLibraryPanel");
-  const referralsCard = referralList?.closest(".card") || referralList?.parentElement;
   
   adminSections.products = productsCard;
   adminSections.editor = editorCard;
   adminSections.preview = previewCard;
   adminSections.media = mediaCard;
-  adminSections.referrals = referralsCard;
   
   const settingsPanel = document.createElement("section");
   settingsPanel.id = "adminSettingsPanel";
@@ -561,7 +572,6 @@ function setupAdminTabs() {
   });
   
   document.getElementById("settingsLogoutBtn")?.addEventListener("click", () => {
-    sessionStorage.removeItem("emx_admin_password");
     adminPassword = "";
     adminApp.classList.add("hidden");
     loginBox.classList.remove("hidden");
@@ -586,11 +596,6 @@ function setupAdminTabs() {
     <button type="button" data-admin-tab="preview">
       <span>◉</span>
       Preview
-    </button>
-
-    <button type="button" data-admin-tab="referrals">
-      <span>Link</span>
-      Referrals
     </button>
 
     <button type="button" data-admin-tab="settings">
@@ -664,7 +669,6 @@ function ensureAdminSettingsPanel() {
   });
   
   document.getElementById("settingsLogoutBtn")?.addEventListener("click", () => {
-    sessionStorage.removeItem("emx_admin_password");
     adminPassword = "";
     adminApp.classList.add("hidden");
     loginBox.classList.remove("hidden");
@@ -736,7 +740,6 @@ function openAdminSettingsModal() {
     });
     
     document.getElementById("modalLockAdminBtn")?.addEventListener("click", () => {
-      sessionStorage.removeItem("emx_admin_password");
       adminPassword = "";
       modal.classList.remove("show");
       adminApp.classList.add("hidden");
@@ -784,11 +787,6 @@ function showAdminTab(tabName) {
     target = previewBox;
   }
 
-  if (tabName === "referrals") {
-    target = referralList || referralEmailField;
-    loadReferrals().catch(error => toast("<b>Referral load failed:</b><br>" + escapeHtml(error.message)));
-  }
-  
   if (tabName === "settings") {
   openAdminSettingsModal();
   return;
@@ -837,40 +835,6 @@ function normalizeEmail(value) {
   return String(value || "").trim().toLowerCase();
 }
 
-function cleanReferralKey(value) {
-  return String(value || "")
-    .trim()
-    .replace(/^@+/, "")
-    .replace(/[^\w.-]/g, "")
-    .slice(0, 64);
-}
-
-function cleanDisplayName(value) {
-  return String(value || "")
-    .trim()
-    .replace(/[<>]/g, "")
-    .replace(/\s+/g, " ")
-    .slice(0, 32);
-}
-
-function creatorSlug(value) {
-  return String(value || "")
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-zA-Z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 40);
-}
-
-function referralLinkForKey(key, displayName = "") {
-  const display = cleanDisplayName(displayName);
-  const slug = creatorSlug(display || key);
-  const target = new URL(slug ? "c/" + encodeURIComponent(slug) : "", SITE_BASE_URL);
-
-  target.searchParams.set("af", key);
-  return target.toString();
-}
-
 function cleanId(value){
   return String(value || "")
     .trim()
@@ -914,14 +878,31 @@ function newProduct(){
     page: "products",
     price: 0,
     oldPrice: 0,
-    image: "./emx-logo.png",
+    image: "./emx-logo-v2.png",
   gallery: [
-    "./emx-logo.png"
+    "./emx-logo-v2.png"
   ],
   previewType: "image",
-    previewSrc: "./emx-logo.png",
+    previewSrc: "./emx-logo-v2.png",
     fallbackPreview: "",
     description: "New product description goes here.",
+    fullDescription: "",
+    category: "EMX software",
+    version: "",
+    deliveryType: "payhip",
+    deliveryUrl: "",
+    deliveryFileName: "",
+    docsUrl: "",
+    supportUrl: "",
+    requirements: "",
+    knownLimitations: "",
+    recovery: "",
+    installation: "",
+    changelog: "",
+    publishStatus: "draft",
+    sortPriority: 0,
+    showInIntro: false,
+    introOrder: 0,
     features: [
       "Feature one",
       "Feature two",
@@ -1011,8 +992,8 @@ function renderReferralList(referrals = []) {
     referralList.innerHTML = `
       <div class="product-btn">
         <span>
-          <b>No saved referrals yet</b>
-          <small>Add an affiliate email and key above.</small>
+          <b>No affiliate applications yet</b>
+          <small>New applications from affiliate.html will appear here.</small>
         </span>
       </div>
     `;
@@ -1020,21 +1001,24 @@ function renderReferralList(referrals = []) {
   }
 
   referralList.innerHTML = referrals.map(referral => `
-    <button class="product-btn" type="button" data-referral-email="${escapeHtml(referral.email)}" data-referral-display="${escapeHtml(referral.displayName || "")}" data-referral-key="${escapeHtml(referral.affiliateKey)}">
+    <button class="product-btn" type="button" data-referral-id="${escapeHtml(referral.id)}" data-referral-email="${escapeHtml(referral.emailMasked || "")}" data-referral-display="${escapeHtml(referral.displayName || "")}" data-referral-key="${escapeHtml(referral.code || "")}" data-referral-status="${escapeHtml(referral.status || "pending")}" data-referral-rate="${Number(referral.rateBps || 0)}">
       <span>
-        <b>${escapeHtml(referral.displayName || referral.email)}</b>
-        <small>${escapeHtml(referral.referralLink || referralLinkForKey(referral.affiliateKey, referral.displayName))}</small>
+        <b>${escapeHtml(referral.displayName || referral.emailMasked || "Affiliate")}</b>
+        <small>/r/${escapeHtml(referral.code || "")} · ${Number(referral.stats?.clicks || 0)} visits · ${Number(referral.stats?.conversions || 0)} sales · $${(Number(referral.stats?.pendingCommissionCents || 0) / 100).toFixed(2)} pending</small>
       </span>
-      <em class="status">Saved</em>
+      <em class="status">${escapeHtml(referral.status || "pending")}</em>
     </button>
   `).join("");
 
-  referralList.querySelectorAll("[data-referral-email]").forEach(button => {
+  referralList.querySelectorAll("[data-referral-id]").forEach(button => {
     button.addEventListener("click", () => {
+      if (referralIdField) referralIdField.value = button.dataset.referralId || "";
       if (referralEmailField) referralEmailField.value = button.dataset.referralEmail || "";
       if (referralDisplayField) referralDisplayField.value = button.dataset.referralDisplay || "";
       if (referralKeyField) referralKeyField.value = button.dataset.referralKey || "";
-      toast("Referral loaded for editing.");
+      if (referralStatusField) referralStatusField.value = button.dataset.referralStatus || "pending";
+      if (referralRateField) referralRateField.value = (Number(button.dataset.referralRate || 0) / 100).toFixed(2);
+      toast("Affiliate application loaded.");
     });
   });
 }
@@ -1055,21 +1039,13 @@ async function loadReferrals() {
     throw new Error(data && data.error ? data.error : "Could not load referrals.");
   }
 
-  renderReferralList(Array.isArray(data.referrals) ? data.referrals : []);
+  renderReferralList(Array.isArray(data.affiliates) ? data.affiliates : []);
 }
 
 async function saveReferral() {
-  const email = normalizeEmail(referralEmailField?.value);
-  const displayName = cleanDisplayName(referralDisplayField?.value);
-  const affiliateKey = cleanReferralKey(referralKeyField?.value);
-
-  if (!email || !email.includes("@")) {
-    toast("Enter the affiliate email.");
-    return;
-  }
-
-  if (!affiliateKey) {
-    toast("Enter the Payhip affiliate key.");
+  const id = referralIdField?.value || "";
+  if (!id) {
+    toast("Select an affiliate application first.");
     return;
   }
 
@@ -1080,9 +1056,9 @@ async function saveReferral() {
       "x-admin-password": adminPassword
     },
     body: JSON.stringify({
-      email,
-      displayName,
-      affiliateKey
+      id,
+      status: referralStatusField?.value || "pending",
+      rateBps: Math.round(Number(referralRateField?.value || 0) * 100)
     })
   });
 
@@ -1092,41 +1068,38 @@ async function saveReferral() {
     throw new Error(data && data.error ? data.error : "Could not save referral.");
   }
 
-  toast("<b>Referral saved.</b><br>" + escapeHtml(data.referral.referralLink));
+  toast("<b>Affiliate updated.</b><br>Status and commission rate are live.");
   await loadReferrals();
 }
 
 async function deleteReferral() {
-  const email = normalizeEmail(referralEmailField?.value);
-
-  if (!email || !email.includes("@")) {
-    toast("Enter the affiliate email to delete.");
+  const id = referralIdField?.value || "";
+  if (!id) {
+    toast("Select an affiliate application first.");
     return;
   }
+  if (referralStatusField) referralStatusField.value = "disabled";
+  await saveReferral();
+}
 
+async function recordAffiliatePayout() {
+  const id = referralIdField?.value || "";
+  const amountCents = Math.round(Number(referralPayoutField?.value || 0) * 100);
+  if (!id || amountCents < 1) {
+    toast("Select an affiliate and enter a payout amount.");
+    return;
+  }
   const response = await fetch(REFERRALS_API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-admin-password": adminPassword
-    },
-    body: JSON.stringify({
-      email,
-      delete: true
-    })
+    headers: { "Content-Type": "application/json", "x-admin-password": adminPassword },
+    body: JSON.stringify({ action: "record-payout", id, amountCents })
   });
-
   const data = await response.json().catch(() => null);
-
   if (!response.ok || !data || data.ok !== true) {
-    throw new Error(data && data.error ? data.error : "Could not delete referral.");
+    throw new Error(data && data.error ? data.error : "Could not record payout.");
   }
-
-  if (referralEmailField) referralEmailField.value = "";
-  if (referralDisplayField) referralDisplayField.value = "";
-  if (referralKeyField) referralKeyField.value = "";
-
-  toast("Referral deleted.");
+  if (referralPayoutField) referralPayoutField.value = "";
+  toast("Payout recorded in the EMX affiliate ledger.");
   await loadReferrals();
 }
 
@@ -1188,6 +1161,23 @@ fields.previewType.value = product.previewType || "image";
   fields.previewSrc.value = product.previewSrc || "";
   fields.fallbackPreview.value = product.fallbackPreview || "";
   fields.description.value = product.description || "";
+  fields.fullDescription.value = product.fullDescription || "";
+  fields.category.value = product.category || "";
+  fields.version.value = product.version || "";
+  setSelectValue(fields.deliveryType, product.deliveryType || "payhip", "payhip");
+  fields.deliveryUrl.value = product.deliveryUrl || "";
+  fields.deliveryFileName.value = product.deliveryFileName || "";
+  fields.docsUrl.value = product.docsUrl || "";
+  fields.supportUrl.value = product.supportUrl || "";
+  fields.requirements.value = product.requirements || "";
+  fields.knownLimitations.value = product.knownLimitations || "";
+  fields.recovery.value = product.recovery || "";
+  fields.installation.value = product.installation || "";
+  fields.changelog.value = product.changelog || "";
+  setSelectValue(fields.publishStatus, product.publishStatus || "published", "published");
+  fields.sortPriority.value = Number(product.sortPriority || 0);
+  setSelectValue(fields.showInIntro, product.showInIntro === true ? "true" : "false", "false");
+  fields.introOrder.value = Number(product.introOrder || 0);
   fields.features.value = Array.isArray(product.features) ? product.features.join("\n") : "";
   linesToField(fields.tags, product.tags);
   linesToField(fields.bundleItems, product.bundleItems);
@@ -1211,15 +1201,32 @@ function readProductFromForm(){
     page: fields.page?.value || "",
     price: Number(fields.price.value || 0),
     oldPrice: Number(fields.oldPrice.value || 0),
-    image: fields.image.value.trim() || "./emx-logo.png",
+    image: fields.image.value.trim() || "./emx-logo-v2.png",
   gallery: fields.gallery.value
   .split("\n")
   .map(item => item.trim())
   .filter(Boolean),
   previewType: fields.previewType.value || "image",
-    previewSrc: fields.previewSrc.value.trim() || fields.image.value.trim() || "./emx-logo.png",
+    previewSrc: fields.previewSrc.value.trim() || fields.image.value.trim() || "./emx-logo-v2.png",
     fallbackPreview: fields.fallbackPreview.value.trim(),
     description: fields.description.value.trim(),
+    fullDescription: fields.fullDescription.value.trim(),
+    category: fields.category.value.trim(),
+    version: fields.version.value.trim(),
+    deliveryType: fields.deliveryType.value || "payhip",
+    deliveryUrl: fields.deliveryUrl.value.trim(),
+    deliveryFileName: fields.deliveryFileName.value.trim(),
+    documentationUrl: fields.docsUrl.value.trim(),
+    supportUrl: fields.supportUrl.value.trim(),
+    requirements: fields.requirements.value.trim(),
+    limitations: fields.knownLimitations.value.trim(),
+    recovery: fields.recovery.value.trim(),
+    installation: fields.installation.value.trim(),
+    changelog: fields.changelog.value.trim(),
+    publishStatus: fields.publishStatus.value || "draft",
+    sortPriority: Number(fields.sortPriority.value || 0),
+    showInIntro: fields.showInIntro.value === "true",
+    introOrder: Number(fields.introOrder.value || 0),
     features: fields.features.value
       .split("\n")
       .map(item => item.trim())
@@ -1269,7 +1276,7 @@ function renderGalleryPreview() {
   
   galleryPreviewBox.innerHTML = galleryItems.map((src, index) => `
     <div class="gallery-preview-item">
-      <img src="${escapeHtml(src)}" alt="Gallery image ${index + 1}" onerror="this.src='./emx-logo.png'">
+      <img src="${escapeHtml(src)}" alt="Gallery image ${index + 1}" onerror="this.src='./emx-logo-v2.png'">
       <span>${index + 1}. ${escapeHtml(src.split("/").pop())}</span>
     </div>
   `).join("");
@@ -1300,7 +1307,7 @@ function renderPreview() {
         <span class="tag">${escapeHtml(product.eyebrow)}</span>
         <h3>${escapeHtml(product.title)}</h3>
       </div>
-      <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.title)}" onerror="this.src='./emx-logo.png'">
+      <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.title)}" onerror="this.src='./emx-logo-v2.png'">
     </div>
 
     <div class="price">
@@ -1322,7 +1329,7 @@ function renderPreview() {
         src="${escapeHtml(src)}"
         alt="Gallery image"
         style="width:86px;height:62px;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:#000;flex:0 0 auto;"
-        onerror="this.src='./emx-logo.png'"
+        onerror="this.src='./emx-logo-v2.png'"
       >
     `).join("")}
   </div>
@@ -1420,7 +1427,6 @@ function unlock() {
   }
   
   adminPassword = password;
-  sessionStorage.setItem("emx_admin_password", adminPassword);
   
   loginBox.classList.add("hidden");
   adminApp.classList.remove("hidden");
@@ -1430,7 +1436,6 @@ function unlock() {
       setupAdminTabs();
       showAdminTab("products");
       toast("Admin unlocked. Products loaded.");
-      loadReferrals().catch(error => toast("<b>Referral load failed:</b><br>" + escapeHtml(error.message)));
     })
     .catch(error => {
       toast("<b>Load error:</b><br>" + escapeHtml(error.message));
@@ -1446,6 +1451,12 @@ Object.values(fields).forEach(field => {
 });
 
 document.getElementById("unlockBtn").addEventListener("click", unlock);
+
+document.getElementById("uploadProductFileBtn")?.addEventListener("click", async () => {
+  const file=document.getElementById("productFileField")?.files?.[0],progress=document.getElementById("productUploadProgress"),status=document.getElementById("productUploadStatus");
+  if(!file){toast("Choose a ZIP, EXE, MSI, or 7Z package first.");return;}
+  try{progress.hidden=false;progress.value=0;status.textContent="Validating and uploading directly to EMX storage…";const blob=await window.EMXProductUpload.upload(file,{password:adminPassword,onProgress:event=>{progress.value=event.percentage||0;status.textContent=`Uploading ${Math.round(event.percentage||0)}%`}});fields.deliveryType.value="direct";fields.deliveryUrl.value=blob.url;fields.deliveryFileName.value=file.name;status.textContent="Upload complete. Apply Changes, then Save Live to publish delivery.";renderPreview();toast("Product package uploaded and delivery fields updated.");}catch(error){status.textContent=error.message;toast("<b>Upload failed:</b><br>"+escapeHtml(error.message));}finally{window.setTimeout(()=>{progress.hidden=true},1200)}
+});
 
 document.getElementById("adminPassword").addEventListener("keydown", event => {
   if(event.key === "Enter"){
@@ -1483,7 +1494,10 @@ document.getElementById("reloadReferralsBtn")?.addEventListener("click", () => {
     .catch(error => toast("<b>Referral reload failed:</b><br>" + escapeHtml(error.message)));
 });
 document.getElementById("deleteReferralBtn")?.addEventListener("click", () => {
-  deleteReferral().catch(error => toast("<b>Referral delete failed:</b><br>" + escapeHtml(error.message)));
+  deleteReferral().catch(error => toast("<b>Affiliate disable failed:</b><br>" + escapeHtml(error.message)));
+});
+document.getElementById("recordPayoutBtn")?.addEventListener("click", () => {
+  recordAffiliatePayout().catch(error => toast("<b>Payout record failed:</b><br>" + escapeHtml(error.message)));
 });
 document.getElementById("clearGalleryBtn")?.addEventListener("click", () => {
   fields.gallery.value = "";
@@ -1503,7 +1517,3 @@ document.getElementById("useMainImageBtn")?.addEventListener("click", () => {
   renderPreview();
   toast("Gallery set to main image. Press Apply Changes, then Save Live.");
 });
-
-if(adminPassword){
-  document.getElementById("adminPassword").value = adminPassword;
-}

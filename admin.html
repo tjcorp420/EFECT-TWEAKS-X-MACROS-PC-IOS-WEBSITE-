@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>EMX Store Admin</title>
-  <meta name="theme-color" content="#020304">
+  <title>EMX Product Control Center</title>
+  <meta name="description" content="Private EMX product catalog, media, delivery, and release control center." />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <meta name="theme-color" content="#05030a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="EMX Admin">
 
-<link rel="apple-touch-icon" href="./emx-logo.png">
+<link rel="apple-touch-icon" href="./emx-logo-v2.png">
 <link rel="manifest" href="./admin.webmanifest">
 
   <style>
@@ -329,16 +331,22 @@
       .top{align-items:flex-start}
     }
   </style>
+  <link rel="stylesheet" href="foundation.css" />
+  <link rel="stylesheet" href="admin-modern.css" />
 </head>
 
 <body>
+  <a class="skip-link" href="#adminApp">Skip to admin workspace</a>
   <div class="wrap">
     <div class="top">
       <div class="brand">
-        <h1>EMX Store Admin</h1>
-        <p>Live product editor for your Vercel store</p>
+        <img src="./emx-logo-v2.png" width="500" height="500" alt="EMX TWEAKS" />
+        <div>
+          <h1>EMX Product Control Center</h1>
+          <p>Catalog · delivery · media · release truth</p>
+        </div>
       </div>
-      <div id="statusPill" class="pill">Locked</div>
+      <div style="display:flex;gap:8px;align-items:center"><a class="pill" href="./affiliate-admin.html">Affiliate Command</a><a class="pill" href="./index.html">Storefront</a><div id="statusPill" class="pill">Locked</div></div>
     </div>
 
     <section id="loginBox" class="card">
@@ -493,6 +501,44 @@
           <label>Description</label>
           <textarea id="descriptionField"></textarea>
 
+          <label>Full Product Description</label>
+          <textarea id="fullDescriptionField" placeholder="Expanded overview shown in the premium product modal."></textarea>
+
+          <div class="row">
+            <div><label>Category</label><input id="categoryField" placeholder="Windows optimization" /></div>
+            <div><label>Current Version</label><input id="versionField" placeholder="1.0.0" /></div>
+          </div>
+
+          <div class="row">
+            <div><label>Delivery Type</label><select id="deliveryTypeField"><option value="payhip">Payhip checkout</option><option value="direct">Direct EMX download</option><option value="external">External download</option><option value="coming-soon">Coming soon</option></select></div>
+            <div><label>Publish Status</label><select id="publishStatusField"><option value="published">Published</option><option value="draft">Draft</option><option value="archived">Archived</option></select></div>
+          </div>
+
+          <label>Delivery URL / File URL</label>
+          <input id="deliveryUrlField" placeholder="/downloads/file.zip or https://…" />
+          <div class="actions" style="margin-top:10px"><input id="productFileField" type="file" accept=".zip,.exe,.msi,.7z" /><button id="uploadProductFileBtn" type="button">Upload product file</button></div>
+          <progress id="productUploadProgress" max="100" value="0" hidden style="width:100%;margin-top:10px"></progress>
+          <p id="productUploadStatus" role="status"></p>
+          <label>Customer-facing File Name</label>
+          <input id="deliveryFileNameField" placeholder="EMX-Product-1.0.0.zip" />
+
+          <div class="row">
+            <div><label>Documentation URL</label><input id="docsUrlField" placeholder="https://…" /></div>
+            <div><label>Support URL</label><input id="supportUrlField" placeholder="https://discord.gg/…" /></div>
+          </div>
+
+          <label>Requirements</label><textarea id="requirementsField"></textarea>
+          <label>Known Limitations</label><textarea id="knownLimitationsField"></textarea>
+          <label>Recovery / Uninstall</label><textarea id="recoveryField"></textarea>
+          <label>Installation Notes</label><textarea id="installationField"></textarea>
+          <label>Changelog</label><textarea id="changelogField"></textarea>
+
+          <div class="row">
+            <div><label>Sort Priority</label><input id="sortPriorityField" type="number" step="1" value="0" /></div>
+            <div><label>Intro Order</label><input id="introOrderField" type="number" step="1" value="0" /></div>
+          </div>
+          <label>Show In Cinematic Intro</label><select id="showInIntroField"><option value="false">No</option><option value="true">Yes</option></select>
+
           <label>Features - one per line</label>
           <textarea id="featuresField"></textarea>
 
@@ -531,33 +577,13 @@
           <div id="previewBox" class="preview"></div>
         </div>
 
-        <div class="card">
-          <h2>Affiliate Referrals</h2>
-          <p>Save the Payhip affiliate email and key so creators can look up their EMX referral link on the public site.</p>
-
-          <label>Affiliate Email</label>
-          <input id="referralEmailField" type="email" placeholder="creator@email.com" />
-
-          <label>Creator Display Name</label>
-          <input id="referralDisplayField" placeholder="Efect2lit" />
-
-          <label>Payhip Affiliate Key</label>
-          <input id="referralKeyField" placeholder="af6a0647dbb7a48" />
-
-          <div class="actions">
-            <button id="saveReferralBtn" type="button">Save Referral</button>
-            <button id="reloadReferralsBtn" class="secondary" type="button">Reload</button>
-            <button id="deleteReferralBtn" class="danger wide" type="button">Delete Email</button>
-          </div>
-
-          <div id="referralList" class="list"></div>
-        </div>
       </main>
     </section>
   </div>
 
   <div id="toast" class="toast"></div>
 
+  <script src="product-upload-client.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>

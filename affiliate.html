@@ -2,12 +2,146 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0; url=https://emx-affiliate-tracking.vercel.app/affiliate/signup">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#05030a">
+  <meta name="description" content="Apply to the self-contained EMX affiliate program, manage your EMX referral link, and review attributed visits and commissions.">
+  <meta property="og:title" content="EMX Affiliate Program">
+  <meta property="og:description" content="A first-party EMX referral program with EMX accounts, links, visit tracking, and commission records.">
+  <meta property="og:image" content="https://efect-macros-x-tweaks.vercel.app/emx-logo-v2.png">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://efect-macros-x-tweaks.vercel.app/affiliate.html">
+  <link rel="icon" type="image/png" href="emx-logo-v2.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="foundation.css">
+  <link rel="stylesheet" href="affiliate.css">
   <title>EMX Affiliate Program</title>
-  <script>window.location.replace("https://emx-affiliate-tracking.vercel.app/affiliate/signup");</script>
 </head>
-<body>
-  <p>Opening the <a href="https://emx-affiliate-tracking.vercel.app/affiliate/signup">EMX Affiliate Program</a>…</p>
+<body class="affiliate-page">
+  <a class="emx-skip-link" href="#main">Skip to content</a>
+  <header class="affiliate-header">
+    <a class="affiliate-brand" href="./index.html" aria-label="EMX TWEAKS home">
+      <img src="emx-logo-v2.png" width="500" height="500" alt="">
+      <span>EMX <strong>TWEAKS</strong></span>
+    </a>
+    <nav aria-label="Affiliate navigation">
+      <a href="./products.html">Products</a>
+      <a href="./affiliate.html" aria-current="page">Affiliate program</a>
+      <a href="./contact.html">Support</a>
+    </nav>
+    <button class="affiliate-sign-in" id="showLoginButton" type="button">Affiliate sign in</button>
+  </header>
+
+  <main id="main">
+    <section class="affiliate-hero" aria-labelledby="affiliate-title">
+      <div class="affiliate-hero-copy">
+        <p class="affiliate-kicker"><span></span> BUILT AND TRACKED BY EMX</p>
+        <h1 id="affiliate-title">Share EMX.<br><em>See what you earn.</em></h1>
+        <p>Apply once, get a clean <strong>emx referral link</strong>, and review attributed visits and completed-sale commission records from your own dashboard. No Payhip affiliate account is required.</p>
+        <div class="affiliate-hero-actions">
+          <button class="emx-button emx-button-primary" id="showJoinButton" type="button">Apply to join</button>
+          <button class="emx-button emx-button-secondary" id="showLoginHeroButton" type="button">Open dashboard</button>
+        </div>
+        <ul class="affiliate-trust-list" aria-label="Program principles">
+          <li>First-party EMX accounts</li>
+          <li>30-day first-party referral memory</li>
+          <li>Approval before commissions activate</li>
+        </ul>
+      </div>
+      <div class="affiliate-console" aria-label="How EMX attribution works">
+        <div class="affiliate-console-head"><span>EMX // REFERRAL FLOW</span><i>FIRST PARTY</i></div>
+        <ol>
+          <li><b>01</b><div><strong>Share</strong><span>Send your personal EMX link.</span></div></li>
+          <li><b>02</b><div><strong>Remember</strong><span>EMX keeps the latest valid referral for 30 days.</span></div></li>
+          <li><b>03</b><div><strong>Attribute</strong><span>The referral code travels with checkout metadata.</span></div></li>
+          <li><b>04</b><div><strong>Review</strong><span>Completed sales appear in your EMX dashboard.</span></div></li>
+        </ol>
+        <p>Commission rate and payout terms are shown only after EMX approval. No rate is invented on this page.</p>
+      </div>
+    </section>
+
+    <section class="affiliate-workspace" aria-live="polite">
+      <div class="affiliate-panel" id="joinPanel">
+        <div class="panel-heading">
+          <p class="affiliate-kicker"><span></span> CREATE YOUR ACCOUNT</p>
+          <h2>Create your EMX affiliate account</h2>
+          <p>Your first-party referral link activates immediately. EMX can review activity and adjust commission eligibility without interrupting honest link tracking.</p>
+        </div>
+        <form id="joinForm">
+          <label>Creator display name<input name="displayName" autocomplete="name" maxlength="48" required placeholder="Your creator name"></label>
+          <label>Email address<input name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com"></label>
+          <label>Preferred referral code<span class="field-prefix">emx/r/</span><input class="has-prefix" name="code" autocomplete="off" minlength="3" maxlength="40" pattern="[a-zA-Z0-9-]+" required placeholder="your-name"></label>
+          <label>Password<input name="password" type="password" autocomplete="new-password" minlength="10" maxlength="128" required aria-describedby="passwordHint"></label>
+          <p class="field-hint" id="passwordHint">Use 10 or more characters with at least one letter and one number.</p>
+          <button class="emx-button emx-button-primary" type="submit">Create affiliate account</button>
+          <p class="form-status" id="joinStatus" role="status"></p>
+        </form>
+      </div>
+
+      <div class="affiliate-panel" id="loginPanel" hidden>
+        <div class="panel-heading">
+          <p class="affiliate-kicker"><span></span> AFFILIATE ACCESS</p>
+          <h2>Sign in to your dashboard</h2>
+          <p>Use the email and password created with your EMX affiliate account.</p>
+        </div>
+        <form id="loginForm">
+          <label>Email address<input name="email" type="email" autocomplete="email" required></label>
+          <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+          <button class="emx-button emx-button-primary" type="submit">Sign in</button>
+          <p class="form-status" id="loginStatus" role="status"></p>
+        </form>
+      </div>
+
+      <div class="affiliate-dashboard" id="dashboardPanel" hidden>
+        <div class="dashboard-head">
+          <div>
+            <p class="affiliate-kicker"><span></span> YOUR EMX DASHBOARD</p>
+            <h2 id="dashboardName">Affiliate dashboard</h2>
+            <p id="dashboardStatus"></p>
+          </div>
+          <button class="emx-button emx-button-secondary" id="logoutButton" type="button">Sign out</button>
+        </div>
+        <div class="referral-link-card">
+          <label for="referralLink">Your referral link</label>
+          <div><input id="referralLink" readonly><button id="copyReferralButton" type="button">Copy link</button></div>
+        </div>
+        <section class="affiliate-onboarding" id="affiliateOnboarding" aria-labelledby="onboardingTitle" hidden>
+          <div class="onboarding-head"><div><p class="affiliate-kicker"><span></span> START HERE</p><h3 id="onboardingTitle">Your three-step launch checklist</h3></div><strong id="onboardingProgress">0 / 3 complete</strong></div>
+          <ol class="onboarding-list">
+            <li id="onboardingCopyStep"><span>1</span><div><strong>Copy your referral link</strong><p>Use the exact personal link shown above.</p><button id="onboardingCopyButton" type="button">Copy my link</button></div></li>
+            <li id="onboardingShareStep"><span>2</span><div><strong>Share it with the right audience</strong><p>This completes automatically after the dashboard records the first unique visit. Never spam or make performance guarantees.</p><a href="./products.html">Review products before sharing</a></div></li>
+            <li id="onboardingEligibilityStep"><span>3</span><div><strong>Understand sale eligibility</strong><p>A sale becomes eligible only after approval and a completed checkout is attributed to your referral code. Visits alone do not create commission.</p><button id="onboardingUnderstandButton" type="button">I understand</button></div></li>
+          </ol>
+        </section>
+        <div class="onboarding-pending" id="onboardingPending" hidden><strong>This account is not active.</strong><span>Contact EMX support if you believe the status is incorrect.</span></div>
+        <div class="metric-grid">
+          <article><span>Unique visits</span><strong id="metricClicks">0</strong><small>Daily-deduplicated first-party visits</small></article>
+          <article><span>Product views</span><strong id="metricProductViews">0</strong><small>Referred product interest</small></article>
+          <article><span>Conversions</span><strong id="metricConversions">0</strong><small>Free downloads + verified sales</small></article>
+          <article><span>Free downloads</span><strong id="metricFreeConversions">0</strong><small>Real $0 conversion events</small></article>
+          <article><span>Pending commission</span><strong id="metricPending">$0.00</strong><small id="metricRate">Rate set after approval</small></article>
+          <article><span>Recorded paid</span><strong id="metricPaid">$0.00</strong><small>Ledger entries recorded by EMX</small></article>
+        </div>
+        <section class="conversion-panel" aria-labelledby="conversionTitle">
+          <div><h3 id="conversionTitle">Recent conversion records</h3><p>Includes free downloads and verified paid sales. Sensitive order details stay private.</p></div>
+          <div class="conversion-list" id="conversionList"><p class="empty-state">No attributed conversions yet.</p></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="affiliate-terms">
+      <div><p class="affiliate-kicker"><span></span> HONEST ATTRIBUTION</p><h2>What this system does—and does not do</h2></div>
+      <div class="terms-grid">
+        <article><h3>EMX owns the tracking</h3><p>Accounts, referral memory, unique visit counts, approval status, commission records, and the dashboard are handled by EMX.</p></article>
+        <article><h3>Checkout confirms a sale</h3><p>The current product checkout sends EMX a signed completed-sale event. EMX reads its own referral metadata and credits the matching approved account.</p></article>
+        <article><h3>No automatic money transfer</h3><p>The dashboard is an earnings ledger, not a bank. A payout is marked paid only after EMX sends it using the separately agreed method.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="affiliate-footer"><span>EMX TWEAKS</span><div><a href="./products.html">Products</a><a href="./faq.html">FAQ</a><a href="./contact.html">Support</a></div></footer>
+  <script defer src="foundation.js"></script>
+  <script defer src="affiliate.js"></script>
 </body>
 </html>

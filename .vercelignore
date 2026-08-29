@@ -4,3 +4,12 @@
 node_modules
 window-deck-preview-*.png
 emx-app-tab-screenshots.zip
+docs
+scripts
+tests
+dist
+*.md
+payhip-vouch-assets
+tmp-payhip-builder.js
+payhip-brand-kit.html
+payhip-emx-header-injection.html

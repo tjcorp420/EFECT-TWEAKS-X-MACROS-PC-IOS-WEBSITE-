@@ -1,4 +1,5 @@
 const { put } = require("@vercel/blob");
+const { requireAdmin } = require("./_lib/admin-auth");
 
 const MAX_UPLOAD_BYTES = 45 * 1024 * 1024;
 const ALLOWED_TYPES = new Set([
@@ -6,7 +7,6 @@ const ALLOWED_TYPES = new Set([
   "image/png",
   "image/webp",
   "image/gif",
-  "image/svg+xml",
   "video/mp4",
   "video/webm",
   "video/quicktime"
@@ -17,13 +17,6 @@ function sendJson(res, response, status = 200) {
   res.setHeader("content-type", "application/json; charset=utf-8");
   res.setHeader("cache-control", "no-store");
   res.end(JSON.stringify(response));
-}
-
-function requireAdmin(req) {
-  const expected = process.env.ADMIN_PASSWORD || "";
-  const actual = req.headers["x-admin-password"] || "";
-
-  return Boolean(expected && actual && expected === actual);
 }
 
 function safeFileName(value) {
@@ -42,7 +35,6 @@ function extensionForContentType(contentType) {
   if (contentType === "image/png") return ".png";
   if (contentType === "image/webp") return ".webp";
   if (contentType === "image/gif") return ".gif";
-  if (contentType === "image/svg+xml") return ".svg";
   if (contentType === "video/mp4") return ".mp4";
   if (contentType === "video/webm") return ".webm";
   if (contentType === "video/quicktime") return ".mov";
@@ -103,7 +95,7 @@ async function handler(req, res) {
     if (!ALLOWED_TYPES.has(contentType)) {
       return sendJson(res, {
         ok: false,
-        error: "Unsupported file type. Upload JPG, PNG, WEBP, GIF, SVG, MP4, WEBM, or MOV."
+        error: "Unsupported file type. Upload JPG, PNG, WEBP, GIF, MP4, WEBM, or MOV. Active SVG files are not accepted."
       }, 400);
     }
 

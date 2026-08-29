@@ -5,27 +5,15 @@
 "start_url": "./index.html",
 "scope": "./",
 "display": "standalone",
-"background_color": "#000000",
-"theme_color": "#000000",
+"background_color": "#05030a",
+"theme_color": "#05030a",
 "orientation": "portrait",
 "icons": [
 {
-"src": "./emx-logo.png",
-"sizes": "180x180",
+"src": "./emx-logo-v2.png",
+"sizes": "500x500",
 "type": "image/png",
-"purpose": "any maskable"
-},
-{
-"src": "./emx-logo.png",
-"sizes": "192x192",
-"type": "image/png",
-"purpose": "any maskable"
-},
-{
-"src": "./emx-logo.png",
-"sizes": "512x512",
-"type": "image/png",
-"purpose": "any maskable"
+"purpose": "any"
 }
 ]
 }

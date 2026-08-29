@@ -3,11 +3,12 @@ const {
   processPayhipPayload,
   sendJson
 } = require("./_lib/license-automation");
+const { secretMatches } = require("./_lib/admin-auth");
 
 function isAllowed(req, body) {
   const expected = process.env.EMX_LICENSE_TEST_SECRET || process.env.ADMIN_PASSWORD || "";
   const actual = req.headers["x-emx-test-secret"] || req.headers["x-admin-password"] || body.secret || "";
-  return Boolean(expected && actual && expected === actual);
+  return secretMatches(expected, actual);
 }
 
 function samplePayload(overrides = {}) {

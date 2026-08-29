@@ -1,0 +1,5 @@
+import { upload } from "@vercel/blob/client";
+
+const signatures={zip:bytes=>bytes[0]===0x50&&bytes[1]===0x4b&&[0x03,0x05,0x07].includes(bytes[2]),exe:bytes=>bytes[0]===0x4d&&bytes[1]===0x5a,msi:bytes=>[0xd0,0xcf,0x11,0xe0,0xa1,0xb1,0x1a,0xe1].every((value,index)=>bytes[index]===value),"7z":bytes=>[0x37,0x7a,0xbc,0xaf,0x27,0x1c].every((value,index)=>bytes[index]===value)};
+async function validFile(file){const ext=file.name.split(".").pop().toLowerCase(),check=signatures[ext];if(!check)return false;return check(new Uint8Array(await file.slice(0,32).arrayBuffer()));}
+window.EMXProductUpload={async upload(file,{password,onProgress}={}){if(!file||!(await validFile(file)))throw new Error("The file signature does not match a supported ZIP, EXE, MSI, or 7Z package.");const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"-").slice(0,120);return upload(`emx-products/${Date.now()}-${safe}`,file,{access:"public",handleUploadUrl:"/api/product-upload",headers:{"x-admin-password":password||""},multipart:file.size>20*1024*1024,onUploadProgress:onProgress});}};

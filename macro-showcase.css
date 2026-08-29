@@ -1,0 +1,35 @@
+.macro-hero {
+  display: grid;
+  grid-template-columns: minmax(300px, .78fr) minmax(420px, 1fr);
+  align-items: center;
+  gap: clamp(32px, 6vw, 76px);
+  padding: 70px 0 64px;
+}
+.macro-hero-copy h1 { font-size: clamp(3rem, 5vw, 5.2rem); }
+.macro-hero-copy > p:not(.eyebrow) { max-width: 600px; color: #aaa1b4; line-height: 1.7; }
+.macro-hero-shot { margin: 0; overflow: hidden; border: 1px solid rgba(207, 112, 255, .32); border-radius: 20px; background: #08050d; box-shadow: 0 26px 70px rgba(0,0,0,.46); }
+.macro-hero-shot picture { display: contents; }.macro-hero-shot img { display: block; width: 100%; height: auto; }
+.macro-hero-shot figcaption, .macro-gallery figcaption { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 13px 16px; border-top: 1px solid rgba(255,255,255,.08); }
+.macro-hero-shot figcaption b, .macro-gallery figcaption b { font-family: var(--emx-font-display); font-size: .85rem; }
+.macro-hero-shot figcaption span, .macro-gallery figcaption span { color: #8f8699; font-size: .66rem; }
+.macro-facts { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid rgba(255,255,255,.09); border-radius: 18px; background: rgba(12,7,18,.78); }
+.macro-facts article { padding: 24px; }
+.macro-facts article + article { border-left: 1px solid rgba(255,255,255,.08); }
+.macro-facts b { color: #c66fff; font-size: .62rem; }
+.macro-facts h2 { margin: 28px 0 8px; font-size: 1.15rem; }
+.macro-facts p { margin: 0; color: #9990a2; font-size: .76rem; line-height: 1.55; }
+.macro-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.macro-gallery figure { margin: 0; overflow: hidden; border: 1px solid rgba(206,139,255,.16); border-radius: 18px; background: #09060e; }
+.macro-gallery a { display: block; padding: 10px; background: #050307; }
+.macro-gallery img { display: block; width: 100%; height: auto; border-radius: 11px; transition: transform 180ms ease; }
+.macro-gallery a:hover img { transform: scale(1.008); }
+.privacy-note { margin: 18px 0 0; color: #857b8d; font-size: .7rem; }
+
+@media (max-width: 900px) {
+  .macro-hero { grid-template-columns: 1fr; padding-top: 58px; }
+}
+@media (max-width: 700px) {
+  .macro-gallery, .macro-facts { grid-template-columns: 1fr; }
+  .macro-facts article + article { border-top: 1px solid rgba(255,255,255,.08); border-left: 0; }
+  .macro-gallery figcaption, .macro-hero-shot figcaption { align-items: flex-start; flex-direction: column; gap: 4px; }
+}

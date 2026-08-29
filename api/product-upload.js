@@ -1,0 +1,12 @@
+const { handleUpload } = require("@vercel/blob/client");
+const { del } = require("@vercel/blob");
+const { requireAdmin } = require("./_lib/admin-auth");
+
+const MAX_BYTES = 2 * 1024 * 1024 * 1024;
+const EXTENSIONS = new Set(["zip", "exe", "msi", "7z"]);
+const TYPES = ["application/zip", "application/x-zip-compressed", "application/octet-stream", "application/x-msdownload", "application/x-msi", "application/x-7z-compressed"];
+function json(res, body, status=200){res.statusCode=status;res.setHeader("content-type","application/json; charset=utf-8");res.setHeader("cache-control","no-store");res.end(JSON.stringify(body));}
+function extension(pathname){return String(pathname||"").split(".").pop().toLowerCase();}
+function signatureOk(bytes, ext){const b=Buffer.from(bytes);if(ext==="zip")return b[0]===0x50&&b[1]===0x4b&&[0x03,0x05,0x07].includes(b[2]);if(ext==="exe")return b[0]===0x4d&&b[1]===0x5a;if(ext==="msi")return b.slice(0,8).equals(Buffer.from([0xd0,0xcf,0x11,0xe0,0xa1,0xb1,0x1a,0xe1]));if(ext==="7z")return b.slice(0,6).equals(Buffer.from([0x37,0x7a,0xbc,0xaf,0x27,0x1c]));return false;}
+module.exports=async function handler(req,res){try{if(req.method!=="POST")return json(res,{ok:false,error:"Method not allowed."},405);const body=req.body&&typeof req.body==="object"?req.body:JSON.parse(String(req.body||"{}"));if(body.type==="blob.generate-client-token"&&!requireAdmin(req))return json(res,{ok:false,error:"Unauthorized."},401);const result=await handleUpload({request:req,body,onBeforeGenerateToken:async pathname=>{const ext=extension(pathname);if(!EXTENSIONS.has(ext))throw new Error("Upload ZIP, EXE, MSI, or 7Z product files only.");return{allowedContentTypes:TYPES,maximumSizeInBytes:MAX_BYTES,addRandomSuffix:true,allowOverwrite:false,tokenPayload:JSON.stringify({ext})}},onUploadCompleted:async({blob,tokenPayload})=>{const ext=JSON.parse(tokenPayload||"{}").ext||extension(blob.pathname);try{const response=await fetch(blob.url,{headers:{range:"bytes=0-31"}});const bytes=Buffer.from(await response.arrayBuffer());if(!response.ok||!signatureOk(bytes,ext)){await del(blob.url);console.error("Rejected uploaded product file with invalid signature",blob.pathname);}}catch(error){await del(blob.url).catch(()=>{});console.error("Product upload validation failed",error instanceof Error?error.message:error);}}});return json(res,result);}catch(error){return json(res,{ok:false,error:error instanceof Error?error.message:"Product upload failed."},400)}};
+module.exports.signatureOk=signatureOk;

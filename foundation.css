@@ -1,0 +1,108 @@
+:root {
+  --emx-bg: #05030a;
+  --emx-bg-raised: #0b0711;
+  --emx-surface: rgba(15, 9, 23, .84);
+  --emx-surface-strong: #120b1b;
+  --emx-text: #f8f5ff;
+  --emx-text-muted: #aaa2b8;
+  --emx-text-subtle: #817889;
+  --emx-green: #aaff5b;
+  --emx-green-deep: #72e73e;
+  --emx-purple: #b94fff;
+  --emx-purple-soft: #d17cff;
+  --emx-danger: #ff6b7a;
+  --emx-warning: #ffbe55;
+  --emx-border: rgba(219, 191, 255, .16);
+  --emx-border-strong: rgba(207, 112, 255, .48);
+  --emx-radius-sm: 11px;
+  --emx-radius-md: 17px;
+  --emx-radius-lg: 18px;
+  --emx-radius-xl: 21px;
+  --emx-font-body: Inter, "Segoe UI", Arial, sans-serif;
+  --emx-font-display: "Space Grotesk", Inter, "Segoe UI", sans-serif;
+  --emx-shadow-lg: 0 24px 70px rgba(0, 0, 0, .38), inset 0 1px rgba(255, 255, 255, .045);
+  --emx-focus-shadow: 0 0 0 2px var(--emx-bg), 0 0 0 5px var(--emx-green);
+  --emx-content-width: 1200px;
+}
+
+html { scroll-behavior: smooth; }
+body { min-width: 320px; }
+[hidden] { display: none !important; }
+
+.emx-skip-link {
+  position: fixed;
+  z-index: 2147483647;
+  top: 12px;
+  left: 12px;
+  padding: 12px 15px;
+  border: 1px solid var(--emx-green);
+  border-radius: var(--emx-radius-sm);
+  color: #0d1408;
+  background: var(--emx-green);
+  box-shadow: var(--emx-focus-shadow);
+  font: 800 .82rem/1 var(--emx-font-body);
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 160ms ease;
+}
+.emx-skip-link:focus { transform: translateY(0); outline: none; }
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--emx-focus-shadow);
+}
+
+.emx-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: var(--emx-radius-sm);
+  font: 800 .82rem/1 var(--emx-font-body);
+  text-decoration: none;
+  transition: transform 160ms ease, filter 160ms ease, border-color 160ms ease, background 160ms ease;
+  cursor: pointer;
+}
+.emx-button:hover { transform: translateY(-2px); }
+.emx-button:active { transform: translateY(0) scale(.985); }
+.emx-button:disabled, .emx-button[aria-disabled="true"] { cursor: not-allowed; filter: grayscale(.35); opacity: .55; transform: none; }
+.emx-button-primary { border: 1px solid rgba(206, 124, 255, .6); color: #fff; background: linear-gradient(135deg, #8d32dc, #c357ff); box-shadow: 0 12px 28px rgba(137, 43, 210, .2); }
+.emx-button-secondary { border: 1px solid rgba(210, 153, 255, .24); color: var(--emx-text); background: rgba(15, 9, 23, .74); }
+
+.emx-nav-toggle {
+  position: relative;
+  display: none;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--emx-border);
+  border-radius: var(--emx-radius-sm);
+  color: var(--emx-text);
+  background: rgba(255, 255, 255, .035);
+  cursor: pointer;
+}
+.emx-nav-toggle span, .emx-nav-toggle::before, .emx-nav-toggle::after { content: ""; position: absolute; left: 11px; display: block; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: top 180ms ease, transform 180ms ease, opacity 180ms ease; }
+.emx-nav-toggle::before { top: 13px; }
+.emx-nav-toggle span { top: 20px; }
+.emx-nav-toggle::after { top: 27px; }
+.emx-nav-toggle[aria-expanded="true"] span { opacity: 0; }
+.emx-nav-toggle[aria-expanded="true"]::before { top: 20px; transform: rotate(45deg); }
+.emx-nav-toggle[aria-expanded="true"]::after { top: 20px; transform: rotate(-45deg); }
+
+@media (max-width: 720px) {
+  .foundation-ready .emx-nav-toggle { display: grid; }
+  .foundation-ready [data-emx-mobile-nav] { display: none; }
+  .foundation-ready [data-emx-mobile-nav].is-open { display: flex; }
+}
+
+@media (forced-colors: active) {
+  .emx-button, .emx-nav-toggle { border: 1px solid ButtonText; }
+  .emx-skip-link { border: 2px solid LinkText; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}

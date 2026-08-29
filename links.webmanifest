@@ -4,14 +4,14 @@
   "description": "Official EMX quick launch hub.",
   "start_url": "/links",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#05030a",
+  "theme_color": "#05030a",
   "icons": [
     {
-      "src": "/emx-logo.png",
-      "sizes": "512x512",
+      "src": "/emx-logo-v2.png",
+      "sizes": "500x500",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }

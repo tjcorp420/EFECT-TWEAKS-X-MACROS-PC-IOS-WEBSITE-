@@ -1,4 +1,8 @@
 const crypto = require("crypto");
+const {
+  recordAffiliateConversion,
+  recordAffiliateRefund
+} = require("./affiliate-program");
 
 const LICENSE_POOL_PATH = "licensePool";
 const LICENSES_PATH = "licenses";
@@ -9,9 +13,11 @@ const BASE_PRODUCT_MAP = {
   Isg28: ["EMX_OS"],
   KQLzN: ["EMX_ZERO_DELAY"],
   "0TOjr": ["EMX_MACRO"],
+  TJFav: ["EMX_TWEAK_DASHBOARD"],
+  Oqz73: ["EMX_VOLT"],
   EQIrd: ["EMX_FPS"],
-  By7FV: ["EMX_OS", "EMX_MACRO"],
-  OS_MACRO_BUNDLE_TEST: ["EMX_OS", "EMX_MACRO"],
+  By7FV: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
+  OS_MACRO_BUNDLE_TEST: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
   Bundle: ["EMX_ZERO_DELAY", "EMX_MACRO", "EMX_FPS"]
 };
 
@@ -19,6 +25,8 @@ const PRODUCT_LABELS = {
   EMX_OS: "EMX Custom OS",
   EMX_ZERO_DELAY: "EMX Ultimate Tweak Utility",
   EMX_MACRO: "EMX Premium KBM Macro",
+  EMX_TWEAK_DASHBOARD: "EMX Windows Tweak Dashboard",
+  EMX_VOLT: "EMX VOLT Macro",
   EMX_FPS: "EMX FPS Booster",
   EMX_CONTROLLER_MACRO: "EMX Controller Macro"
 };
@@ -481,13 +489,17 @@ async function applyPaidPurchase(payload, options = {}) {
   const orderRef = db.ref(`${ORDERS_PATH}/${orderId}`);
   const orderSnap = await orderRef.once("value");
   const existingOrder = orderSnap.val();
+  const affiliateConversion = await recordAffiliateConversion(db, payload, orderId);
 
   if (existingOrder && existingOrder.processed === true) {
     return {
       ...plan,
       alreadyProcessed: true,
       licenseKey: normalizeLicenseKey(existingOrder.licenseKey || ""),
-      isNewLicense: false
+      isNewLicense: false,
+      affiliate: affiliateConversion
+        ? { code: affiliateConversion.code, status: affiliateConversion.status }
+        : null
     };
   }
 
@@ -557,6 +569,14 @@ async function applyPaidPurchase(payload, options = {}) {
     payhipDate: payload.date || null,
     amount: payload.price || null,
     currency: payload.currency || null,
+    affiliate: affiliateConversion
+      ? {
+          affiliateId: affiliateConversion.affiliateId,
+          code: affiliateConversion.code,
+          commissionCents: affiliateConversion.commissionCents,
+          status: affiliateConversion.status
+        }
+      : null,
     emailDelivery: {
       status: "pending",
       updatedAt: now
@@ -584,7 +604,10 @@ async function applyPaidPurchase(payload, options = {}) {
     alreadyProcessed: false,
     licenseKey,
     isNewLicense,
-    emailDelivery
+    emailDelivery,
+    affiliate: affiliateConversion
+      ? { code: affiliateConversion.code, status: affiliateConversion.status }
+      : null
   };
 }
 
@@ -606,6 +629,12 @@ async function applyRefund(payload, options = {}) {
   }
 
   const db = options.db || getDb();
+  const affiliateRefund = await recordAffiliateRefund(
+    db,
+    orderId,
+    payload.amount_refunded,
+    payload.price
+  );
   await db.ref(`${ORDERS_PATH}/${orderId}`).update({
     refunded: true,
     refundType: payload.amount_refunded === payload.price ? "full" : "partial",
@@ -617,7 +646,10 @@ async function applyRefund(payload, options = {}) {
   return {
     type: "refunded",
     orderId,
-    action: "marked-refunded"
+    action: "marked-refunded",
+    affiliate: affiliateRefund
+      ? { code: affiliateRefund.code, reversedCommissionCents: affiliateRefund.reversedCommissionCents }
+      : null
   };
 }
 

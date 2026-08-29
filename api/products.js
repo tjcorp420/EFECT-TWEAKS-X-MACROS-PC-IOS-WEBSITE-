@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
+const { requireAdmin } = require("./_lib/admin-auth");
 
 const PRODUCTS_KEY = "emx:products:v1";
 const CHECKOUT_BASE = "https://payhip.com/buy";
@@ -8,20 +9,13 @@ const DEFAULT_BUNDLE_ITEMS = {
   os_macro_bundle: ["custom_os", "macro"],
   bundle: ["windows_tweak_dashboard", "macro", "fps"]
 };
-const RETIRED_PRODUCT_IDS = new Set(["macro", "controller_macro", "os_macro_bundle", "bundle"]);
+const RETIRED_PRODUCT_IDS = new Set(["macro", "controller_macro", "bundle"]);
 
 function sendJson(res, response, status = 200) {
   res.statusCode = status;
   res.setHeader("content-type", "application/json; charset=utf-8");
   res.setHeader("cache-control", "no-store");
   res.end(JSON.stringify(response));
-}
-
-function requireAdmin(req) {
-  const expected = process.env.ADMIN_PASSWORD || "";
-  const actual = req.headers["x-admin-password"] || "";
-
-  return Boolean(expected && actual && expected === actual);
 }
 
 function assertKvConfigured() {
@@ -156,7 +150,7 @@ function normalizeProduct(product, index) {
   const productUrl = cleanUrl(product.productUrl)
     || (key ? `${CHECKOUT_BASE}?link=${encodeURIComponent(key)}` : "");
 
-  const image = cleanUrl(product.image) || "./emx-logo.png";
+  const image = cleanUrl(product.image) || "./emx-logo-v2.png";
   const gallery = normalizeLines(product.gallery, 24).map(cleanUrl).filter(Boolean);
   const previewType = product.previewType === "video" ? "video" : "image";
   const previewSrc = cleanUrl(product.previewSrc) || image;
@@ -191,6 +185,29 @@ function normalizeProduct(product, index) {
     modalTitle: cleanString(product.modalTitle, 120),
     modalSubtitle: cleanString(product.modalSubtitle, 300),
     ctaLabel: cleanString(product.ctaLabel, 40),
+    version: cleanString(product.version, 80),
+    lastVerified: cleanString(product.lastVerified, 80),
+    platform: cleanString(product.platform, 100),
+    purpose: cleanString(product.purpose, 180),
+    licenseType: cleanString(product.licenseType, 120),
+    controllerSupport: cleanString(product.controllerSupport, 180),
+    slug: cleanId(product.slug, id),
+    category: cleanString(product.category, 80),
+    fullDescription: cleanString(product.fullDescription, 4000),
+    deliveryType: ["payhip", "direct", "external", "coming-soon", "none"].includes(product.deliveryType) ? product.deliveryType : (key ? "payhip" : "external"),
+    deliveryUrl: cleanUrl(product.deliveryUrl || product.downloadUrl),
+    deliveryFileName: cleanString(product.deliveryFileName, 160),
+    documentationUrl: cleanUrl(product.documentationUrl),
+    supportUrl: cleanUrl(product.supportUrl),
+    installation: normalizeLines(product.installation, 20),
+    changelog: normalizeLines(product.changelog, 30),
+    publishStatus: ["published", "draft", "archived", "coming-soon"].includes(product.publishStatus) ? product.publishStatus : (product.visible === false ? "draft" : "published"),
+    sortPriority: Math.max(0, Math.round(Number(product.sortPriority || index + 1))),
+    showInIntro: product.showInIntro !== false,
+    introOrder: Math.max(0, Math.round(Number(product.introOrder || index + 1))),
+    requirements: normalizeLines(product.requirements, 12),
+    recovery: normalizeLines(product.recovery, 12),
+    limitations: normalizeLines(product.limitations, 12),
     updatedAt: cleanString(product.updatedAt, 40) || new Date().toISOString()
   };
 }
@@ -213,6 +230,32 @@ async function loadProducts() {
     products = [...products, ...missingSeedProducts];
   }
 
+  const seedById = new Map(seedProducts.map(product => [cleanId(product.id, ""), product]));
+  products = products.map(product => {
+    const id = cleanId(product.id, "");
+    const seed = seedById.get(id);
+    if (!seed) return product;
+    return {
+      ...seed,
+      ...product,
+      ...( ["volt", "os_macro_bundle"].includes(id) ? {
+        image: seed.image,
+        gallery: seed.gallery,
+        previewSrc: seed.previewSrc,
+        fallbackPreview: seed.fallbackPreview
+      } : {}),
+      version: product.version || seed.version,
+      lastVerified: product.lastVerified || seed.lastVerified,
+      platform: product.platform || seed.platform,
+      purpose: product.purpose || seed.purpose,
+      licenseType: product.licenseType || seed.licenseType,
+      controllerSupport: product.controllerSupport || seed.controllerSupport,
+      requirements: product.requirements?.length ? product.requirements : seed.requirements,
+      recovery: product.recovery?.length ? product.recovery : seed.recovery,
+      limitations: product.limitations?.length ? product.limitations : seed.limitations
+    };
+  });
+
   return products
     .map(normalizeProduct)
     .filter(product => !RETIRED_PRODUCT_IDS.has(product.id));
@@ -234,13 +277,16 @@ async function saveProducts(products) {
       throw new Error(`Duplicate product ID: ${product.id}`);
     }
     seen.add(product.id);
+    if (product.deliveryType === "direct" && product.price > 0) {
+      throw new Error(`Paid product ${product.id} must use an entitlement-protected checkout. Public direct delivery is limited to free products.`);
+    }
   }
 
   await kvSet(PRODUCTS_KEY, normalized);
   return normalized;
 }
 
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   try {
     if (req.method === "OPTIONS") {
       return sendJson(res, { ok: true });
@@ -271,4 +317,7 @@ module.exports = async function handler(req, res) {
       error: error instanceof Error ? error.message : "Products API failed."
     }, 500);
   }
-};
+}
+
+module.exports = handler;
+module.exports.loadProducts = loadProducts;
