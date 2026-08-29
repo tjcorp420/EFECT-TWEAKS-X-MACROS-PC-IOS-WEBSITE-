@@ -131,7 +131,7 @@ function parseBody(req) {
   return {};
 }
 
-function getFirebaseAdmin() {
+function getDb() {
   const databaseURL = process.env.FIREBASE_DATABASE_URL || process.env.EMX_FIREBASE_DATABASE_URL || "";
   const serviceAccountRaw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.EMX_FIREBASE_SERVICE_ACCOUNT_JSON || "";
 
@@ -139,27 +139,19 @@ function getFirebaseAdmin() {
     throw new Error("Firebase Admin is not configured. Set FIREBASE_DATABASE_URL and FIREBASE_SERVICE_ACCOUNT_JSON.");
   }
 
-  const admin = require("firebase-admin");
-
-  if (!admin.apps.length) {
-    let credentialJson;
-    try {
-      credentialJson = JSON.parse(serviceAccountRaw);
-    } catch (error) {
-      throw new Error("FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON.");
-    }
-
-    admin.initializeApp({
-      credential: admin.credential.cert(credentialJson),
-      databaseURL
-    });
+  let credentialJson;
+  try {
+    credentialJson = JSON.parse(serviceAccountRaw);
+  } catch (error) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON.");
   }
 
-  return admin;
-}
-
-function getDb() {
-  return getFirebaseAdmin().database();
+  const { cert, getApps, initializeApp } = require("firebase-admin/app");
+  const { getDatabase } = require("firebase-admin/database");
+  const appName = "emx-license-automation";
+  const app = getApps().find(candidate => candidate.name === appName)
+    || initializeApp({ credential: cert(credentialJson), databaseURL }, appName);
+  return getDatabase(app);
 }
 
 function getProductsFromItems(items = []) {

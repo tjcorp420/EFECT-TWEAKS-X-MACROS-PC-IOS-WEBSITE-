@@ -62,7 +62,7 @@ function safeKey(value) {
   return String(value || "").replace(/[.#$/[\]]/g, "_").slice(0, 180);
 }
 
-function getFirebaseAdmin() {
+function getDb() {
   const databaseURL = process.env.FIREBASE_DATABASE_URL || process.env.EMX_FIREBASE_DATABASE_URL || "";
   const serviceAccountRaw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON || process.env.EMX_FIREBASE_SERVICE_ACCOUNT_JSON || "";
 
@@ -70,24 +70,19 @@ function getFirebaseAdmin() {
     throw new Error("Affiliate storage is not configured.");
   }
 
-  const admin = require("firebase-admin");
-  if (!admin.apps.length) {
-    let credentialJson;
-    try {
-      credentialJson = JSON.parse(serviceAccountRaw);
-    } catch (error) {
-      throw new Error("Affiliate storage credentials are invalid.");
-    }
-    admin.initializeApp({
-      credential: admin.credential.cert(credentialJson),
-      databaseURL
-    });
+  let credentialJson;
+  try {
+    credentialJson = JSON.parse(serviceAccountRaw);
+  } catch (error) {
+    throw new Error("Affiliate storage credentials are invalid.");
   }
-  return admin;
-}
 
-function getDb() {
-  return getFirebaseAdmin().database();
+  const { cert, getApps, initializeApp } = require("firebase-admin/app");
+  const { getDatabase } = require("firebase-admin/database");
+  const appName = "emx-affiliate";
+  const app = getApps().find(candidate => candidate.name === appName)
+    || initializeApp({ credential: cert(credentialJson), databaseURL }, appName);
+  return getDatabase(app);
 }
 
 function parseCookies(req) {
