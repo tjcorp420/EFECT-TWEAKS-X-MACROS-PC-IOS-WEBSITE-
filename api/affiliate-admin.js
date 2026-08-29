@@ -45,11 +45,26 @@ async function affiliateRecord(db, id) {
 }
 
 async function createTestAffiliate(db) {
+  const existingSnap = await db.ref("affiliateProgram/affiliates").once("value");
+  let existingTest = null;
+  existingSnap.forEach(child => {
+    const candidate = child.val() || {};
+    if (!existingTest && candidate.isTest === true && /^emx-test-[a-z0-9]+$/.test(String(candidate.code || ""))) existingTest = candidate;
+  });
+  if (existingTest) return { ...publicAffiliate(existingTest), isTest: true };
   const suffix = Date.now().toString(36);
   const affiliate = await createAffiliate(db, { email: `affiliate-test-${suffix}@example.invalid`, displayName: `EMX Test ${suffix.slice(-4)}`, code: `emx-test-${suffix}`, password: `Test-${crypto.randomBytes(8).toString("hex")}9` });
-  await db.ref(`affiliateProgram/affiliates/${safeKey(affiliate.id)}`).update({ isTest: true, notes: "Temporary affiliate created by Affiliate Command Center test mode." });
+  await db.ref(`affiliateProgram/affiliates/${safeKey(affiliate.id)}`).update({ isTest: true, notes: "EMX_DIAGNOSTIC_TEST_ONLY" });
   await writeAdminAudit(db, "affiliate.test-created", affiliate.id, { code: affiliate.code });
   return { ...publicAffiliate({ ...affiliate, isTest: true }), isTest: true };
+}
+
+function assertDisposableTestAffiliate(affiliate) {
+  const unmistakablyTestOnly = affiliate?.isTest === true
+    && /^emx-test-[a-z0-9]+$/.test(String(affiliate.code || ""))
+    && /^EMX Test [a-z0-9]+$/i.test(String(affiliate.displayName || ""))
+    && affiliate.notes === "EMX_DIAGNOSTIC_TEST_ONLY";
+  if (!unmistakablyTestOnly) throw new Error("Safety stop: this is not an isolated EMX diagnostic account.");
 }
 
 async function runDiagnostic(db, affiliate) {
@@ -70,19 +85,23 @@ async function runDiagnostic(db, affiliate) {
 }
 
 async function resetTestAffiliate(db, affiliate) {
-  if (!affiliate?.isTest) throw new Error("Only temporary test affiliates can be reset.");
+  assertDisposableTestAffiliate(affiliate);
   const updates = {
-    [`affiliateProgram/affiliates/${safeKey(affiliate.id)}`]: null,
-    [`affiliateProgram/indexByCode/${safeKey(affiliate.code)}`]: null,
-    [`affiliateProgram/indexByEmail/${safeKey(affiliate.emailHash)}`]: null,
-    [`affiliateProgram/productStats/${safeKey(affiliate.id)}`]: null
+    [`affiliateProgram/productStats/${safeKey(affiliate.id)}`]: null,
+    [`affiliateProgram/affiliates/${safeKey(affiliate.id)}/stats`]: {
+      clicks: 0, uniqueVisitors: 0, productViews: 0, checkoutOpens: 0,
+      conversions: 0, freeConversions: 0, paidConversions: 0,
+      grossCents: 0, pendingCommissionCents: 0, paidCommissionCents: 0,
+      reversedCommissionCents: 0
+    },
+    [`affiliateProgram/affiliates/${safeKey(affiliate.id)}/updatedAt`]: new Date().toISOString()
   };
   for (const path of ["events", "conversions", "payouts"]) {
     const snap = await db.ref(`affiliateProgram/${path}`).orderByChild("affiliateId").equalTo(affiliate.id).once("value");
     snap.forEach(child => { updates[`affiliateProgram/${path}/${child.key}`] = null; });
   }
   await db.ref().update(updates);
-  await writeAdminAudit(db, "affiliate.test-reset", affiliate.id, { code: affiliate.code });
+  await writeAdminAudit(db, "affiliate.test-activity-cleared", affiliate.id, { code: affiliate.code });
 }
 
 async function reforgeCode(db, affiliate, requested) {
@@ -97,7 +116,7 @@ async function reforgeCode(db, affiliate, requested) {
   return next;
 }
 
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   try {
     if (!requireAdmin(req)) return sendJson(res, { ok: false, error: "Unauthorized." }, 401);
     const db = getDb();
@@ -126,4 +145,9 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     return sendJson(res, { ok: false, error: error instanceof Error ? error.message : "Affiliate command failed." }, 400);
   }
-};
+}
+
+module.exports = handler;
+module.exports.assertDisposableTestAffiliate = assertDisposableTestAffiliate;
+module.exports.createTestAffiliate = createTestAffiliate;
+module.exports.resetTestAffiliate = resetTestAffiliate;

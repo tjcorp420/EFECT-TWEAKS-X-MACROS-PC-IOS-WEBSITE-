@@ -103,7 +103,7 @@
     const active =
       affiliate.status === "active" || affiliate.status === "approved";
     status.textContent = active
-      ? "Active. Your link tracks visits, product interest, free downloads, and eligible sales."
+      ? "Active now. You can share your link and generate attributed sales immediately. Customer payments go to EMX, and EMX distributes payouts separately."
       : `Account ${affiliate.status || "inactive"}. Contact EMX support if you need help.`;
     document.getElementById("referralLink").value =
       `${window.location.origin}/r/${encodeURIComponent(affiliate.code || "")}`;
@@ -127,8 +127,8 @@
     );
     document.getElementById("metricRate").textContent =
       active && Number(affiliate.rateBps || 0) > 0
-        ? `${(Number(affiliate.rateBps) / 100).toFixed(2).replace(/\.00$/, "")}% approved rate`
-        : "Rate set after approval";
+        ? `${(Number(affiliate.rateBps) / 100).toFixed(2).replace(/\.00$/, "")}% payout rate`
+        : "Sales active · payout rate managed by EMX";
     renderOnboarding(affiliate, stats);
 
     const list = document.getElementById("conversionList");
@@ -208,7 +208,7 @@
       renderDashboard(await request({ action: "signup", ...values }));
       setStatus(
         status,
-        "Application received. Your dashboard and referral link are ready; EMX sets paid commission eligibility after review.",
+        "Account created. Your referral link is active now and can generate attributed sales immediately.",
         "success",
       );
       joinForm.reset();
