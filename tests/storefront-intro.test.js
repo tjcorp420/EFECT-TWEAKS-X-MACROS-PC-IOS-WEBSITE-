@@ -207,3 +207,9 @@ test("the explicit intro preview URL works even with reduced motion enabled", as
   const appended = await renderIntro({ reduced: true, search: "?intro=1" });
   assert.equal(appended.length, 1);
 });
+
+test("a fresh desktop entry is not hidden by the browser motion preference", async () => {
+  const [intro] = await renderIntro({ reduced: true });
+  assert.ok(intro);
+  assert.match(intro.className, /force-motion/);
+});

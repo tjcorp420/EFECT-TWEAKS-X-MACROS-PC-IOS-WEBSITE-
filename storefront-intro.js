@@ -62,7 +62,6 @@
     if (!settings.introEnabled || settings.replayMode === "never") return false;
     if (forceReplay) return true;
     if (deliberateReload) return true;
-    if (reduced) return false;
     if (internal) return false;
     // A fresh direct or external entry should always receive the storefront
     // introduction. Session memory only protects in-site navigation from
@@ -226,7 +225,7 @@
     const timing = sequenceTiming(settings, products.length);
     remember(settings);
     const intro = document.createElement("div");
-    intro.className = `emx-cinematic intensity-${settings.animationIntensity || "balanced"}${forceReplay || deliberateReload ? " force-motion" : ""}`;
+    intro.className = `emx-cinematic intensity-${settings.animationIntensity || "balanced"}${forceReplay || deliberateReload || reduced ? " force-motion" : ""}`;
     intro.setAttribute("role", "dialog");
     intro.setAttribute("aria-modal", "true");
     intro.setAttribute("aria-label", "EMX product introduction");
