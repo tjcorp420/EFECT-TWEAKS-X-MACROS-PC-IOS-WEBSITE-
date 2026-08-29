@@ -26,7 +26,7 @@ There is no framework router, TypeScript configuration, or CSS build pipeline. N
 - Public HTML/CSS/JavaScript may contain public product facts and links only.
 - `/api/products` may read public catalog data without authentication. Mutations require server-side admin authorization.
 - `/api/affiliate-admin`, `/api/product-upload`, `/api/upload`, and test endpoints contain privileged operations and authenticate server-side.
-- `/api/analytics-track` accepts only bounded same-origin first-party events and never accepts revenue.
+- `/api/affiliate-track` accepts only bounded same-origin first-party events and never accepts revenue.
 - `/api/download` resolves catalog delivery and attempts analytics independently so telemetry failure does not deny a valid file.
 - `/api/payhip-webhook` verifies Payhip's documented SHA-256 API-key signature before any write.
 - `/api/license-lookup` reads Firebase using server credentials. It must never expose data beyond the receipt-scoped response.

@@ -88,7 +88,7 @@
   });
 
   function track(type, details = {}) {
-    return fetch(type === "referral_click" ? "/api/affiliate-track" : "/api/analytics-track", {
+    return fetch("/api/affiliate-track", {
       method: "POST",
       headers: { "content-type": "application/json" },
       credentials: "same-origin",

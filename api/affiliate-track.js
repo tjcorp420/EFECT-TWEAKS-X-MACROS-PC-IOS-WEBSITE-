@@ -1,4 +1,5 @@
-const { getDb, hasValidOrigin, sendJson, trackAffiliateClick } = require("./_lib/affiliate-program");
+const { getDb, hasValidOrigin, sendJson } = require("./_lib/affiliate-program");
+const { recordAffiliateEvent } = require("./_lib/affiliate-analytics");
 
 function readBody(req) {
   if (req.body && typeof req.body === "object") return req.body;
@@ -15,8 +16,9 @@ module.exports = async function handler(req, res) {
       return sendJson(res, { ok: false, error: "Method not allowed." }, 405);
     }
     if (!hasValidOrigin(req)) return sendJson(res, { ok: false, error: "Request origin was not accepted." }, 403);
-    return sendJson(res, { ok: true, ...(await trackAffiliateClick(getDb(), readBody(req))) });
+    const input = readBody(req);
+    return sendJson(res, { ok: true, ...(await recordAffiliateEvent(getDb(), { ...input, type: input.type || "referral_click" })) });
   } catch (error) {
-    return sendJson(res, { ok: false, error: "Affiliate visit could not be recorded." }, 503);
+    return sendJson(res, { ok: false, error: "Affiliate event could not be recorded." }, 503);
   }
 };

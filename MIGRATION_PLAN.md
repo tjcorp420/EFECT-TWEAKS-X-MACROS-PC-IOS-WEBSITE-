@@ -8,6 +8,6 @@ The new model is additive and reads legacy affiliate records.
 4. Existing catalog entries are normalized with safe delivery, publishing, and intro defaults. Review each item in Product Control before saving live.
 5. Use the marked test-affiliate flow and a real free download to populate and verify the new event/conversion branches.
 6. Keep Payhip paid delivery in place. Move only free/public packages to direct Blob delivery.
-7. After observation, retire the legacy `/api/referrals` admin path; do not delete historical conversion or payout records.
+7. The legacy `/api/referrals` wrapper is retired; historical conversion and payout records remain untouched.
 
 Rollback is code-only: the checked-in catalog remains a public fallback, and the existing provider data is not destructively migrated.
