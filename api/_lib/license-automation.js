@@ -210,8 +210,160 @@ function makeRandomLicenseKey() {
 function getLicenseClaimUrl() {
   return String(
     process.env.EMX_LICENSE_CLAIM_URL
-      || "https://efect-macros-x-tweaks.vercel.app/license.html"
+      || "https://activate.emxtweaks.com"
   ).trim();
+}
+
+async function syncVoltLicense(details, options = {}) {
+  const productIds = Array.isArray(details.productIds) ? details.productIds : [];
+  if (!productIds.includes("EMX_VOLT")) {
+    return { status: "skipped", reason: "volt-not-in-order" };
+  }
+
+  const endpoint = String(
+    options.endpoint || process.env.EMX_VOLT_LICENSE_SYNC_URL || ""
+  ).trim().replace(/\/$/, "");
+  const secret = String(
+    options.secret || process.env.EMX_LICENSE_SYNC_SECRET || ""
+  ).trim();
+
+  if (!endpoint || !secret) {
+    return { status: "skipped", reason: "volt-sync-not-configured" };
+  }
+
+  if (typeof fetch !== "function") {
+    return { status: "failed", reason: "fetch-unavailable" };
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    const response = await fetch(`${endpoint}/internal/licenses/sync`, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${secret}`,
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        licenseKey: normalizeLicenseKey(details.licenseKey),
+        ownerEmail: normalizeEmail(details.ownerEmail),
+        plan: "lifetime",
+        maxDevices: 1
+      }),
+      signal: controller.signal
+    });
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok || !body.ok) {
+      return {
+        status: "failed",
+        statusCode: response.status,
+        reason: body.error || "volt-sync-failed"
+      };
+    }
+
+    return {
+      status: "synced",
+      created: Boolean(body.created),
+      licenseId: String(body.licenseId || "")
+    };
+  } catch (error) {
+    return {
+      status: "failed",
+      reason: error && error.name === "AbortError" ? "volt-sync-timeout" : "volt-sync-unavailable"
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function syncUnifiedLicense(details, options = {}) {
+  const productIds = Array.isArray(details.productIds) ? details.productIds : [];
+  if (!productIds.length) {
+    return { status: "skipped", reason: "no-products" };
+  }
+
+  const endpoint = String(
+    options.endpoint || process.env.EMX_UNIFIED_LICENSE_SYNC_URL || ""
+  ).trim().replace(/\/$/, "");
+  const secret = String(
+    options.secret || process.env.EMX_LICENSE_SYNC_SECRET || ""
+  ).trim();
+  if (!endpoint || !secret) {
+    return { status: "skipped", reason: "unified-sync-not-configured" };
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(`${endpoint}/api/licenses/internal/sync`, {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${secret}`,
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        licenseKey: normalizeLicenseKey(details.licenseKey),
+        ownerEmail: normalizeEmail(details.ownerEmail),
+        productIds,
+        source: "payhip-webhook"
+      }),
+      signal: controller.signal
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || !body.ok) {
+      return {
+        status: "failed",
+        statusCode: response.status,
+        reason: body.error || "unified-sync-failed"
+      };
+    }
+    return {
+      status: "synced",
+      created: Boolean(body.created),
+      licenseId: String(body.licenseId || ""),
+      productIds: Array.isArray(body.productIds) ? body.productIds : []
+    };
+  } catch (error) {
+    return {
+      status: "failed",
+      reason: error && error.name === "AbortError"
+        ? "unified-sync-timeout"
+        : "unified-sync-unavailable"
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function syncProductLicenses(details) {
+  const licenseKeys = details.licenseKeys && typeof details.licenseKeys === "object"
+    ? details.licenseKeys
+    : Object.fromEntries(
+      (details.productIds || []).map(productId => [productId, details.licenseKey])
+    );
+  const entries = Object.entries(licenseKeys)
+    .map(([productId, licenseKey]) => ({
+      productId,
+      licenseKey: normalizeLicenseKey(licenseKey)
+    }))
+    .filter(entry => entry.licenseKey);
+
+  const results = await Promise.all(entries.map(async entry => {
+    const scopedDetails = {
+      licenseKey: entry.licenseKey,
+      ownerEmail: details.ownerEmail,
+      productIds: [entry.productId]
+    };
+    const [unified, volt] = await Promise.all([
+      syncUnifiedLicense(scopedDetails),
+      syncVoltLicense(scopedDetails)
+    ]);
+    return [entry.productId, { unified, volt }];
+  }));
+
+  return Object.fromEntries(results);
 }
 
 async function sendLicenseEmail(email, details) {
@@ -237,7 +389,11 @@ async function sendLicenseEmail(email, details) {
   }
 
   const orderId = String(details.orderId || "");
-  const licenseKey = normalizeLicenseKey(details.licenseKey);
+  const licenseKeys = details.licenseKeys && typeof details.licenseKeys === "object"
+    ? details.licenseKeys
+    : Object.fromEntries(
+      (details.productIds || []).map(productId => [productId, details.licenseKey])
+    );
   const productLabels = (details.productIds || [])
     .map(productId => PRODUCT_LABELS[productId] || productId)
     .filter(Boolean);
@@ -246,15 +402,24 @@ async function sendLicenseEmail(email, details) {
   const supportUrl = String(process.env.EMX_DISCORD_SUPPORT_URL || "https://discord.gg/puaZFNfNKW").trim();
   const replyTo = String(process.env.EMX_LICENSE_REPLY_TO || process.env.EMX_SUPPORT_EMAIL || "").trim();
 
+  const licenseCards = Object.entries(licenseKeys).map(([productId, rawKey]) => {
+    const licenseKey = normalizeLicenseKey(rawKey);
+    const label = PRODUCT_LABELS[productId] || productId;
+    return `<div style="margin:12px 0;padding:18px;border-radius:14px;background:#000;border:1px solid #263b28;text-align:center;">
+      <div style="font-size:12px;color:#9aa0a6;text-transform:uppercase;letter-spacing:1px;">${escapeHtml(label)}</div>
+      <div style="font-size:22px;font-weight:800;color:#24ff24;letter-spacing:1px;margin-top:8px;">${escapeHtml(licenseKey)}</div>
+    </div>`;
+  }).join("");
+  const textLicenseLines = Object.entries(licenseKeys).map(([productId, rawKey]) =>
+    `${PRODUCT_LABELS[productId] || productId}: ${normalizeLicenseKey(rawKey)}`
+  );
+
   const html = `
     <div style="font-family:Arial,sans-serif;background:#050505;color:#ffffff;padding:28px;">
       <div style="max-width:620px;margin:0 auto;border:1px solid #1fdc35;border-radius:18px;padding:24px;background:#0b0d10;">
         <h1 style="margin:0 0 12px;font-size:28px;color:#24ff24;">Your EMX license is ready</h1>
-        <p style="color:#d8d8d8;line-height:1.55;">Thanks for your purchase. Your license key below unlocks: <strong>${escapeHtml(productText)}</strong>.</p>
-        <div style="margin:22px 0;padding:18px;border-radius:14px;background:#000;border:1px solid #263b28;text-align:center;">
-          <div style="font-size:12px;color:#9aa0a6;text-transform:uppercase;letter-spacing:1px;">License Key</div>
-          <div style="font-size:24px;font-weight:800;color:#24ff24;letter-spacing:1px;margin-top:8px;">${escapeHtml(licenseKey)}</div>
-        </div>
+        <p style="color:#d8d8d8;line-height:1.55;">Thanks for your purchase. Each product has its own one-PC license key: <strong>${escapeHtml(productText)}</strong>.</p>
+        ${licenseCards}
         <p style="color:#cfcfcf;line-height:1.55;">Order ID: <strong>${escapeHtml(orderId)}</strong></p>
         <p style="color:#cfcfcf;line-height:1.55;">If you ever need to recover it, use your Payhip email and transaction ID here:</p>
         <p><a href="${escapeHtml(claimUrl)}" style="display:inline-block;background:#24ff24;color:#000;padding:13px 18px;border-radius:999px;text-decoration:none;font-weight:800;">Claim / Recover Key</a></p>
@@ -267,7 +432,8 @@ async function sendLicenseEmail(email, details) {
     "Your EMX license is ready.",
     "",
     `Products: ${productText}`,
-    `License Key: ${licenseKey}`,
+    "Each product has its own one-PC license key:",
+    ...textLicenseLines,
     `Order ID: ${orderId}`,
     "",
     `Recover key: ${claimUrl}`,
@@ -403,24 +569,36 @@ async function reserveLicenseFromPool(db, orderId) {
   return null;
 }
 
-async function getOrCreateLicenseKey(db, emailHash, orderId, options = {}) {
-  const customerRef = db.ref(`${CUSTOMERS_PATH}/${emailHash}`);
-  const customerSnap = await customerRef.once("value");
-  const customer = customerSnap.val();
-
-  if (customer && customer.licenseKey) {
+async function getOrCreateProductLicenseKey(
+  db,
+  customer,
+  productId,
+  orderId,
+  options = {}
+) {
+  const productKey = normalizeLicenseKey(
+    customer && customer.licenseKeys && customer.licenseKeys[productId]
+  );
+  if (productKey) {
     return {
-      licenseKey: normalizeLicenseKey(customer.licenseKey),
+      licenseKey: productKey,
       isNewLicense: false
     };
   }
 
-  let licenseKey = await reserveLicenseFromPool(db, orderId);
+  // Existing customers keep a shared legacy key only for products that key
+  // already owned. Newly purchased products always receive a separate key.
+  const legacyKey = normalizeLicenseKey(customer && customer.licenseKey);
+  if (legacyKey && customer.products && customer.products[productId] === true) {
+    return { licenseKey: legacyKey, isNewLicense: false };
+  }
+
+  let licenseKey = await reserveLicenseFromPool(db, `${orderId}:${productId}`);
 
   if (!licenseKey && options.allowGeneratedKeys === true) {
     const minimumGeneratedPool = Number(process.env.EMX_GENERATED_POOL_SIZE || 30);
     await topUpLicensePool(db, Math.max(1, minimumGeneratedPool), "auto-generated-empty-pool");
-    licenseKey = await reserveLicenseFromPool(db, orderId);
+    licenseKey = await reserveLicenseFromPool(db, `${orderId}:${productId}`);
 
     if (!licenseKey) {
       licenseKey = makeRandomLicenseKey();
@@ -435,6 +613,19 @@ async function getOrCreateLicenseKey(db, emailHash, orderId, options = {}) {
     licenseKey,
     isNewLicense: true
   };
+}
+
+function normalizeOrderLicenseKeys(order, productIds) {
+  const stored = order && order.licenseKeys && typeof order.licenseKeys === "object"
+    ? order.licenseKeys
+    : {};
+  const legacyKey = normalizeLicenseKey(order && order.licenseKey);
+  return Object.fromEntries(productIds
+    .map(productId => [
+      productId,
+      normalizeLicenseKey(stored[productId]) || legacyKey
+    ])
+    .filter(([, licenseKey]) => Boolean(licenseKey)));
 }
 
 async function applyPaidPurchase(payload, options = {}) {
@@ -469,10 +660,14 @@ async function applyPaidPurchase(payload, options = {}) {
   };
 
   if (options.dryRun) {
+    const previewKey = options.previewLicenseKey || "EMX-PREVIEW-KEY";
     return {
       ...plan,
       dryRun: true,
-      licenseKey: options.previewLicenseKey || "EMX-PREVIEW-KEY",
+      licenseKey: previewKey,
+      licenseKeys: Object.fromEntries(
+        productIds.map(productId => [productId, previewKey])
+      ),
       isNewLicense: "unknown"
     };
   }
@@ -484,59 +679,87 @@ async function applyPaidPurchase(payload, options = {}) {
   const affiliateConversion = await recordAffiliateConversion(db, payload, orderId);
 
   if (existingOrder && existingOrder.processed === true) {
+    const licenseKeys = normalizeOrderLicenseKeys(existingOrder, productIds);
+    const productSync = await syncProductLicenses({
+      licenseKeys,
+      ownerEmail: email,
+      productIds
+    });
+    await orderRef.update({
+      productSync: {
+        ...productSync,
+        updatedAt: now
+      },
+      updatedAt: now
+    });
     return {
       ...plan,
       alreadyProcessed: true,
       licenseKey: normalizeLicenseKey(existingOrder.licenseKey || ""),
+      licenseKeys,
       isNewLicense: false,
+      productSync,
       affiliate: affiliateConversion
         ? { code: affiliateConversion.code, status: affiliateConversion.status }
         : null
     };
   }
 
-  const { licenseKey, isNewLicense } = await getOrCreateLicenseKey(db, emailHash, orderId, {
-    allowGeneratedKeys: generatedKeysEnabled()
-  });
-
-  const safeLicenseKey = safeFirebaseKey(licenseKey);
-  const licenseRef = db.ref(`${LICENSES_PATH}/${safeLicenseKey}`);
   const customerRef = db.ref(`${CUSTOMERS_PATH}/${emailHash}`);
-
-  const licenseSnap = await licenseRef.once("value");
-  const existingLicense = licenseSnap.val() || {};
-
-  const nextLicense = {
-    ...existingLicense,
-    key: licenseKey,
-    licenseKey,
-    product: existingLicense.product || "ALL",
-    active: existingLicense.active !== false,
-    enabled: existingLicense.enabled !== false,
-    used: existingLicense.used === true,
-    hwid: existingLicense.hwid || "",
-    source: existingLicense.source || "payhip-webhook",
-    emailHash,
-    buyerEmailMasked: maskEmail(email),
-    products: {
-      ...(existingLicense.products || {}),
-      ...buildProductsObject(productIds)
-    },
-    orders: {
-      ...(existingLicense.orders || {}),
-      [orderId]: true
-    },
-    createdAt: existingLicense.createdAt || now,
-    updatedAt: now
-  };
-
-  await licenseRef.set(nextLicense);
-
   const customerSnap = await customerRef.once("value");
   const existingCustomer = customerSnap.val() || {};
+  const licenseKeys = {};
+  const isNewByProduct = {};
+
+  for (const productId of productIds) {
+    const result = await getOrCreateProductLicenseKey(
+      db,
+      existingCustomer,
+      productId,
+      orderId,
+      { allowGeneratedKeys: generatedKeysEnabled() }
+    );
+    licenseKeys[productId] = result.licenseKey;
+    isNewByProduct[productId] = result.isNewLicense;
+
+    const safeLicenseKey = safeFirebaseKey(result.licenseKey);
+    const licenseRef = db.ref(`${LICENSES_PATH}/${safeLicenseKey}`);
+    const licenseSnap = await licenseRef.once("value");
+    const existingLicense = licenseSnap.val() || {};
+    await licenseRef.set({
+      ...existingLicense,
+      key: result.licenseKey,
+      licenseKey: result.licenseKey,
+      product: existingLicense.product || productId,
+      active: existingLicense.active !== false,
+      enabled: existingLicense.enabled !== false,
+      used: existingLicense.used === true,
+      hwid: existingLicense.hwid || "",
+      source: existingLicense.source || "payhip-webhook-product-key",
+      emailHash,
+      buyerEmailMasked: maskEmail(email),
+      products: {
+        ...(existingLicense.products || {}),
+        [productId]: true
+      },
+      orders: {
+        ...(existingLicense.orders || {}),
+        [orderId]: true
+      },
+      createdAt: existingLicense.createdAt || now,
+      updatedAt: now
+    });
+  }
+
+  const licenseKey = licenseKeys[productIds[0]];
+  const isNewLicense = Object.values(isNewByProduct).some(Boolean);
   await customerRef.set({
     ...existingCustomer,
-    licenseKey,
+    licenseKey: existingCustomer.licenseKey || licenseKey,
+    licenseKeys: {
+      ...(existingCustomer.licenseKeys || {}),
+      ...licenseKeys
+    },
     buyerEmailMasked: maskEmail(email),
     products: {
       ...(existingCustomer.products || {}),
@@ -556,6 +779,7 @@ async function applyPaidPurchase(payload, options = {}) {
     emailHash,
     buyerEmailMasked: maskEmail(email),
     licenseKey,
+    licenseKeys,
     productKeys,
     products: buildOrderProductsObject(productIds),
     payhipDate: payload.date || null,
@@ -577,9 +801,24 @@ async function applyPaidPurchase(payload, options = {}) {
     updatedAt: now
   });
 
+  const productSync = await syncProductLicenses({
+    licenseKeys,
+    ownerEmail: email,
+    productIds
+  });
+
+  await orderRef.update({
+    productSync: {
+      ...productSync,
+      updatedAt: new Date().toISOString()
+    },
+    updatedAt: new Date().toISOString()
+  });
+
   const emailDelivery = await sendLicenseEmail(email, {
     orderId,
     licenseKey,
+    licenseKeys,
     productIds
   });
 
@@ -595,7 +834,10 @@ async function applyPaidPurchase(payload, options = {}) {
     ...plan,
     alreadyProcessed: false,
     licenseKey,
+    licenseKeys,
+    isNewByProduct,
     isNewLicense,
+    productSync,
     emailDelivery,
     affiliate: affiliateConversion
       ? { code: affiliateConversion.code, status: affiliateConversion.status }
@@ -677,12 +919,20 @@ async function lookupLicenseByReceipt(email, orderId) {
   const order = orderSnap.val();
   const emailHash = hashEmail(cleanEmail);
 
-  if (!order || order.emailHash !== emailHash || !order.licenseKey) {
+  if (
+    !order ||
+    order.emailHash !== emailHash ||
+    (!order.licenseKey && !order.licenseKeys)
+  ) {
     return null;
   }
 
+  const productIds = Object.keys(order.products || {});
+  const licenseKeys = normalizeOrderLicenseKeys(order, productIds);
+
   return {
     licenseKey: normalizeLicenseKey(order.licenseKey),
+    licenseKeys,
     products: order.products || {},
     orderId: cleanOrderId
   };
@@ -700,5 +950,8 @@ module.exports = {
   parseBody,
   processPayhipPayload,
   sendJson,
+  syncProductLicenses,
+  syncUnifiedLicense,
+  syncVoltLicense,
   verifyPayhipSignature
 };

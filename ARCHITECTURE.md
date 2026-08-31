@@ -31,6 +31,7 @@ There is no framework router, TypeScript configuration, or CSS build pipeline. N
 - `/api/payhip-webhook` verifies Payhip's documented SHA-256 API-key signature before any write.
 - `/api/license-lookup` reads Firebase using server credentials. It must never expose data beyond the receipt-scoped response.
 - Firebase, Vercel KV, Vercel Blob, Payhip, and Resend credentials are server-only environment variables.
+- The signed Payhip webhook issues a separate one-PC key for each product on future purchases and synchronizes every product-scoped key to `activate.emxtweaks.com` through `EMX_UNIFIED_LICENSE_SYNC_URL`. VOLT keys are also synchronized to the current compatibility Worker through `EMX_VOLT_LICENSE_SYNC_URL`. Both calls use the same server-only `EMX_LICENSE_SYNC_SECRET`; failures are recorded for retry and never mint a replacement key. Existing shared keys remain valid only for products they already owned before the migration.
 
 ## State rules
 

@@ -85,6 +85,159 @@ test("Payhip webhook signatures follow the configured API key digest", () => {
   else process.env.PAYHIP_API_KEY = previous;
 });
 
+test("VOLT synchronization reuses the shared EMX key and enforces one device", async () => {
+  const previousFetch = global.fetch;
+  let request;
+  global.fetch = async (url, options) => {
+    request = { url, options };
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ ok: true, created: true, licenseId: "abc123" }),
+    };
+  };
+
+  try {
+    const result = await license.syncVoltLicense(
+      {
+        licenseKey: "emx-aaaaa-bbbbb-ccccc-ddddd",
+        ownerEmail: " Buyer@Example.com ",
+        productIds: ["EMX_VOLT"],
+      },
+      {
+        endpoint: "https://volt.example/",
+        secret: "test-sync-secret",
+      },
+    );
+
+    assert.equal(result.status, "synced");
+    assert.equal(request.url, "https://volt.example/internal/licenses/sync");
+    assert.equal(request.options.headers.authorization, "Bearer test-sync-secret");
+    assert.deepEqual(JSON.parse(request.options.body), {
+      licenseKey: "EMX-AAAAA-BBBBB-CCCCC-DDDDD",
+      ownerEmail: "buyer@example.com",
+      plan: "lifetime",
+      maxDevices: 1,
+    });
+  } finally {
+    global.fetch = previousFetch;
+  }
+});
+
+test("VOLT synchronization is skipped for orders without a VOLT entitlement", async () => {
+  const result = await license.syncVoltLicense({
+    licenseKey: "EMX-AAAAA-BBBBB-CCCCC-DDDDD",
+    ownerEmail: "buyer@example.com",
+    productIds: ["EMX_OS"],
+  });
+  assert.deepEqual(result, { status: "skipped", reason: "volt-not-in-order" });
+});
+
+test("unified synchronization sends every purchased entitlement with one device", async () => {
+  const previousFetch = global.fetch;
+  let request;
+  global.fetch = async (url, options) => {
+    request = { url, options };
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({
+        ok: true,
+        created: true,
+        licenseId: "abc123",
+        productIds: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
+      }),
+    };
+  };
+
+  try {
+    const result = await license.syncUnifiedLicense(
+      {
+        licenseKey: "EMX-AAAAA-BBBBB-CCCCC-DDDDD",
+        ownerEmail: "buyer@example.com",
+        productIds: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
+      },
+      {
+        endpoint: "https://activate.example/",
+        secret: "test-sync-secret",
+      },
+    );
+    assert.equal(result.status, "synced");
+    assert.equal(
+      request.url,
+      "https://activate.example/api/licenses/internal/sync",
+    );
+    assert.deepEqual(JSON.parse(request.options.body).productIds, [
+      "EMX_TWEAK_DASHBOARD",
+      "EMX_VOLT",
+    ]);
+  } finally {
+    global.fetch = previousFetch;
+  }
+});
+
+test("future product synchronization keeps one distinct key per product", async () => {
+  const previousFetch = global.fetch;
+  const previousUnified = process.env.EMX_UNIFIED_LICENSE_SYNC_URL;
+  const previousVolt = process.env.EMX_VOLT_LICENSE_SYNC_URL;
+  const previousSecret = process.env.EMX_LICENSE_SYNC_SECRET;
+  const requests = [];
+  process.env.EMX_UNIFIED_LICENSE_SYNC_URL = "https://activate.example";
+  process.env.EMX_VOLT_LICENSE_SYNC_URL = "https://volt.example";
+  process.env.EMX_LICENSE_SYNC_SECRET = "test-sync-secret";
+  global.fetch = async (url, options) => {
+    requests.push({ url, body: JSON.parse(options.body) });
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ ok: true, created: true, productIds: [] }),
+    };
+  };
+
+  try {
+    await license.syncProductLicenses({
+      ownerEmail: "buyer@example.com",
+      productIds: ["EMX_OS", "EMX_VOLT"],
+      licenseKeys: {
+        EMX_OS: "EMX-OSKEY-AAAAA-BBBBB-CCCCC",
+        EMX_VOLT: "EMX-VOLT1-AAAAA-BBBBB-CCCCC",
+      },
+    });
+
+    const unified = requests.filter((request) =>
+      request.url.includes("activate.example"),
+    );
+    assert.equal(unified.length, 2);
+    assert.deepEqual(
+      unified.map((request) => ({
+        key: request.body.licenseKey,
+        products: request.body.productIds,
+      })),
+      [
+        {
+          key: "EMX-OSKEY-AAAAA-BBBBB-CCCCC",
+          products: ["EMX_OS"],
+        },
+        {
+          key: "EMX-VOLT1-AAAAA-BBBBB-CCCCC",
+          products: ["EMX_VOLT"],
+        },
+      ],
+    );
+    const volt = requests.find((request) => request.url.includes("volt.example"));
+    assert.equal(volt.body.licenseKey, "EMX-VOLT1-AAAAA-BBBBB-CCCCC");
+  } finally {
+    global.fetch = previousFetch;
+    if (previousUnified === undefined)
+      delete process.env.EMX_UNIFIED_LICENSE_SYNC_URL;
+    else process.env.EMX_UNIFIED_LICENSE_SYNC_URL = previousUnified;
+    if (previousVolt === undefined) delete process.env.EMX_VOLT_LICENSE_SYNC_URL;
+    else process.env.EMX_VOLT_LICENSE_SYNC_URL = previousVolt;
+    if (previousSecret === undefined) delete process.env.EMX_LICENSE_SYNC_SECRET;
+    else process.env.EMX_LICENSE_SYNC_SECRET = previousSecret;
+  }
+});
+
 test("admin credentials use length-safe constant-time comparison", () => {
   assert.equal(secretMatches("correct-secret", "correct-secret"), true);
   assert.equal(secretMatches("correct-secret", "wrong-secret"), false);
