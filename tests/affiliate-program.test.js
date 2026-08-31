@@ -155,6 +155,7 @@ test("unified synchronization sends every purchased entitlement with one device"
       {
         licenseKey: "EMX-AAAAA-BBBBB-CCCCC-DDDDD",
         ownerEmail: "buyer@example.com",
+        externalReference: "ORDER-123",
         productIds: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
       },
       {
@@ -171,6 +172,7 @@ test("unified synchronization sends every purchased entitlement with one device"
       "EMX_TWEAK_DASHBOARD",
       "EMX_VOLT",
     ]);
+    assert.equal(JSON.parse(request.options.body).externalReference, "ORDER-123");
   } finally {
     global.fetch = previousFetch;
   }
@@ -197,6 +199,7 @@ test("future product synchronization keeps one distinct key per product", async 
   try {
     await license.syncProductLicenses({
       ownerEmail: "buyer@example.com",
+      orderId: "ORDER-456",
       productIds: ["EMX_OS", "EMX_VOLT"],
       licenseKeys: {
         EMX_OS: "EMX-OSKEY-AAAAA-BBBBB-CCCCC",
@@ -208,6 +211,7 @@ test("future product synchronization keeps one distinct key per product", async 
       request.url.includes("activate.example"),
     );
     assert.equal(unified.length, 2);
+    assert.equal(unified[0].body.externalReference, "ORDER-456");
     assert.deepEqual(
       unified.map((request) => ({
         key: request.body.licenseKey,

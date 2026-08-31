@@ -306,6 +306,7 @@ async function syncUnifiedLicense(details, options = {}) {
       body: JSON.stringify({
         licenseKey: normalizeLicenseKey(details.licenseKey),
         ownerEmail: normalizeEmail(details.ownerEmail),
+        externalReference: String(details.externalReference || "").trim(),
         productIds,
         source: "payhip-webhook"
       }),
@@ -354,6 +355,7 @@ async function syncProductLicenses(details) {
     const scopedDetails = {
       licenseKey: entry.licenseKey,
       ownerEmail: details.ownerEmail,
+      externalReference: details.orderId,
       productIds: [entry.productId]
     };
     const [unified, volt] = await Promise.all([
@@ -804,6 +806,7 @@ async function applyPaidPurchase(payload, options = {}) {
   const productSync = await syncProductLicenses({
     licenseKeys,
     ownerEmail: email,
+    orderId,
     productIds
   });
 
