@@ -40,6 +40,16 @@ test("catalog removes retired database rows and restores the canonical current b
       image: "./assets/emx-os/emx-payhip-overview.png",
       gallery: ["./assets/emx-os/emx-payhip-overview.png"],
       visible: true
+    },
+    {
+      id: "clips",
+      key: "8vBPZ",
+      productUrl: "https://payhip.com/b/8vBPZ",
+      price: 1,
+      version: "Old catalog release",
+      licenseType: "Paid access",
+      deliveryType: "payhip",
+      visible: true
     }
   ];
 
@@ -53,6 +63,7 @@ test("catalog removes retired database rows and restores the canonical current b
   const ids = products.map(product => product.id);
   const bundle = products.find(product => product.id === "os_macro_bundle");
   const customOs = products.find(product => product.id === "custom_os");
+  const clips = products.find(product => product.id === "clips");
 
   assert.ok(!ids.includes("optimizer"));
   assert.equal(
@@ -63,4 +74,10 @@ test("catalog removes retired database rows and restores the canonical current b
   assert.match(bundle.description, /Windows Tweak Dashboard and EMX VOLT MACRO/);
   assert.equal(customOs.image, "./assets/emx-os/emx-custom-os-overview.png");
   assert.equal(customOs.gallery.length, 8);
+  assert.equal(clips.price, 0);
+  assert.equal(clips.key, "");
+  assert.equal(clips.version, "v1.9.3");
+  assert.equal(clips.deliveryType, "external");
+  assert.equal(clips.deliveryUrl, "https://clips.emxtweaks.com/");
+  assert.match(clips.licenseType, /Free download/);
 });

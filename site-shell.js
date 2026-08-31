@@ -7,7 +7,7 @@
     ["products", "./products.html", "Products"],
     ["bundles", "./bundles.html", "Bundles"],
     ["macros", "./macros.html", "Macros"],
-    ["free", "./index.html#free-tools", "Free tools"],
+    ["apps", "./index.html#emx-apps", "Apps"],
     ["aim-trainer", "./aim-trainer.html", "Aim Trainer"],
     ["license", "./license.html", "Claim"],
     ["affiliate", "./affiliate.html", "Affiliate"],
@@ -26,7 +26,7 @@
       <nav id="site-navigation" data-emx-mobile-nav aria-label="Primary navigation">
         ${navigation.map(([key, href, label]) => `<a href="${href}"${page === key ? ' aria-current="page"' : ""}>${label}</a>`).join("")}
       </nav>
-      <a class="site-support" href="https://discord.gg/puaZFNfNKW" target="_blank" rel="noopener noreferrer"><i></i> Discord</a>
+      <a class="site-support" href="https://support.emxtweaks.com/"><i></i> Support center</a>
     `;
   }
 
@@ -35,7 +35,7 @@
     footer.className = "site-footer";
     footer.innerHTML = `
       <div><a class="site-brand" href="./index.html"><img src="emx-logo-v2.png" width="500" height="500" alt=""><span>EMX <strong>TWEAKS</strong></span></a><p>Windows software, setup tools, and real product support.</p></div>
-      <nav aria-label="Footer navigation"><a href="./about.html">About</a><a href="./compare.html">Compare</a><a href="./updates.html">Updates</a><a href="./vouches.html">Vouches</a><a href="./faq.html">FAQ</a><a href="./affiliate.html">Affiliate</a><a href="./contact.html">Support</a></nav>
+      <nav aria-label="Footer navigation"><a href="./about.html">About</a><a href="./compare.html">Compare</a><a href="./updates.html">Updates</a><a href="https://clips.emxtweaks.com/">Clips</a><a href="./affiliate.html">Affiliate</a><a href="https://support.emxtweaks.com/">Support</a></nav>
     `;
   }
 })();

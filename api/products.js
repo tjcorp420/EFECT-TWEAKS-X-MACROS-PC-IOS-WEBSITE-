@@ -13,6 +13,24 @@ const RETIRED_PRODUCT_IDS = new Set(["optimizer", "macro", "controller_macro", "
 const CANONICAL_PRODUCT_FIELDS = {
   custom_os: ["image", "gallery", "previewSrc", "fallbackPreview"],
   volt: ["image", "gallery", "previewSrc", "fallbackPreview"],
+  clips: [
+    "key",
+    "productUrl",
+    "price",
+    "oldPrice",
+    "image",
+    "gallery",
+    "previewSrc",
+    "fallbackPreview",
+    "description",
+    "features",
+    "saleBadge",
+    "tags",
+    "deliveryType",
+    "deliveryUrl",
+    "ctaLabel",
+    "licenseClaim"
+  ],
   os_macro_bundle: [
     "key",
     "productUrl",
@@ -262,15 +280,16 @@ async function loadProducts() {
     const canonicalValues = Object.fromEntries(
       canonicalFields.map(field => [field, seed[field]])
     );
+    const useCanonicalFacts = id === "clips";
     return {
       ...seed,
       ...product,
       ...canonicalValues,
-      version: product.version || seed.version,
-      lastVerified: product.lastVerified || seed.lastVerified,
+      version: useCanonicalFacts ? seed.version : product.version || seed.version,
+      lastVerified: useCanonicalFacts ? seed.lastVerified : product.lastVerified || seed.lastVerified,
       platform: product.platform || seed.platform,
       purpose: product.purpose || seed.purpose,
-      licenseType: product.licenseType || seed.licenseType,
+      licenseType: useCanonicalFacts ? seed.licenseType : product.licenseType || seed.licenseType,
       controllerSupport: product.controllerSupport || seed.controllerSupport,
       requirements: product.requirements?.length ? product.requirements : seed.requirements,
       recovery: product.recovery?.length ? product.recovery : seed.recovery,

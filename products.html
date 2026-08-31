@@ -78,6 +78,70 @@
         </div>
         <div class="product-grid" id="productGrid"></div>
       </section>
+      <section class="section" aria-labelledby="coming-soon-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span></span> BUILDING NEXT</p>
+            <h2 id="coming-soon-title">
+              More EMX products<br /><em>coming soon.</em>
+            </h2>
+          </div>
+          <p>
+            Explore the categories being considered. Names, screenshots, prices,
+            and release dates stay unannounced until they are real and verified.
+          </p>
+        </div>
+        <div class="card-grid">
+          <article class="content-card">
+            <p class="eyebrow"><span></span> CATEGORY PREVIEW</p>
+            <h3>Free Windows utilities</h3>
+            <p>
+              Focused desktop tools that solve one setup problem without
+              requiring a paid checkout.
+            </p>
+            <button
+              class="emx-button emx-button-secondary"
+              type="button"
+              data-coming-soon-title="Free Windows utilities"
+              data-coming-soon-copy="New standalone Windows tools are being evaluated. No product name, download, or release date is announced yet."
+            >
+              Preview plans
+            </button>
+          </article>
+          <article class="content-card">
+            <p class="eyebrow"><span></span> CATEGORY PREVIEW</p>
+            <h3>Creator tools</h3>
+            <p>
+              Utilities around local clips, organization, export preparation,
+              and creator workflows.
+            </p>
+            <button
+              class="emx-button emx-button-secondary"
+              type="button"
+              data-coming-soon-title="Creator tools"
+              data-coming-soon-copy="EMX is exploring more creator-focused utilities. Features and compatibility will be published only after a working app exists."
+            >
+              Preview plans
+            </button>
+          </article>
+          <article class="content-card">
+            <p class="eyebrow"><span></span> CATEGORY PREVIEW</p>
+            <h3>Companion web apps</h3>
+            <p>
+              Optional browser companions for public EMX products where a web
+              workflow provides real value.
+            </p>
+            <button
+              class="emx-button emx-button-secondary"
+              type="button"
+              data-coming-soon-title="Companion web apps"
+              data-coming-soon-copy="Future public companion experiences may connect to supported EMX products. Personal-only tools are not part of the public catalog."
+            >
+              Preview plans
+            </button>
+          </article>
+        </div>
+      </section>
       <section class="section">
         <div class="split-panel">
           <div>
@@ -102,6 +166,43 @@
         </div>
       </section>
     </main>
+    <dialog
+      class="coming-soon-dialog"
+      id="comingSoonDialog"
+      aria-labelledby="comingSoonDialogTitle"
+    >
+      <div class="coming-soon-dialog-shell">
+        <form method="dialog">
+          <button
+            class="coming-soon-dialog-close"
+            type="submit"
+            aria-label="Close coming soon details"
+          >
+            ×
+          </button>
+        </form>
+        <p class="eyebrow"><span></span> COMING SOON</p>
+        <h2 id="comingSoonDialogTitle">More EMX products</h2>
+        <p id="comingSoonDialogCopy">
+          New public products will appear here after their real interface,
+          requirements, release path, and support plan are verified.
+        </p>
+        <ul class="check-list">
+          <li>No placeholder checkout or preorder</li>
+          <li>No invented screenshots or features</li>
+          <li>No release date until the app is tested</li>
+        </ul>
+        <div class="hero-actions">
+          <a class="emx-button emx-button-primary" href="./updates.html"
+            >Watch release center</a
+          ><a
+            class="emx-button emx-button-secondary"
+            href="https://support.emxtweaks.com/?category=Feature%20request#report"
+            >Suggest an app</a
+          >
+        </div>
+      </div>
+    </dialog>
     <footer data-site-footer></footer>
     <script src="products.js"></script>
     <script defer src="site-shell.js"></script>
@@ -109,5 +210,6 @@
     <script defer src="affiliate-ref.js"></script>
     <script defer src="download-client.js"></script>
     <script defer src="catalog.js"></script>
+    <script defer src="coming-soon.js"></script>
   </body>
 </html>

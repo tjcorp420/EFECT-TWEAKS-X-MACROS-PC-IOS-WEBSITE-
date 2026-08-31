@@ -33,6 +33,11 @@
     if (text != null) node.textContent = text;
     return node;
   }
+  function priceLabel(product) {
+    return Number(product.price || 0) <= 0
+      ? "Free"
+      : money.format(Number(product.price));
+  }
   function responsiveImage(source, alt, loading = "lazy") {
     const optimized = /(?:app-screenshots\/(?:volt-current|emx-windows-tweak-dashboard)|assets\/(?:emx-os|emx-clips|free-tools)|emx-aim-trainer-command-center)/.test(source) && /\.(?:png|jpe?g)$/i.test(source);
     const image = make("img");
@@ -81,7 +86,7 @@
     sections.forEach(([label,items,title], index) => { const button=make("button", "", label); button.type="button"; const panel=make("section"); panel.hidden=index!==0; panel.append(make("h3","",title),modalList(items)); button.setAttribute("aria-selected", String(index===0)); button.onclick=()=>{[...tabs.children].forEach(x=>x.setAttribute("aria-selected","false"));[...panels.children].forEach(x=>x.hidden=true);button.setAttribute("aria-selected","true");panel.hidden=false}; tabs.appendChild(button); panels.appendChild(panel); });
     if (sections.length) content.append(tabs, panels);
     const footer = make("div", "product-dialog-footer");
-    footer.append(make("strong", "", money.format(Number(product.price || 0))));
+    footer.append(make("strong", "", priceLabel(product)));
     const action = make("a", "emx-button emx-button-primary", product.ctaLabel || (product.deliveryType === "direct" || product.deliveryType === "external" ? "Download now" : "Open official checkout"));
     action.dataset.productId=product.id;
     if (["direct","external"].includes(product.deliveryType)) { action.href=product.deliveryUrl||"#"; action.dataset.emxDownload="true"; } else { action.href=checkoutUrl(product); }
@@ -114,7 +119,7 @@
     const price = make(
       "div",
       "product-price",
-      money.format(Number(product.price || 0)),
+      priceLabel(product),
     );
     if (Number(product.oldPrice || 0) > Number(product.price || 0)) {
       const old = make("del", "", money.format(Number(product.oldPrice)));
@@ -205,7 +210,10 @@
       "Earn by sharing EMX →",
     );
     affiliateLink.href = "./affiliate.html";
-    checkoutGroup.append(checkout, affiliateLink);
+    checkoutGroup.append(checkout);
+    if (deliveryType === "payhip" && Number(product.price || 0) > 0) {
+      checkoutGroup.append(affiliateLink);
+    }
     actions.append(price, checkoutGroup);
     body.append(galleryDetails, details, trust, actions);
     article.append(media, body);
