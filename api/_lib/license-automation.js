@@ -214,6 +214,10 @@ function getLicenseClaimUrl() {
   ).trim();
 }
 
+function shouldRetryLicenseEmail(order) {
+  return !order || order.emailDelivery?.status !== "sent";
+}
+
 async function syncVoltLicense(details, options = {}) {
   const productIds = Array.isArray(details.productIds) ? details.productIds : [];
   if (!productIds.includes("EMX_VOLT")) {
@@ -687,13 +691,30 @@ async function applyPaidPurchase(payload, options = {}) {
       ownerEmail: email,
       productIds
     });
-    await orderRef.update({
+    const orderUpdate = {
       productSync: {
         ...productSync,
         updatedAt: now
       },
       updatedAt: now
-    });
+    };
+
+    let emailDelivery = existingOrder.emailDelivery || null;
+    if (shouldRetryLicenseEmail(existingOrder)) {
+      emailDelivery = await sendLicenseEmail(email, {
+        orderId,
+        licenseKey: normalizeLicenseKey(existingOrder.licenseKey || ""),
+        licenseKeys,
+        productIds
+      });
+      orderUpdate.emailDelivery = {
+        ...emailDelivery,
+        updatedAt: new Date().toISOString()
+      };
+      orderUpdate.updatedAt = new Date().toISOString();
+    }
+
+    await orderRef.update(orderUpdate);
     return {
       ...plan,
       alreadyProcessed: true,
@@ -701,6 +722,7 @@ async function applyPaidPurchase(payload, options = {}) {
       licenseKeys,
       isNewLicense: false,
       productSync,
+      emailDelivery,
       affiliate: affiliateConversion
         ? { code: affiliateConversion.code, status: affiliateConversion.status }
         : null
@@ -953,6 +975,7 @@ module.exports = {
   parseBody,
   processPayhipPayload,
   sendJson,
+  shouldRetryLicenseEmail,
   syncProductLicenses,
   syncUnifiedLicense,
   syncVoltLicense,
