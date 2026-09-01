@@ -9,6 +9,7 @@ The repository is a static multi-page application deployed by Vercel:
 foundation.css/js       shared design and progressive enhancement
 home-v3.css             current homepage product-showcase layout
 site.css/site-shell.js  shared public-route layout and navigation
+labs.html/css/js        catalog-driven free-utility and public-experiment hub
 catalog.css/catalog.js  catalog cards, filters, galleries, and product quick-view modal
 storefront-intro.*      database-driven cinematic home introduction
 affiliate-admin.*       Affiliate Command Center
@@ -39,6 +40,7 @@ There is no framework router, TypeScript configuration, or CSS build pipeline. N
 - Affiliate referral preference: device-local storage with a 30-day timestamp; session/visitor IDs are privacy-safe random identifiers.
 - Admin credentials remain in page memory only and are sent to protected server endpoints for the active page session; they are never written to browser storage.
 - Customer emails, transaction IDs, and license keys must not enter local storage or analytics.
+- Public Claim links and the legacy `/license.html` route redirect to the central activation service, which can return every product-scoped key on a receipt.
 
 ## Error pattern
 

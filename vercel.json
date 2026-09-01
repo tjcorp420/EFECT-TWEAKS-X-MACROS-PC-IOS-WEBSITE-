@@ -28,10 +28,26 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/license",
+      "destination": "https://activate.emxtweaks.com/activate",
+      "permanent": true
+    },
+    {
+      "source": "/license.html",
+      "destination": "https://activate.emxtweaks.com/activate",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/API/PAYHIP-WEBHOOK",
       "destination": "/api/payhip-webhook"
+    },
+    {
+      "source": "/labs",
+      "destination": "/labs.html"
     },
     {
       "source": "/links",

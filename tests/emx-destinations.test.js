@@ -16,15 +16,36 @@ test("EMX Clips is a free official download with current screenshots", () => {
   assert.doesNotMatch(products, /payhip\.com\/b\/8vBPZ/);
 });
 
-test("public navigation exposes Clips and Support but keeps personal Mail private", () => {
+test("public navigation exposes Labs, central Claim, and Support but keeps personal Mail private", () => {
   const shell = read("site-shell.js");
   const home = read("index.html");
   assert.match(shell, /https:\/\/support\.emxtweaks\.com\//);
-  assert.match(shell, /https:\/\/clips\.emxtweaks\.com\//);
+  assert.match(shell, /\["labs", "\.\/labs\.html", "Labs"\]/);
+  assert.match(shell, /https:\/\/activate\.emxtweaks\.com\/activate/);
+  assert.doesNotMatch(shell, /href="\.\/license\.html"/);
   assert.doesNotMatch(shell, /mail\.emxtweaks\.com/);
   assert.match(home, /Open EMX Clips/);
   assert.match(home, /Open support/);
+  assert.match(home, /Open EMX Labs/);
   assert.doesNotMatch(home, /EMX Mail/);
+});
+
+test("EMX Labs renders every visible free catalog product through official delivery routes", () => {
+  const page = read("labs.html");
+  const behavior = read("labs.js");
+  const routing = read("vercel.json");
+  const legacyClaim = read("license.html");
+
+  assert.match(page, /data-page="labs"/);
+  assert.match(page, /id="labs-grid"/);
+  assert.match(page, /src="products\.js"/);
+  assert.match(page, /src="download-client\.js"/);
+  assert.match(behavior, /Number\(product\.price\) === 0/);
+  assert.match(behavior, /product\.retired !== true/);
+  assert.match(behavior, /download\.dataset\.emxDownload/);
+  assert.match(routing, /"source": "\/labs"/);
+  assert.match(routing, /"source": "\/license\.html"[\s\S]*?"destination": "https:\/\/activate\.emxtweaks\.com\/activate"/);
+  assert.match(legacyClaim, /http-equiv="refresh" content="0;url=https:\/\/activate\.emxtweaks\.com\/activate"/);
 });
 
 test("coming-soon previews are accessible and do not invent release details", () => {

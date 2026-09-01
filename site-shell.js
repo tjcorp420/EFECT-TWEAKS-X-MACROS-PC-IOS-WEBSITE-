@@ -7,9 +7,8 @@
     ["products", "./products.html", "Products"],
     ["bundles", "./bundles.html", "Bundles"],
     ["macros", "./macros.html", "Macros"],
-    ["apps", "./index.html#emx-apps", "Apps"],
-    ["aim-trainer", "./aim-trainer.html", "Aim Trainer"],
-    ["license", "./license.html", "Claim"],
+    ["labs", "./labs.html", "Labs"],
+    ["license", "https://activate.emxtweaks.com/activate", "Claim"],
     ["affiliate", "./affiliate.html", "Affiliate"],
     ["contact", "./contact.html", "Support"],
   ];
@@ -35,7 +34,7 @@
     footer.className = "site-footer";
     footer.innerHTML = `
       <div><a class="site-brand" href="./index.html"><img src="emx-logo-v2.png" width="500" height="500" alt=""><span>EMX <strong>TWEAKS</strong></span></a><p>Windows software, setup tools, and real product support.</p></div>
-      <nav aria-label="Footer navigation"><a href="./about.html">About</a><a href="./compare.html">Compare</a><a href="./updates.html">Updates</a><a href="https://clips.emxtweaks.com/">Clips</a><a href="./affiliate.html">Affiliate</a><a href="https://support.emxtweaks.com/">Support</a></nav>
+      <nav aria-label="Footer navigation"><a href="./about.html">About</a><a href="./compare.html">Compare</a><a href="./updates.html">Updates</a><a href="./labs.html">EMX Labs</a><a href="https://activate.emxtweaks.com/activate">Claim key</a><a href="./affiliate.html">Affiliate</a><a href="https://support.emxtweaks.com/">Support</a></nav>
     `;
   }
 })();

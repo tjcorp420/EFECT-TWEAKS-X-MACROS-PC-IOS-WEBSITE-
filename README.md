@@ -25,6 +25,8 @@ npm run build
 ## Current storefront features
 
 - Responsive first-party Affiliate and Support paths in the main navigation and checkout areas
+- Catalog-driven EMX Labs hub for every visible free utility and public experiment
+- Central multi-product license recovery at `https://activate.emxtweaks.com/activate`
 - Full-frame product screenshot carousels with Previous/Next controls and thumbnail rails
 - Answer-based Setup Finder with optional Windows, GPU, input, and price preferences
 - Side-by-side product comparison and visible release, requirement, recovery, and limitation details
