@@ -39,6 +39,28 @@ test("catalog removes retired database rows and restores the canonical current b
       title: "EMX Custom OS",
       image: "./assets/emx-os/emx-payhip-overview.png",
       gallery: ["./assets/emx-os/emx-payhip-overview.png"],
+      version: "v1.3.20",
+      visible: true
+    },
+    {
+      id: "windows_tweak_dashboard",
+      key: "TJFav",
+      title: "EMX Windows Tweak Dashboard",
+      version: "v0.3.0",
+      visible: true
+    },
+    {
+      id: "volt",
+      key: "Oqz73",
+      title: "EMX VOLT MACRO",
+      version: "v0.1.71",
+      visible: true
+    },
+    {
+      id: "fps",
+      key: "EQIrd",
+      title: "EMX FPS Booster",
+      version: "v1.0.23",
       visible: true
     },
     {
@@ -63,7 +85,10 @@ test("catalog removes retired database rows and restores the canonical current b
   const ids = products.map(product => product.id);
   const bundle = products.find(product => product.id === "os_macro_bundle");
   const customOs = products.find(product => product.id === "custom_os");
+  const dashboard = products.find(product => product.id === "windows_tweak_dashboard");
   const clips = products.find(product => product.id === "clips");
+  const volt = products.find(product => product.id === "volt");
+  const fps = products.find(product => product.id === "fps");
 
   assert.ok(!ids.includes("optimizer"));
   assert.equal(
@@ -74,10 +99,14 @@ test("catalog removes retired database rows and restores the canonical current b
   assert.match(bundle.description, /Windows Tweak Dashboard and EMX VOLT MACRO/);
   assert.equal(customOs.image, "./assets/emx-os/emx-custom-os-overview.png");
   assert.equal(customOs.gallery.length, 8);
+  assert.equal(customOs.version, "v1.3.21");
+  assert.equal(dashboard.version, "v0.3.1");
   assert.equal(clips.price, 0);
   assert.equal(clips.key, "");
-  assert.equal(clips.version, "v1.9.3");
+  assert.equal(clips.version, "v1.9.4");
   assert.equal(clips.deliveryType, "external");
   assert.equal(clips.deliveryUrl, "https://clips.emxtweaks.com/");
   assert.match(clips.licenseType, /Free download/);
+  assert.equal(volt.version, "v0.1.72");
+  assert.equal(fps.version, "v1.0.24");
 });

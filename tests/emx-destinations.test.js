@@ -11,7 +11,7 @@ test("EMX Clips is a free official download with current screenshots", () => {
   assert.match(products, /id: "clips"[\s\S]*?price: 0,/);
   assert.match(products, /productUrl: "https:\/\/clips\.emxtweaks\.com\/"/);
   assert.match(products, /deliveryType: "external"/);
-  assert.match(products, /version: "v1\.9\.3"/);
+  assert.match(products, /version: "v1\.9\.4"/);
   assert.match(products, /emx-clips-capture-ingame\.png/);
   assert.doesNotMatch(products, /payhip\.com\/b\/8vBPZ/);
 });

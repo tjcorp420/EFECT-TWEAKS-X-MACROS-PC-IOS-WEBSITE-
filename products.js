@@ -21,7 +21,7 @@ window.EMX_PRODUCTS = [
     previewType: "image",
     previewSrc: "./assets/emx-os/emx-custom-os-overview.png",
     fallbackPreview: "./assets/emx-os/emx-custom-os-overview.png",
-    description: "EMX Custom OS v1.3.20 is a Windows 10 and 11 gaming optimization and visual identity package with hardware-aware Smart tuning, five animated EMX scenes, one-key Gaming Mode, change evidence, recovery tools, and seamless updates.",
+    description: "EMX Custom OS v1.3.21 is a Windows 10 and 11 gaming optimization and visual identity package with hardware-aware Smart tuning, five animated EMX scenes, one-key Gaming Mode, change evidence, recovery tools, and seamless updates.",
     features: [
       "Smart profile scans hardware and chooses Safe or Balanced automatically",
       "Compatibility-safe Windows 10 and 11 tuning for gaming, streaming, Discord, OBS, controllers, audio, networking, and updates",
@@ -32,7 +32,7 @@ window.EMX_PRODUCTS = [
     ],
     featured: true,
     bestSeller: true,
-    saleBadge: "v1.3.20",
+    saleBadge: "v1.3.21",
     tags: ["Windows 10 + 11", "Live wallpapers", "Smart profiles", "Restore-first"],
     visible: true
   },
@@ -184,7 +184,7 @@ window.EMX_PRODUCTS = [
     previewType: "image",
     previewSrc: "./app-screenshots/volt-current/dashboard.png",
     fallbackPreview: "./app-screenshots/volt-current/dashboard.png",
-    description: "EMX VOLT MACRO v0.1.71 is the current EMX Windows macro app with a Rust-powered runtime, coordinated timing profiles, saved binds, controller setup, tray support, emergency stop, help center, and signed update checks.",
+    description: "EMX VOLT MACRO v0.1.72 is the current EMX Windows macro app with a Rust-powered runtime, coordinated timing profiles, saved binds, controller setup, tray support, emergency stop, help center, and signed update checks.",
     features: [
       "Tauri + Rust Windows desktop engine",
       "Lifetime single-PC Payhip license access",
@@ -330,11 +330,11 @@ const EMX_DELIVERY_DETAILS = {
 window.EMX_PRODUCTS.forEach((product) => Object.assign(product, EMX_DELIVERY_DETAILS[product.id] || {}));
 
 const EMX_TRUST_DETAILS = {
-  custom_os: { version: "v1.3.20", lastVerified: "August 29, 2026", platform: "Windows 10 / 11", purpose: "Guided Windows setup and personalization", licenseType: "Lifetime access", controllerSupport: "Not required", requirements: ["64-bit Windows 10 or 11 PC", "Administrator access for supported system changes", "Working Windows recovery access"], recovery: ["Restore points before supported changes", "Change evidence and support bundles", "Built-in restore and rollback controls"], limitations: ["No guaranteed FPS, ping, or hardware result", "Driver and hardware compatibility varies"] },
-  windows_tweak_dashboard: { version: "Current catalog build", lastVerified: "August 29, 2026", platform: "Windows 10 / 11", purpose: "Reversible Windows tuning", licenseType: "Lifetime one-PC access", controllerSupport: "Not required", requirements: ["Supported Windows 10 or 11 PC", "Administrator access for system changes", "Create and retain a recovery point"], recovery: ["Backups before supported changes", "Undo Center and action logs", "Restore tools"], limitations: ["Performance gains are not guaranteed", "Exact effect depends on the PC and selected changes"] },
-  clips: { version: "v1.9.3", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Local instant replay and clip library", licenseType: "Free download with free machine-bound activation", controllerSupport: "Not required", requirements: ["Windows PC", "NVIDIA GPU with supported NVENC path", "Available local storage for replay files"], recovery: ["Original clips remain ordinary local files", "Storage controls do not replace a personal backup"], limitations: ["Non-NVIDIA capture paths are not currently confirmed", "Capture results depend on driver and encoder support"] },
-  volt: { version: "v0.1.71", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Desktop macro control", licenseType: "Lifetime single-PC access", controllerSupport: "Keyboard/mouse and Xbox/XInput path", requirements: ["Windows PC", "Supported keyboard/mouse or Xbox/XInput setup", "Use only where game and platform rules allow"], recovery: ["Visible emergency stop", "Saved configuration and profile controls", "Reset or rebind from the app"], limitations: ["Direct PlayStation controller support is not currently confirmed", "No guaranteed in-game result or rules compatibility"] },
-  fps: { version: "Not versioned in catalog", lastVerified: "August 29, 2026", platform: "Windows", purpose: "Performance setup pack", licenseType: "Lifetime access", controllerSupport: "Not required", requirements: ["Windows PC", "Review each change before applying", "Keep Windows recovery available"], recovery: ["Follow included backup and rollback guidance before applying changes"], limitations: ["Results vary by hardware and current configuration", "No performance result is guaranteed"] },
+  custom_os: { version: "v1.3.21", lastVerified: "August 31, 2026", platform: "Windows 10 / 11", purpose: "Guided Windows setup and personalization", licenseType: "Lifetime access", controllerSupport: "Not required", requirements: ["64-bit Windows 10 or 11 PC", "Administrator access for supported system changes", "Working Windows recovery access"], recovery: ["Restore points before supported changes", "Change evidence and support bundles", "Built-in restore and rollback controls"], limitations: ["No guaranteed FPS, ping, or hardware result", "Driver and hardware compatibility varies"] },
+  windows_tweak_dashboard: { version: "v0.3.1", lastVerified: "August 31, 2026", platform: "Windows 10 / 11", purpose: "Reversible Windows tuning", licenseType: "Lifetime one-PC access", controllerSupport: "Not required", requirements: ["Supported Windows 10 or 11 PC", "Administrator access for system changes", "Create and retain a recovery point"], recovery: ["Backups before supported changes", "Undo Center and action logs", "Restore tools"], limitations: ["Performance gains are not guaranteed", "Exact effect depends on the PC and selected changes"] },
+  clips: { version: "v1.9.4", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Local instant replay and clip library", licenseType: "Free download with free machine-bound activation", controllerSupport: "Not required", requirements: ["Windows PC", "NVIDIA GPU with supported NVENC path", "Available local storage for replay files"], recovery: ["Original clips remain ordinary local files", "Storage controls do not replace a personal backup"], limitations: ["Non-NVIDIA capture paths are not currently confirmed", "Capture results depend on driver and encoder support"] },
+  volt: { version: "v0.1.72", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Desktop macro control", licenseType: "Lifetime single-PC access", controllerSupport: "Keyboard/mouse and Xbox/XInput path", requirements: ["Windows PC", "Supported keyboard/mouse or Xbox/XInput setup", "Use only where game and platform rules allow"], recovery: ["Visible emergency stop", "Saved configuration and profile controls", "Reset or rebind from the app"], limitations: ["Direct PlayStation controller support is not currently confirmed", "No guaranteed in-game result or rules compatibility"] },
+  fps: { version: "v1.0.24", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Performance setup pack", licenseType: "Lifetime access", controllerSupport: "Not required", requirements: ["Windows PC", "Review each change before applying", "Keep Windows recovery available"], recovery: ["Follow included backup and rollback guidance before applying changes"], limitations: ["Results vary by hardware and current configuration", "No performance result is guaranteed"] },
   os_macro_bundle: { version: "Current two-product bundle", lastVerified: "August 29, 2026", platform: "Windows 10 / 11", purpose: "Windows tuning plus macro control", licenseType: "Shared EMX claim path", controllerSupport: "Inherits the current VOLT input paths", requirements: ["Meet the requirements for both included products", "Administrator access for Windows tuning", "Supported VOLT input setup"], recovery: ["Windows Tweak Dashboard backups and Undo Center", "VOLT emergency stop and saved controls"], limitations: ["Each included product keeps its own compatibility limits", "No performance or in-game result is guaranteed"] }
 };
 

@@ -11,8 +11,10 @@ const DEFAULT_BUNDLE_ITEMS = {
 };
 const RETIRED_PRODUCT_IDS = new Set(["optimizer", "macro", "controller_macro", "bundle"]);
 const CANONICAL_PRODUCT_FIELDS = {
-  custom_os: ["image", "gallery", "previewSrc", "fallbackPreview"],
-  volt: ["image", "gallery", "previewSrc", "fallbackPreview"],
+  custom_os: ["image", "gallery", "previewSrc", "fallbackPreview", "description", "saleBadge", "version", "lastVerified"],
+  windows_tweak_dashboard: ["version", "lastVerified"],
+  volt: ["image", "gallery", "previewSrc", "fallbackPreview", "description", "version", "lastVerified"],
+  fps: ["version", "lastVerified"],
   clips: [
     "key",
     "productUrl",
@@ -29,7 +31,9 @@ const CANONICAL_PRODUCT_FIELDS = {
     "deliveryType",
     "deliveryUrl",
     "ctaLabel",
-    "licenseClaim"
+    "licenseClaim",
+    "version",
+    "lastVerified"
   ],
   os_macro_bundle: [
     "key",
@@ -285,8 +289,12 @@ async function loadProducts() {
       ...seed,
       ...product,
       ...canonicalValues,
-      version: useCanonicalFacts ? seed.version : product.version || seed.version,
-      lastVerified: useCanonicalFacts ? seed.lastVerified : product.lastVerified || seed.lastVerified,
+      version: useCanonicalFacts || canonicalFields.includes("version")
+        ? seed.version
+        : product.version || seed.version,
+      lastVerified: useCanonicalFacts || canonicalFields.includes("lastVerified")
+        ? seed.lastVerified
+        : product.lastVerified || seed.lastVerified,
       platform: product.platform || seed.platform,
       purpose: product.purpose || seed.purpose,
       licenseType: useCanonicalFacts ? seed.licenseType : product.licenseType || seed.licenseType,
