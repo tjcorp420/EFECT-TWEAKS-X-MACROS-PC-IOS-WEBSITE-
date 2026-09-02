@@ -2,6 +2,7 @@
 
 EMX is a static multi-page storefront with shared browser modules and serverless CommonJS APIs. The checked-in `products.js` catalog is the resilient public fallback; `/api/products` overlays the operator-managed Vercel KV catalog when configured.
 
+- Homepage hub: semantic HTML, a supplied nebula background asset, dedicated responsive CSS, and vanilla JavaScript for the free-release panel and Discord copy action.
 - Storefront: semantic HTML, shared CSS, vanilla JavaScript, responsive WebP previews with original PNG links.
 - Product Control Center: `admin.html` manages catalog, media, release truth, delivery, and intro eligibility.
 - Affiliate Command Center: `affiliate-admin.html` manages people, referral codes, attribution, conversions, commissions, diagnostics, and reporting.

@@ -16,34 +16,41 @@ test("EMX Clips is a free official download with current screenshots", () => {
   assert.doesNotMatch(products, /payhip\.com\/b\/8vBPZ/);
 });
 
-test("public navigation exposes Labs, central Claim, and Support but keeps personal Mail private", () => {
+test("public navigation routes free utilities through the hub and keeps personal Mail private", () => {
   const shell = read("site-shell.js");
   const home = read("index.html");
   assert.match(shell, /https:\/\/support\.emxtweaks\.com\//);
-  assert.match(shell, /\["labs", "\.\/labs\.html", "Labs"\]/);
+  assert.match(shell, /\["free", "\.\/index\.html\?free=1#free-tools", "Free"\]/);
+  assert.match(shell, /\["links", "\.\/links\.html", "Network"\]/);
+  assert.doesNotMatch(shell, /"\.\/labs\.html", "Labs"/);
   assert.match(shell, /https:\/\/activate\.emxtweaks\.com\/activate/);
   assert.doesNotMatch(shell, /href="\.\/license\.html"/);
   assert.doesNotMatch(shell, /mail\.emxtweaks\.com/);
-  assert.match(home, /Open EMX Clips/);
-  assert.match(home, /Open support/);
-  assert.match(home, /Open EMX Labs/);
+  assert.match(home, /EMX TWEAKS HUB/);
+  assert.match(home, /FREE UTILITIES &amp; APPLICATIONS/);
+  assert.match(home, /EMX NETWORK/);
   assert.doesNotMatch(home, /EMX Mail/);
 });
 
-test("EMX Labs renders every visible free catalog product through official delivery routes", () => {
-  const page = read("labs.html");
-  const behavior = read("labs.js");
+test("the hub exposes every current free release and Labs resolves to the free panel", () => {
+  const home = read("index.html");
+  const hubBehavior = read("link-hub.js");
+  const products = read("products.js");
   const routing = read("vercel.json");
   const legacyClaim = read("license.html");
 
-  assert.match(page, /data-page="labs"/);
-  assert.match(page, /id="labs-grid"/);
-  assert.match(page, /src="products\.js"/);
-  assert.match(page, /src="download-client\.js"/);
-  assert.match(behavior, /Number\(product\.price\) === 0/);
-  assert.match(behavior, /product\.retired !== true/);
-  assert.match(behavior, /download\.dataset\.emxDownload/);
-  assert.match(routing, /"source": "\/labs"/);
+  for (const title of ["EMX Clips", "Window Deck", "EMX Aim Trainer", "Control Hub", "EMX Sprite Tracker"]) assert.match(home, new RegExp(title));
+  assert.match(home, /id="free-tools"/);
+  assert.match(home, /id="free-app-modal"/);
+  assert.match(home, /data-free-app="sprite_tracker"/);
+  assert.match(hubBehavior, /href: "https:\/\/payhip\.com\/b\/V90h5"/);
+  assert.match(hubBehavior, /navigator\.clipboard/);
+  assert.match(hubBehavior, /aria-expanded/);
+  assert.match(hubBehavior, /showModal\(\)/);
+  assert.match(hubBehavior, /window_deck/);
+  assert.match(products, /id: "sprite_tracker"[\s\S]*?price: 0/);
+  assert.match(products, /deliveryUrl: "https:\/\/payhip\.com\/b\/V90h5"/);
+  assert.match(routing, /"source": "\/labs"[\s\S]*?"destination": "\/#free-tools"/);
   assert.match(routing, /"source": "\/license\.html"[\s\S]*?"destination": "https:\/\/activate\.emxtweaks\.com\/activate"/);
   assert.match(legacyClaim, /http-equiv="refresh" content="0;url=https:\/\/activate\.emxtweaks\.com\/activate"/);
 });

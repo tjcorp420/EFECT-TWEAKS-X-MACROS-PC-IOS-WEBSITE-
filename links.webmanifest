@@ -1,8 +1,8 @@
 {
-  "name": "EMX Command Hub",
-  "short_name": "EMX Links",
-  "description": "Official EMX quick launch hub.",
-  "start_url": "/links",
+  "name": "EMX TWEAKS HUB",
+  "short_name": "EMX HUB",
+  "description": "Official EMX links and free utility hub.",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#05030a",
   "theme_color": "#05030a",

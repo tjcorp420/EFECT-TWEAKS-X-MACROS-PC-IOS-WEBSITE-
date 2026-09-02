@@ -316,6 +316,16 @@ window.EMX_PRODUCTS.push(
     requirements: ["64-bit Windows PC"], recovery: ["Uninstall through Windows when no longer needed"], limitations: ["Does not scan or modify hardware automatically"],
     deliveryType: "external", deliveryUrl: "https://x1gzparfdlol2128.public.blob.vercel-storage.com/downloads/EMX-Tweaks-Control-Hub-Setup-1.0.3-x64.exe", deliveryFileName: "EMX-Tweaks-Control-Hub-Setup-1.0.3-x64.exe",
     ctaLabel: "Download free EXE", homepage: true, featured: false, showInIntro: false, introOrder: 8, visible: true, publishStatus: "published"
+  },
+  {
+    id: "sprite_tracker", slug: "sprite-tracker", title: "EMX Fortnite Sprite Tracker", eyebrow: "Free Fortnite Collection Tracker", price: 0,
+    image: "./assets/free-tools/sprite-tracker-home.png", gallery: ["./assets/free-tools/sprite-tracker-home.png"],
+    description: "A free Fortnite Sprite collection tracker for searching the catalog, recording owned or mastered Sprites, adding notes, and following collection progress.",
+    features: ["Track owned and mastered Sprites", "Searchable collection catalog", "Optional progress sync when available"],
+    tags: ["Free", "Fortnite", "Tracker"], category: "Fortnite Tools", platform: "Windows", purpose: "Sprite collection progress tracking",
+    version: "Current release", lastVerified: "September 2, 2026", licenseType: "Free Payhip download", controllerSupport: "Not required",
+    requirements: ["Windows PC", "Payhip account only if requested by the checkout flow"], recovery: ["Uninstall through Windows when no longer needed"], limitations: ["Independent fan-made tracker; not affiliated with Epic Games"],
+    deliveryType: "payhip", deliveryUrl: "https://payhip.com/b/V90h5", ctaLabel: "Open free download", homepage: true, featured: false, showInIntro: false, introOrder: 9, visible: true, publishStatus: "published"
   }
 );
 

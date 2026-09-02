@@ -18,7 +18,7 @@
   function checkoutUrl(product) {
     const base = product.key
       ? `https://payhip.com/buy?link=${encodeURIComponent(product.key)}`
-      : product.productUrl;
+      : product.deliveryUrl || product.productUrl || "#";
     const ref =
       window.EMXAffiliate?.activeCode ||
       localStorage.getItem("emx_active_affiliate_ref_v2") ||

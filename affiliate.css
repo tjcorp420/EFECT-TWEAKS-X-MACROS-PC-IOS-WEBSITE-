@@ -79,7 +79,6 @@ a {
   background: rgba(193, 92, 255, 0.1);
 }
 .affiliate-sign-in {
-  justify-self: end;
   min-height: 42px;
   padding: 0 15px;
   border: 1px solid rgba(193, 92, 255, 0.52);
@@ -89,6 +88,7 @@ a {
   font-weight: 800;
   cursor: pointer;
 }
+.affiliate-header-actions { justify-self: end; display: flex; align-items: center; gap: 8px; }
 .affiliate-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(360px, 0.84fr);
@@ -794,3 +794,12 @@ input.has-prefix {
     flex-direction: column;
   }
 }
+
+:root[data-theme="light"] html { color-scheme: light; }
+:root[data-theme="light"] body { color: var(--emx-text); background: radial-gradient(58rem 40rem at 76% 4%, rgba(176,38,255,.1), transparent 66%), linear-gradient(180deg, #f7f2fb 0, var(--emx-bg) 48rem); }
+:root[data-theme="light"] .affiliate-header { background: rgba(255,255,255,.86); }
+:root[data-theme="light"] :where(.affiliate-console, .affiliate-dashboard, .affiliate-panel, .affiliate-application-guide, .affiliate-onboarding, .affiliate-terms, .terms-grid article, .metric-grid article, .conversion-row, .onboarding-list li) { color: var(--emx-text); border-color: var(--emx-border); background: rgba(255,255,255,.8); box-shadow: var(--emx-shadow-lg); }
+:root[data-theme="light"] :where(.affiliate-console li, .application-steps li, .referral-code-preview, .referral-link-card, .onboarding-pending) { color: var(--emx-text); border-color: var(--emx-border); background: rgba(247,242,250,.86); }
+:root[data-theme="light"] :where(.affiliate-hero-copy > p:not(.affiliate-kicker), .affiliate-console li span, .affiliate-console > p, .affiliate-terms p, .application-guide-heading > p:last-child, .application-steps p, .dashboard-head p, .conversion-panel p, .conversion-row small, .empty-state, .terms-grid p, .onboarding-list p, .onboarding-pending) { color: var(--emx-text-muted); }
+:root[data-theme="light"] :where(input, select, textarea) { color: var(--emx-text); border-color: var(--emx-border); background: #fff; }
+:root[data-theme="light"] .onboarding-pending strong { color: var(--emx-text); }

@@ -62,3 +62,42 @@
 .coming-soon-dialog-close{position:absolute;top:16px;right:16px;width:44px;height:44px;border:1px solid var(--emx-border);border-radius:12px;color:var(--emx-text);background:rgba(255,255,255,.04);font-size:1.5rem;cursor:pointer}
 .coming-soon-dialog-close:hover{border-color:rgba(193,92,255,.5);background:rgba(193,92,255,.1)}
 .coming-soon-dialog-close:focus-visible{outline:3px solid var(--emx-focus);outline-offset:2px}
+
+/* Catalog light theme: every resting, hover, active, selected, and modal state has explicit contrast. */
+:root[data-theme="light"] .catalog-controls { color: var(--emx-text); }
+:root[data-theme="light"] .filter-row button { border-color: rgba(74,44,91,.18); color: #5e5367; background: rgba(255,255,255,.78); }
+:root[data-theme="light"] .filter-row button:hover { border-color: rgba(140,32,208,.38); color: #6f148f; background: rgba(177,78,229,.09); }
+:root[data-theme="light"] .filter-row button[aria-pressed="true"] { border-color: #8c20d0; color: #fff; background: linear-gradient(135deg,#7d19bd,#ae39e9); box-shadow: 0 8px 20px rgba(126,29,184,.2); }
+:root[data-theme="light"] .catalog-state { color: #5f5669; }
+:root[data-theme="light"] .catalog-compare-link { color: #2f8300; }
+:root[data-theme="light"] .product-card { border-color: rgba(78,46,96,.16); color: var(--emx-text); background: linear-gradient(145deg,rgba(255,255,255,.97),rgba(247,243,250,.96)); box-shadow: 0 24px 60px rgba(59,31,73,.14); }
+:root[data-theme="light"] .product-card:hover { border-color: rgba(140,32,208,.42); }
+:root[data-theme="light"] .product-media { border-color: rgba(74,44,91,.14); background: #eee9f2; }
+:root[data-theme="light"] .product-body > p:first-child { color: #7f1cad; }
+:root[data-theme="light"] .product-description { color: #5f5669; }
+:root[data-theme="light"] .product-tags li { border-color: rgba(74,44,91,.14); color: #605668; background: rgba(255,255,255,.84); }
+:root[data-theme="light"] .product-details { border-color: rgba(74,44,91,.14); }
+:root[data-theme="light"] .product-details summary,
+:root[data-theme="light"] .product-gallery-details summary,
+:root[data-theme="light"] .product-trust summary { color: #211728; }
+:root[data-theme="light"] .product-trust { border-color: rgba(58,142,0,.2); background: rgba(81,166,22,.055); }
+:root[data-theme="light"] .product-trust-meta dt { color: #2f8300; }
+:root[data-theme="light"] .product-trust-meta dd,
+:root[data-theme="light"] .product-price del { color: #655b6d; }
+:root[data-theme="light"] .product-quick-view { border-color: rgba(125,31,174,.24); color: #651284; background: rgba(171,69,244,.065); }
+:root[data-theme="light"] .product-quick-view:hover,
+:root[data-theme="light"] .product-quick-view:focus-visible { border-color: #4a9c12; color: #2f7600; background: rgba(104,188,43,.09); }
+:root[data-theme="light"] .catalog-skeleton { border-color: var(--emx-border); background: rgba(255,255,255,.78); }
+:root[data-theme="light"] .catalog-skeleton::before { background: linear-gradient(100deg,#eee9f2 25%,#fff 45%,#eee9f2 65%); background-size:220% 100%; }
+:root[data-theme="light"] .catalog-skeleton::after { background: linear-gradient(100deg,rgba(86,52,105,.04) 25%,rgba(157,57,211,.1) 45%,rgba(86,52,105,.04) 65%); background-size:220% 100%; }
+:root[data-theme="light"] .product-dialog { border-color: rgba(126,33,176,.3); color: var(--emx-text); background: #fff; box-shadow: 0 40px 120px rgba(49,25,62,.3); }
+:root[data-theme="light"] .product-dialog-lead { color: #5f5669; }
+:root[data-theme="light"] .product-dialog-facts span { border-color: var(--emx-border); background: #f8f4fb; }
+:root[data-theme="light"] .product-dialog-facts small { color: #2f8300; }
+:root[data-theme="light"] .product-dialog-tabs { border-color: var(--emx-border); }
+:root[data-theme="light"] .product-dialog-tabs button { color: #665b6d; }
+:root[data-theme="light"] .product-dialog-tabs button:hover { color: #6f148f; background: rgba(169,63,222,.07); }
+:root[data-theme="light"] .product-dialog-tabs button[aria-selected="true"] { border-color: #8c20d0; color: #6f148f; background: rgba(169,63,222,.1); }
+:root[data-theme="light"] .product-dialog-footer { border-color: var(--emx-border); }
+:root[data-theme="light"] .coming-soon-dialog { border-color: rgba(126,33,176,.28); color: var(--emx-text); background: #fff; box-shadow: 0 34px 100px rgba(49,25,62,.28); }
+:root[data-theme="light"] .coming-soon-dialog-close { color: var(--emx-text); background: #f5eff8; }

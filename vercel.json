@@ -30,6 +30,11 @@
   ],
   "redirects": [
     {
+      "source": "/labs",
+      "destination": "/#free-tools",
+      "permanent": true
+    },
+    {
       "source": "/license",
       "destination": "https://activate.emxtweaks.com/activate",
       "permanent": true
@@ -46,11 +51,11 @@
       "destination": "/api/payhip-webhook"
     },
     {
-      "source": "/labs",
-      "destination": "/labs.html"
+      "source": "/links",
+      "destination": "/links.html"
     },
     {
-      "source": "/links",
+      "source": "/network",
       "destination": "/links.html"
     },
     {
