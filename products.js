@@ -134,35 +134,38 @@ window.EMX_PRODUCTS = [
   },
   {
     id: "controller_macro",
-    key: "ArZlF",
-    productUrl: "https://payhip.com/b/ArZlF",
-    title: "EMX Elite Controller Macro (Retired)",
-    eyebrow: "Retired Product",
-    price: 29.99,
-    oldPrice: 49.99,
+    key: "0STfj",
+    productUrl: "https://payhip.com/b/0STfj",
+    title: "EMX Controller Macro",
+    eyebrow: "PlayStation-First Controller Macro",
+    price: 20.00,
+    oldPrice: 0,
     image: "./controller-macro.png",
     gallery: [
       "./controller-macro.png",
-      "./controller-macro-dashboard.png",
-      "./controller-macro-gallery.png",
-      "./controller-macro-logo-card.png",
-      "./controller-macro-hero.png"
+      "./controller-app-dashboard.png",
+      "./controller-app-macros.png",
+      "./controller-app-bindings.png",
+      "./controller-app-settings.png",
+      "./controller-app-setup.png"
     ],
     previewType: "image",
     previewSrc: "./controller-macro.png",
     fallbackPreview: "./controller-macro.png",
-    description: "Fast native controller macro utility built around a clean Double Edit workflow, controller-ready diagnostics, protected presets, speed/catch control, and native PC controller input paths. Includes portable EXE plus customer README.",
+    description: "EMX Controller Macro is a PlayStation-first Windows controller macro (v0.6.1). Configurable Double Edit and Drag with Balanced and Speed presets, experimental Sprint Assist, DualSense/DS4 virtual output, tray controls, and one-PC paid activation with emailed key delivery and recovery. Product page: controller.emxtweaks.com.",
     features: [
-      "Native controller input engine with controller-ready status",
-      "Double Edit preset with speed/catch control",
-      "Hex-style Sony HID and SCUF-style controller support path",
-      "Touchpad, paddle, face button, trigger, and stick button binding options",
-      "No DS4Windows requirement"
+      "Double Edit with Balanced and Speed presets and repeat-while-held",
+      "Drag with independent edit-tap and select-hold timing",
+      "PlayStation-first bindings with DualSense / DS4 virtual output",
+      "Experimental Sprint Assist for controller sprinting",
+      "Rebindable hotkeys, tray controls, and emergency stop",
+      "One-PC paid activation with emailed key delivery and recovery"
     ],
-    saleBadge: "New Controller Drop",
-    homepage: false,
-    visible: false,
-    retired: true
+    saleBadge: "Controller",
+    tags: ["Controller macro", "PlayStation", "Double Edit"],
+    documentationUrl: "https://controller.emxtweaks.com",
+    homepage: true,
+    visible: true
   },
   {
     id: "volt",
@@ -334,7 +337,8 @@ const EMX_DELIVERY_DETAILS = {
   windows_tweak_dashboard: { deliveryType: "payhip", showInIntro: true, introOrder: 2, category: "Windows Tuning", publishStatus: "published" },
   clips: { deliveryType: "external", deliveryUrl: "https://clips.emxtweaks.com/", ctaLabel: "Open free download", showInIntro: true, introOrder: 3, category: "Capture", publishStatus: "published" },
   volt: { deliveryType: "payhip", showInIntro: true, introOrder: 4, category: "Macros", publishStatus: "published" },
-  fps: { deliveryType: "payhip", showInIntro: true, introOrder: 5, category: "Performance", publishStatus: "published" },
+  controller_macro: { deliveryType: "payhip", showInIntro: true, introOrder: 5, category: "Macros", publishStatus: "published" },
+  fps: { deliveryType: "payhip", showInIntro: true, introOrder: 6, category: "Performance", publishStatus: "published" },
   os_macro_bundle: { deliveryType: "payhip", showInIntro: false, introOrder: 9, category: "Bundles", publishStatus: "published" }
 };
 window.EMX_PRODUCTS.forEach((product) => Object.assign(product, EMX_DELIVERY_DETAILS[product.id] || {}));
@@ -344,6 +348,7 @@ const EMX_TRUST_DETAILS = {
   windows_tweak_dashboard: { version: "v0.3.1", lastVerified: "August 31, 2026", platform: "Windows 10 / 11", purpose: "Reversible Windows tuning", licenseType: "Lifetime one-PC access", controllerSupport: "Not required", requirements: ["Supported Windows 10 or 11 PC", "Administrator access for system changes", "Create and retain a recovery point"], recovery: ["Backups before supported changes", "Undo Center and action logs", "Restore tools"], limitations: ["Performance gains are not guaranteed", "Exact effect depends on the PC and selected changes"] },
   clips: { version: "v1.9.4", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Local instant replay and clip library", licenseType: "Free download with free machine-bound activation", controllerSupport: "Not required", requirements: ["Windows PC", "NVIDIA GPU with supported NVENC path", "Available local storage for replay files"], recovery: ["Original clips remain ordinary local files", "Storage controls do not replace a personal backup"], limitations: ["Non-NVIDIA capture paths are not currently confirmed", "Capture results depend on driver and encoder support"] },
   volt: { version: "v0.1.73", lastVerified: "September 7, 2026", platform: "Windows", purpose: "Desktop keyboard and mouse macro control", licenseType: "Lifetime single-PC access", controllerSupport: "Keyboard and mouse", requirements: ["Windows PC", "Supported keyboard and mouse", "Use only where game and platform rules allow"], recovery: ["Visible emergency stop", "Saved configuration and profile controls", "Reset or rebind from the app"], limitations: ["No guaranteed in-game result or rules compatibility"] },
+  controller_macro: { version: "v0.6.1", lastVerified: "September 7, 2026", platform: "Windows", purpose: "PlayStation controller macro control", licenseType: "One-PC paid activation", controllerSupport: "PlayStation (DualSense / DS4 via ViGEmBus)", requirements: ["Windows PC", "PlayStation DualSense or DS4 controller", "ViGEmBus for virtual controller output"], recovery: ["Visible emergency stop", "Restore controller access and open logs", "Saved settings and profiles"], limitations: ["Sprint Assist is experimental and may cycle inventory in some cases", "No guaranteed in-game result or rules compatibility"] },
   fps: { version: "v1.0.24", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Performance setup pack", licenseType: "Lifetime access", controllerSupport: "Not required", requirements: ["Windows PC", "Review each change before applying", "Keep Windows recovery available"], recovery: ["Follow included backup and rollback guidance before applying changes"], limitations: ["Results vary by hardware and current configuration", "No performance result is guaranteed"] },
   os_macro_bundle: { version: "Current two-product bundle", lastVerified: "September 7, 2026", platform: "Windows 10 / 11", purpose: "Windows tuning plus macro control", licenseType: "Shared EMX claim path", controllerSupport: "Keyboard and mouse", requirements: ["Meet the requirements for both included products", "Administrator access for Windows tuning", "Supported keyboard and mouse for VOLT"], recovery: ["Windows Tweak Dashboard backups and Undo Center", "VOLT emergency stop and saved controls"], limitations: ["Each included product keeps its own compatibility limits", "No performance or in-game result is guaranteed"] }
 };
