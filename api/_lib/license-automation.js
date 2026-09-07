@@ -641,14 +641,21 @@ async function applyPaidPurchase(payload, options = {}) {
   const items = Array.isArray(payload.items) ? payload.items : [];
   const { productIds, productKeys } = getProductsFromItems(items);
   if (productIds.includes("EMX_CONTROLLER_MACRO")) {
-    const amount = typeof payload.price === "number" || (typeof payload.price === "string" && /^\d+$/.test(payload.price))
-      ? Number(payload.price) : NaN;
+    // Parse the order total robustly across Payhip's number/string formats
+    // (e.g. 20, "20", "20.00", "0", "0.00"). Only a total that parses to
+    // exactly 0 is treated as a zero-dollar order; anything nonzero or
+    // unparseable is treated as a normal paid order and always delivers, so a
+    // price-format quirk can never block a real buyer's key.
+    const parsedPrice = typeof payload.price === "number"
+      ? payload.price
+      : (typeof payload.price === "string" && payload.price.trim() !== "" ? Number(payload.price) : NaN);
     const controllerItems = items.filter(item => item?.product_key === "0STfj");
     // Payhip authenticates the webhook before this function runs. A merchant-
     // issued 100% coupon is still a real checkout receipt, not a client unlock.
-    const authorizedCouponOrder = amount === 0 && controllerItems.length > 0
+    const isZeroDollarOrder = Number.isFinite(parsedPrice) && parsedPrice === 0;
+    const authorizedCouponOrder = controllerItems.length > 0
       && controllerItems.every(item => item.used_coupon === true);
-    if (!Number.isSafeInteger(amount) || amount < 0 || (amount === 0 && !authorizedCouponOrder)) {
+    if (isZeroDollarOrder && !authorizedCouponOrder) {
       throw new Error("EMX Controller Macro requires a verified nonzero paid purchase or a Payhip coupon checkout.");
     }
   }
