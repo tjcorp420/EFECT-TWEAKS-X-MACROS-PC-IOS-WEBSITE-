@@ -133,7 +133,7 @@ window.EMX_PRODUCTS = [
     retired: true
   },
   {
-    id: "controller_macro",
+    id: "emx_controller_macro",
     key: "0STfj",
     productUrl: "https://payhip.com/b/0STfj",
     title: "EMX Controller Macro",
@@ -337,7 +337,7 @@ const EMX_DELIVERY_DETAILS = {
   windows_tweak_dashboard: { deliveryType: "payhip", showInIntro: true, introOrder: 2, category: "Windows Tuning", publishStatus: "published" },
   clips: { deliveryType: "external", deliveryUrl: "https://clips.emxtweaks.com/", ctaLabel: "Open free download", showInIntro: true, introOrder: 3, category: "Capture", publishStatus: "published" },
   volt: { deliveryType: "payhip", showInIntro: true, introOrder: 4, category: "Macros", publishStatus: "published" },
-  controller_macro: { deliveryType: "payhip", showInIntro: true, introOrder: 5, category: "Macros", publishStatus: "published" },
+  emx_controller_macro: { deliveryType: "payhip", showInIntro: true, introOrder: 5, category: "Macros", publishStatus: "published" },
   fps: { deliveryType: "payhip", showInIntro: true, introOrder: 6, category: "Performance", publishStatus: "published" },
   os_macro_bundle: { deliveryType: "payhip", showInIntro: false, introOrder: 9, category: "Bundles", publishStatus: "published" }
 };
@@ -348,7 +348,7 @@ const EMX_TRUST_DETAILS = {
   windows_tweak_dashboard: { version: "v0.3.1", lastVerified: "August 31, 2026", platform: "Windows 10 / 11", purpose: "Reversible Windows tuning", licenseType: "Lifetime one-PC access", controllerSupport: "Not required", requirements: ["Supported Windows 10 or 11 PC", "Administrator access for system changes", "Create and retain a recovery point"], recovery: ["Backups before supported changes", "Undo Center and action logs", "Restore tools"], limitations: ["Performance gains are not guaranteed", "Exact effect depends on the PC and selected changes"] },
   clips: { version: "v1.9.4", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Local instant replay and clip library", licenseType: "Free download with free machine-bound activation", controllerSupport: "Not required", requirements: ["Windows PC", "NVIDIA GPU with supported NVENC path", "Available local storage for replay files"], recovery: ["Original clips remain ordinary local files", "Storage controls do not replace a personal backup"], limitations: ["Non-NVIDIA capture paths are not currently confirmed", "Capture results depend on driver and encoder support"] },
   volt: { version: "v0.1.73", lastVerified: "September 7, 2026", platform: "Windows", purpose: "Desktop keyboard and mouse macro control", licenseType: "Lifetime single-PC access", controllerSupport: "Keyboard and mouse", requirements: ["Windows PC", "Supported keyboard and mouse", "Use only where game and platform rules allow"], recovery: ["Visible emergency stop", "Saved configuration and profile controls", "Reset or rebind from the app"], limitations: ["No guaranteed in-game result or rules compatibility"] },
-  controller_macro: { version: "v0.6.1", lastVerified: "September 7, 2026", platform: "Windows", purpose: "PlayStation controller macro control", licenseType: "One-PC paid activation", controllerSupport: "PlayStation (DualSense / DS4 via ViGEmBus)", requirements: ["Windows PC", "PlayStation DualSense or DS4 controller", "ViGEmBus for virtual controller output"], recovery: ["Visible emergency stop", "Restore controller access and open logs", "Saved settings and profiles"], limitations: ["Sprint Assist is experimental and may cycle inventory in some cases", "No guaranteed in-game result or rules compatibility"] },
+  emx_controller_macro: { version: "v0.6.1", lastVerified: "September 7, 2026", platform: "Windows", purpose: "PlayStation controller macro control", licenseType: "One-PC paid activation", controllerSupport: "PlayStation (DualSense / DS4 via ViGEmBus)", requirements: ["Windows PC", "PlayStation DualSense or DS4 controller", "ViGEmBus for virtual controller output"], recovery: ["Visible emergency stop", "Restore controller access and open logs", "Saved settings and profiles"], limitations: ["Sprint Assist is experimental and may cycle inventory in some cases", "No guaranteed in-game result or rules compatibility"] },
   fps: { version: "v1.0.24", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Performance setup pack", licenseType: "Lifetime access", controllerSupport: "Not required", requirements: ["Windows PC", "Review each change before applying", "Keep Windows recovery available"], recovery: ["Follow included backup and rollback guidance before applying changes"], limitations: ["Results vary by hardware and current configuration", "No performance result is guaranteed"] },
   os_macro_bundle: { version: "Current two-product bundle", lastVerified: "September 7, 2026", platform: "Windows 10 / 11", purpose: "Windows tuning plus macro control", licenseType: "Shared EMX claim path", controllerSupport: "Keyboard and mouse", requirements: ["Meet the requirements for both included products", "Administrator access for Windows tuning", "Supported keyboard and mouse for VOLT"], recovery: ["Windows Tweak Dashboard backups and Undo Center", "VOLT emergency stop and saved controls"], limitations: ["Each included product keeps its own compatibility limits", "No performance or in-game result is guaranteed"] }
 };

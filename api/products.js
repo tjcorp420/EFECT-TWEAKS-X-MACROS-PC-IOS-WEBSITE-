@@ -9,7 +9,7 @@ const DEFAULT_BUNDLE_ITEMS = {
   os_macro_bundle: ["windows_tweak_dashboard", "volt"],
   bundle: ["windows_tweak_dashboard", "macro", "fps"]
 };
-const RETIRED_PRODUCT_IDS = new Set(["optimizer", "macro", "bundle"]);
+const RETIRED_PRODUCT_IDS = new Set(["optimizer", "macro", "controller_macro", "bundle"]);
 const CANONICAL_PRODUCT_FIELDS = {
   custom_os: ["image", "gallery", "previewSrc", "fallbackPreview", "description", "saleBadge", "version", "lastVerified"],
   windows_tweak_dashboard: ["version", "lastVerified"],
