@@ -15,6 +15,7 @@ const BASE_PRODUCT_MAP = {
   "0TOjr": ["EMX_MACRO"],
   TJFav: ["EMX_TWEAK_DASHBOARD"],
   Oqz73: ["EMX_VOLT"],
+  "0STfj": ["EMX_CONTROLLER_MACRO"],
   EQIrd: ["EMX_FPS"],
   By7FV: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
   OS_MACRO_BUNDLE_TEST: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
@@ -639,6 +640,18 @@ async function applyPaidPurchase(payload, options = {}) {
   const orderId = safeFirebaseKey(payload.id || payload.transaction_id || payload.order_id);
   const items = Array.isArray(payload.items) ? payload.items : [];
   const { productIds, productKeys } = getProductsFromItems(items);
+  if (productIds.includes("EMX_CONTROLLER_MACRO")) {
+    const amount = typeof payload.price === "number" || (typeof payload.price === "string" && /^\d+$/.test(payload.price))
+      ? Number(payload.price) : NaN;
+    const controllerItems = items.filter(item => item?.product_key === "0STfj");
+    // Payhip authenticates the webhook before this function runs. A merchant-
+    // issued 100% coupon is still a real checkout receipt, not a client unlock.
+    const authorizedCouponOrder = amount === 0 && controllerItems.length > 0
+      && controllerItems.every(item => item.used_coupon === true);
+    if (!Number.isSafeInteger(amount) || amount < 0 || (amount === 0 && !authorizedCouponOrder)) {
+      throw new Error("EMX Controller Macro requires a verified nonzero paid purchase or a Payhip coupon checkout.");
+    }
+  }
   const now = new Date().toISOString();
 
   if (!email || !email.includes("@")) {

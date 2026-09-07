@@ -107,6 +107,6 @@ test("catalog removes retired database rows and restores the canonical current b
   assert.equal(clips.deliveryType, "external");
   assert.equal(clips.deliveryUrl, "https://clips.emxtweaks.com/");
   assert.match(clips.licenseType, /Free download/);
-  assert.equal(volt.version, "v0.1.72");
+  assert.equal(volt.version, "v0.1.73");
   assert.equal(fps.version, "v1.0.24");
 });

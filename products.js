@@ -140,8 +140,9 @@ window.EMX_PRODUCTS = [
     eyebrow: "PlayStation-First Controller Macro",
     price: 20.00,
     oldPrice: 0,
-    image: "./controller-app-dashboard.png",
+    image: "./assets/emx-controller/controller-custom.png",
     gallery: [
+      "./assets/emx-controller/controller-custom.png",
       "./controller-app-dashboard.png",
       "./controller-app-macros.png",
       "./controller-app-bindings.png",
@@ -149,8 +150,8 @@ window.EMX_PRODUCTS = [
       "./controller-app-setup.png"
     ],
     previewType: "image",
-    previewSrc: "./controller-app-dashboard.png",
-    fallbackPreview: "./controller-app-dashboard.png",
+    previewSrc: "./assets/emx-controller/controller-custom.png",
+    fallbackPreview: "./assets/emx-controller/controller-custom.png",
     description: "EMX Controller Macro is a PlayStation-first Windows controller macro (v0.6.1). Configurable Double Edit and Drag with Balanced and Speed presets, experimental Sprint Assist, DualSense/DS4 virtual output, tray controls, and one-PC paid activation with emailed key delivery and recovery. Product page: controller.emxtweaks.com.",
     features: [
       "Double Edit with Balanced and Speed presets and repeat-while-held",
