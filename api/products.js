@@ -285,6 +285,10 @@ async function loadProducts() {
       canonicalFields.map(field => [field, seed[field]])
     );
     const useCanonicalFacts = id === "clips";
+    // EMX VOLT MACRO is a keyboard and mouse macro; its bundle inherits those
+    // input paths. Keep the checked-in input facts authoritative so a stale
+    // stored controllerSupport value can never re-advertise controller support.
+    const sourceOwnedInputFacts = id === "volt" || id === "os_macro_bundle";
     return {
       ...seed,
       ...product,
@@ -296,12 +300,12 @@ async function loadProducts() {
         ? seed.lastVerified
         : product.lastVerified || seed.lastVerified,
       platform: product.platform || seed.platform,
-      purpose: product.purpose || seed.purpose,
+      purpose: sourceOwnedInputFacts ? seed.purpose : product.purpose || seed.purpose,
       licenseType: useCanonicalFacts ? seed.licenseType : product.licenseType || seed.licenseType,
-      controllerSupport: product.controllerSupport || seed.controllerSupport,
-      requirements: product.requirements?.length ? product.requirements : seed.requirements,
+      controllerSupport: sourceOwnedInputFacts ? seed.controllerSupport : product.controllerSupport || seed.controllerSupport,
+      requirements: sourceOwnedInputFacts ? seed.requirements : (product.requirements?.length ? product.requirements : seed.requirements),
       recovery: product.recovery?.length ? product.recovery : seed.recovery,
-      limitations: product.limitations?.length ? product.limitations : seed.limitations
+      limitations: sourceOwnedInputFacts ? seed.limitations : (product.limitations?.length ? product.limitations : seed.limitations)
     };
   });
 
