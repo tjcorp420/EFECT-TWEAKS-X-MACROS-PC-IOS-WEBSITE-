@@ -90,7 +90,13 @@
     const action = make("a", "emx-button emx-button-primary", product.ctaLabel || (product.deliveryType === "direct" || product.deliveryType === "external" ? "Download now" : "Open official checkout"));
     action.dataset.productId=product.id;
     if (["direct","external"].includes(product.deliveryType)) { action.href=product.deliveryUrl||"#"; action.dataset.emxDownload="true"; } else { action.href=checkoutUrl(product); }
-    footer.appendChild(action); content.appendChild(footer); shell.append(close, visual, content); productDialog.replaceChildren(shell); productDialog.showModal();
+    footer.appendChild(action);
+    if (product.documentationUrl) {
+      const site = make("a", "emx-button emx-button-secondary", product.websiteLabel || "Visit product website");
+      site.href = product.documentationUrl; site.target = "_blank"; site.rel = "noopener noreferrer";
+      footer.appendChild(site);
+    }
+    content.appendChild(footer); shell.append(close, visual, content); productDialog.replaceChildren(shell); productDialog.showModal();
     window.EMXAffiliate?.track("product_view", { productId: product.id, source: "quick-view" });
   }
   function card(product) {
@@ -211,6 +217,13 @@
     );
     affiliateLink.href = "./affiliate.html";
     checkoutGroup.append(checkout);
+    if (product.documentationUrl) {
+      const site = make("a", "emx-button emx-button-secondary", product.websiteLabel || "Visit product website");
+      site.href = product.documentationUrl;
+      site.target = "_blank";
+      site.rel = "noopener noreferrer";
+      checkoutGroup.append(site);
+    }
     if (deliveryType === "payhip" && Number(product.price || 0) > 0) {
       checkoutGroup.append(affiliateLink);
     }

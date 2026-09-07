@@ -243,6 +243,7 @@ function normalizeProduct(product, index) {
     deliveryUrl: cleanUrl(product.deliveryUrl || product.downloadUrl),
     deliveryFileName: cleanString(product.deliveryFileName, 160),
     documentationUrl: cleanUrl(product.documentationUrl),
+    websiteLabel: cleanString(product.websiteLabel, 40),
     supportUrl: cleanUrl(product.supportUrl),
     installation: normalizeLines(product.installation, 20),
     changelog: normalizeLines(product.changelog, 30),
