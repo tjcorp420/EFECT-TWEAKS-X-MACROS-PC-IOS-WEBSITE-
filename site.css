@@ -150,3 +150,22 @@ input:focus, select:focus, textarea:focus { border-color: #c56cff; outline: none
   .site-support { width: 42px; padding: 0; justify-content: center; font-size: 0; }
   .site-support i { width: 8px; height: 8px; }
 }
+
+/* ===== Legal pages (Terms / Privacy / Refunds / License) ===== */
+.legal-shell .legal-block { margin-top: 16px; }
+.legal-block h2 { margin: 0 0 10px; }
+.legal-block p { margin: 0 0 12px; max-width: 74ch; line-height: 1.7; }
+.legal-block p:last-child { margin-bottom: 0; }
+.legal-block ul.check-list { margin: 6px 0 12px; }
+.legal-block a { text-decoration: underline; text-underline-offset: 2px; }
+.legal-meta { margin-top: 22px; font-size: .84rem; opacity: .8; }
+
+/* Store policy notice (product / catalog pages) */
+.buy-policy { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; padding: 14px 18px; border: 1px solid rgba(171,255,84,.28); border-radius: 16px; background: linear-gradient(135deg, rgba(171,255,84,.08), rgba(185,79,255,.06)); font-size: .88rem; line-height: 1.5; }
+.buy-policy strong { color: var(--emx-green, #7dff4f); }
+.buy-policy .buy-policy-ico { flex: 0 0 auto; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(171,255,84,.34); background: rgba(171,255,84,.1); font-size: 1.1rem; }
+.buy-policy a { text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; }
+
+/* Site footer legal row */
+.site-legal-note { margin: 14px 0 0; font-size: .78rem; line-height: 1.55; opacity: .78; }
+.site-legal-note strong { opacity: 1; }

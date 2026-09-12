@@ -251,7 +251,13 @@ body.deck-page {
 
 /* ============================ STATUS + FOOTER ============================ */
 .deck-status { min-height: 22px; margin: 16px 0 0; color: var(--green); font: 800 .74rem/1.4 var(--emx-font-body); text-align: center; }
-.deck-foot { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 30px; padding: 18px 4px 0; border-top: 1px solid var(--line); color: var(--dim); font: 800 .6rem/1.5 var(--emx-font-body); letter-spacing: .09em; }
+.deck-foot { display: flex; flex-direction: column; gap: 14px; margin-top: 30px; padding: 20px 4px 0; border-top: 1px solid var(--line); color: var(--dim); }
+.deck-foot-links { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+.deck-foot-links a { color: var(--muted); font: 700 .78rem/1 var(--emx-font-body); text-decoration: none; transition: color .2s; }
+.deck-foot-links a:hover { color: var(--green); }
+.deck-foot-note { margin: 0; max-width: 70ch; color: var(--dim); font: 600 .76rem/1.55 var(--emx-font-body); }
+.deck-foot-note strong { color: var(--muted); }
+.deck-foot-base { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; font: 800 .6rem/1.5 var(--emx-font-body); letter-spacing: .09em; }
 .deck-foot-tag { color: var(--muted); }
 
 /* ============================ ENTRANCE ============================ */
