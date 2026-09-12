@@ -169,3 +169,31 @@ input:focus, select:focus, textarea:focus { border-color: #c56cff; outline: none
 /* Site footer legal row */
 .site-legal-note { margin: 14px 0 0; font-size: .78rem; line-height: 1.55; opacity: .78; }
 .site-legal-note strong { opacity: 1; }
+
+/* ===== Unify /links (EMX Network) with the hub's animated space brand ===== */
+body[data-page="links"] { background: transparent; }
+body[data-page="links"] .site-header,
+body[data-page="links"] .page-shell,
+body[data-page="links"] .site-footer { position: relative; z-index: 1; }
+body[data-page="links"] .content-card,
+body[data-page="links"] .glass-panel.content-card {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(155deg, rgba(255,255,255,.065), rgba(255,255,255,.014)) padding-box,
+    linear-gradient(150deg, rgba(255,255,255,.16), rgba(168,85,247,.34) 52%, rgba(125,255,80,.30)) border-box;
+  box-shadow: inset 0 1px rgba(255,255,255,.1), 0 16px 40px rgba(0,0,0,.34);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(18px) saturate(1.25);
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .28s;
+}
+body[data-page="links"] .card-grid .content-card:hover {
+  transform: translateY(-5px);
+  box-shadow: inset 0 1px rgba(255,255,255,.2), 0 26px 62px rgba(0,0,0,.44), 0 0 30px rgba(176,70,255,.2);
+}
+:root[data-theme="light"] body[data-page="links"] .content-card,
+:root[data-theme="light"] body[data-page="links"] .glass-panel.content-card {
+  background:
+    linear-gradient(155deg, rgba(255,255,255,.92), rgba(255,255,255,.66)) padding-box,
+    linear-gradient(150deg, rgba(255,255,255,.95), rgba(139,50,188,.28) 52%, rgba(65,151,0,.34)) border-box;
+  box-shadow: inset 0 1px #fff, 0 16px 40px rgba(64,33,80,.13);
+}
