@@ -546,3 +546,57 @@ body.link-hub-page {
   .hub-header, .hub-intro, .hub-links > *, .hub-footer { animation: none !important; opacity: 1 !important; transform: none !important; }
   .hub-cosmos::before, .hub-intro h1 em { animation: none !important; }
 }
+
+/* ===================================================================
+   EMX HUB — REDESIGN v2 (decisive background overhaul)
+   The nebula photo animated its OWN brightness every frame, overriding
+   the dim in the v1 layer. Redefine that keyframe + suppress the photo
+   so the animated aurora becomes the real, living background.
+=================================================================== */
+
+/* Redefine the drift keyframes so the photo stays DARK while it moves */
+@keyframes hub-nebula-drift {
+  from { transform: scale(1.10) translate3d(-1.2%, -.6%, 0); filter: saturate(1.0) contrast(1.02) brightness(.30); }
+  to   { transform: scale(1.16) translate3d(1.4%, .9%, 0);  filter: saturate(1.12) contrast(1.06) brightness(.40); }
+}
+.hub-cosmos-nebula { opacity: .20; }
+
+/* Base cosmos: deep, clean space with color pools */
+.hub-cosmos {
+  background:
+    radial-gradient(1300px 780px at 50% -12%, rgba(158, 60, 235, .34), transparent 60%),
+    radial-gradient(1000px 860px at 8% 16%,  rgba(64, 226, 138, .16), transparent 55%),
+    radial-gradient(1050px 940px at 96% 26%, rgba(220, 78, 255, .18), transparent 55%),
+    radial-gradient(900px 900px at 70% 108%, rgba(120, 60, 235, .22), transparent 55%),
+    linear-gradient(165deg, #05010e 0%, #090314 46%, #04070a 100%);
+}
+
+/* Aurora: bigger, brighter, clearly moving — the star of the bg now */
+.hub-cosmos::before {
+  inset: -34%;
+  opacity: .8;
+  background:
+    radial-gradient(closest-side at 18% 28%, rgba(78, 255, 132, .32), transparent 70%),
+    radial-gradient(closest-side at 84% 22%, rgba(212, 80, 255, .38), transparent 70%),
+    radial-gradient(closest-side at 58% 88%, rgba(132, 66, 240, .32), transparent 70%),
+    radial-gradient(closest-side at 30% 68%, rgba(48, 216, 255, .24), transparent 70%);
+  filter: blur(58px);
+  animation: hub-aurora-2 15s ease-in-out infinite alternate;
+}
+
+/* A slow rotating light sweep for extra life behind the content */
+.hub-cosmos-grid { opacity: .42; }
+
+/* Stronger vignette so the glass cards read crisp against the space */
+.hub-cosmos::after {
+  background:
+    radial-gradient(circle at 50% 28%, transparent 0 18%, rgba(3, 1, 8, .42) 60%, rgba(1, 0, 4, .9) 100%),
+    linear-gradient(90deg, rgba(3, 1, 7, .6), transparent 22% 78%, rgba(3, 1, 7, .6));
+}
+
+:root[data-theme="light"] .hub-cosmos-nebula { opacity: .5; }
+:root[data-theme="light"] .hub-cosmos::before { opacity: .5; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hub-cosmos-nebula { animation: none !important; filter: brightness(.34) saturate(1.05) !important; }
+}
