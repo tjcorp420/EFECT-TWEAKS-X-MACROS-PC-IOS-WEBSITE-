@@ -276,3 +276,13 @@ body:not(.deck-page) .site-footer { position: relative; z-index: 1; }
 @media (prefers-reduced-motion: reduce) {
   .deck-aurora, .deck-stars, .deck-grid, .page-hero-copy h1 em, .macro-hero-copy h1 em { animation: none !important; }
 }
+
+/* ===== Reviews page — masonry of real vouch screenshots ===== */
+.reviews-grid { columns: 3 300px; column-gap: 16px; }
+.review-card { display: block; break-inside: avoid; margin: 0 0 16px; border: 1px solid transparent; border-radius: 16px; overflow: hidden; line-height: 0;
+  background: linear-gradient(155deg, rgba(255,255,255,.06), rgba(255,255,255,.012)) padding-box, linear-gradient(150deg, rgba(255,255,255,.16), rgba(168,85,247,.32) 52%, rgba(125,255,80,.28)) border-box;
+  box-shadow: inset 0 1px rgba(255,255,255,.09), 0 16px 40px rgba(0,0,0,.32);
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s; }
+.review-card img { width: 100%; height: auto; display: block; }
+.review-card:hover, .review-card:focus-visible { transform: translateY(-4px); box-shadow: inset 0 1px rgba(255,255,255,.18), 0 26px 58px rgba(0,0,0,.44), 0 0 28px rgba(176,70,255,.2); outline: none; }
+@media (max-width: 640px) { .reviews-grid { columns: 1; } }

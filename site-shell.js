@@ -10,9 +10,10 @@
     ["free", "./index.html?free=1#free-tools", "Free"],
     ["links", "./links.html", "Network"],
     ["about", "./about.html", "About"],
+    ["vouches", "./vouches.html", "Reviews"],
     ["license", "https://activate.emxtweaks.com/activate", "Claim"],
     ["affiliate", "./affiliate.html", "Affiliate"],
-    ["contact", "./contact.html", "Support"],
+    ["help", "./help.html", "Help"],
   ];
 
   const header = document.querySelector("[data-site-header]");
@@ -45,7 +46,7 @@
       : `<p class="site-legal-note"><strong>All EMX products are digital — all sales are final.</strong> License keys are machine-bound; an OS reinstall, factory reset, or hardware change can void a key, and keys are not recovered or re-issued for free. Contact <a href="mailto:emxbiz@emxtweaks.com">emxbiz@emxtweaks.com</a>.</p>`;
     footer.innerHTML = `
       <div><a class="site-brand" href="./index.html"><img src="emx-logo-v2.png" width="500" height="500" alt=""><span>EMX <strong>TWEAKS</strong></span></a><p>Windows software, setup tools, and real product support.</p>${legalNote}</div>
-      <nav aria-label="Footer navigation"><a href="./about.html">About</a><a href="./compare.html">Compare</a><a href="./updates.html">Updates</a><a href="./links.html">EMX Network</a><a href="https://support.emxtweaks.com/">Support</a><a href="./terms.html">Terms</a><a href="./privacy.html">Privacy</a><a href="./refunds.html">Refund Policy</a><a href="./eula.html">License &amp; Keys</a></nav>
+      <nav aria-label="Footer navigation"><a href="./about.html">About</a><a href="./vouches.html">Reviews</a><a href="./help.html">Help</a><a href="./compare.html">Compare</a><a href="./updates.html">Updates</a><a href="./links.html">EMX Network</a><a href="https://support.emxtweaks.com/">Support</a><a href="./terms.html">Terms</a><a href="./privacy.html">Privacy</a><a href="./refunds.html">Refund Policy</a><a href="./eula.html">License &amp; Keys</a></nav>
     `;
   }
 
