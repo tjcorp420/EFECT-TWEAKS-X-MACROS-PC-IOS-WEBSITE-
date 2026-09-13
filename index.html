@@ -20,8 +20,26 @@
   <link rel="stylesheet" href="foundation.css">
   <link rel="stylesheet" href="link-hub.css?v=5">
   <title>EMX TWEAKS HUB — Official Links</title>
+  <style>
+    #emx-splash{position:fixed;inset:0;z-index:99999;background:#04030a;opacity:1;transition:opacity .8s ease}
+    #emx-splash iframe{width:100%;height:100%;border:0;display:block}
+    #emx-splash.done{opacity:0;pointer-events:none}
+    #emx-skip{position:fixed;right:18px;bottom:18px;z-index:100000;background:rgba(12,8,22,.62);border:1px solid rgba(184,156,255,.35);color:#e7e3fb;font:700 .8rem/1 "Inter",system-ui,sans-serif;letter-spacing:.04em;padding:11px 17px;border-radius:11px;cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:.2s}
+    #emx-skip:hover{border-color:#7dff4f;color:#fff}
+    html.splash-lock,html.splash-lock body{overflow:hidden}
+  </style>
 </head>
 <body data-page="hub" class="link-hub-page deck-page">
+  <div id="emx-splash"><iframe src="https://intro.emxtweaks.com/" title="EMX TWEAKS intro" loading="eager" scrolling="no"></iframe><button id="emx-skip" type="button">Skip intro →</button></div>
+  <script>
+  (function(){var s=document.getElementById("emx-splash");if(!s)return;var done=false;
+    document.documentElement.classList.add("splash-lock");
+    function dismiss(){if(done)return;done=true;s.classList.add("done");document.documentElement.classList.remove("splash-lock");setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s);},900);}
+    document.getElementById("emx-skip").addEventListener("click",dismiss);
+    window.addEventListener("message",function(e){if(e.origin==="https://intro.emxtweaks.com"&&e.data==="emx-intro-hero"){setTimeout(dismiss,2200);}});
+    setTimeout(dismiss,10000);
+  })();
+  </script>
   <a class="emx-skip-link" href="#main">Skip to links</a>
 
   <div class="deck-bg" aria-hidden="true">
