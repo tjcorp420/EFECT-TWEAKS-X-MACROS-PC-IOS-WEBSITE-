@@ -197,3 +197,82 @@ body[data-page="links"] .card-grid .content-card:hover {
     linear-gradient(150deg, rgba(255,255,255,.95), rgba(139,50,188,.28) 52%, rgba(65,151,0,.34)) border-box;
   box-shadow: inset 0 1px #fff, 0 16px 40px rgba(64,33,80,.13);
 }
+
+/* =====================================================================
+   GLOBAL EMX BRAND LAYER — animated background + premium surfaces
+   Applies to every shell page (background auto-injected by site-shell.js).
+   The hub (index.html) is self-contained via link-hub.css and unaffected.
+===================================================================== */
+.deck-bg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background:
+    radial-gradient(1200px 760px at 50% -12%, rgba(150, 60, 235, .34), transparent 60%),
+    radial-gradient(1000px 900px at 8% 20%,  rgba(64, 226, 138, .14), transparent 55%),
+    radial-gradient(1100px 940px at 96% 24%, rgba(220, 78, 255, .18), transparent 55%),
+    radial-gradient(900px 900px at 70% 112%, rgba(120, 60, 235, .22), transparent 55%),
+    linear-gradient(165deg, #06020f 0%, #0a0416 48%, #05070b 100%);
+}
+.deck-aurora { position: absolute; inset: -30%; filter: blur(62px); opacity: .72;
+  background:
+    radial-gradient(closest-side at 20% 30%, rgba(78, 255, 132, .30), transparent 70%),
+    radial-gradient(closest-side at 82% 24%, rgba(212, 80, 255, .36), transparent 70%),
+    radial-gradient(closest-side at 56% 86%, rgba(132, 66, 240, .30), transparent 70%),
+    radial-gradient(closest-side at 34% 66%, rgba(48, 216, 255, .22), transparent 70%);
+  animation: deck-aurora 16s ease-in-out infinite alternate;
+}
+@keyframes deck-aurora { 0% { transform: translate3d(-3%, -2%, 0) scale(1); } 50% { transform: translate3d(4%, 3%, 0) scale(1.12) rotate(2deg); } 100% { transform: translate3d(-2%, 2%, 0) scale(1.05); } }
+.deck-stars { position: absolute; inset: -25%; opacity: .5;
+  background-image: radial-gradient(circle, rgba(255,255,255,.92) 0 1px, transparent 1.6px), radial-gradient(circle, rgba(170,255,120,.7) 0 1px, transparent 1.7px);
+  background-size: 150px 150px, 235px 235px; background-position: 0 0, 60px 80px; animation: deck-stars 70s linear infinite;
+}
+.deck-stars-2 { background-size: 210px 210px, 330px 330px; opacity: .34; animation-duration: 105s; animation-direction: reverse; }
+@keyframes deck-stars { to { transform: translate3d(4%, 6%, 0); } }
+.deck-grid { position: absolute; inset: -10%; opacity: .13;
+  background-image: linear-gradient(rgba(184,156,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(184,156,255,.5) 1px, transparent 1px);
+  background-size: 66px 66px;
+  -webkit-mask-image: radial-gradient(circle at 50% 28%, #000 38%, transparent 82%); mask-image: radial-gradient(circle at 50% 28%, #000 38%, transparent 82%);
+  animation: deck-grid 44s linear infinite;
+}
+@keyframes deck-grid { to { background-position: 66px 66px, 66px 66px; } }
+.deck-vignette { position: absolute; inset: 0; background: radial-gradient(circle at 50% 26%, transparent 0 20%, rgba(3, 1, 8, .42) 60%, rgba(1, 0, 4, .88) 100%); }
+@keyframes deck-sheen { to { background-position: 220% center; } }
+
+:root[data-theme="light"] .deck-bg { background: linear-gradient(165deg, #efe8f7, #e6dcf2 60%, #eef0e6); }
+:root[data-theme="light"] .deck-aurora { opacity: .4; }
+:root[data-theme="light"] .deck-stars, :root[data-theme="light"] .deck-grid { opacity: .1; }
+:root[data-theme="light"] .deck-vignette { background: radial-gradient(circle at 50% 26%, transparent 0 30%, rgba(255,255,255,.4) 100%); }
+
+/* Lift shell content above the fixed background */
+body:not(.deck-page):not(.link-hub-page) { background: transparent; }
+body:not(.deck-page) .site-header,
+body:not(.deck-page) main,
+body:not(.deck-page) .page-shell,
+body:not(.deck-page) .site-footer { position: relative; z-index: 1; }
+
+/* Premium glass surfaces everywhere */
+.content-card, .feature-card, .glass-panel {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(155deg, rgba(255,255,255,.06), rgba(255,255,255,.012)) padding-box,
+    linear-gradient(150deg, rgba(255,255,255,.16), rgba(168,85,247,.32) 52%, rgba(125,255,80,.28)) border-box;
+  box-shadow: inset 0 1px rgba(255,255,255,.09), 0 16px 40px rgba(0,0,0,.32);
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s, border-color .28s;
+}
+.card-grid .content-card:hover, .card-grid .feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: inset 0 1px rgba(255,255,255,.18), 0 26px 60px rgba(0,0,0,.44), 0 0 30px rgba(176,70,255,.2);
+}
+:root[data-theme="light"] .content-card,
+:root[data-theme="light"] .feature-card,
+:root[data-theme="light"] .glass-panel {
+  background:
+    linear-gradient(155deg, rgba(255,255,255,.92), rgba(255,255,255,.66)) padding-box,
+    linear-gradient(150deg, rgba(255,255,255,.95), rgba(139,50,188,.26) 52%, rgba(65,151,0,.3)) border-box;
+  box-shadow: inset 0 1px #fff, 0 16px 40px rgba(64,33,80,.12);
+}
+
+/* Animated hero accent on section pages */
+.page-hero-copy h1 em, .macro-hero-copy h1 em { background-size: 220% auto; animation: deck-sheen 7s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .deck-aurora, .deck-stars, .deck-grid, .page-hero-copy h1 em, .macro-hero-copy h1 em { animation: none !important; }
+}

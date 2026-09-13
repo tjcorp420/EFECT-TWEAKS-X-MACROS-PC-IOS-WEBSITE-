@@ -44,4 +44,13 @@
       <nav aria-label="Footer navigation"><a href="./about.html">About</a><a href="./compare.html">Compare</a><a href="./updates.html">Updates</a><a href="./links.html">EMX Network</a><a href="https://support.emxtweaks.com/">Support</a><a href="./terms.html">Terms</a><a href="./privacy.html">Privacy</a><a href="./refunds.html">Refund Policy</a><a href="./eula.html">License &amp; Keys</a></nav>
     `;
   }
+
+  // Inject the shared EMX animated background on every shell page (skip if one
+  // is already present, e.g. pages that hard-code it or the self-contained hub).
+  if (!document.querySelector(".deck-bg")) {
+    document.body.insertAdjacentHTML(
+      "afterbegin",
+      '<div class="deck-bg" aria-hidden="true"><div class="deck-stars"></div><div class="deck-stars deck-stars-2"></div><div class="deck-aurora"></div><div class="deck-grid"></div><div class="deck-vignette"></div></div>'
+    );
+  }
 })();

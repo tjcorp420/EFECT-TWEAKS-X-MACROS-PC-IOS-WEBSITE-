@@ -277,7 +277,8 @@ body.deck-page {
 .deck-grid-links > *:nth-child(5) { animation-delay: .56s; }
 .deck-grid-links > *:nth-child(6) { animation-delay: .62s; }
 .deck-grid-links > *:nth-child(7) { animation-delay: .68s; }
-.deck-foot { animation: deck-enter .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: .74s; }
+.deck-grid-links > *:nth-child(8) { animation-delay: .74s; }
+.deck-foot { animation: deck-enter .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: .80s; }
 
 /* ============================ RESPONSIVE ============================ */
 @media (max-width: 760px) {
