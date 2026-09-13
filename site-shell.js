@@ -9,6 +9,7 @@
     ["macros", "./macros.html", "Macros"],
     ["free", "./index.html?free=1#free-tools", "Free"],
     ["links", "./links.html", "Network"],
+    ["about", "./about.html", "About"],
     ["license", "https://activate.emxtweaks.com/activate", "Claim"],
     ["affiliate", "./affiliate.html", "Affiliate"],
     ["contact", "./contact.html", "Support"],
