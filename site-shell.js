@@ -39,8 +39,12 @@
   const footer = document.querySelector("[data-site-footer]");
   if (footer) {
     footer.className = "site-footer";
+    // The About page gets a shorter, neutral legal summary; policy pages keep the full note.
+    const legalNote = page === "about"
+      ? `<p class="site-legal-note">Digital products. Licensing and eligibility vary by product. See <a href="./eula.html">License &amp; Keys</a> for details.</p>`
+      : `<p class="site-legal-note"><strong>All EMX products are digital — all sales are final.</strong> License keys are machine-bound; an OS reinstall, factory reset, or hardware change can void a key, and keys are not recovered or re-issued for free. Contact <a href="mailto:emxbiz@emxtweaks.com">emxbiz@emxtweaks.com</a>.</p>`;
     footer.innerHTML = `
-      <div><a class="site-brand" href="./index.html"><img src="emx-logo-v2.png" width="500" height="500" alt=""><span>EMX <strong>TWEAKS</strong></span></a><p>Windows software, setup tools, and real product support.</p><p class="site-legal-note"><strong>All EMX products are digital — all sales are final.</strong> License keys are machine-bound; an OS reinstall, factory reset, or hardware change can void a key, and keys are not recovered or re-issued for free. Contact <a href="mailto:emxbiz@emxtweaks.com">emxbiz@emxtweaks.com</a>.</p></div>
+      <div><a class="site-brand" href="./index.html"><img src="emx-logo-v2.png" width="500" height="500" alt=""><span>EMX <strong>TWEAKS</strong></span></a><p>Windows software, setup tools, and real product support.</p>${legalNote}</div>
       <nav aria-label="Footer navigation"><a href="./about.html">About</a><a href="./compare.html">Compare</a><a href="./updates.html">Updates</a><a href="./links.html">EMX Network</a><a href="https://support.emxtweaks.com/">Support</a><a href="./terms.html">Terms</a><a href="./privacy.html">Privacy</a><a href="./refunds.html">Refund Policy</a><a href="./eula.html">License &amp; Keys</a></nav>
     `;
   }
