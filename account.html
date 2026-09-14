@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EMX Account Hub</title>
+<link rel="icon" href="./emx-logo-v2.png">
+<link rel="stylesheet" href="account.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <img src="./emx-logo-v2.png" alt="EMX">
+      <div><b>EMX HUB</b><br><span>ACCOUNT</span></div>
+    </div>
+    <a class="btn ghost small" href="./products.html">← Store</a>
+  </div>
+
+  <!-- AUTH -->
+  <section id="auth" class="glass auth">
+    <h1 id="authTitle">Log in to EMX</h1>
+    <p class="sub">One account for every EMX product, your keys, and the free EMX Hub app.</p>
+    <div class="tabs">
+      <div class="tab active" data-mode="login">Log in</div>
+      <div class="tab" data-mode="signup">Sign up</div>
+    </div>
+    <label>Email</label>
+    <input id="email" type="email" autocomplete="email" placeholder="you@email.com">
+    <label>Password</label>
+    <input id="password" type="password" autocomplete="current-password" placeholder="At least 8 characters">
+    <div style="margin-top:18px"><button id="authBtn" class="btn purple" style="width:100%">Log in</button></div>
+    <div id="authMsg" class="msg"></div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dash" class="hide">
+    <div class="glass dash-head">
+      <div>
+        <h1>Your EMX Library</h1>
+        <div class="who">Signed in as <b id="who"></b></div>
+      </div>
+      <div class="cta-app">
+        <a class="btn" href="#" id="downloadApp">⬇ Download EMX Hub app</a>
+        <button class="btn ghost small" id="logout">Sign out</button>
+      </div>
+    </div>
+    <div id="grid" class="grid"></div>
+  </section>
+</div>
+<script src="account.js"></script>
+</body>
+</html>
