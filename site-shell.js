@@ -14,6 +14,7 @@
     ["license", "https://activate.emxtweaks.com/activate", "Claim"],
     ["affiliate", "./affiliate.html", "Affiliate"],
     ["help", "./help.html", "Help"],
+    ["account", "./account.html", "Account"],
   ];
 
   const header = document.querySelector("[data-site-header]");
