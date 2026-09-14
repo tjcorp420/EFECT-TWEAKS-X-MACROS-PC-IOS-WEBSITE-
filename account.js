@@ -144,7 +144,7 @@
 
   // Set this to the hosted EMX_Hub_Setup_1.0.0.exe download URL (e.g. a free Payhip product
   // link, or a GitHub release asset). Until it's set, the button explains it's coming.
-  const HUB_DOWNLOAD_URL = "";
+  const HUB_DOWNLOAD_URL = "https://payhip.com/b/Q7ikr";
   $("downloadApp").addEventListener("click", (e) => {
     e.preventDefault();
     if (HUB_DOWNLOAD_URL) { window.open(HUB_DOWNLOAD_URL, "_blank", "noopener"); return; }

@@ -73,6 +73,38 @@ window.EMX_PRODUCTS = [
     visible: true
   },
   {
+    id: "emx_hub",
+    key: "Q7ikr",
+    productUrl: "https://payhip.com/b/Q7ikr",
+    title: "EMX Hub",
+    eyebrow: "Free Account Hub & Launcher",
+    price: 0,
+    oldPrice: 0,
+    image: "./app-screenshots/emx-hub-product.png",
+    gallery: ["./app-screenshots/emx-hub-product.png"],
+    previewType: "image",
+    previewSrc: "./app-screenshots/emx-hub-product.png",
+    fallbackPreview: "./app-screenshots/emx-hub-product.png",
+    description: "EMX Hub is your one home for everything EMX. Sign in with a single EMX account to see your whole library, launch any installed EMX product in one click, and keep your license keys in one place. New purchases show up automatically — no digging through emails.",
+    features: [
+      "One free EMX account for all your products and keys",
+      "Launch any installed EMX app from a single desktop hub",
+      "Purchases auto-appear as Owned — sign up with your purchase email",
+      "Add and copy license keys in one place",
+      "Free for all EMX customers"
+    ],
+    featured: true,
+    saleBadge: "FREE",
+    version: "1.0.0",
+    platform: "Windows 10 + 11",
+    tags: ["Free", "Launcher", "Account", "Windows"],
+    homepage: false,
+    deliveryType: "external",
+    deliveryUrl: "https://payhip.com/b/Q7ikr",
+    ctaLabel: "Open free download",
+    visible: true
+  },
+  {
     id: "windows_tweak_dashboard",
     key: "TJFav",
     productUrl: "https://payhip.com/b/TJFav",
