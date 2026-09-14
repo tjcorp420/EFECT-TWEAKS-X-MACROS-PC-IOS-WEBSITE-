@@ -65,15 +65,14 @@
   }
 
   function ownedKey(id) { return account && account.keys && account.keys[id]; }
+  function autoOwned(p) { return !!(account && account.owns && p.key && account.owns[p.key]); }
+  function isOwned(p) { return !!ownedKey(p.id) || autoOwned(p); }
 
   function renderGrid() {
     const grid = $("grid");
-    // Owned first, then paid unowned, then free.
-    const order = [...products].sort((a, b) => {
-      const oa = ownedKey(a.id) ? 0 : (a.price > 0 ? 1 : 2);
-      const ob = ownedKey(b.id) ? 0 : (b.price > 0 ? 1 : 2);
-      return oa - ob;
-    });
+    // Owned first (purchased or key added), then paid unowned, then free.
+    const rank = (p) => isOwned(p) ? 0 : (p.price > 0 ? 1 : 2);
+    const order = [...products].sort((a, b) => rank(a) - rank(b));
     grid.innerHTML = order.map(cardHtml).join("");
     grid.querySelectorAll("[data-add]").forEach(btn => btn.addEventListener("click", onAdd));
     grid.querySelectorAll("[data-remove]").forEach(btn => btn.addEventListener("click", onRemove));
@@ -84,6 +83,9 @@
     const img = esc(p.image || "./emx-logo-v2.png");
     const buy = esc(p.productUrl || (p.deliveryUrl || "#"));
     const owned = ownedKey(p.id);
+    const addRow = `<div class="addrow"><input placeholder="Paste license key" data-key="${esc(p.id)}">
+          <button class="btn small" data-add="${esc(p.id)}">Add</button></div>
+        <div class="muted" data-msg="${esc(p.id)}"></div>`;
     let action;
     if (p.price <= 0) {
       action = `<span class="badge free">● FREE</span>
@@ -93,11 +95,13 @@
         <div class="keyrow"><code title="${esc(owned.key)}">${esc(owned.key)}</code>
           <button class="btn ghost small" data-copy="${esc(owned.key)}">Copy</button>
           <button class="btn ghost small" data-remove="${esc(p.id)}">✕</button></div>`;
+    } else if (autoOwned(p)) {
+      action = `<span class="badge owned">● OWNED</span>
+        <div class="muted">Add the key from your Payhip email to copy &amp; activate:</div>
+        ${addRow}`;
     } else {
       action = `<a class="btn purple small" href="${buy}" target="_blank" rel="noopener">Get — $${(p.price || 0).toFixed(2)}</a>
-        <div class="addrow"><input placeholder="Paste license key" data-key="${esc(p.id)}">
-          <button class="btn small" data-add="${esc(p.id)}">Add</button></div>
-        <div class="muted" data-msg="${esc(p.id)}"></div>`;
+        ${addRow}`;
     }
     return `<div class="glass card">
       <img class="thumb" src="${img}" alt="" onerror="this.src='./emx-logo-v2.png'">

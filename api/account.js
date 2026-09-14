@@ -66,7 +66,7 @@ async function signup(res, body) {
     createdAt: Date.now()
   };
   await kvSetJson(key, account);
-  return send(res, 200, { ok: true, token: makeSession(account.emailHash), account: publicAccount(account) });
+  return send(res, 200, { ok: true, token: makeSession(account.emailHash), account: await withOwns(account) });
 }
 
 async function login(res, body) {
@@ -76,7 +76,7 @@ async function login(res, body) {
   if (!account || scrypt(password, account.pwSalt) !== account.pwHash) {
     return send(res, 401, { ok: false, error: "Wrong email or password." });
   }
-  return send(res, 200, { ok: true, token: makeSession(account.emailHash), account: publicAccount(account) });
+  return send(res, 200, { ok: true, token: makeSession(account.emailHash), account: await withOwns(account) });
 }
 
 async function me(res, body) {
@@ -84,7 +84,7 @@ async function me(res, body) {
   if (!hash) return send(res, 401, { ok: false, error: "Session expired. Log in again." });
   const account = await kvGetJson(KV_PREFIX + hash);
   if (!account) return send(res, 404, { ok: false, error: "Account not found." });
-  return send(res, 200, { ok: true, account: publicAccount(account) });
+  return send(res, 200, { ok: true, account: await withOwns(account) });
 }
 
 async function addKey(res, body) {
@@ -108,7 +108,7 @@ async function addKey(res, body) {
   account.keys = account.keys || {};
   account.keys[productId] = { key: licenseKey, verified, addedAt: Date.now() };
   await kvSetJson(kvKey, account);
-  return send(res, 200, { ok: true, account: publicAccount(account) });
+  return send(res, 200, { ok: true, account: await withOwns(account) });
 }
 
 async function removeKey(res, body) {
@@ -120,13 +120,21 @@ async function removeKey(res, body) {
   if (!account) return send(res, 404, { ok: false, error: "Account not found." });
   if (account.keys) delete account.keys[productId];
   await kvSetJson(kvKey, account);
-  return send(res, 200, { ok: true, account: publicAccount(account) });
+  return send(res, 200, { ok: true, account: await withOwns(account) });
 }
 
 // ---- helpers ----
 
 function publicAccount(a) {
   return { emailMasked: a.emailMasked, keys: a.keys || {}, createdAt: a.createdAt };
+}
+
+// Merges auto-captured ownership (written by the Payhip webhook to emx:owns:<hash>) into the
+// account payload as `owns` — a map of Payhip product permalink -> { name, date }.
+async function withOwns(a) {
+  let owns = {};
+  try { owns = (await kvGetJson("emx:owns:" + a.emailHash)) || {}; } catch { owns = {}; }
+  return { ...publicAccount(a), owns };
 }
 
 async function payhipVerify(link, licenseKey, secret) {
