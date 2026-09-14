@@ -14,6 +14,7 @@ const BASE_PRODUCT_MAP = {
   KQLzN: ["EMX_ZERO_DELAY"],
   "0TOjr": ["EMX_MACRO"],
   TJFav: ["EMX_TWEAK_DASHBOARD"],
+  tkYJN: ["EMX_TWEAKS_PRO"],
   Oqz73: ["EMX_VOLT"],
   "0STfj": ["EMX_CONTROLLER_MACRO"],
   EQIrd: ["EMX_FPS"],
@@ -27,6 +28,7 @@ const PRODUCT_LABELS = {
   EMX_ZERO_DELAY: "EMX Ultimate Tweak Utility",
   EMX_MACRO: "EMX Premium KBM Macro",
   EMX_TWEAK_DASHBOARD: "EMX Windows Tweak Dashboard",
+  EMX_TWEAKS_PRO: "EMX Tweaks Pro",
   EMX_VOLT: "EMX VOLT Macro",
   EMX_FPS: "EMX FPS Booster",
   EMX_CONTROLLER_MACRO: "EMX Controller Macro"
@@ -283,6 +285,31 @@ async function syncVoltLicense(details, options = {}) {
   }
 }
 
+async function syncTweaksProLicense(details, options = {}) {
+  const productIds = Array.isArray(details.productIds) ? details.productIds : [];
+  if (!productIds.includes("EMX_TWEAKS_PRO")) {
+    return { status: "skipped", reason: "tweaks-pro-not-in-order" };
+  }
+  const endpoint = String(options.endpoint || process.env.EMX_TWEAKS_PRO_LICENSE_SYNC_URL || "https://emx-tweaks-pro-auth.tjcorp420.workers.dev").trim().replace(/\/$/, "");
+  const secret = String(options.secret || process.env.EMX_LICENSE_SYNC_SECRET || "").trim();
+  if (!secret) return { status: "skipped", reason: "tweaks-pro-sync-not-configured" };
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(`${endpoint}/internal/licenses/sync`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${secret}`, "content-type": "application/json" },
+      body: JSON.stringify({ licenseKey: normalizeLicenseKey(details.licenseKey), ownerEmail: normalizeEmail(details.ownerEmail), productId: "emx-tweaks-pro", plan: "lifetime", maxDevices: 1 }),
+      signal: controller.signal
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || !body.ok) return { status: "failed", statusCode: response.status, reason: body.error || "tweaks-pro-sync-failed" };
+    return { status: "synced", created: Boolean(body.created), licenseId: String(body.licenseId || "") };
+  } catch (error) {
+    return { status: "failed", reason: error && error.name === "AbortError" ? "tweaks-pro-sync-timeout" : "tweaks-pro-sync-unavailable" };
+  } finally { clearTimeout(timeout); }
+}
+
 async function syncUnifiedLicense(details, options = {}) {
   const productIds = Array.isArray(details.productIds) ? details.productIds : [];
   if (!productIds.length) {
@@ -363,11 +390,12 @@ async function syncProductLicenses(details) {
       externalReference: details.orderId,
       productIds: [entry.productId]
     };
-    const [unified, volt] = await Promise.all([
+    const [unified, volt, tweaksPro] = await Promise.all([
       syncUnifiedLicense(scopedDetails),
-      syncVoltLicense(scopedDetails)
+      syncVoltLicense(scopedDetails),
+      syncTweaksProLicense(scopedDetails)
     ]);
-    return [entry.productId, { unified, volt }];
+    return [entry.productId, { unified, volt, tweaksPro }];
   }));
 
   return Object.fromEntries(results);
@@ -997,6 +1025,7 @@ module.exports = {
   sendJson,
   shouldRetryLicenseEmail,
   syncProductLicenses,
+  syncTweaksProLicense,
   syncUnifiedLicense,
   syncVoltLicense,
   verifyPayhipSignature

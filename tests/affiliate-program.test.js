@@ -133,6 +133,31 @@ test("VOLT synchronization is skipped for orders without a VOLT entitlement", as
   assert.deepEqual(result, { status: "skipped", reason: "volt-not-in-order" });
 });
 
+test("Tweaks Pro synchronization targets only the isolated Pro Worker", async () => {
+  const previousFetch = global.fetch;
+  let request;
+  global.fetch = async (url, options) => {
+    request = { url, options };
+    return { ok: true, status: 200, json: async () => ({ ok: true, created: true, licenseId: "pro123" }) };
+  };
+  try {
+    const result = await license.syncTweaksProLicense({
+      licenseKey: "EMX-AAAAA-BBBBB-CCCCC-DDDDD",
+      ownerEmail: "buyer@example.com",
+      productIds: ["EMX_TWEAKS_PRO"]
+    }, { endpoint: "https://pro.example/", secret: "test-sync-secret" });
+    assert.equal(result.status, "synced");
+    assert.equal(request.url, "https://pro.example/internal/licenses/sync");
+    assert.deepEqual(JSON.parse(request.options.body), {
+      licenseKey: "EMX-AAAAA-BBBBB-CCCCC-DDDDD",
+      ownerEmail: "buyer@example.com",
+      productId: "emx-tweaks-pro",
+      plan: "lifetime",
+      maxDevices: 1
+    });
+  } finally { global.fetch = previousFetch; }
+});
+
 test("unified synchronization sends every purchased entitlement with one device", async () => {
   const previousFetch = global.fetch;
   let request;

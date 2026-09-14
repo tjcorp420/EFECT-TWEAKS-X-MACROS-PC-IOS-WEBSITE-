@@ -89,6 +89,7 @@ test("catalog removes retired database rows and restores the canonical current b
   const clips = products.find(product => product.id === "clips");
   const volt = products.find(product => product.id === "volt");
   const fps = products.find(product => product.id === "fps");
+  const tweaksPro = products.find(product => product.id === "emx_tweaks_pro");
 
   assert.ok(!ids.includes("optimizer"));
   assert.equal(
@@ -109,4 +110,8 @@ test("catalog removes retired database rows and restores the canonical current b
   assert.match(clips.licenseType, /Free download/);
   assert.equal(volt.version, "v0.1.73");
   assert.equal(fps.version, "v1.0.24");
+  assert.equal(tweaksPro.key, "tkYJN");
+  assert.equal(tweaksPro.price, 35);
+  assert.equal(tweaksPro.productUrl, "https://payhip.com/b/tkYJN");
+  assert.equal(tweaksPro.image, "./assets/emx-tweaks-pro-product.png");
 });
