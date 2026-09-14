@@ -152,7 +152,7 @@ window.EMX_PRODUCTS = [
     previewType: "image",
     previewSrc: "./assets/emx-tweaks-pro-product.png",
     fallbackPreview: "./assets/emx-tweaks-pro-product.png",
-    description: "EMX Tweaks Pro is the complete premium Windows utility for application management, reversible system tuning, repairs, update controls, optional features, AppX management, environment reporting, automation, and Windows 11 installation-media workflows.",
+    description: "EMX Tweaks Pro is the complete premium Windows utility for application management, reversible system tuning, repairs, update controls, optional features, AppX management, environment reporting, automation, and Windows 11 installation-media workflows. Built for Windows 10 and 11 power users who want clear choices, restore-aware operations, logs, and practical controls in one EMX-branded dashboard.",
     features: [
       "233 application definitions across 10 categories",
       "67 tweak controls with selectable undo workflows",
