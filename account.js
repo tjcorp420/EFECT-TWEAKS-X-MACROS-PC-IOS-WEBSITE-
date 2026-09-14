@@ -142,9 +142,13 @@
     $("dash").classList.add("hide"); $("auth").classList.remove("hide"); setMsg("");
   });
 
+  // Set this to the hosted EMX_Hub_Setup_1.0.0.exe download URL (e.g. a free Payhip product
+  // link, or a GitHub release asset). Until it's set, the button explains it's coming.
+  const HUB_DOWNLOAD_URL = "";
   $("downloadApp").addEventListener("click", (e) => {
     e.preventDefault();
-    alert("The free EMX Hub desktop app is coming next — it signs in with this same account and launches all your installed EMX products.");
+    if (HUB_DOWNLOAD_URL) { window.open(HUB_DOWNLOAD_URL, "_blank", "noopener"); return; }
+    alert("The free EMX Hub desktop app is ready — it's being hosted for download shortly. It signs in with this same account and launches all your installed EMX products.");
   });
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
