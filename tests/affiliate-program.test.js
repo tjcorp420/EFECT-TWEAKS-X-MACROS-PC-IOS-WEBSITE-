@@ -158,6 +158,34 @@ test("Tweaks Pro synchronization targets only the isolated Pro Worker", async ()
   } finally { global.fetch = previousFetch; }
 });
 
+test("Tweaks Pro synchronization prefers its own isolated secret over the shared one", async () => {
+  const previousFetch = global.fetch;
+  const previousProSecret = process.env.EMX_TWEAKS_PRO_SYNC_SECRET;
+  const previousSharedSecret = process.env.EMX_LICENSE_SYNC_SECRET;
+  let request;
+  process.env.EMX_TWEAKS_PRO_SYNC_SECRET = "pro-only-secret";
+  process.env.EMX_LICENSE_SYNC_SECRET = "shared-secret-must-not-be-used";
+  global.fetch = async (url, options) => {
+    request = { url, options };
+    return { ok: true, status: 200, json: async () => ({ ok: true, created: true, licenseId: "pro123" }) };
+  };
+  try {
+    const result = await license.syncTweaksProLicense({
+      licenseKey: "EMX-AAAAA-BBBBB-CCCCC-DDDDD",
+      ownerEmail: "buyer@example.com",
+      productIds: ["EMX_TWEAKS_PRO"]
+    });
+    assert.equal(result.status, "synced");
+    assert.equal(request.options.headers.authorization, "Bearer pro-only-secret");
+  } finally {
+    global.fetch = previousFetch;
+    if (previousProSecret === undefined) delete process.env.EMX_TWEAKS_PRO_SYNC_SECRET;
+    else process.env.EMX_TWEAKS_PRO_SYNC_SECRET = previousProSecret;
+    if (previousSharedSecret === undefined) delete process.env.EMX_LICENSE_SYNC_SECRET;
+    else process.env.EMX_LICENSE_SYNC_SECRET = previousSharedSecret;
+  }
+});
+
 test("unified synchronization sends every purchased entitlement with one device", async () => {
   const previousFetch = global.fetch;
   let request;

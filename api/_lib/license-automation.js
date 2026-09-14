@@ -291,7 +291,10 @@ async function syncTweaksProLicense(details, options = {}) {
     return { status: "skipped", reason: "tweaks-pro-not-in-order" };
   }
   const endpoint = String(options.endpoint || process.env.EMX_TWEAKS_PRO_LICENSE_SYNC_URL || "https://emx-tweaks-pro-auth.tjcorp420.workers.dev").trim().replace(/\/$/, "");
-  const secret = String(options.secret || process.env.EMX_LICENSE_SYNC_SECRET || "").trim();
+  // Pro uses its own isolated sync secret so its Worker never depends on the
+  // shared EMX_LICENSE_SYNC_SECRET (which also guards the Volt and Unified
+  // sync). Fall back to the shared secret for backward compatibility.
+  const secret = String(options.secret || process.env.EMX_TWEAKS_PRO_SYNC_SECRET || process.env.EMX_LICENSE_SYNC_SECRET || "").trim();
   if (!secret) return { status: "skipped", reason: "tweaks-pro-sync-not-configured" };
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
