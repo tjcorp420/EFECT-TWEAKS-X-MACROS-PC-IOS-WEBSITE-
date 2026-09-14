@@ -37,6 +37,42 @@ window.EMX_PRODUCTS = [
     visible: true
   },
   {
+    id: "emx_cru",
+    key: "LwdbV",
+    productUrl: "https://payhip.com/b/LwdbV",
+    title: "EMX CRU",
+    eyebrow: "Stretched Resolution + Fortnite Config",
+    price: 10.00,
+    oldPrice: 0,
+    image: "./app-screenshots/emx-cru-01-dashboard.png",
+    gallery: [
+      "./app-screenshots/emx-cru-01-dashboard.png",
+      "./app-screenshots/emx-cru-02-activation.png"
+    ],
+    previewType: "image",
+    previewSrc: "./app-screenshots/emx-cru-01-dashboard.png",
+    fallbackPreview: "./app-screenshots/emx-cru-01-dashboard.png",
+    description: "EMX CRU is a premium stretched-resolution and Fortnite display configuration tool. Create or select stretched resolutions, validate them against your display driver, force full-panel GPU scaling, and update Fortnite's display config — all from one polished dashboard.",
+    features: [
+      "Custom stretched resolutions with a real Windows driver compatibility test before anything is applied",
+      "One-press FORCE FULL-PANEL STRETCH so a 4:3 or stretched mode fills the whole panel with no black bars",
+      "Fortnite config engine that safely updates GameUserSettings.ini and restores read-only protection",
+      "15-second keep/revert safety screen protects against a black-screen lockout",
+      "Aspect ratio, pixel reduction, and horizontal stretch shown before you apply",
+      "Machine-bound license activation — enter your key once and it opens offline after"
+    ],
+    featured: true,
+    bestSeller: false,
+    saleBadge: "v2.4",
+    version: "2.4.0",
+    platform: "Windows 10 + 11",
+    licenseType: "Machine-bound license key",
+    tags: ["Stretched res", "Fortnite", "Driver-validated", "Windows"],
+    deliveryType: "payhip",
+    ctaLabel: "Open official checkout",
+    visible: true
+  },
+  {
     id: "windows_tweak_dashboard",
     key: "TJFav",
     productUrl: "https://payhip.com/b/TJFav",
