@@ -90,6 +90,7 @@ test("catalog removes retired database rows and restores the canonical current b
   const volt = products.find(product => product.id === "volt");
   const fps = products.find(product => product.id === "fps");
   const tweaksPro = products.find(product => product.id === "emx_tweaks_pro");
+  const desktopFlow = products.find(product => product.id === "emx_desktop_flow");
 
   assert.ok(!ids.includes("optimizer"));
   assert.equal(
@@ -114,4 +115,15 @@ test("catalog removes retired database rows and restores the canonical current b
   assert.equal(tweaksPro.price, 35);
   assert.equal(tweaksPro.productUrl, "https://payhip.com/b/tkYJN");
   assert.equal(tweaksPro.image, "./assets/emx-tweaks-pro-product.png");
+  assert.equal(desktopFlow.key, "5BxNV");
+  assert.equal(desktopFlow.price, 29.99);
+  assert.equal(desktopFlow.previewType, "video");
+  assert.equal(desktopFlow.previewSrc, "./media/emx-desktop-flow-promo.mp4");
+  const catalogBehavior = require("node:fs").readFileSync(require("node:path").join(__dirname, "..", "catalog.js"), "utf8");
+  assert.match(catalogBehavior, /function productPreview\(product, card = false\)/);
+  assert.match(catalogBehavior, /video\.controls = !card/);
+  assert.match(catalogBehavior, /media\.appendChild\(productPreview\(product, true\)\)/);
+  assert.match(catalogBehavior, /function openImageViewer\(source, label\)/);
+  assert.doesNotMatch(catalogBehavior, /fullLink\.target = "_blank"/);
+  assert.match(catalogBehavior, /prefers-reduced-motion: reduce/);
 });

@@ -55,9 +55,53 @@
     picture.append(webp, image);
     return picture;
   }
+  function productPreview(product, card = false) {
+    const fallback = product.fallbackPreview || product.image || "emx-logo-v2.png";
+    if (product.previewType !== "video" || !product.previewSrc) {
+      return responsiveImage(fallback, `${product.title} preview`, "eager");
+    }
+
+    const video = make("video", card ? "product-card-video" : "product-dialog-video");
+    video.src = product.previewSrc;
+    video.poster = fallback;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.controls = !card;
+    video.preload = "metadata";
+    video.setAttribute("aria-label", `${product.title} product preview video`);
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      video.autoplay = true;
+    }
+    video.addEventListener("error", () => {
+      video.replaceWith(responsiveImage(fallback, `${product.title} preview`, "eager"));
+    }, { once: true });
+    return video;
+  }
   const productDialog = make("dialog", "product-dialog");
   productDialog.setAttribute("aria-label", "Product details");
   document.body.appendChild(productDialog);
+  const imageDialog = make("dialog", "product-image-dialog");
+  imageDialog.setAttribute("aria-label", "Product screenshot viewer");
+  const imageDialogShell = make("div", "product-image-dialog-shell");
+  const imageDialogClose = make("button", "product-image-dialog-close", "×");
+  imageDialogClose.type = "button";
+  imageDialogClose.setAttribute("aria-label", "Close screenshot viewer");
+  const imageDialogImage = make("img");
+  const imageDialogCaption = make("p", "product-image-dialog-caption");
+  imageDialogClose.addEventListener("click", () => imageDialog.close());
+  imageDialogShell.append(imageDialogClose, imageDialogImage, imageDialogCaption);
+  imageDialog.appendChild(imageDialogShell);
+  imageDialog.addEventListener("click", event => {
+    if (event.target === imageDialog) imageDialog.close();
+  });
+  document.body.appendChild(imageDialog);
+  function openImageViewer(source, label) {
+    imageDialogImage.src = source;
+    imageDialogImage.alt = label;
+    imageDialogCaption.textContent = label;
+    imageDialog.showModal();
+  }
   function modalList(items) {
     const list = make("ul", "check-list");
     (Array.isArray(items) ? items : String(items || "").split("\n")).filter(Boolean).forEach(item => list.appendChild(make("li", "", item)));
@@ -68,7 +112,7 @@
     const close = make("button", "product-dialog-close", "×");
     close.type = "button"; close.setAttribute("aria-label", "Close product details"); close.onclick = () => productDialog.close();
     const visual = make("div", "product-dialog-visual");
-    visual.appendChild(responsiveImage(product.image || "emx-logo-v2.png", `${product.title} preview`, "eager"));
+    visual.appendChild(productPreview(product));
     const content = make("div", "product-dialog-content");
     content.append(make("p", "product-dialog-eyebrow", product.eyebrow || "EMX SOFTWARE"), make("h2", "", product.modalTitle || product.title), make("p", "product-dialog-lead", product.fullDescription || product.description));
     const trust = make("div", "product-dialog-facts");
@@ -103,7 +147,7 @@
     const article = make("article", "product-card");
     article.id = `product-${product.id}`;
     const media = make("div", "product-media");
-    media.appendChild(responsiveImage(product.image || "emx-logo-v2.png", `${product.title} preview`));
+    media.appendChild(productPreview(product, true));
     if (product.saleBadge)
       media.appendChild(make("span", "product-badge", product.saleBadge));
     const body = make("div", "product-body");
@@ -151,9 +195,8 @@
     const previous = make("button", "product-gallery-control", "←");
     previous.type = "button";
     previous.setAttribute("aria-label", `Previous ${product.title} screenshot`);
-    const fullLink = make("a");
-    fullLink.target = "_blank";
-    fullLink.rel = "noopener";
+    const fullView = make("button", "product-gallery-open");
+    fullView.type = "button";
     const next = make("button", "product-gallery-control", "→");
     next.type = "button";
     next.setAttribute("aria-label", `Next ${product.title} screenshot`);
@@ -162,9 +205,8 @@
     function selectScreenshot(index) {
       galleryIndex = (index + sources.length) % sources.length;
       const selected = sources[galleryIndex];
-      fullLink.href = selected;
-      fullLink.setAttribute("aria-label", `Open ${product.title} screenshot ${galleryIndex + 1} full size`);
-      fullLink.replaceChildren(responsiveImage(selected, `${product.title} screenshot ${galleryIndex + 1}`));
+      fullView.setAttribute("aria-label", `Open ${product.title} screenshot ${galleryIndex + 1} full size`);
+      fullView.replaceChildren(responsiveImage(selected, `${product.title} screenshot ${galleryIndex + 1}`));
       [...rail.children].forEach((button, position) => button.setAttribute("aria-current", String(position === galleryIndex)));
     }
     sources.forEach((source, index) => {
@@ -177,7 +219,11 @@
     });
     previous.addEventListener("click", () => selectScreenshot(galleryIndex - 1));
     next.addEventListener("click", () => selectScreenshot(galleryIndex + 1));
-    stage.append(previous, fullLink, next);
+    fullView.addEventListener("click", () => openImageViewer(
+      sources[galleryIndex],
+      `${product.title} screenshot ${galleryIndex + 1}`
+    ));
+    stage.append(previous, fullView, next);
     gallery.append(stage, rail);
     selectScreenshot(0);
     galleryDetails.append(gallerySummary, gallery);

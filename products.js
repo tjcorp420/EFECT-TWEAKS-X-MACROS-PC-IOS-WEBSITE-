@@ -105,6 +105,69 @@ window.EMX_PRODUCTS = [
     visible: true
   },
   {
+    id: "emx_desktop_flow",
+    slug: "emx-desktop-flow",
+    key: "5BxNV",
+    productUrl: "https://payhip.com/b/5BxNV",
+    title: "EMX Desktop Flow",
+    eyebrow: "Interactive Windows Desktop Studio",
+    price: 29.99,
+    oldPrice: 0,
+    image: "./assets/emx-desktop-flow/cover.png",
+    gallery: [
+      "./assets/emx-desktop-flow/hero.png",
+      "./assets/emx-desktop-flow/features.png",
+      "./assets/emx-desktop-flow/visual-audio.png"
+    ],
+    previewType: "video",
+    previewSrc: "./media/emx-desktop-flow-promo.mp4",
+    fallbackPreview: "./assets/emx-desktop-flow/hero.png",
+    description: "Turn Windows into a live, reactive command center with animated wallpapers, Visual Audio scenes, a customizable app dock, desktop widgets, cursor tools, Quick Capture, color control, and motion effects in one premium EMX app.",
+    fullDescription: "EMX Desktop Flow brings animated wallpapers, professional audio-reactive visualizers, a customizable app dock, resizable widgets, Cursor Studio, Flow Quick Capture, Desktop Reactor, Color Studio, and Motion Studio together in one polished Windows desktop experience.",
+    features: [
+      "GIF, MP4, WebM, and MOV live wallpapers with EMX scene support",
+      "Audio-reactive Visual Audio scenes with clean spectrum and bar styles",
+      "Customizable EMX Dock with app focus, minimize, hover, gradient, and active-state controls",
+      "Resizable desktop widgets for clocks, system meters, temperatures, device batteries, images, and GIFs",
+      "Cursor Studio preview, Flow Quick Capture, Desktop Reactor, Color Studio, and Motion Studio",
+      "One-PC activation with encrypted local storage and a limited verified offline grace period"
+    ],
+    featured: true,
+    bestSeller: false,
+    saleBadge: "NEW",
+    version: "v1.0.21",
+    lastVerified: "September 21, 2026",
+    platform: "Windows 11",
+    purpose: "Desktop customization, live visuals, widgets, capture, and workflow control",
+    licenseType: "Lifetime one-PC activation",
+    controllerSupport: "Not required",
+    tags: ["Desktop customization", "Visual Audio", "Live wallpaper", "Widgets"],
+    category: "Desktop Utilities",
+    requirements: [
+      "64-bit Windows 11 PC",
+      "Internet connection for initial license activation",
+      "Supported Windows and hardware providers for optional temperature and device-battery data"
+    ],
+    recovery: [
+      "Color changes use preview-and-revert controls",
+      "Imported media and saved scenes remain locally manageable",
+      "EMX support can assist with a valid purchase and device-bound activation"
+    ],
+    limitations: [
+      "The current installer is unsigned and may display a Windows SmartScreen publisher warning",
+      "Hardware temperatures and peripheral batteries show unavailable when Windows or the device provider exposes no supported sensor",
+      "Visual and audio-reactive behavior depends on the selected source, hardware, and Windows configuration"
+    ],
+    homepage: true,
+    deliveryType: "payhip",
+    ctaLabel: "Get Desktop Flow",
+    showInIntro: true,
+    introOrder: 2,
+    sortPriority: 2,
+    publishStatus: "published",
+    visible: true
+  },
+  {
     id: "windows_tweak_dashboard",
     key: "TJFav",
     productUrl: "https://payhip.com/b/TJFav",
