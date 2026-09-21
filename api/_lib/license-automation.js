@@ -17,6 +17,7 @@ const BASE_PRODUCT_MAP = {
   tkYJN: ["EMX_TWEAKS_PRO"],
   Oqz73: ["EMX_VOLT"],
   "0STfj": ["EMX_CONTROLLER_MACRO"],
+  "5BxNV": ["EMX_DESKTOP_FLOW"],
   EQIrd: ["EMX_FPS"],
   By7FV: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
   OS_MACRO_BUNDLE_TEST: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
@@ -31,7 +32,8 @@ const PRODUCT_LABELS = {
   EMX_TWEAKS_PRO: "EMX Tweaks Pro",
   EMX_VOLT: "EMX VOLT Macro",
   EMX_FPS: "EMX FPS Booster",
-  EMX_CONTROLLER_MACRO: "EMX Controller Macro"
+  EMX_CONTROLLER_MACRO: "EMX Controller Macro",
+  EMX_DESKTOP_FLOW: "EMX Desktop Flow"
 };
 
 function getProductMap() {
@@ -221,6 +223,27 @@ function shouldRetryLicenseEmail(order) {
   return !order || order.emailDelivery?.status !== "sent";
 }
 
+function requireLicenseEmailDelivery(delivery) {
+  if (delivery && delivery.status === "sent") return;
+
+  const reason = String(delivery && delivery.reason || "email-send-failed")
+    .replace(/[^a-z0-9._-]/gi, "-")
+    .slice(0, 80);
+  throw new Error(`License email delivery failed: ${reason}`);
+}
+
+function requireProductLicenseSync(productSync, productIds = []) {
+  if (!productIds.includes("EMX_DESKTOP_FLOW")) return;
+
+  const status = productSync
+    && productSync.EMX_DESKTOP_FLOW
+    && productSync.EMX_DESKTOP_FLOW.desktopFlow
+    && productSync.EMX_DESKTOP_FLOW.desktopFlow.status;
+  if (status === "synced") return;
+
+  throw new Error("Desktop Flow license activation sync failed.");
+}
+
 async function syncVoltLicense(details, options = {}) {
   const productIds = Array.isArray(details.productIds) ? details.productIds : [];
   if (!productIds.includes("EMX_VOLT")) {
@@ -313,6 +336,55 @@ async function syncTweaksProLicense(details, options = {}) {
   } finally { clearTimeout(timeout); }
 }
 
+async function syncDesktopFlowLicense(details, options = {}) {
+  const productIds = Array.isArray(details.productIds) ? details.productIds : [];
+  if (!productIds.includes("EMX_DESKTOP_FLOW")) {
+    return { status: "skipped", reason: "desktop-flow-not-in-order" };
+  }
+  const endpoint = String(
+    options.endpoint
+      || process.env.EMX_DESKTOP_FLOW_LICENSE_SYNC_URL
+      || "https://emx-desktop-flow-auth.tjcorp420.workers.dev"
+  ).trim().replace(/\/$/, "");
+  const secret = String(
+    options.secret
+      || process.env.EMX_DESKTOP_FLOW_SYNC_SECRET
+      || process.env.EMX_LICENSE_SYNC_SECRET
+      || ""
+  ).trim();
+  if (!secret) return { status: "skipped", reason: "desktop-flow-sync-not-configured" };
+  if (typeof fetch !== "function") return { status: "failed", reason: "fetch-unavailable" };
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(`${endpoint}/internal/licenses/sync`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${secret}`, "content-type": "application/json" },
+      body: JSON.stringify({
+        licenseKey: normalizeLicenseKey(details.licenseKey),
+        ownerEmail: normalizeEmail(details.ownerEmail),
+        productId: "emx-desktop-flow",
+        plan: "lifetime",
+        maxDevices: 1
+      }),
+      signal: controller.signal
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || !body.ok) {
+      return { status: "failed", statusCode: response.status, reason: body.error || "desktop-flow-sync-failed" };
+    }
+    return { status: "synced", created: Boolean(body.created), licenseId: String(body.licenseId || "") };
+  } catch (error) {
+    return {
+      status: "failed",
+      reason: error && error.name === "AbortError" ? "desktop-flow-sync-timeout" : "desktop-flow-sync-unavailable"
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function syncUnifiedLicense(details, options = {}) {
   const productIds = Array.isArray(details.productIds) ? details.productIds : [];
   if (!productIds.length) {
@@ -393,12 +465,13 @@ async function syncProductLicenses(details) {
       externalReference: details.orderId,
       productIds: [entry.productId]
     };
-    const [unified, volt, tweaksPro] = await Promise.all([
+    const [unified, volt, tweaksPro, desktopFlow] = await Promise.all([
       syncUnifiedLicense(scopedDetails),
       syncVoltLicense(scopedDetails),
-      syncTweaksProLicense(scopedDetails)
+      syncTweaksProLicense(scopedDetails),
+      syncDesktopFlowLicense(scopedDetails)
     ]);
-    return [entry.productId, { unified, volt, tweaksPro }];
+    return [entry.productId, { unified, volt, tweaksPro, desktopFlow }];
   }));
 
   return Object.fromEntries(results);
@@ -609,28 +682,14 @@ async function reserveLicenseFromPool(db, orderId) {
 
 async function getOrCreateProductLicenseKey(
   db,
-  customer,
+  _customer,
   productId,
   orderId,
   options = {}
 ) {
-  const productKey = normalizeLicenseKey(
-    customer && customer.licenseKeys && customer.licenseKeys[productId]
-  );
-  if (productKey) {
-    return {
-      licenseKey: productKey,
-      isNewLicense: false
-    };
-  }
-
-  // Existing customers keep a shared legacy key only for products that key
-  // already owned. Newly purchased products always receive a separate key.
-  const legacyKey = normalizeLicenseKey(customer && customer.licenseKey);
-  if (legacyKey && customer.products && customer.products[productId] === true) {
-    return { licenseKey: legacyKey, isNewLicense: false };
-  }
-
+  // Idempotency is handled by the persisted order before this function runs.
+  // A different order is a different one-PC purchase, even when the buyer uses
+  // the same email address and buys the same product for a second computer.
   let licenseKey = await reserveLicenseFromPool(db, `${orderId}:${productId}`);
 
   if (!licenseKey && options.allowGeneratedKeys === true) {
@@ -766,6 +825,8 @@ async function applyPaidPurchase(payload, options = {}) {
     }
 
     await orderRef.update(orderUpdate);
+    requireProductLicenseSync(productSync, productIds);
+    requireLicenseEmailDelivery(emailDelivery);
     return {
       ...plan,
       alreadyProcessed: true,
@@ -835,6 +896,10 @@ async function applyPaidPurchase(payload, options = {}) {
       ...(existingCustomer.licenseKeys || {}),
       ...licenseKeys
     },
+    licenseKeysByOrder: {
+      ...(existingCustomer.licenseKeysByOrder || {}),
+      [orderId]: licenseKeys
+    },
     buyerEmailMasked: maskEmail(email),
     products: {
       ...(existingCustomer.products || {}),
@@ -891,6 +956,8 @@ async function applyPaidPurchase(payload, options = {}) {
     updatedAt: new Date().toISOString()
   });
 
+  requireProductLicenseSync(productSync, productIds);
+
   const emailDelivery = await sendLicenseEmail(email, {
     orderId,
     licenseKey,
@@ -905,6 +972,8 @@ async function applyPaidPurchase(payload, options = {}) {
     },
     updatedAt: new Date().toISOString()
   });
+
+  requireLicenseEmailDelivery(emailDelivery);
 
   return {
     ...plan,
@@ -1018,6 +1087,7 @@ module.exports = {
   BASE_PRODUCT_MAP,
   PRODUCT_LABELS,
   applyPaidPurchase,
+  getOrCreateProductLicenseKey,
   getProductMap,
   hashEmail,
   lookupLicenseByReceipt,
@@ -1025,9 +1095,12 @@ module.exports = {
   normalizeLicenseKey,
   parseBody,
   processPayhipPayload,
+  requireLicenseEmailDelivery,
+  requireProductLicenseSync,
   sendJson,
   shouldRetryLicenseEmail,
   syncProductLicenses,
+  syncDesktopFlowLicense,
   syncTweaksProLicense,
   syncUnifiedLicense,
   syncVoltLicense,

@@ -80,13 +80,22 @@ module.exports = async function handler(req, res) {
     // Capture ownership for the Account Hub first (works with just KV).
     await recordOwnershipToKV(payload);
 
-    // Then run the legacy Firebase license automation if it's configured; if not, don't fail
-    // the webhook — ownership was already recorded above.
-    let result = null;
+    // License fulfillment is the required side effect of a paid order. Do not
+    // acknowledge the webhook when this fails: Payhip retries non-2xx webhook
+    // responses, while a swallowed error permanently strands the receipt with
+    // no recoverable EMX key. Log only non-sensitive routing metadata.
+    let result;
     try {
       result = await processPayhipPayload(payload, { dryRun: false });
     } catch (automationError) {
-      result = { automationSkipped: automationError instanceof Error ? automationError.message : "unavailable" };
+      console.error("Payhip license fulfillment failed", {
+        eventType: String(payload.type || "unknown"),
+        productKeys: Array.isArray(payload.items)
+          ? payload.items.map(item => String(item && (item.product_key || item.product_link || item.key) || "").trim()).filter(Boolean)
+          : [],
+        reason: automationError instanceof Error ? automationError.message : "unavailable"
+      });
+      throw automationError;
     }
     return sendJson(res, { ok: true, result });
   } catch (error) {
