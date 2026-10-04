@@ -22,7 +22,7 @@ test("link hub keeps emxtweaks.com as the home route and preserves required dest
   assert.match(home, /ONE LINK · EVERY OFFICIAL EMX DESTINATION/);
   assert.match(home, /Your setup\./);
   assert.match(home, /Shop Windows tools/);
-  assert.match(home, /id="store-entry-intro"/);
+  assert.doesNotMatch(home, /id="(?:emx-splash|store-entry-intro)"/);
   assert.equal(manifest.start_url, "/");
   for (const subdomain of [
     "clips.emxtweaks.com",
