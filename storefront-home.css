@@ -1,0 +1,341 @@
+.deck {
+  width: min(1220px, calc(100% - 48px));
+  max-width: 1220px;
+}
+body[data-page="home"] .site-header {
+  position: sticky;
+  top: 12px;
+  z-index: 60;
+}
+body[data-page="home"] .deck-stars {
+  opacity: 0.12;
+}
+body[data-page="home"] .deck-grid {
+  opacity: 0.22;
+}
+body[data-page="home"] .deck-aurora {
+  opacity: 0.3;
+}
+.store-gameplay-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.store-gameplay-grid figure {
+  margin: 0;
+  border: 1px solid var(--emx-border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--emx-surface);
+}
+.store-gameplay-grid video {
+  display: block;
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+  background: #050407;
+}
+.store-gameplay-grid figcaption {
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+.store-faq details {
+  border-bottom: 1px solid var(--emx-border);
+  padding: 20px 0;
+}
+.store-faq summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.store-faq p {
+  color: var(--emx-text-muted);
+  line-height: 1.7;
+  margin-top: 16px;
+}
+.store-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: #020204;
+  display: grid;
+  place-items: center;
+}
+.store-intro[hidden] {
+  display: none;
+}
+.store-intro video {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+}
+.store-intro-actions {
+  position: absolute;
+  bottom: 28px;
+  right: 28px;
+  display: flex;
+  gap: 12px;
+}
+.store-intro-actions button {
+  padding: 14px 20px;
+  border: 1px solid #7c698f;
+  background: #100b19;
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  min-height: 44px;
+}
+.store-intro-actions button:focus-visible,
+.store-faq summary:focus-visible {
+  outline: 2px solid #9bff3a;
+  outline-offset: 4px;
+}
+html.store-intro-active {
+  overflow: hidden;
+}
+@media (max-width: 1000px) {
+  .store-gameplay-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .deck {
+    width: calc(100% - 32px);
+  }
+  .store-gameplay-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.store-header-banner { position: relative; margin: 28px 0 34px; overflow: hidden; border: 1px solid rgba(195,117,255,.2); border-radius: 18px; background: #08050d; }
+.store-header-banner video { display: block; width: 100%; height: auto; aspect-ratio: 18 / 7; object-fit: contain; }
+.store-header-banner button { position: absolute; right: 12px; bottom: 12px; border: 1px solid #a66bd6; border-radius: 8px; padding: 8px 12px; color: white; background: rgba(8,5,13,.88); cursor: pointer; }
+.store-header-banner button:focus-visible { outline: 2px solid #a1ff4c; outline-offset: 3px; }
+.store-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  padding: 36px 0 54px;
+}
+.store-hero h1 {
+  font: 800 clamp(3rem, 6vw, 5.3rem)/1.02 var(--emx-font-display);
+  letter-spacing: -0.055em;
+  margin: 16px 0 24px;
+}
+.store-hero h1 em {
+  color: var(--emx-purple);
+  font-style: normal;
+}
+.store-lead {
+  color: var(--emx-text-muted);
+  font-size: 1.08rem;
+  line-height: 1.7;
+  max-width: 530px;
+}
+.store-hero .deck-cta {
+  justify-content: flex-start;
+}
+.store-subline {
+  font-size: 0.8rem;
+  color: var(--emx-text-muted);
+  margin-top: 22px;
+}
+.store-hero-preview {
+  margin: 0;
+  border: 1px solid var(--emx-border);
+  background: var(--emx-surface);
+  border-radius: 22px;
+  overflow: hidden;
+}
+.store-hero-preview img {
+  display: block;
+  width: 100%;
+  height: 420px;
+  object-fit: contain;
+  background: #09070c;
+}
+.store-hero-preview figcaption {
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 0.8rem;
+}
+.store-section {
+  margin: 30px 0 58px;
+}
+.store-section h2 {
+  font: 700 clamp(1.7rem, 3vw, 2.5rem)/1.15 var(--emx-font-display);
+  margin: 12px 0 22px;
+  letter-spacing: -0.03em;
+}
+.store-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.store-featured {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+.store-product {
+  border: 1px solid var(--emx-border);
+  border-radius: 18px;
+  background: var(--emx-surface);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.store-product img {
+  width: 100%;
+  height: 190px;
+  object-fit: contain;
+  background: #09070c;
+}
+.store-product-copy {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 12px;
+}
+.store-product h3 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+.store-product p {
+  color: var(--emx-text-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+.store-product small {
+  color: var(--emx-green);
+  font-weight: 700;
+}
+.store-product-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+.store-product-actions .deck-btn {
+  font-size: 0.8rem;
+  padding: 12px;
+}
+.store-bundle {
+  border: 1px solid var(--emx-border);
+  background: var(--emx-surface);
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+.store-bundle p {
+  color: var(--emx-text-muted);
+  line-height: 1.6;
+  max-width: 630px;
+}
+.store-video-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+.store-video-grid figure {
+  margin: 0;
+  border: 1px solid var(--emx-border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--emx-surface);
+}
+.store-video-grid video {
+  display: block;
+  width: 100%;
+  height: 310px;
+  object-fit: contain;
+  background: #060509;
+}
+.store-video-grid figcaption {
+  padding: 20px;
+  display: grid;
+  gap: 10px;
+}
+.store-video-grid figcaption span {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--emx-text-muted);
+}
+.store-network {
+  border-top: 1px solid var(--emx-border);
+  padding-top: 24px;
+  margin-bottom: 32px;
+}
+.store-network summary {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 16px 0;
+}
+.store-network .deck-grid-links {
+  margin-top: 24px;
+}
+.deck-aurora,
+.deck-stars,
+.deck-title span {
+  animation: none;
+}
+.deck-foot-note {
+  display: none;
+}
+@media (max-width: 760px) {
+  .store-hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-top: 18px;
+  }
+  .store-hero-preview img {
+    height: 330px;
+  }
+  .store-featured,
+  .store-video-grid {
+    grid-template-columns: 1fr;
+  }
+  .store-section-heading,
+  .store-bundle {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .store-product img {
+    height: 230px;
+  }
+  .store-video-grid video {
+    height: 280px;
+  }
+  .store-hero h1 {
+    font-size: 3.2rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .deck-bg * {
+    animation: none !important;
+  }
+}
+
+.store-bundle[hidden] {
+  display: none;
+}
+.store-network summary:focus-visible {
+  outline: 2px solid var(--emx-green);
+  outline-offset: 4px;
+}
+:root[data-theme="light"] .store-product small,
+:root[data-theme="light"] .store-section .deck-kicker,
+:root[data-theme="light"] .store-hero .deck-kicker {
+  color: #3d6900;
+}

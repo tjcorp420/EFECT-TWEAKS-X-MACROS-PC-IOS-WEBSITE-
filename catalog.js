@@ -39,7 +39,10 @@
       : money.format(Number(product.price));
   }
   function responsiveImage(source, alt, loading = "lazy") {
-    const optimized = /(?:app-screenshots\/(?:volt-current|emx-windows-tweak-dashboard)|assets\/(?:emx-os|emx-clips|free-tools)|emx-aim-trainer-command-center)/.test(source) && /\.(?:png|jpe?g)$/i.test(source);
+    const optimized =
+      /(?:app-screenshots\/(?:volt-current|emx-windows-tweak-dashboard)|assets\/(?:emx-os|emx-clips|free-tools)|emx-aim-trainer-command-center)/.test(
+        source,
+      ) && /\.(?:png|jpe?g)$/i.test(source);
     const image = make("img");
     image.src = source;
     image.alt = alt;
@@ -56,12 +59,16 @@
     return picture;
   }
   function productPreview(product, card = false) {
-    const fallback = product.fallbackPreview || product.image || "emx-logo-v2.png";
+    const fallback =
+      product.fallbackPreview || product.image || "emx-logo-v2.png";
     if (product.previewType !== "video" || !product.previewSrc) {
       return responsiveImage(fallback, `${product.title} preview`, "eager");
     }
 
-    const video = make("video", card ? "product-card-video" : "product-dialog-video");
+    const video = make(
+      "video",
+      card ? "product-card-video" : "product-dialog-video",
+    );
     video.src = product.previewSrc;
     video.poster = fallback;
     video.muted = true;
@@ -73,9 +80,15 @@
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       video.autoplay = true;
     }
-    video.addEventListener("error", () => {
-      video.replaceWith(responsiveImage(fallback, `${product.title} preview`, "eager"));
-    }, { once: true });
+    video.addEventListener(
+      "error",
+      () => {
+        video.replaceWith(
+          responsiveImage(fallback, `${product.title} preview`, "eager"),
+        );
+      },
+      { once: true },
+    );
     return video;
   }
   const productDialog = make("dialog", "product-dialog");
@@ -90,9 +103,13 @@
   const imageDialogImage = make("img");
   const imageDialogCaption = make("p", "product-image-dialog-caption");
   imageDialogClose.addEventListener("click", () => imageDialog.close());
-  imageDialogShell.append(imageDialogClose, imageDialogImage, imageDialogCaption);
+  imageDialogShell.append(
+    imageDialogClose,
+    imageDialogImage,
+    imageDialogCaption,
+  );
   imageDialog.appendChild(imageDialogShell);
-  imageDialog.addEventListener("click", event => {
+  imageDialog.addEventListener("click", (event) => {
     if (event.target === imageDialog) imageDialog.close();
   });
   document.body.appendChild(imageDialog);
@@ -104,19 +121,40 @@
   }
   function modalList(items) {
     const list = make("ul", "check-list");
-    (Array.isArray(items) ? items : String(items || "").split("\n")).filter(Boolean).forEach(item => list.appendChild(make("li", "", item)));
+    (Array.isArray(items) ? items : String(items || "").split("\n"))
+      .filter(Boolean)
+      .forEach((item) => list.appendChild(make("li", "", item)));
     return list;
   }
   function openProduct(product) {
     const shell = make("div", "product-dialog-shell");
     const close = make("button", "product-dialog-close", "×");
-    close.type = "button"; close.setAttribute("aria-label", "Close product details"); close.onclick = () => productDialog.close();
+    close.type = "button";
+    close.setAttribute("aria-label", "Close product details");
+    close.onclick = () => productDialog.close();
     const visual = make("div", "product-dialog-visual");
     visual.appendChild(productPreview(product));
     const content = make("div", "product-dialog-content");
-    content.append(make("p", "product-dialog-eyebrow", product.eyebrow || "EMX SOFTWARE"), make("h2", "", product.modalTitle || product.title), make("p", "product-dialog-lead", product.fullDescription || product.description));
+    content.append(
+      make("p", "product-dialog-eyebrow", product.eyebrow || "EMX SOFTWARE"),
+      make("h2", "", product.modalTitle || product.title),
+      make(
+        "p",
+        "product-dialog-lead",
+        product.fullDescription || product.description,
+      ),
+    );
     const trust = make("div", "product-dialog-facts");
-    [["VERSION", product.version || "Not recorded"],["PLATFORM", product.platform || "See requirements"],["LICENSE", product.licenseType || "See listing"],["RECOVERY", (product.recovery || [])[0] || "See instructions"]].forEach(([label,value]) => { const fact=make("span"); fact.append(make("small","",label),make("b","",value)); trust.appendChild(fact); });
+    [
+      ["VERSION", product.version || "Not recorded"],
+      ["PLATFORM", product.platform || "See requirements"],
+      ["LICENSE", product.licenseType || "See listing"],
+      ["RECOVERY", (product.recovery || [])[0] || "See instructions"],
+    ].forEach(([label, value]) => {
+      const fact = make("span");
+      fact.append(make("small", "", label), make("b", "", value));
+      trust.appendChild(fact);
+    });
     content.appendChild(trust);
     const tabs = make("div", "product-dialog-tabs");
     const panels = make("div", "product-dialog-panels");
@@ -125,23 +163,67 @@
       ["Requirements", product.requirements, "System requirements"],
       ["Install", product.installation, "Installation notes"],
       ["Changelog", product.changelog, "Current release changes"],
-      ["Limitations", product.limitations, "Known limitations"]
-    ].filter(([,items]) => Array.isArray(items) ? items.length : String(items || "").trim());
-    sections.forEach(([label,items,title], index) => { const button=make("button", "", label); button.type="button"; const panel=make("section"); panel.hidden=index!==0; panel.append(make("h3","",title),modalList(items)); button.setAttribute("aria-selected", String(index===0)); button.onclick=()=>{[...tabs.children].forEach(x=>x.setAttribute("aria-selected","false"));[...panels.children].forEach(x=>x.hidden=true);button.setAttribute("aria-selected","true");panel.hidden=false}; tabs.appendChild(button); panels.appendChild(panel); });
+      ["Limitations", product.limitations, "Known limitations"],
+    ].filter(([, items]) =>
+      Array.isArray(items) ? items.length : String(items || "").trim(),
+    );
+    sections.forEach(([label, items, title], index) => {
+      const button = make("button", "", label);
+      button.type = "button";
+      const panel = make("section");
+      panel.hidden = index !== 0;
+      panel.append(make("h3", "", title), modalList(items));
+      button.setAttribute("aria-selected", String(index === 0));
+      button.onclick = () => {
+        [...tabs.children].forEach((x) =>
+          x.setAttribute("aria-selected", "false"),
+        );
+        [...panels.children].forEach((x) => (x.hidden = true));
+        button.setAttribute("aria-selected", "true");
+        panel.hidden = false;
+      };
+      tabs.appendChild(button);
+      panels.appendChild(panel);
+    });
     if (sections.length) content.append(tabs, panels);
     const footer = make("div", "product-dialog-footer");
     footer.append(make("strong", "", priceLabel(product)));
-    const action = make("a", "emx-button emx-button-primary", product.ctaLabel || (product.deliveryType === "direct" || product.deliveryType === "external" ? "Download now" : "Open official checkout"));
-    action.dataset.productId=product.id;
-    if (["direct","external"].includes(product.deliveryType)) { action.href=product.deliveryUrl||"#"; action.dataset.emxDownload="true"; } else { action.href=checkoutUrl(product); }
+    const action = make(
+      "a",
+      "emx-button emx-button-primary",
+      product.ctaLabel ||
+        (product.deliveryType === "direct" ||
+        product.deliveryType === "external"
+          ? "Download now"
+          : "Open official checkout"),
+    );
+    action.dataset.productId = product.id;
+    if (["direct", "external"].includes(product.deliveryType)) {
+      action.href = product.deliveryUrl || "#";
+      action.dataset.emxDownload = "true";
+    } else {
+      action.href = checkoutUrl(product);
+    }
     footer.appendChild(action);
     if (product.documentationUrl) {
-      const site = make("a", "emx-button emx-button-secondary", product.websiteLabel || "Visit product website");
-      site.href = product.documentationUrl; site.target = "_blank"; site.rel = "noopener noreferrer";
+      const site = make(
+        "a",
+        "emx-button emx-button-secondary",
+        product.websiteLabel || "Visit product website",
+      );
+      site.href = product.documentationUrl;
+      site.target = "_blank";
+      site.rel = "noopener noreferrer";
       footer.appendChild(site);
     }
-    content.appendChild(footer); shell.append(close, visual, content); productDialog.replaceChildren(shell); productDialog.showModal();
-    window.EMXAffiliate?.track("product_view", { productId: product.id, source: "quick-view" });
+    content.appendChild(footer);
+    shell.append(close, visual, content);
+    productDialog.replaceChildren(shell);
+    productDialog.showModal();
+    window.EMXAffiliate?.track("product_view", {
+      productId: product.id,
+      source: "quick-view",
+    });
   }
   function card(product) {
     const article = make("article", "product-card");
@@ -166,11 +248,7 @@
     quickView.addEventListener("click", () => openProduct(product));
     body.appendChild(quickView);
     const actions = make("div", "product-actions");
-    const price = make(
-      "div",
-      "product-price",
-      priceLabel(product),
-    );
+    const price = make("div", "product-price", priceLabel(product));
     if (Number(product.oldPrice || 0) > Number(product.price || 0)) {
       const old = make("del", "", money.format(Number(product.oldPrice)));
       price.appendChild(old);
@@ -178,9 +256,9 @@
     const details = make("details", "product-details");
     const summary = make("summary", "", "What is included");
     const featureList = make("ul", "check-list");
-    (product.features || []).slice(0, 5).forEach((feature) =>
-      featureList.appendChild(make("li", "", feature)),
-    );
+    (product.features || [])
+      .slice(0, 5)
+      .forEach((feature) => featureList.appendChild(make("li", "", feature)));
     details.append(summary, featureList);
     const galleryImages = (product.gallery || []).filter(Boolean).slice(0, 24);
     const galleryDetails = make("details", "product-gallery-details");
@@ -189,7 +267,9 @@
       "",
       `View ${galleryImages.length || 1} full screenshot${galleryImages.length === 1 ? "" : "s"}`,
     );
-    const sources = galleryImages.length ? galleryImages : [product.image || "emx-logo-v2.png"];
+    const sources = galleryImages.length
+      ? galleryImages
+      : [product.image || "emx-logo-v2.png"];
     const gallery = make("div", "product-gallery-carousel");
     const stage = make("div", "product-gallery-stage");
     const previous = make("button", "product-gallery-control", "←");
@@ -205,46 +285,88 @@
     function selectScreenshot(index) {
       galleryIndex = (index + sources.length) % sources.length;
       const selected = sources[galleryIndex];
-      fullView.setAttribute("aria-label", `Open ${product.title} screenshot ${galleryIndex + 1} full size`);
-      fullView.replaceChildren(responsiveImage(selected, `${product.title} screenshot ${galleryIndex + 1}`));
-      [...rail.children].forEach((button, position) => button.setAttribute("aria-current", String(position === galleryIndex)));
+      fullView.setAttribute(
+        "aria-label",
+        `Open ${product.title} screenshot ${galleryIndex + 1} full size`,
+      );
+      fullView.replaceChildren(
+        responsiveImage(
+          selected,
+          `${product.title} screenshot ${galleryIndex + 1}`,
+          "eager",
+        ),
+      );
+      [...rail.children].forEach((button, position) =>
+        button.setAttribute("aria-current", String(position === galleryIndex)),
+      );
     }
     sources.forEach((source, index) => {
       const thumbnail = make("button");
       thumbnail.type = "button";
-      thumbnail.setAttribute("aria-label", `Show ${product.title} screenshot ${index + 1}`);
+      thumbnail.setAttribute(
+        "aria-label",
+        `Show ${product.title} screenshot ${index + 1}`,
+      );
       thumbnail.appendChild(responsiveImage(source, ""));
       thumbnail.addEventListener("click", () => selectScreenshot(index));
       rail.appendChild(thumbnail);
     });
-    previous.addEventListener("click", () => selectScreenshot(galleryIndex - 1));
+    previous.addEventListener("click", () =>
+      selectScreenshot(galleryIndex - 1),
+    );
     next.addEventListener("click", () => selectScreenshot(galleryIndex + 1));
-    fullView.addEventListener("click", () => openImageViewer(
-      sources[galleryIndex],
-      `${product.title} screenshot ${galleryIndex + 1}`
-    ));
+    fullView.addEventListener("click", () =>
+      openImageViewer(
+        sources[galleryIndex],
+        `${product.title} screenshot ${galleryIndex + 1}`,
+      ),
+    );
     stage.append(previous, fullView, next);
     gallery.append(stage, rail);
     selectScreenshot(0);
     galleryDetails.append(gallerySummary, gallery);
+    galleryDetails.addEventListener("toggle", () => {
+      if (galleryDetails.open)
+        galleryDetails.querySelectorAll("img").forEach((image) => {
+          image.loading = "eager";
+        });
+    });
     const trust = make("details", "product-trust");
-    trust.appendChild(make("summary", "", "Release, requirements, and recovery"));
+    trust.appendChild(
+      make("summary", "", "Release, requirements, and recovery"),
+    );
     const trustMeta = make("dl", "product-trust-meta");
     [
       ["Current version", product.version || "See current product listing"],
       ["Last verified", product.lastVerified || "Not recorded"],
-      ["Requirements", (product.requirements || []).join(" • ") || "Review before checkout"],
-      ["Recovery", (product.recovery || []).join(" • ") || "See product instructions"],
-      ["Known limitations", (product.limitations || []).join(" • ") || "No additional catalog limitations recorded"],
+      [
+        "Requirements",
+        (product.requirements || []).join(" • ") || "Review before checkout",
+      ],
+      [
+        "Recovery",
+        (product.recovery || []).join(" • ") || "See product instructions",
+      ],
+      [
+        "Known limitations",
+        (product.limitations || []).join(" • ") ||
+          "No additional catalog limitations recorded",
+      ],
     ].forEach(([label, value]) => {
       trustMeta.append(make("dt", "", label), make("dd", "", value));
     });
     trust.appendChild(trustMeta);
-    const deliveryType = product.deliveryType || (product.key ? "payhip" : "external");
+    const deliveryType =
+      product.deliveryType || (product.key ? "payhip" : "external");
     const checkout = make(
       "a",
       "emx-button emx-button-primary",
-      product.ctaLabel || (deliveryType === "direct" || deliveryType === "external" ? "Download" : product.type === "bundle" ? "Open bundle checkout" : "Open official checkout"),
+      product.ctaLabel ||
+        (deliveryType === "direct" || deliveryType === "external"
+          ? "Download"
+          : product.type === "bundle"
+            ? "Open bundle checkout"
+            : "Open official checkout"),
     );
     checkout.dataset.productId = product.id;
     if (deliveryType === "direct" || deliveryType === "external") {
@@ -264,7 +386,11 @@
     affiliateLink.href = "./affiliate.html";
     checkoutGroup.append(checkout);
     if (product.documentationUrl) {
-      const site = make("a", "emx-button emx-button-secondary", product.websiteLabel || "Visit product website");
+      const site = make(
+        "a",
+        "emx-button emx-button-secondary",
+        product.websiteLabel || "Visit product website",
+      );
       site.href = product.documentationUrl;
       site.target = "_blank";
       site.rel = "noopener noreferrer";
@@ -295,13 +421,22 @@
             .includes(query)),
     );
     grid.replaceChildren(...matches.map(card));
+    window.EMXStoreAnalytics?.observe(grid);
     if (window.EMXAffiliate?.activeCode && "IntersectionObserver" in window) {
-      const observer = new IntersectionObserver(entries => entries.forEach(entry => {
-        if (!entry.isIntersecting || entry.intersectionRatio < 0.55) return;
-        observer.unobserve(entry.target);
-        window.EMXAffiliate.track("product_view", { productId: entry.target.id.replace(/^product-/, "") });
-      }), { threshold: 0.55 });
-      grid.querySelectorAll(".product-card").forEach(item => observer.observe(item));
+      const observer = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting || entry.intersectionRatio < 0.55) return;
+            observer.unobserve(entry.target);
+            window.EMXAffiliate.track("product_view", {
+              productId: entry.target.id.replace(/^product-/, ""),
+            });
+          }),
+        { threshold: 0.55 },
+      );
+      grid
+        .querySelectorAll(".product-card")
+        .forEach((item) => observer.observe(item));
     }
     state.textContent = matches.length
       ? `${matches.length} current EMX listing${matches.length === 1 ? "" : "s"}.`
@@ -347,5 +482,7 @@
     render();
   }
   load();
-  productDialog.addEventListener("click", event => { if (event.target === productDialog) productDialog.close(); });
+  productDialog.addEventListener("click", (event) => {
+    if (event.target === productDialog) productDialog.close();
+  });
 })();

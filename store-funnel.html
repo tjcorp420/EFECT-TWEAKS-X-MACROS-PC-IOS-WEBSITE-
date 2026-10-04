@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>EMX Store Funnel</title>
+    <link rel="stylesheet" href="foundation.css" />
+    <link rel="stylesheet" href="site.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="section">
+        <h1>Store funnel</h1>
+        <p>
+          Session counts from the last 30 days. Views and checkout opens are
+          deduplicated per product and session each day. Compare with paid
+          Payhip orders separately; test/free orders are not paid sales.
+        </p>
+        <form id="funnel-form">
+          <label
+            >Store admin password
+            <input
+              id="funnel-password"
+              type="password"
+              autocomplete="current-password"
+              required /></label
+          ><button class="emx-button" type="submit">Load report</button>
+        </form>
+        <p id="funnel-status" role="status"></p>
+        <div id="funnel-report"></div>
+      </section>
+    </main>
+    <script defer src="store-funnel-report.js"></script>
+  </body>
+</html>

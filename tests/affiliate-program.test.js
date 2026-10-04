@@ -42,10 +42,49 @@ test("referral code extraction only accepts explicit metadata", () => {
 test("current Payhip product keys map to the correct EMX licenses", () => {
   assert.deepEqual(license.getProductMap().TJFav, ["EMX_TWEAK_DASHBOARD"]);
   assert.deepEqual(license.getProductMap().Oqz73, ["EMX_VOLT"]);
+  assert.deepEqual(license.getProductMap()["5BxNV"], ["EMX_DESKTOP_FLOW"]);
   assert.deepEqual(license.getProductMap().By7FV, [
     "EMX_TWEAK_DASHBOARD",
     "EMX_VOLT",
   ]);
+});
+
+test("Desktop Flow purchases synchronize to the isolated activation Worker", async () => {
+  const previousFetch = global.fetch;
+  const previousSecret = process.env.EMX_DESKTOP_FLOW_SYNC_SECRET;
+  const request = {};
+  process.env.EMX_DESKTOP_FLOW_SYNC_SECRET = "desktop-flow-test-secret";
+  global.fetch = async (url, options) => {
+    request.url = url;
+    request.options = options;
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ ok: true, created: true, licenseId: "test-license" })
+    };
+  };
+
+  try {
+    const result = await license.syncDesktopFlowLicense({
+      licenseKey: "EMXDF-12345678-12345678-12345678",
+      ownerEmail: "buyer@example.com",
+      productIds: ["EMX_DESKTOP_FLOW"]
+    });
+    assert.equal(result.status, "synced");
+    assert.equal(request.url, "https://emx-desktop-flow-auth.tjcorp420.workers.dev/internal/licenses/sync");
+    assert.equal(request.options.headers.authorization, "Bearer desktop-flow-test-secret");
+    assert.deepEqual(JSON.parse(request.options.body), {
+      licenseKey: "EMXDF-12345678-12345678-12345678",
+      ownerEmail: "buyer@example.com",
+      productId: "emx-desktop-flow",
+      plan: "lifetime",
+      maxDevices: 1
+    });
+  } finally {
+    global.fetch = previousFetch;
+    if (previousSecret === undefined) delete process.env.EMX_DESKTOP_FLOW_SYNC_SECRET;
+    else process.env.EMX_DESKTOP_FLOW_SYNC_SECRET = previousSecret;
+  }
 });
 
 test("cumulative refunds reverse only the new commission amount", () => {

@@ -8,6 +8,7 @@ const LICENSE_POOL_PATH = "licensePool";
 const LICENSES_PATH = "licenses";
 const CUSTOMERS_PATH = "customersByEmailHash";
 const ORDERS_PATH = "orders";
+const LICENSE_EMAIL_RESEND_COOLDOWN_MS = 5 * 60 * 1000;
 
 const BASE_PRODUCT_MAP = {
   Isg28: ["EMX_OS"],
@@ -18,6 +19,12 @@ const BASE_PRODUCT_MAP = {
   Oqz73: ["EMX_VOLT"],
   "0STfj": ["EMX_CONTROLLER_MACRO"],
   "5BxNV": ["EMX_DESKTOP_FLOW"],
+  t2qKl: ["EMX_DESKTOP_FLOW_LITE"],
+  sAu8f: ["EMX_TASKBAR_STUDIO"],
+  Ove0d: ["EMX_VEX"],
+  SR4bJ: ["EMX_NEXUS"],
+  GUE6H: ["EMX_WORLD"],
+  "4ENPW": ["EMX_PRO_TIMER"],
   EQIrd: ["EMX_FPS"],
   By7FV: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
   OS_MACRO_BUNDLE_TEST: ["EMX_TWEAK_DASHBOARD", "EMX_VOLT"],
@@ -33,7 +40,36 @@ const PRODUCT_LABELS = {
   EMX_VOLT: "EMX VOLT Macro",
   EMX_FPS: "EMX FPS Booster",
   EMX_CONTROLLER_MACRO: "EMX Controller Macro",
-  EMX_DESKTOP_FLOW: "EMX Desktop Flow"
+  EMX_DESKTOP_FLOW: "EMX Desktop Flow",
+  EMX_DESKTOP_FLOW_LITE: "EMX Desktop Flow Lite",
+  EMX_TASKBAR_STUDIO: "EMX Taskbar Studio",
+  EMX_VEX: "EMX VEX KBM Macro",
+  EMX_NEXUS: "EMX Nexus",
+  EMX_WORLD: "EMX WORLD",
+  EMX_PRO_TIMER: "EMX Pro Timer Res Tuner"
+};
+
+const PAID_DESKTOP_PRODUCTS = {
+  "EMX_VEX": {
+    "product": "emx-vex",
+    "prefix": "EMXVX",
+    "env": "EMX_VEX"
+  },
+  "EMX_NEXUS": {
+    "product": "emx-nexus",
+    "prefix": "EMXNX",
+    "env": "EMX_NEXUS"
+  },
+  "EMX_WORLD": {
+    "product": "emx-world",
+    "prefix": "EMXWD",
+    "env": "EMX_WORLD"
+  },
+  "EMX_PRO_TIMER": {
+    "product": "emx-pro-timer",
+    "prefix": "EMXPT",
+    "env": "EMX_PRO_TIMER"
+  }
 };
 
 function getProductMap() {
@@ -233,15 +269,23 @@ function requireLicenseEmailDelivery(delivery) {
 }
 
 function requireProductLicenseSync(productSync, productIds = []) {
-  if (!productIds.includes("EMX_DESKTOP_FLOW")) return;
+  const required = [
+    { productId: "EMX_DESKTOP_FLOW", syncName: "desktopFlow", label: "Desktop Flow" },
+    { productId: "EMX_DESKTOP_FLOW_LITE", syncName: "desktopFlowLite", label: "Desktop Flow Lite" },
+    { productId: "EMX_TASKBAR_STUDIO", syncName: "taskbarStudio", label: "Taskbar Studio" },
+    ...Object.keys(PAID_DESKTOP_PRODUCTS).map(productId => ({ productId, syncName: "paidDesktop", label: PRODUCT_LABELS[productId] }))
+  ];
 
-  const status = productSync
-    && productSync.EMX_DESKTOP_FLOW
-    && productSync.EMX_DESKTOP_FLOW.desktopFlow
-    && productSync.EMX_DESKTOP_FLOW.desktopFlow.status;
-  if (status === "synced") return;
-
-  throw new Error("Desktop Flow license activation sync failed.");
+  for (const requirement of required) {
+    if (!productIds.includes(requirement.productId)) continue;
+    const status = productSync
+      && productSync[requirement.productId]
+      && productSync[requirement.productId][requirement.syncName]
+      && productSync[requirement.productId][requirement.syncName].status;
+    if (status !== "synced") {
+      throw new Error(`${requirement.label} license activation sync failed.`);
+    }
+  }
 }
 
 async function syncVoltLicense(details, options = {}) {
@@ -385,6 +429,139 @@ async function syncDesktopFlowLicense(details, options = {}) {
   }
 }
 
+async function syncDesktopFlowLiteLicense(details, options = {}) {
+  const productIds = Array.isArray(details.productIds) ? details.productIds : [];
+  if (!productIds.includes("EMX_DESKTOP_FLOW_LITE")) {
+    return { status: "skipped", reason: "desktop-flow-lite-not-in-order" };
+  }
+  const endpoint = String(
+    options.endpoint
+      || process.env.EMX_DESKTOP_FLOW_LITE_LICENSE_SYNC_URL
+      || "https://emx-desktop-flow-lite-auth.tjcorp420.workers.dev"
+  ).trim().replace(/\/$/, "");
+  const secret = String(
+    options.secret
+      || process.env.EMX_DESKTOP_FLOW_LITE_SYNC_SECRET
+      || ""
+  ).trim();
+  if (!secret) return { status: "skipped", reason: "desktop-flow-lite-sync-not-configured" };
+  if (typeof fetch !== "function") return { status: "failed", reason: "fetch-unavailable" };
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(`${endpoint}/internal/licenses/sync`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${secret}`, "content-type": "application/json" },
+      body: JSON.stringify({
+        licenseKey: normalizeLicenseKey(details.licenseKey),
+        ownerEmail: normalizeEmail(details.ownerEmail),
+        productId: "emx-desktop-flow-lite",
+        plan: "lifetime",
+        maxDevices: 1
+      }),
+      signal: controller.signal
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || !body.ok) {
+      return { status: "failed", statusCode: response.status, reason: body.error || "desktop-flow-lite-sync-failed" };
+    }
+    return { status: "synced", created: Boolean(body.created), licenseId: String(body.licenseId || "") };
+  } catch (error) {
+    return {
+      status: "failed",
+      reason: error && error.name === "AbortError" ? "desktop-flow-lite-sync-timeout" : "desktop-flow-lite-sync-unavailable"
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function syncTaskbarStudioLicense(details, options = {}) {
+  const productIds = Array.isArray(details.productIds) ? details.productIds : [];
+  if (!productIds.includes("EMX_TASKBAR_STUDIO")) {
+    return { status: "skipped", reason: "taskbar-studio-not-in-order" };
+  }
+  const endpoint = String(
+    options.endpoint
+      || process.env.EMX_TASKBAR_STUDIO_LICENSE_SYNC_URL
+      || "https://emx-taskbar-studio-auth.tjcorp420.workers.dev"
+  ).trim().replace(/\/$/, "");
+  // This authority has its own secret; never fall back to another product's.
+  const secret = String(options.secret || process.env.EMX_TASKBAR_STUDIO_SYNC_SECRET || "").trim();
+  if (!secret) return { status: "skipped", reason: "taskbar-studio-sync-not-configured" };
+  if (typeof fetch !== "function") return { status: "failed", reason: "fetch-unavailable" };
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(`${endpoint}/internal/licenses/sync`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${secret}`, "content-type": "application/json" },
+      body: JSON.stringify({
+        licenseKey: normalizeLicenseKey(details.licenseKey),
+        ownerEmail: normalizeEmail(details.ownerEmail),
+        productId: "emx-taskbar-studio",
+        plan: "lifetime",
+        maxDevices: 1
+      }),
+      signal: controller.signal
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || body.ok !== true || body.product !== "emx-taskbar-studio") {
+      return { status: "failed", statusCode: response.status, reason: "taskbar-studio-sync-rejected" };
+    }
+    return { status: "synced", created: Boolean(body.created), licenseId: String(body.licenseId || "") };
+  } catch (error) {
+    return {
+      status: "failed",
+      reason: error && error.name === "AbortError" ? "taskbar-studio-sync-timeout" : "taskbar-studio-sync-unavailable"
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function syncPaidDesktopLicense(details, options = {}) {
+  const productId = (details.productIds || []).find(id => PAID_DESKTOP_PRODUCTS[id]);
+  if (!productId) return { status: "skipped", reason: "paid-desktop-not-in-order" };
+  const config = PAID_DESKTOP_PRODUCTS[productId];
+  const endpoint = String(options.endpoint || process.env[config.env + "_LICENSE_SYNC_URL"] ||
+    `https://${config.product}-auth.tjcorp420.workers.dev`).trim().replace(/\/$/, "");
+  const secret = String(options.secret || process.env[config.env + "_SYNC_SECRET"] || "").trim();
+  if (!secret) return { status: "skipped", reason: "paid-desktop-sync-not-configured" };
+  if (typeof fetch !== "function") return { status: "failed", reason: "fetch-unavailable" };
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(`${endpoint}/internal/licenses/sync`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${secret}`, "content-type": "application/json" },
+      body: JSON.stringify({
+        licenseKey: normalizeLicenseKey(details.licenseKey),
+        ownerEmail: normalizeEmail(details.ownerEmail),
+        productId: config.product,
+        plan: "lifetime",
+        maxDevices: 1
+      }),
+      signal: controller.signal
+    });
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || body.ok !== true || body.product !== config.product) {
+      return { status: "failed", statusCode: response.status, reason: "paid-desktop-sync-rejected" };
+    }
+    return { status: "synced", created: Boolean(body.created), licenseId: String(body.licenseId || "") };
+  } catch (error) {
+    return {
+      status: "failed",
+      reason: error && error.name === "AbortError" ? "paid-desktop-sync-timeout" : "paid-desktop-sync-unavailable"
+    };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function syncUnifiedLicense(details, options = {}) {
   const productIds = Array.isArray(details.productIds) ? details.productIds : [];
   if (!productIds.length) {
@@ -465,13 +642,16 @@ async function syncProductLicenses(details) {
       externalReference: details.orderId,
       productIds: [entry.productId]
     };
-    const [unified, volt, tweaksPro, desktopFlow] = await Promise.all([
+    const [unified, volt, tweaksPro, desktopFlow, desktopFlowLite, taskbarStudio, paidDesktop] = await Promise.all([
       syncUnifiedLicense(scopedDetails),
       syncVoltLicense(scopedDetails),
       syncTweaksProLicense(scopedDetails),
-      syncDesktopFlowLicense(scopedDetails)
+      syncDesktopFlowLicense(scopedDetails),
+      syncDesktopFlowLiteLicense(scopedDetails),
+      syncTaskbarStudioLicense(scopedDetails),
+      syncPaidDesktopLicense(scopedDetails)
     ]);
-    return [entry.productId, { unified, volt, tweaksPro, desktopFlow }];
+    return [entry.productId, { unified, volt, tweaksPro, desktopFlow, desktopFlowLite, taskbarStudio, paidDesktop }];
   }));
 
   return Object.fromEntries(results);
@@ -568,7 +748,9 @@ async function sendLicenseEmail(email, details) {
     headers: {
       authorization: `Bearer ${apiKey}`,
       "content-type": "application/json",
-      "idempotency-key": `emx-license-${orderId}`
+      "idempotency-key": details.deliveryAttempt
+        ? `emx-license-${orderId}-${String(details.deliveryAttempt).replace(/[^a-z0-9-]/gi, "").slice(0, 40)}`
+        : `emx-license-${orderId}`
     },
     body: JSON.stringify(payload)
   });
@@ -589,6 +771,67 @@ async function sendLicenseEmail(email, details) {
     provider: "resend",
     id: responseBody.id || ""
   };
+}
+
+async function resendLicenseEmailByReceipt(email, orderId, options = {}) {
+  const cleanEmail = normalizeEmail(email);
+  const cleanOrderId = safeFirebaseKey(orderId);
+  if (!cleanEmail || !cleanEmail.includes("@") || !cleanOrderId) {
+    throw new Error("Email and Payhip transaction id are required.");
+  }
+
+  const db = options.db || getDb();
+  const orderRef = db.ref(`${ORDERS_PATH}/${cleanOrderId}`);
+  const order = (await orderRef.once("value")).val();
+  if (
+    !order
+    || order.emailHash !== hashEmail(cleanEmail)
+    || (!order.licenseKey && !order.licenseKeys)
+  ) {
+    return { status: "not_found" };
+  }
+
+  const nowMs = Number.isFinite(options.nowMs) ? options.nowMs : Date.now();
+  const lastResendMs = Date.parse(order.emailDelivery?.lastResendAt || "");
+  if (
+    Number.isFinite(lastResendMs)
+    && nowMs - lastResendMs < LICENSE_EMAIL_RESEND_COOLDOWN_MS
+  ) {
+    return {
+      status: "cooldown",
+      retryAfterSeconds: Math.max(
+        1,
+        Math.ceil((LICENSE_EMAIL_RESEND_COOLDOWN_MS - (nowMs - lastResendMs)) / 1000)
+      )
+    };
+  }
+
+  const productIds = Object.keys(order.products || {});
+  const licenseKeys = normalizeOrderLicenseKeys(order, productIds);
+  if (!productIds.length || productIds.some(productId => !licenseKeys[productId])) {
+    return { status: "incomplete" };
+  }
+
+  const sendEmail = options.sendEmail || sendLicenseEmail;
+  const delivery = await sendEmail(cleanEmail, {
+    orderId: cleanOrderId,
+    licenseKey: normalizeLicenseKey(order.licenseKey || ""),
+    licenseKeys,
+    productIds,
+    deliveryAttempt: `resend-${Math.floor(nowMs / LICENSE_EMAIL_RESEND_COOLDOWN_MS)}`
+  });
+  const timestamp = new Date(nowMs).toISOString();
+  await orderRef.update({
+    emailDelivery: {
+      ...delivery,
+      lastResendAt: timestamp,
+      updatedAt: timestamp
+    },
+    updatedAt: timestamp
+  });
+  requireLicenseEmailDelivery(delivery);
+
+  return { status: "sent", provider: delivery.provider || "email" };
 }
 
 async function countUnusedPoolKeys(db, limit = 30) {
@@ -690,6 +933,16 @@ async function getOrCreateProductLicenseKey(
   // Idempotency is handled by the persisted order before this function runs.
   // A different order is a different one-PC purchase, even when the buyer uses
   // the same email address and buys the same product for a second computer.
+  if (productId === "EMX_DESKTOP_FLOW_LITE" || productId === "EMX_TASKBAR_STUDIO" || PAID_DESKTOP_PRODUCTS[productId]) {
+    const prefix = PAID_DESKTOP_PRODUCTS[productId]?.prefix || (productId === "EMX_TASKBAR_STUDIO" ? "EMXTS" : "EMXDFL");
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const licenseKey = `${prefix}-${crypto.randomBytes(4).toString("hex")}-${crypto.randomBytes(4).toString("hex")}-${crypto.randomBytes(4).toString("hex")}`.toUpperCase();
+      const existing = await db.ref(`${LICENSES_PATH}/${safeFirebaseKey(licenseKey)}`).once("value");
+      if (!existing.exists()) return { licenseKey, isNewLicense: true };
+    }
+    throw new Error(`Could not generate a unique ${PRODUCT_LABELS[productId]} license key.`);
+  }
+
   let licenseKey = await reserveLicenseFromPool(db, `${orderId}:${productId}`);
 
   if (!licenseKey && options.allowGeneratedKeys === true) {
@@ -809,6 +1062,9 @@ async function applyPaidPurchase(payload, options = {}) {
       updatedAt: now
     };
 
+    // A retried receipt must still have an activatable key before email delivery.
+    await orderRef.update(orderUpdate);
+    requireProductLicenseSync(productSync, productIds);
     let emailDelivery = existingOrder.emailDelivery || null;
     if (shouldRetryLicenseEmail(existingOrder)) {
       emailDelivery = await sendLicenseEmail(email, {
@@ -825,7 +1081,6 @@ async function applyPaidPurchase(payload, options = {}) {
     }
 
     await orderRef.update(orderUpdate);
-    requireProductLicenseSync(productSync, productIds);
     requireLicenseEmailDelivery(emailDelivery);
     return {
       ...plan,
@@ -1051,7 +1306,7 @@ async function processPayhipPayload(payload, options = {}) {
   };
 }
 
-async function lookupLicenseByReceipt(email, orderId) {
+async function lookupLicenseByReceipt(email, orderId, options = {}) {
   const cleanEmail = normalizeEmail(email);
   const cleanOrderId = safeFirebaseKey(orderId);
 
@@ -1059,7 +1314,7 @@ async function lookupLicenseByReceipt(email, orderId) {
     throw new Error("Email and Payhip transaction id are required.");
   }
 
-  const db = getDb();
+  const db = options.db || getDb();
   const orderSnap = await db.ref(`${ORDERS_PATH}/${cleanOrderId}`).once("value");
   const order = orderSnap.val();
   const emailHash = hashEmail(cleanEmail);
@@ -1095,12 +1350,16 @@ module.exports = {
   normalizeLicenseKey,
   parseBody,
   processPayhipPayload,
+  resendLicenseEmailByReceipt,
   requireLicenseEmailDelivery,
   requireProductLicenseSync,
   sendJson,
   shouldRetryLicenseEmail,
   syncProductLicenses,
   syncDesktopFlowLicense,
+  syncDesktopFlowLiteLicense,
+  syncTaskbarStudioLicense,
+  syncPaidDesktopLicense,
   syncTweaksProLicense,
   syncUnifiedLicense,
   syncVoltLicense,

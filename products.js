@@ -168,6 +168,404 @@ window.EMX_PRODUCTS = [
     visible: true
   },
   {
+    id: "emx_desktop_flow_lite",
+    slug: "emx-desktop-flow-lite",
+    key: "t2qKl",
+    productUrl: "https://payhip.com/b/t2qKl",
+    title: "EMX Desktop Flow Lite",
+    eyebrow: "Live Wallpaper and Cursor Studio",
+    price: 14.99,
+    oldPrice: 0,
+    image: "./assets/emx-desktop-flow-lite/cover.png",
+    gallery: ["./assets/emx-desktop-flow-lite/cover.png"],
+    previewType: "video",
+    previewSrc: "./media/emx-desktop-flow-lite-promo.mp4",
+    fallbackPreview: "./assets/emx-desktop-flow-lite/cover.png",
+    description: "Transform Windows with live wallpapers, separate normal and private libraries, bulk background controls, flexible rotation sources, custom cursors, and browser new-tab backgrounds in one polished EMX app.",
+    fullDescription: "EMX Desktop Flow Lite brings animated and image wallpapers, private-library organization, multi-select actions, automatic rotation, cursor creation, visual controls, and browser new-tab backgrounds together in a focused Windows desktop customization app.",
+    features: [
+      "MP4, WebM, GIF, and image wallpapers displayed behind normal desktop icons",
+      "Normal, Private, and All library views with multi-select bulk privacy, pin, and delete actions",
+      "Rotation from Normal, Private, All, Favorites, or a custom playlist, plus day and night scheduling",
+      "Multi-monitor selection, scaling controls, playback speed, volume, and fullscreen or battery pause options",
+      "Custom CUR and ANI cursors, image-to-cursor-pack creation, and default-cursor recovery",
+      "Separate one-PC Lite activation with encrypted local storage and a 72-hour verified offline grace period"
+    ],
+    featured: true,
+    bestSeller: false,
+    saleBadge: "NEW",
+    version: "v1.5.1",
+    lastVerified: "September 28, 2026",
+    platform: "Windows 10 + 11",
+    purpose: "Live wallpapers, private background organization, rotation, cursors, and browser personalization",
+    licenseType: "Lifetime one-PC activation",
+    controllerSupport: "Not required",
+    tags: ["Live wallpaper", "Private library", "Rotation", "Cursors"],
+    category: "Desktop Utilities",
+    requirements: [
+      "64-bit Windows 10 or Windows 11 PC",
+      "Internet connection for initial activation, gallery downloads, and updates",
+      "Hardware-accelerated graphics recommended for animated wallpapers"
+    ],
+    recovery: [
+      "Imported media is copied into the managed library; original files are not modified",
+      "Windows cursors can be restored to their defaults from the app",
+      "EMX support can assist with a valid purchase and device reset"
+    ],
+    limitations: [
+      "Private Library files are separated from normal in-app browsing and rotation but are not encrypted on disk",
+      "The current installer is unsigned and may display a Windows Unknown Publisher warning",
+      "Animated-wallpaper performance depends on the selected media, graphics hardware, and Windows configuration"
+    ],
+    homepage: true,
+    deliveryType: "payhip",
+    ctaLabel: "Get Desktop Flow Lite",
+    showInIntro: false,
+    sortPriority: 3,
+    publishStatus: "published",
+    visible: true
+  },
+  {
+    id: "emx_taskbar_studio",
+    slug: "emx-taskbar-studio",
+    key: "sAu8f",
+    productUrl: "https://payhip.com/b/sAu8f",
+    title: "EMX Taskbar Studio",
+    eyebrow: "Your Taskbar. Your Rules.",
+    price: 10.99,
+    oldPrice: 0,
+    image: "./assets/emx-taskbar-studio/appearance.png",
+    gallery: [
+      "./assets/emx-taskbar-studio/appearance.png",
+      "./assets/emx-taskbar-studio/profiles.png"
+    ],
+    previewType: "image",
+    previewSrc: "./assets/emx-taskbar-studio/appearance.png",
+    fallbackPreview: "./assets/emx-taskbar-studio/appearance.png",
+    description: "Build your own Windows taskbar with floating layouts, unique icon shapes, image or MP4 backgrounds, smooth hover animations, saved profiles, and a movable audio panel with master and app volume controls.",
+    fullDescription: "Make your desktop your own with EMX Taskbar Studio. Fine-tune the dock's position, size, spacing, shape, colors, transparency, and backgrounds. Pin installed apps and supported game shortcuts, create reusable profiles, and control Windows master volume, app audio sessions, and compatible now-playing media from one resizable panel.",
+    features: [
+      "Floating docks, pills, islands, and presets with live size, shape, spacing, and placement controls",
+      "Custom image and MP4 backgrounds for the taskbar and app icon surfaces",
+      "Circle, diamond, triangle, star, shield, and other icon shapes with smooth hover effects",
+      "Installed-app search, app pins, and supported local and game shortcuts",
+      "Resizable audio panel with master volume, app audio sessions, artwork, and supported playback controls",
+      "Editable saved profiles, auto-hide, an on/off toggle, and a rebindable hotkey",
+      "One-PC activation with encrypted local storage and up to 72 hours of verified offline use"
+    ],
+    featured: true,
+    bestSeller: false,
+    saleBadge: "NEW",
+    version: "v1.0.0",
+    lastVerified: "October 3, 2026",
+    platform: "Windows 10 + 11",
+    purpose: "Taskbar customization, app launching, saved desktop styles, and audio control",
+    licenseType: "Lifetime one-PC activation",
+    controllerSupport: "Not required",
+    tags: ["Taskbar", "Desktop customization", "Animated backgrounds", "Audio"],
+    category: "Desktop Utilities",
+    requirements: [
+      "64-bit Windows 10 or Windows 11 PC",
+      "Internet access for initial activation, periodic verification, and updates",
+      "A valid EMX Taskbar Studio license key for setup and application activation"
+    ],
+    installation: [
+      "Download the setup ZIP from your Payhip receipt and extract the setup EXE",
+      "Use the Taskbar Studio key sent to your checkout email to activate setup",
+      "Install for your Windows user, then launch EMX Taskbar Studio"
+    ],
+    recovery: [
+      "Restore the Windows taskbar from the app or its recovery commands",
+      "Uninstall preserves user settings, profiles, and unrelated files",
+      "Recover your key with the checkout email and Payhip transaction ID"
+    ],
+    limitations: [
+      "Media details and playback controls depend on what the app or browser shares with Windows",
+      "App volume controls adjust Windows audio sessions; they do not mirror a website's internal player slider",
+      "A browser audio session may include several tabs",
+      "The installer is unsigned and may display a Windows publisher warning"
+    ],
+    homepage: true,
+    deliveryType: "payhip",
+    ctaLabel: "Get Taskbar Studio",
+    showInIntro: false,
+    sortPriority: 4,
+    publishStatus: "published",
+    visible: true
+  },
+{
+  "id": "emx_vex",
+  "slug": "emx-vex",
+  "key": "Ove0d",
+  "title": "EMX VEX KBM Macro",
+  "price": 15.99,
+  "version": "v1.0.0",
+  "description": "Configure Double Edit and Drag Edit modules with keyboard and mouse bindings, adjustable Double Edit speed, a visual input map, and a customizable VEX Core.",
+  "features": [
+    "Independently configurable Double Edit and Drag Edit modules",
+    "Keyboard and supported mouse bindings through Input Constellation",
+    "Double Edit speed from 5\u2013100% with original timing reset",
+    "VEX Tuner appearance and motion controls",
+    "F8 emergency stop, tray behavior, and optional Windows startup",
+    "Verified in-app update downloads"
+  ],
+  "limitations": [
+    "Configure bindings to match the game controls; compatibility varies by game",
+    "Windows 10 compatibility is intended; this build was verified on Windows 11",
+    "No guaranteed performance gains or game compatibility",
+    "The installer is unsigned and may show a Windows publisher warning"
+  ],
+  "productUrl": "https://payhip.com/b/Ove0d",
+  "image": "./assets/emx-vex/product.png",
+  "gallery": [
+    "./assets/emx-vex/product.png"
+  ],
+  "previewType": "image",
+  "previewSrc": "./assets/emx-vex/product.png",
+  "fallbackPreview": "./assets/emx-vex/product.png",
+  "fullDescription": "EMX VEX is a native Windows input utility with configurable Double Edit and Drag Edit modules, repeat-while-held Double Edit, a visual keybinding interface, and appearance controls. The Windows x64 setup includes the required .NET runtime. A VEX-specific one-PC purchase key activates setup and normal startup; encrypted activation and settings remain outside the app folder through updates.",
+  "eyebrow": "Windows Keyboard & Mouse Macro",
+  "oldPrice": 0,
+  "featured": true,
+  "saleBadge": "NEW",
+  "lastVerified": "October 3, 2026",
+  "platform": "64-bit Windows 10 + 11",
+  "purpose": "Configure editing inputs and personalize the VEX interface.",
+  "licenseType": "Lifetime one-PC activation",
+  "category": "Macros",
+  "tags": [
+    "Windows",
+    "EMX VEX",
+    "KBM",
+    "Double Edit",
+    "Drag Edit",
+    "Keyboard",
+    "Mouse",
+    "In-app updates"
+  ],
+  "requirements": [
+    "64-bit Windows 10 or Windows 11",
+    "Internet access for initial activation, verification, and updates",
+    "Valid product-specific EMX license key"
+  ],
+  "installation": [
+    "Download the ZIP from your Payhip receipt and extract Setup",
+    "Activate using the product key sent to your checkout email",
+    "Install and launch the application"
+  ],
+  "recovery": [
+    "Recover your purchase key through the existing receipt lookup",
+    "Settings and encrypted activation are retained through updates and uninstall"
+  ],
+  "homepage": true,
+  "deliveryType": "payhip",
+  "ctaLabel": "Get EMX VEX",
+  "showInIntro": false,
+  "sortPriority": 8,
+  "publishStatus": "published",
+  "visible": true
+},
+  {
+  "id": "emx_nexus",
+  "slug": "emx-nexus",
+  "key": "SR4bJ",
+  "title": "EMX Nexus",
+  "price": 10.99,
+  "version": "v1.0.0",
+  "description": "Create launch profiles for apps, games, folders, and websites with custom hotkeys, animations, sounds, desktop effects, and live system monitoring.",
+  "features": [
+    "App, game, website, and folder launch profiles",
+    "Custom hotkeys and quick-launch overlay",
+    "Personalized launch animations, sounds, and supported app-exit effects",
+    "Live system monitoring, hardware benchmarks, and launch history",
+    "Interface customization and in-app updates"
+  ],
+  "limitations": [
+    "App-exit tracking requires a separately identifiable application process",
+    "Hardware benchmarks describe this system; results do not promise gaming improvements",
+    "Machine-wide installation may request administrator permission",
+    "The installer is unsigned and may show a Windows publisher warning"
+  ],
+  "productUrl": "https://payhip.com/b/SR4bJ",
+  "image": "./assets/emx-nexus/product.jpg",
+  "gallery": [
+    "./assets/emx-nexus/product.jpg"
+  ],
+  "previewType": "image",
+  "previewSrc": "./assets/emx-nexus/product.jpg",
+  "fallbackPreview": "./assets/emx-nexus/product.jpg",
+  "fullDescription": "Create launch profiles for apps, games, folders, and websites with custom hotkeys, animations, sounds, desktop effects, and live system monitoring.",
+  "eyebrow": "Windows Desktop Software",
+  "oldPrice": 0,
+  "featured": true,
+  "saleBadge": "NEW",
+  "lastVerified": "October 3, 2026",
+  "platform": "64-bit Windows 10 + 11",
+  "purpose": "Create launch profiles for apps, games, folders, and websites with custom hotkeys, animations, sounds, desktop effects, and live system monitoring.",
+  "licenseType": "Lifetime one-PC activation",
+  "category": "Desktop Utilities",
+  "tags": [
+    "Windows",
+    "EMX Nexus",
+    "In-app updates"
+  ],
+  "requirements": [
+    "64-bit Windows 10 or Windows 11",
+    "Internet access for initial activation, verification, and updates",
+    "Valid product-specific EMX license key"
+  ],
+  "installation": [
+    "Download the ZIP from your Payhip receipt and extract Setup",
+    "Activate using the product key sent to your checkout email",
+    "Install and launch the application"
+  ],
+  "recovery": [
+    "Recover your key using your checkout email and Payhip transaction ID",
+    "Settings and activation are preserved outside the installer payload directory"
+  ],
+  "homepage": true,
+  "deliveryType": "payhip",
+  "ctaLabel": "Get EMX Nexus",
+  "showInIntro": false,
+  "sortPriority": 5,
+  "publishStatus": "published",
+  "visible": true
+},
+  {
+  "id": "emx_world",
+  "slug": "emx-world",
+  "key": "GUE6H",
+  "title": "EMX WORLD",
+  "price": 5,
+  "version": "v0.5.0",
+  "description": "Explore an interactive 3D Earth with location search, terrain, collections, a travel passport, Earth Roulette, and supported radio, camera, and street-imagery services.",
+  "features": [
+    "Interactive 3D globe and 2D map views",
+    "City, address, and landmark search",
+    "Terrain, camera controls, discovery, and collections",
+    "Travel passport, Earth Roulette, and postcards",
+    "Supported radio, camera, and street-imagery services",
+    "In-app updates"
+  ],
+  "limitations": [
+    "Requires Microsoft Edge WebView2 Runtime",
+    "Online content depends on provider availability and coverage",
+    "Some services require your own provider credentials or subscription; an EMX license does not include provider rights",
+    "The installer is unsigned and may show a Windows publisher warning"
+  ],
+  "productUrl": "https://payhip.com/b/GUE6H",
+  "image": "./assets/emx-world/product.jpg",
+  "gallery": [
+    "./assets/emx-world/product.jpg"
+  ],
+  "previewType": "image",
+  "previewSrc": "./assets/emx-world/product.jpg",
+  "fallbackPreview": "./assets/emx-world/product.jpg",
+  "fullDescription": "Explore an interactive 3D Earth with location search, terrain, collections, a travel passport, Earth Roulette, and supported radio, camera, and street-imagery services.",
+  "eyebrow": "Windows Desktop Software",
+  "oldPrice": 0,
+  "featured": true,
+  "saleBadge": "NEW",
+  "lastVerified": "October 3, 2026",
+  "platform": "64-bit Windows 10 + 11",
+  "purpose": "Explore an interactive 3D Earth with location search, terrain, collections, a travel passport, Earth Roulette, and supported radio, camera, and street-imagery services.",
+  "licenseType": "Lifetime one-PC activation",
+  "category": "Desktop Utilities",
+  "tags": [
+    "Windows",
+    "EMX WORLD",
+    "In-app updates"
+  ],
+  "requirements": [
+    "64-bit Windows 10 or Windows 11",
+    "Internet access for initial activation, verification, and updates",
+    "Valid product-specific EMX license key"
+  ],
+  "installation": [
+    "Download the ZIP from your Payhip receipt and extract Setup",
+    "Activate using the product key sent to your checkout email",
+    "Install and launch the application"
+  ],
+  "recovery": [
+    "Recover your key using your checkout email and Payhip transaction ID",
+    "Settings and activation are preserved outside the installer payload directory"
+  ],
+  "homepage": true,
+  "deliveryType": "payhip",
+  "ctaLabel": "Get EMX WORLD",
+  "showInIntro": false,
+  "sortPriority": 5,
+  "publishStatus": "published",
+  "visible": true
+},
+  {
+  "id": "emx_pro_timer",
+  "slug": "emx-pro-timer",
+  "key": "4ENPW",
+  "title": "EMX Pro Timer Res Tuner",
+  "price": 5,
+  "version": "v1.2.0",
+  "description": "Inspect Windows timer resolution, request the lowest supported interval, release your request, and measure observed wait timing with optional silent startup and background operation.",
+  "features": [
+    "Live Windows timer-resolution reporting",
+    "Request the lowest supported interval",
+    "Restore Default releases the EMX timer request",
+    "Optional request locking and silent Windows startup",
+    "Timing verification with observed waits and variation",
+    "In-app updates"
+  ],
+  "limitations": [
+    "Results depend on Windows, hardware, power settings, and other applications",
+    "Higher timer frequency can increase power use",
+    "Does not guarantee higher FPS, lower ping, or reduced input latency",
+    "The installer is unsigned and may show a Windows publisher warning"
+  ],
+  "productUrl": "https://payhip.com/b/4ENPW",
+  "image": "./assets/emx-pro-timer/product.jpg",
+  "gallery": [
+    "./assets/emx-pro-timer/product.jpg"
+  ],
+  "previewType": "image",
+  "previewSrc": "./assets/emx-pro-timer/product.jpg",
+  "fallbackPreview": "./assets/emx-pro-timer/product.jpg",
+  "fullDescription": "Inspect Windows timer resolution, request the lowest supported interval, release your request, and measure observed wait timing with optional silent startup and background operation.",
+  "eyebrow": "Windows Desktop Software",
+  "oldPrice": 0,
+  "featured": true,
+  "saleBadge": "NEW",
+  "lastVerified": "October 3, 2026",
+  "platform": "64-bit Windows 10 + 11",
+  "purpose": "Inspect Windows timer resolution, request the lowest supported interval, release your request, and measure observed wait timing with optional silent startup and background operatio",
+  "licenseType": "Lifetime one-PC activation",
+  "category": "Desktop Utilities",
+  "tags": [
+    "Windows",
+    "EMX Pro Timer Res Tuner",
+    "In-app updates"
+  ],
+  "requirements": [
+    "64-bit Windows 10 or Windows 11",
+    "Internet access for initial activation, verification, and updates",
+    "Valid product-specific EMX license key"
+  ],
+  "installation": [
+    "Download the ZIP from your Payhip receipt and extract Setup",
+    "Activate using the product key sent to your checkout email",
+    "Install and launch the application"
+  ],
+  "recovery": [
+    "Recover your key using your checkout email and Payhip transaction ID",
+    "Settings and activation are preserved outside the installer payload directory"
+  ],
+  "homepage": true,
+  "deliveryType": "payhip",
+  "ctaLabel": "Get EMX Pro Timer Res Tuner",
+  "showInIntro": false,
+  "sortPriority": 5,
+  "publishStatus": "published",
+  "visible": true
+},
+  {
     id: "windows_tweak_dashboard",
     key: "TJFav",
     productUrl: "https://payhip.com/b/TJFav",
@@ -350,19 +748,18 @@ window.EMX_PRODUCTS = [
     eyebrow: "NEW Rust Engine Drop",
     price: 25.00,
     oldPrice: 50.00,
-    image: "./app-screenshots/volt-current/dashboard.png",
+    image: "./assets/emx-volt-v0.1.76/dashboard.png",
     gallery: [
-      "./app-screenshots/volt-current/dashboard.png",
-      "./app-screenshots/volt-current/macros.png",
-      "./app-screenshots/volt-current/profiles.png",
-      "./app-screenshots/volt-current/binds.png",
-      "./app-screenshots/volt-current/help.png",
-      "./app-screenshots/volt-current/support.png"
+      "./assets/emx-volt-v0.1.76/dashboard.png",
+      "./assets/emx-volt-v0.1.76/macros.png",
+      "./assets/emx-volt-v0.1.76/binds.png",
+      "./assets/emx-volt-v0.1.76/support.png",
+      "./assets/emx-volt-v0.1.76/splash.png"
     ],
     previewType: "image",
-    previewSrc: "./app-screenshots/volt-current/dashboard.png",
-    fallbackPreview: "./app-screenshots/volt-current/dashboard.png",
-    description: "EMX VOLT MACRO v0.1.73 is the current EMX Windows keyboard and mouse macro app with a Rust-powered runtime, coordinated timing profiles, saved binds, tray support, emergency stop, help center, and signed update checks.",
+    previewSrc: "./assets/emx-volt-v0.1.76/dashboard.png",
+    fallbackPreview: "./assets/emx-volt-v0.1.76/dashboard.png",
+    description: "EMX VOLT MACRO v0.1.76 is the current EMX Windows keyboard and mouse macro app with a Rust-powered runtime, coordinated timing profiles, saved binds, tray support, emergency stop, help center, and signed update checks.",
     features: [
       "Tauri + Rust Windows desktop engine",
       "Lifetime single-PC Payhip license access",
@@ -383,11 +780,11 @@ window.EMX_PRODUCTS = [
     eyebrow: "Performance Pack",
     price: 10.99,
     oldPrice: 21.98,
-    image: "./fps.png",
-    gallery: ["./fps.png", "./fps2.png", "./fps3.png", "./fps4.png"],
+    image: "./assets/emx-fps-current/dashboard.png",
+    gallery: ["./assets/emx-fps-current/dashboard.png", "./assets/emx-fps-current/splash.png"],
     previewType: "image",
-    previewSrc: "./fps.png",
-    fallbackPreview: "./fps.png",
+    previewSrc: "./assets/emx-fps-current/dashboard.png",
+    fallbackPreview: "./assets/emx-fps-current/dashboard.png",
     description: "A lightweight performance tuning pack built to help your PC feel cleaner, faster, and smoother during gameplay, with EMX license claiming tied to the Payhip receipt after checkout.",
     features: [
       "Game-priority tuning for smoother gameplay feel",
@@ -410,10 +807,9 @@ window.EMX_PRODUCTS = [
     gallery: [
       "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
       "./app-screenshots/emx-windows-tweak-dashboard-02-low-latency.png",
-      "./app-screenshots/volt-current/dashboard.png",
-      "./app-screenshots/volt-current/macros.png",
-      "./app-screenshots/volt-current/profiles.png",
-      "./app-screenshots/volt-current/binds.png"
+      "./assets/emx-volt-v0.1.76/dashboard.png",
+      "./assets/emx-volt-v0.1.76/macros.png",
+      "./assets/emx-volt-v0.1.76/binds.png"
     ],
     previewType: "image",
     previewSrc: "./app-screenshots/emx-windows-tweak-dashboard-01-overview.png",
@@ -522,7 +918,7 @@ const EMX_TRUST_DETAILS = {
   custom_os: { version: "v1.3.21", lastVerified: "August 31, 2026", platform: "Windows 10 / 11", purpose: "Guided Windows setup and personalization", licenseType: "Lifetime access", controllerSupport: "Not required", requirements: ["64-bit Windows 10 or 11 PC", "Administrator access for supported system changes", "Working Windows recovery access"], recovery: ["Restore points before supported changes", "Change evidence and support bundles", "Built-in restore and rollback controls"], limitations: ["No guaranteed FPS, ping, or hardware result", "Driver and hardware compatibility varies"] },
   windows_tweak_dashboard: { version: "v0.3.1", lastVerified: "August 31, 2026", platform: "Windows 10 / 11", purpose: "Reversible Windows tuning", licenseType: "Lifetime one-PC access", controllerSupport: "Not required", requirements: ["Supported Windows 10 or 11 PC", "Administrator access for system changes", "Create and retain a recovery point"], recovery: ["Backups before supported changes", "Undo Center and action logs", "Restore tools"], limitations: ["Performance gains are not guaranteed", "Exact effect depends on the PC and selected changes"] },
   clips: { version: "v1.9.4", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Local instant replay and clip library", licenseType: "Free download with free machine-bound activation", controllerSupport: "Not required", requirements: ["Windows PC", "NVIDIA GPU with supported NVENC path", "Available local storage for replay files"], recovery: ["Original clips remain ordinary local files", "Storage controls do not replace a personal backup"], limitations: ["Non-NVIDIA capture paths are not currently confirmed", "Capture results depend on driver and encoder support"] },
-  volt: { version: "v0.1.73", lastVerified: "September 7, 2026", platform: "Windows", purpose: "Desktop keyboard and mouse macro control", licenseType: "Lifetime single-PC access", controllerSupport: "Keyboard and mouse", requirements: ["Windows PC", "Supported keyboard and mouse", "Use only where game and platform rules allow"], recovery: ["Visible emergency stop", "Saved configuration and profile controls", "Reset or rebind from the app"], limitations: ["No guaranteed in-game result or rules compatibility"] },
+  volt: { version: "v0.1.76", lastVerified: "September 30, 2026", platform: "Windows", purpose: "Desktop keyboard and mouse macro control", licenseType: "Lifetime single-PC access", controllerSupport: "Keyboard and mouse", requirements: ["Windows PC", "Supported keyboard and mouse", "Use only where game and platform rules allow"], recovery: ["Visible emergency stop", "Saved configuration and profile controls", "Reset or rebind from the app"], limitations: ["No guaranteed in-game result or rules compatibility"] },
   emx_controller_macro: { version: "v0.6.1", lastVerified: "September 7, 2026", platform: "Windows", purpose: "PlayStation controller macro control", licenseType: "One-PC paid activation", controllerSupport: "PlayStation (DualSense / DS4 via ViGEmBus)", requirements: ["Windows PC", "PlayStation DualSense or DS4 controller", "ViGEmBus for virtual controller output"], recovery: ["Visible emergency stop", "Restore controller access and open logs", "Saved settings and profiles"], limitations: ["Sprint Assist is experimental and may cycle inventory in some cases", "No guaranteed in-game result or rules compatibility"] },
   fps: { version: "v1.0.24", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Performance setup pack", licenseType: "Lifetime access", controllerSupport: "Not required", requirements: ["Windows PC", "Review each change before applying", "Keep Windows recovery available"], recovery: ["Follow included backup and rollback guidance before applying changes"], limitations: ["Results vary by hardware and current configuration", "No performance result is guaranteed"] },
   os_macro_bundle: { version: "Current two-product bundle", lastVerified: "September 7, 2026", platform: "Windows 10 / 11", purpose: "Windows tuning plus macro control", licenseType: "Shared EMX claim path", controllerSupport: "Keyboard and mouse", requirements: ["Meet the requirements for both included products", "Administrator access for Windows tuning", "Supported keyboard and mouse for VOLT"], recovery: ["Windows Tweak Dashboard backups and Undo Center", "VOLT emergency stop and saved controls"], limitations: ["Each included product keeps its own compatibility limits", "No performance or in-game result is guaranteed"] }

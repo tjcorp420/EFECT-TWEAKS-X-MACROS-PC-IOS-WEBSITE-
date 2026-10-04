@@ -1,179 +1,581 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <base href="/">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#06030f">
-  <meta name="description" content="The official EMX TWEAKS hub — Windows performance software, macros, free tools, UEFN maps, custom builds, community, and every active EMX destination in one place.">
-  <meta property="og:title" content="EMX TWEAKS HUB">
-  <meta property="og:description" content="Official EMX products, community, Fortnite maps, free tools, custom builds, and trusted EMX destinations in one place.">
-  <meta property="og:image" content="https://emxtweaks.com/emx-logo-v2.png">
-  <meta property="og:type" content="website">
-  <link rel="canonical" href="https://emxtweaks.com/">
-  <link rel="icon" href="emx-logo-v2.png">
-  <link rel="apple-touch-icon" href="emx-logo-v2.png">
-  <link rel="manifest" href="links.webmanifest">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="foundation.css">
-  <link rel="stylesheet" href="link-hub.css?v=5">
-  <title>EMX TWEAKS HUB — Official Links</title>
-  <style>
-    #emx-splash{position:fixed;inset:0;z-index:99999;background:#04030a;opacity:1;transition:opacity .8s ease}
-    #emx-splash iframe{width:100%;height:100%;border:0;display:block}
-    #emx-splash.done{opacity:0;pointer-events:none}
-    #emx-skip{position:fixed;right:18px;bottom:18px;z-index:100000;background:rgba(12,8,22,.62);border:1px solid rgba(184,156,255,.35);color:#e7e3fb;font:700 .8rem/1 "Inter",system-ui,sans-serif;letter-spacing:.04em;padding:11px 17px;border-radius:11px;cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:.2s}
-    #emx-skip:hover{border-color:#7dff4f;color:#fff}
-    html.splash-lock,html.splash-lock body{overflow:hidden}
-  </style>
-</head>
-<body data-page="hub" class="link-hub-page deck-page">
-  <div id="emx-splash"><iframe src="https://intro.emxtweaks.com/" title="EMX TWEAKS intro" loading="eager" scrolling="no"></iframe><button id="emx-skip" type="button">Skip intro →</button></div>
-  <script>
-  (function(){var s=document.getElementById("emx-splash");if(!s)return;var done=false;
-    document.documentElement.classList.add("splash-lock");
-    function dismiss(){if(done)return;done=true;s.classList.add("done");document.documentElement.classList.remove("splash-lock");setTimeout(function(){if(s&&s.parentNode)s.parentNode.removeChild(s);},900);}
-    document.getElementById("emx-skip").addEventListener("click",dismiss);
-    window.addEventListener("message",function(e){if(e.origin==="https://intro.emxtweaks.com"&&e.data==="emx-intro-hero"){setTimeout(dismiss,2200);}});
-    setTimeout(dismiss,10000);
-  })();
-  </script>
-  <a class="emx-skip-link" href="#main">Skip to links</a>
+  <head>
+    <meta charset="UTF-8" />
+    <base href="/" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#06030f" />
+    <meta
+      name="description"
+      content="EMX Windows software for tuning your PC, configuring macros, and capturing gameplay. Compare real app previews, try free tools, and shop official releases."
+    />
+    <meta
+      property="og:title"
+      content="EMX TWEAKS — Windows Tools &amp; Macros"
+    />
+    <meta
+      property="og:description"
+      content="Official EMX products, community, Fortnite maps, free tools, custom builds, and trusted EMX destinations in one place."
+    />
+    <meta property="og:image" content="https://emxtweaks.com/emx-logo-v2.png" />
+    <meta property="og:type" content="website" />
+    <link rel="canonical" href="https://emxtweaks.com/" />
+    <link rel="icon" href="emx-logo-v2.png" />
+    <link rel="apple-touch-icon" href="emx-logo-v2.png" />
+    <link rel="manifest" href="links.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="foundation.css" />
+    <link rel="stylesheet" href="link-hub.css?v=5" />
+    <title>EMX TWEAKS — Windows Tools &amp; Macros</title>
+    <link rel="stylesheet" href="site.css" />
+    <link rel="stylesheet" href="storefront-home.css?v=2" />
+  </head>
+  <body data-page="home" class="link-hub-page deck-page">
+    <a class="emx-skip-link" href="#main">Skip to store</a>
 
-  <div class="deck-bg" aria-hidden="true">
-    <div class="deck-stars"></div>
-    <div class="deck-stars deck-stars-2"></div>
-    <div class="deck-aurora"></div>
-    <div class="deck-grid"></div>
-    <div class="deck-vignette"></div>
-  </div>
+    <div class="deck-bg" aria-hidden="true">
+      <div class="deck-stars"></div>
+      <div class="deck-stars deck-stars-2"></div>
+      <div class="deck-aurora"></div>
+      <div class="deck-grid"></div>
+      <div class="deck-vignette"></div>
+    </div>
 
-  <main id="main" class="deck">
-    <header class="deck-top">
-      <a class="deck-brand" href="./index.html" aria-label="EMX TWEAKS home">
-        <span class="deck-brand-mark" aria-hidden="true"><img src="emx-logo-v2.png" width="500" height="500" alt=""></span>
-        <span class="deck-brand-copy"><b>EMX TWEAKS</b><small><i></i> OFFICIAL NODE · ONLINE</small></span>
-      </a>
-      <button class="emx-theme-toggle deck-toggle" type="button" data-emx-theme-toggle aria-label="Switch color theme">
-        <span class="emx-theme-icon" aria-hidden="true">☀</span><span class="emx-theme-label">Light mode</span>
-      </button>
-    </header>
-
-    <section class="deck-hero">
-      <p class="deck-kicker"><span></span> ONE LINK · EVERY OFFICIAL EMX DESTINATION</p>
-      <h1 class="deck-title">EMX <span>TWEAKS</span><br><em>HUB</em></h1>
-      <p class="deck-lead">Windows performance software, macros, free tools, UEFN maps, and custom builds — every official EMX destination in one clean place.</p>
-      <div class="deck-chips">
-        <span class="deck-chip"><i></i> Windows software</span>
-        <span class="deck-chip"><i></i> UEFN maps</span>
-        <span class="deck-chip"><i></i> 5 free tools</span>
-        <span class="deck-chip"><i></i> Custom builds</span>
+    <header data-site-header></header>
+    <div
+      class="store-intro"
+      id="store-entry-intro"
+      role="dialog"
+      aria-modal="true"
+      aria-label="EMX store intro"
+      hidden
+    >
+      <video
+        id="store-intro-video"
+        muted
+        playsinline
+        preload="none"
+        poster="media/store/store-intro-oct01.jpg"
+        aria-label="EMX fullscreen brand intro"
+      >
+        <source
+          src="media/store/store-intro-oct01.mp4"
+          type="video/mp4"
+        />
+      </video>
+      <div class="store-intro-actions">
+        <button id="store-intro-play" type="button" hidden>Play intro</button
+        ><button id="store-intro-skip" type="button">Skip intro →</button>
       </div>
-      <div class="deck-cta">
-        <a class="deck-btn deck-btn-primary" href="products.html">Shop all products <span aria-hidden="true">→</span></a>
-        <a class="deck-btn deck-btn-primary" href="https://payhip.com/b/Q7ikr" target="_blank" rel="noopener noreferrer" title="Access all your paid EMX products in one place">⬇ Download Hub</a>
-        <a class="deck-btn deck-btn-ghost" href="account.html" title="Log in to your EMX Hub account in the browser">Log in to Hub</a>
-        <a class="deck-btn deck-btn-ghost" href="https://discord.gg/puaZFNfNKW" target="_blank" rel="noopener noreferrer">Join the Discord</a>
-      </div>
-    </section>
-
-    <nav class="deck-grid-links" aria-label="EMX destinations">
-      <a class="deck-tile hub-link deck-tile-shop deck-span-2" href="products.html">
-        <span class="deck-tile-ico" aria-hidden="true">▣</span>
-        <span class="deck-tile-body"><em class="deck-eyebrow">PRIMARY DESTINATION</em><b>Shop: Tweaks, Macros &amp; Utilities</b><small>Official store · every EMX product</small></span>
-        <span class="deck-tile-go" aria-hidden="true">→</span>
-      </a>
-
-      <a class="deck-tile hub-link deck-tile-build deck-span-2" href="https://custombuilds.emxtweaks.com" target="_blank" rel="noopener noreferrer">
-        <span class="deck-badge" aria-hidden="true">NEW</span>
-        <span class="deck-tile-ico" aria-hidden="true">◈</span>
-        <span class="deck-tile-body"><b>Hire EMX: Custom Builds</b><small>Websites, apps &amp; utilities — built to order</small></span>
-        <span class="deck-tile-go" aria-hidden="true">↗</span>
-      </a>
-
-      <a class="deck-tile hub-link" href="https://discord.gg/puaZFNfNKW" target="_blank" rel="noopener noreferrer">
-        <span class="deck-tile-ico" aria-hidden="true">◉</span>
-        <span class="deck-tile-body"><b>Join Discord</b><small>News, drops &amp; support</small></span>
-        <span class="deck-tile-go" aria-hidden="true">↗</span>
-      </a>
-
-      <button class="deck-tile hub-link" id="copy-discord" type="button" data-discord-handle="ur_not_himfr" aria-describedby="hub-status">
-        <span class="deck-tile-ico" aria-hidden="true">⧉</span>
-        <span class="deck-tile-body"><b>Copy Discord</b><small>ur_not_himfr — tap to copy</small></span>
-        <span class="deck-tile-go" aria-hidden="true">⧉</span>
-      </button>
-
-      <a class="deck-tile hub-link" href="https://www.fortnite.com/@efect.lit?lang=en-US" target="_blank" rel="noopener noreferrer">
-        <span class="deck-tile-ico" aria-hidden="true">✦</span>
-        <span class="deck-tile-body"><b>Fortnite Maps (UEFN)</b><small>Play the EFECT.LIT creator maps</small></span>
-        <span class="deck-tile-go" aria-hidden="true">↗</span>
-      </a>
-
-      <a class="deck-tile hub-link" href="links.html">
-        <span class="deck-tile-ico" aria-hidden="true">⌘</span>
-        <span class="deck-tile-body"><b>EMX Network</b><small>Every active EMX subdomain</small></span>
-        <span class="deck-tile-go" aria-hidden="true">↗</span>
-      </a>
-
-      <a class="deck-tile hub-link" href="about.html">
-        <span class="deck-tile-ico" aria-hidden="true">❖</span>
-        <span class="deck-tile-body"><b>About EMX</b><small>The story &amp; the developer behind it</small></span>
-        <span class="deck-tile-go" aria-hidden="true">→</span>
-      </a>
-
-      <button class="deck-tile hub-link deck-tile-free" id="free-tools-trigger" type="button" aria-expanded="false" aria-controls="free-tools">
-        <span class="deck-tile-ico" aria-hidden="true">▼</span>
-        <span class="deck-tile-body"><b>Free Tools &amp; Apps</b><small>5 official $0 EMX releases — tap to browse</small></span>
-        <span class="deck-tile-go deck-expand" aria-hidden="true">⌄</span>
-      </button>
-    </nav>
-
-    <section class="hub-free-panel" id="free-tools" hidden aria-labelledby="free-tools-title">
-      <div class="hub-free-panel-heading"><div><p class="hub-kicker"><span></span> $0 EMX RELEASES</p><h2 id="free-tools-title">FREE UTILITY DROP</h2></div><button class="hub-panel-close" type="button" data-close-free aria-label="Close free utilities">×</button></div>
-      <div class="hub-free-grid">
-        <button class="hub-free-card" type="button" data-free-app="clips"><span class="hub-free-card-preview"><img src="assets/emx-clips/emx-clips-capture-ingame.png" width="1280" height="720" alt="" loading="lazy"><span class="hub-free-card-number">01</span></span><span class="hub-free-card-copy"><b>EMX Clips</b><small>Instant replay for Windows</small><i aria-hidden="true">EXPLORE <span>↗</span></i></span></button>
-        <button class="hub-free-card" type="button" data-free-app="window_deck"><span class="hub-free-card-preview"><img src="assets/free-tools/window-deck-wheel.jpg" width="1280" height="720" alt="" loading="lazy"><span class="hub-free-card-number">02</span></span><span class="hub-free-card-copy"><b>Window Deck</b><small>Animated desktop command wheel</small><i aria-hidden="true">EXPLORE <span>↗</span></i></span></button>
-        <button class="hub-free-card" type="button" data-free-app="aim_trainer"><span class="hub-free-card-preview"><img src="emx-aim-trainer-command-center.png" width="1280" height="1024" alt="" loading="lazy"><span class="hub-free-card-number">03</span></span><span class="hub-free-card-copy"><b>EMX Aim Trainer</b><small>Flick, tracking, and reaction suite</small><i aria-hidden="true">EXPLORE <span>↗</span></i></span></button>
-        <button class="hub-free-card" type="button" data-free-app="control_hub"><span class="hub-free-card-preview"><img src="assets/free-tools/control-hub-dashboard.png" width="1280" height="820" alt="" loading="lazy"><span class="hub-free-card-number">04</span></span><span class="hub-free-card-copy"><b>Control Hub</b><small>Setup organizer for Windows</small><i aria-hidden="true">EXPLORE <span>↗</span></i></span></button>
-        <button class="hub-free-card" type="button" data-free-app="sprite_tracker"><span class="hub-free-card-preview"><img src="assets/free-tools/sprite-tracker-home.png" width="1280" height="720" alt="" loading="lazy"><span class="hub-free-card-number">05</span></span><span class="hub-free-card-copy"><b>EMX Sprite Tracker</b><small>Fortnite collection tracker</small><i aria-hidden="true">EXPLORE <span>↗</span></i></span></button>
-      </div>
-    </section>
-
-    <dialog class="hub-app-modal" id="free-app-modal" aria-labelledby="free-app-title">
-      <article class="hub-app-modal-frame">
-        <button class="hub-modal-close" type="button" data-close-app-modal aria-label="Close application details">×</button>
-        <div class="hub-modal-art"><img id="free-app-image" src="emx-logo-v2.png" width="1280" height="720" alt=""></div>
-        <div class="hub-modal-content">
-          <p class="hub-kicker"><span></span> <span id="free-app-category">FREE EMX RELEASE</span></p>
-          <h2 id="free-app-title">EMX Application</h2>
-          <p id="free-app-description"></p>
-          <ul class="hub-app-features" id="free-app-features"></ul>
-          <div class="hub-modal-specs"><span><b>PLATFORM</b><i id="free-app-platform">Windows</i></span><span><b>ACCESS</b><i id="free-app-access">Free</i></span></div>
-          <a class="hub-modal-action" id="free-app-action" href="#">OPEN RELEASE <span aria-hidden="true">↗</span></a>
+    </div>
+    <main id="main" class="deck">
+      <section class="store-header-banner" aria-label="EMX TWEAKS brand banner">
+        <video id="store-header-video" muted loop playsinline preload="none" poster="media/store/store-header-oct01.jpg" aria-label="Animated EMX TWEAKS header">
+          <source src="media/store/store-header-oct01.mp4" type="video/mp4" />
+        </video>
+        <button id="store-header-toggle" type="button" aria-pressed="false">Play header</button>
+      </section>
+      <section class="store-hero" aria-labelledby="store-title">
+        <div>
+          <p class="deck-kicker"><span></span> EMX WINDOWS SOFTWARE</p>
+          <h1 id="store-title">Your setup.<br /><em>More control.</em></h1>
+          <p class="store-lead">
+            Tune Windows, configure your macros, and capture your best moments.
+            Explore real EMX apps and choose the tools that fit your setup.
+          </p>
+          <div class="deck-cta">
+            <a class="deck-btn deck-btn-primary" href="products.html"
+              >Shop Windows tools →</a
+            ><a class="deck-btn deck-btn-ghost" href="?free=1#free-tools"
+              >Try free tools</a
+            >
+          </div>
+          <p class="store-subline">
+            Windows desktop software · Real app previews · Setup support
+          </p>
         </div>
-      </article>
-    </dialog>
+        <figure class="store-hero-preview">
+          <img
+            src="assets/emx-volt-v0.1.76/dashboard.png"
+            width="1004"
+            height="897"
+            alt="EMX VOLT Macro dashboard with profiles, macro slots, and saved binds"
+          />
+          <figcaption>
+            Inside EMX VOLT Macro <a href="macros.html">Explore the app →</a>
+          </figcaption>
+        </figure>
+      </section>
+      <section class="store-section" aria-labelledby="featured-title">
+        <div class="store-section-heading">
+          <div>
+            <p class="deck-kicker">START WITH YOUR GOAL</p>
+            <h2 id="featured-title">Find your EMX tool.</h2>
+          </div>
+          <a href="products.html">Compare all products →</a>
+        </div>
+        <p id="featured-status" role="status">Loading current products…</p>
+        <div class="store-featured" id="store-featured"></div>
+      </section>
+      <section
+        class="store-section store-bundle"
+        id="store-bundle"
+        aria-label="Featured EMX bundle"
+      ></section>
+      <section class="store-section" aria-labelledby="video-title">
+        <p class="deck-kicker">EMX IN ACTION</p>
+        <h2 id="video-title">Watch the gameplay.</h2>
+        <p class="store-lead">
+          Five creator captures from freebuild practice and live matches.
+        </p>
+        <div class="store-gameplay-grid">
+          <figure>
+            <video
+              controls
+              playsinline
+              muted
+              preload="none"
+              poster="media/store/freebuild-poster.jpg"
+              aria-label="Freebuild practice · September 29"
+            >
+              <source
+                src="media/store/emx-freebuild-showcase.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <figcaption>
+              <b>Freebuild practice · September 29</b
+              ><a href="macros.html">Explore VOLT Macro →</a>
+            </figcaption>
+          </figure>
+          <figure>
+            <video
+              controls
+              playsinline
+              muted
+              preload="none"
+              poster="media/store/gameplay-sep22.jpg"
+              aria-label="Build and edit gameplay · September 22"
+            >
+              <source
+                src="media/store/emx-gameplay-sep22.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <figcaption>
+              <b>Build and edit gameplay · September 22</b
+              ><a href="macros.html">Explore VOLT Macro →</a>
+            </figcaption>
+          </figure>
+          <figure>
+            <video
+              controls
+              playsinline
+              muted
+              preload="none"
+              poster="media/store/gameplay-sep29.jpg"
+              aria-label="Live match gameplay · September 29"
+            >
+              <source
+                src="media/store/emx-gameplay-sep29.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <figcaption>
+              <b>Live match gameplay · September 29</b
+              ><a href="macros.html">Explore VOLT Macro →</a>
+            </figcaption>
+          </figure>
+          <figure>
+            <video
+              controls
+              playsinline
+              muted
+              preload="none"
+              poster="media/store/gameplay-sep18-a.jpg"
+              aria-label="Close-range gameplay · September 18"
+            >
+              <source
+                src="media/store/emx-gameplay-sep18-a.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <figcaption>
+              <b>Close-range gameplay · September 18</b
+              ><a href="macros.html">Explore VOLT Macro →</a>
+            </figcaption>
+          </figure>
+          <figure>
+            <video
+              controls
+              playsinline
+              muted
+              preload="none"
+              poster="media/store/gameplay-sep18-b.jpg"
+              aria-label="Build-fight gameplay · September 18"
+            >
+              <source
+                src="media/store/emx-gameplay-sep18-b.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <figcaption>
+              <b>Build-fight gameplay · September 18</b
+              ><a href="macros.html">Explore VOLT Macro →</a>
+            </figcaption>
+          </figure>
+        </div>
+        <p class="store-subline">
+          Creator-supplied gameplay. These clips are not controlled
+          before-and-after benchmarks.
+        </p>
+      </section>
+      <section class="store-section store-faq">
+        <p class="deck-kicker">BEFORE YOU CHOOSE</p>
+        <h2>Questions, answered.</h2>
+        <details>
+          <summary>Which tool should I start with?</summary>
+          <p>
+            Choose FPS Booster for a focused tuning pack, Windows Tweak
+            Dashboard for guided changes and recovery controls, or VOLT Macro
+            for keyboard and mouse macro configuration.
+          </p>
+        </details>
+        <details>
+          <summary>Can I try EMX for free?</summary>
+          <p>
+            Yes. Explore EMX Clips, Window Deck, Aim Trainer, Control Hub, and
+            Sprite Tracker.
+          </p>
+          <a href="?free=1#free-tools">Browse free tools →</a>
+        </details>
+        <details>
+          <summary>Where do I get setup help?</summary>
+          <p>
+            Use the Support Center for product-specific help and the Claim page
+            for receipt-based key lookup.
+          </p>
+          <a href="https://support.emxtweaks.com/">Open Support Center →</a>
+        </details>
+      </section>
+      <details class="store-network" id="emx-hub">
+        <summary>
+          Already part of EMX? Open the Hub, community &amp; network
+        </summary>
+        <p>ONE LINK · EVERY OFFICIAL EMX DESTINATION</p>
+        <div class="deck-cta">
+          <a class="deck-btn deck-btn-ghost" href="https://payhip.com/b/Q7ikr"
+            >Download Hub</a
+          ><a class="deck-btn deck-btn-ghost" href="account.html"
+            >Log in to Hub</a
+          >
+        </div>
+        <nav class="deck-grid-links" aria-label="EMX destinations">
+          <a
+            class="deck-tile hub-link deck-tile-shop deck-span-2"
+            href="products.html"
+          >
+            <span class="deck-tile-ico" aria-hidden="true">▣</span>
+            <span class="deck-tile-body"
+              ><em class="deck-eyebrow">PRIMARY DESTINATION</em
+              ><b>Shop: Tweaks, Macros &amp; Utilities</b
+              ><small>Official store · every EMX product</small></span
+            >
+            <span class="deck-tile-go" aria-hidden="true">→</span>
+          </a>
 
-    <p id="hub-status" class="deck-status" role="status" aria-live="polite"></p>
-    <footer class="deck-foot">
-      <nav class="deck-foot-links" aria-label="Legal and support">
-        <a href="terms.html">Terms</a>
-        <a href="privacy.html">Privacy</a>
-        <a href="refunds.html">Refund Policy</a>
-        <a href="eula.html">License &amp; Keys</a>
-        <a href="https://support.emxtweaks.com/">Support</a>
-        <a href="mailto:emxbiz@emxtweaks.com">Contact</a>
-      </nav>
-      <p class="deck-foot-note">Digital products — <strong>all sales are final.</strong> License keys are machine-bound and are not recovered or re-issued for free.</p>
-      <div class="deck-foot-base"><span>© <span data-current-year></span> EMX TWEAKS · Official EMX network</span><span class="deck-foot-tag">SECURE ROUTES · OFFICIAL LINKS ONLY</span></div>
-    </footer>
-  </main>
+          <a
+            class="deck-tile hub-link deck-tile-build deck-span-2"
+            href="https://custombuilds.emxtweaks.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="deck-badge" aria-hidden="true">NEW</span>
+            <span class="deck-tile-ico" aria-hidden="true">◈</span>
+            <span class="deck-tile-body"
+              ><b>Hire EMX: Custom Builds</b
+              ><small
+                >Websites, apps &amp; utilities — built to order</small
+              ></span
+            >
+            <span class="deck-tile-go" aria-hidden="true">↗</span>
+          </a>
 
-  <script defer src="foundation.js"></script>
-  <script defer src="link-hub.js"></script>
-  <script defer src="affiliate-ref.js"></script>
-  <script defer src="download-client.js"></script>
-</body>
+          <a
+            class="deck-tile hub-link"
+            href="https://discord.gg/puaZFNfNKW"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="deck-tile-ico" aria-hidden="true">◉</span>
+            <span class="deck-tile-body"
+              ><b>Join Discord</b><small>News, drops &amp; support</small></span
+            >
+            <span class="deck-tile-go" aria-hidden="true">↗</span>
+          </a>
+
+          <button
+            class="deck-tile hub-link"
+            id="copy-discord"
+            type="button"
+            data-discord-handle="ur_not_himfr"
+            aria-describedby="hub-status"
+          >
+            <span class="deck-tile-ico" aria-hidden="true">⧉</span>
+            <span class="deck-tile-body"
+              ><b>Copy Discord</b
+              ><small>ur_not_himfr — tap to copy</small></span
+            >
+            <span class="deck-tile-go" aria-hidden="true">⧉</span>
+          </button>
+
+          <a
+            class="deck-tile hub-link"
+            href="https://www.fortnite.com/@efect.lit?lang=en-US"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="deck-tile-ico" aria-hidden="true">✦</span>
+            <span class="deck-tile-body"
+              ><b>Fortnite Maps (UEFN)</b
+              ><small>Play the EFECT.LIT creator maps</small></span
+            >
+            <span class="deck-tile-go" aria-hidden="true">↗</span>
+          </a>
+
+          <a class="deck-tile hub-link" href="links.html">
+            <span class="deck-tile-ico" aria-hidden="true">⌘</span>
+            <span class="deck-tile-body"
+              ><b>EMX Network</b><small>Every active EMX subdomain</small></span
+            >
+            <span class="deck-tile-go" aria-hidden="true">↗</span>
+          </a>
+
+          <a class="deck-tile hub-link" href="about.html">
+            <span class="deck-tile-ico" aria-hidden="true">❖</span>
+            <span class="deck-tile-body"
+              ><b>About EMX</b
+              ><small>The story &amp; the developer behind it</small></span
+            >
+            <span class="deck-tile-go" aria-hidden="true">→</span>
+          </a>
+
+          <button
+            class="deck-tile hub-link deck-tile-free"
+            id="free-tools-trigger"
+            type="button"
+            aria-expanded="false"
+            aria-controls="free-tools"
+          >
+            <span class="deck-tile-ico" aria-hidden="true">▼</span>
+            <span class="deck-tile-body"
+              ><b>Free Tools &amp; Apps</b
+              ><small>5 official $0 EMX releases — tap to browse</small></span
+            >
+            <span class="deck-tile-go deck-expand" aria-hidden="true">⌄</span>
+          </button>
+        </nav>
+      </details>
+      <section
+        class="hub-free-panel"
+        id="free-tools"
+        hidden
+        aria-labelledby="free-tools-title"
+      >
+        <div class="hub-free-panel-heading">
+          <div>
+            <p class="hub-kicker"><span></span> $0 EMX RELEASES</p>
+            <h2 id="free-tools-title">FREE UTILITY DROP</h2>
+          </div>
+          <button
+            class="hub-panel-close"
+            type="button"
+            data-close-free
+            aria-label="Close free utilities"
+          >
+            ×
+          </button>
+        </div>
+        <div class="hub-free-grid">
+          <button class="hub-free-card" type="button" data-free-app="clips">
+            <span class="hub-free-card-preview"
+              ><img
+                src="assets/emx-clips/emx-clips-capture-ingame.png"
+                width="1280"
+                height="720"
+                alt=""
+                loading="lazy"
+              /><span class="hub-free-card-number">01</span></span
+            ><span class="hub-free-card-copy"
+              ><b>EMX Clips</b><small>Instant replay for Windows</small
+              ><i aria-hidden="true">EXPLORE <span>↗</span></i></span
+            >
+          </button>
+          <button
+            class="hub-free-card"
+            type="button"
+            data-free-app="window_deck"
+          >
+            <span class="hub-free-card-preview"
+              ><img
+                src="assets/free-tools/window-deck-wheel.jpg"
+                width="1280"
+                height="720"
+                alt=""
+                loading="lazy"
+              /><span class="hub-free-card-number">02</span></span
+            ><span class="hub-free-card-copy"
+              ><b>Window Deck</b><small>Animated desktop command wheel</small
+              ><i aria-hidden="true">EXPLORE <span>↗</span></i></span
+            >
+          </button>
+          <button
+            class="hub-free-card"
+            type="button"
+            data-free-app="aim_trainer"
+          >
+            <span class="hub-free-card-preview"
+              ><img
+                src="emx-aim-trainer-command-center.png"
+                width="1280"
+                height="1024"
+                alt=""
+                loading="lazy"
+              /><span class="hub-free-card-number">03</span></span
+            ><span class="hub-free-card-copy"
+              ><b>EMX Aim Trainer</b
+              ><small>Flick, tracking, and reaction suite</small
+              ><i aria-hidden="true">EXPLORE <span>↗</span></i></span
+            >
+          </button>
+          <button
+            class="hub-free-card"
+            type="button"
+            data-free-app="control_hub"
+          >
+            <span class="hub-free-card-preview"
+              ><img
+                src="assets/free-tools/control-hub-dashboard.png"
+                width="1280"
+                height="820"
+                alt=""
+                loading="lazy"
+              /><span class="hub-free-card-number">04</span></span
+            ><span class="hub-free-card-copy"
+              ><b>Control Hub</b><small>Setup organizer for Windows</small
+              ><i aria-hidden="true">EXPLORE <span>↗</span></i></span
+            >
+          </button>
+          <button
+            class="hub-free-card"
+            type="button"
+            data-free-app="sprite_tracker"
+          >
+            <span class="hub-free-card-preview"
+              ><img
+                src="assets/free-tools/sprite-tracker-home.png"
+                width="1280"
+                height="720"
+                alt=""
+                loading="lazy"
+              /><span class="hub-free-card-number">05</span></span
+            ><span class="hub-free-card-copy"
+              ><b>EMX Sprite Tracker</b
+              ><small>Fortnite collection tracker</small
+              ><i aria-hidden="true">EXPLORE <span>↗</span></i></span
+            >
+          </button>
+        </div>
+      </section>
+
+      <dialog
+        class="hub-app-modal"
+        id="free-app-modal"
+        aria-labelledby="free-app-title"
+      >
+        <article class="hub-app-modal-frame">
+          <button
+            class="hub-modal-close"
+            type="button"
+            data-close-app-modal
+            aria-label="Close application details"
+          >
+            ×
+          </button>
+          <div class="hub-modal-art">
+            <img
+              id="free-app-image"
+              src="emx-logo-v2.png"
+              width="1280"
+              height="720"
+              alt=""
+            />
+          </div>
+          <div class="hub-modal-content">
+            <p class="hub-kicker">
+              <span></span> <span id="free-app-category">FREE EMX RELEASE</span>
+            </p>
+            <h2 id="free-app-title">EMX Application</h2>
+            <p id="free-app-description"></p>
+            <ul class="hub-app-features" id="free-app-features"></ul>
+            <div class="hub-modal-specs">
+              <span><b>PLATFORM</b><i id="free-app-platform">Windows</i></span
+              ><span><b>ACCESS</b><i id="free-app-access">Free</i></span>
+            </div>
+            <a class="hub-modal-action" id="free-app-action" href="#"
+              >OPEN RELEASE <span aria-hidden="true">↗</span></a
+            >
+          </div>
+        </article>
+      </dialog>
+
+      <p
+        id="hub-status"
+        class="deck-status"
+        role="status"
+        aria-live="polite"
+      ></p>
+      <footer class="deck-foot">
+        <nav class="deck-foot-links" aria-label="Legal and support">
+          <a href="terms.html">Terms</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="refunds.html">Refund Policy</a>
+          <a href="eula.html">License &amp; Keys</a>
+          <a href="https://support.emxtweaks.com/">Support</a>
+          <a href="mailto:emxbiz@emxtweaks.com">Contact</a>
+        </nav>
+        <p class="deck-foot-note">
+          Digital products — <strong>all sales are final.</strong> License keys
+          are machine-bound and are not recovered or re-issued for free.
+        </p>
+        <div class="deck-foot-base">
+          <span
+            >© <span data-current-year></span> EMX TWEAKS · Official EMX
+            network</span
+          ><span class="deck-foot-tag"
+            >SECURE ROUTES · OFFICIAL LINKS ONLY</span
+          >
+        </div>
+      </footer>
+    </main>
+
+    <script defer src="site-shell.js"></script>
+    <script defer src="store-entry-intro.js"></script>
+    <script defer src="products.js"></script>
+    <script defer src="store-analytics.js"></script>
+    <script defer src="storefront-home.js?v=2"></script>
+    <script defer src="foundation.js"></script>
+    <script defer src="link-hub.js?v=hub-nav-2"></script>
+    <script defer src="store-header-video.js"></script>
+    <script defer src="affiliate-ref.js"></script>
+    <script defer src="download-client.js"></script>
+  </body>
 </html>

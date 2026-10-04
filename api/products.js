@@ -11,10 +11,22 @@ const DEFAULT_BUNDLE_ITEMS = {
 };
 const RETIRED_PRODUCT_IDS = new Set(["optimizer", "macro", "controller_macro", "bundle"]);
 const CANONICAL_PRODUCT_FIELDS = {
+  emx_vex: ["id", "slug", "key", "title", "price", "version", "description", "features", "limitations", "productUrl", "image", "gallery", "previewType", "previewSrc", "fallbackPreview", "fullDescription", "eyebrow", "oldPrice", "featured", "saleBadge", "lastVerified", "platform", "purpose", "licenseType", "category", "tags", "requirements", "installation", "recovery", "homepage", "deliveryType", "ctaLabel", "showInIntro", "sortPriority", "publishStatus", "visible"],
+  emx_nexus: ["id", "slug", "key", "title", "price", "version", "description", "features", "limitations", "productUrl", "image", "gallery", "previewType", "previewSrc", "fallbackPreview", "fullDescription", "eyebrow", "oldPrice", "featured", "saleBadge", "lastVerified", "platform", "purpose", "licenseType", "category", "tags", "requirements", "installation", "recovery", "homepage", "deliveryType", "ctaLabel", "showInIntro", "sortPriority", "publishStatus", "visible"],
+  emx_world: ["id", "slug", "key", "title", "price", "version", "description", "features", "limitations", "productUrl", "image", "gallery", "previewType", "previewSrc", "fallbackPreview", "fullDescription", "eyebrow", "oldPrice", "featured", "saleBadge", "lastVerified", "platform", "purpose", "licenseType", "category", "tags", "requirements", "installation", "recovery", "homepage", "deliveryType", "ctaLabel", "showInIntro", "sortPriority", "publishStatus", "visible"],
+  emx_pro_timer: ["id", "slug", "key", "title", "price", "version", "description", "features", "limitations", "productUrl", "image", "gallery", "previewType", "previewSrc", "fallbackPreview", "fullDescription", "eyebrow", "oldPrice", "featured", "saleBadge", "lastVerified", "platform", "purpose", "licenseType", "category", "tags", "requirements", "installation", "recovery", "homepage", "deliveryType", "ctaLabel", "showInIntro", "sortPriority", "publishStatus", "visible"],
+
+  emx_taskbar_studio: [
+    "key", "productUrl", "title", "price", "version", "lastVerified",
+    "image", "gallery", "previewType", "previewSrc", "fallbackPreview",
+    "description", "fullDescription", "features", "platform", "purpose",
+    "licenseType", "requirements", "installation", "recovery", "limitations",
+    "deliveryType", "ctaLabel", "category"
+  ],
   custom_os: ["image", "gallery", "previewSrc", "fallbackPreview", "description", "saleBadge", "version", "lastVerified"],
   windows_tweak_dashboard: ["version", "lastVerified"],
   volt: ["image", "gallery", "previewSrc", "fallbackPreview", "description", "version", "lastVerified"],
-  fps: ["version", "lastVerified"],
+  fps: ["image", "gallery", "previewSrc", "fallbackPreview", "version", "lastVerified"],
   clips: [
     "key",
     "productUrl",

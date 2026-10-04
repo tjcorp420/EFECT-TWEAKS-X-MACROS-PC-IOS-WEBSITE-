@@ -20,15 +20,18 @@ test("public navigation routes free utilities through the hub and keeps personal
   const shell = read("site-shell.js");
   const home = read("index.html");
   assert.match(shell, /https:\/\/support\.emxtweaks\.com\//);
-  assert.match(shell, /\["free", "\.\/index\.html\?free=1#free-tools", "Free"\]/);
+  assert.match(
+    shell,
+    /\["free", "\.\/index\.html\?free=1#free-tools", "Free"\]/,
+  );
   assert.match(shell, /\["links", "\.\/links\.html", "Network"\]/);
   assert.doesNotMatch(shell, /"\.\/labs\.html", "Labs"/);
   assert.match(shell, /https:\/\/activate\.emxtweaks\.com\/activate/);
   assert.doesNotMatch(shell, /href="\.\/license\.html"/);
   assert.doesNotMatch(shell, /mail\.emxtweaks\.com/);
-  assert.match(home, /EMX TWEAKS HUB/);
-  assert.match(home, /FREE UTILITIES &amp; APPLICATIONS/);
-  assert.match(home, /EMX NETWORK/);
+  assert.match(home, /EMX TWEAKS — Windows Tools/);
+  assert.match(home, /FREE UTILITY DROP/);
+  assert.match(home, /EMX Network/);
   assert.doesNotMatch(home, /EMX Mail/);
 });
 
@@ -39,7 +42,14 @@ test("the hub exposes every current free release and Labs resolves to the free p
   const routing = read("vercel.json");
   const legacyClaim = read("license.html");
 
-  for (const title of ["EMX Clips", "Window Deck", "EMX Aim Trainer", "Control Hub", "EMX Sprite Tracker"]) assert.match(home, new RegExp(title));
+  for (const title of [
+    "EMX Clips",
+    "Window Deck",
+    "EMX Aim Trainer",
+    "Control Hub",
+    "EMX Sprite Tracker",
+  ])
+    assert.match(home, new RegExp(title));
   assert.match(home, /id="free-tools"/);
   assert.match(home, /id="free-app-modal"/);
   assert.match(home, /data-free-app="sprite_tracker"/);
@@ -50,9 +60,18 @@ test("the hub exposes every current free release and Labs resolves to the free p
   assert.match(hubBehavior, /window_deck/);
   assert.match(products, /id: "sprite_tracker"[\s\S]*?price: 0/);
   assert.match(products, /deliveryUrl: "https:\/\/payhip\.com\/b\/V90h5"/);
-  assert.match(routing, /"source": "\/labs"[\s\S]*?"destination": "\/#free-tools"/);
-  assert.match(routing, /"source": "\/license\.html"[\s\S]*?"destination": "https:\/\/activate\.emxtweaks\.com\/activate"/);
-  assert.match(legacyClaim, /http-equiv="refresh" content="0;url=https:\/\/activate\.emxtweaks\.com\/activate"/);
+  assert.match(
+    routing,
+    /"source": "\/labs"[\s\S]*?"destination": "\/#free-tools"/,
+  );
+  assert.match(
+    routing,
+    /"source": "\/license\.html"[\s\S]*?"destination": "https:\/\/activate\.emxtweaks\.com\/activate"/,
+  );
+  assert.match(
+    legacyClaim,
+    /http-equiv="refresh" content="0;url=https:\/\/activate\.emxtweaks\.com\/activate"/,
+  );
 });
 
 test("coming-soon previews are accessible and do not invent release details", () => {

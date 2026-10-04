@@ -8,7 +8,7 @@ const index = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const vercel = JSON.parse(fs.readFileSync(path.join(root, "vercel.json"), "utf8"));
 
 test("referral routes keep attribution while homepage assets resolve from root", () => {
-  assert.match(index, /<base href="\/">/);
+  assert.match(index, /<base href="\/"\s*\/?>/);
   assert.ok(
     vercel.rewrites.some(
       route => route.source === "/r/:creator" && route.destination === "/index.html",

@@ -16,17 +16,33 @@
       const stem = png.replace(/\.png$/i, "");
       image.src = png;
       image.alt = `Current EMX VOLT ${item.dataset.title} tab`;
-      source.srcset = `${stem}-640.webp 640w, ${stem}-960.webp 960w`;
+      if (source)
+        source.srcset = `${stem}-640.webp 640w, ${stem}-960.webp 960w`;
+      image.removeAttribute("width");
+      image.removeAttribute("height");
+      image.loading = "eager";
       full.href = png;
       title.textContent = item.dataset.title;
       copy.textContent = item.dataset.copy;
       count.textContent = `${index + 1} / ${items.length}`;
-      items.forEach((button, position) => button.setAttribute("aria-current", String(position === index)));
-      item.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      items.forEach((button, position) =>
+        button.setAttribute("aria-current", String(position === index)),
+      );
+      item.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
     }
-    items.forEach((item, position) => item.addEventListener("click", () => select(position)));
-    root.querySelector("[data-carousel-prev]")?.addEventListener("click", () => select(index - 1));
-    root.querySelector("[data-carousel-next]")?.addEventListener("click", () => select(index + 1));
+    items.forEach((item, position) =>
+      item.addEventListener("click", () => select(position)),
+    );
+    root
+      .querySelector("[data-carousel-prev]")
+      ?.addEventListener("click", () => select(index - 1));
+    root
+      .querySelector("[data-carousel-next]")
+      ?.addEventListener("click", () => select(index + 1));
     root.addEventListener("keydown", (event) => {
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         event.preventDefault();

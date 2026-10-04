@@ -91,6 +91,7 @@ test("catalog removes retired database rows and restores the canonical current b
   const fps = products.find(product => product.id === "fps");
   const tweaksPro = products.find(product => product.id === "emx_tweaks_pro");
   const desktopFlow = products.find(product => product.id === "emx_desktop_flow");
+  const desktopFlowLite = products.find(product => product.id === "emx_desktop_flow_lite");
 
   assert.ok(!ids.includes("optimizer"));
   assert.equal(
@@ -109,7 +110,11 @@ test("catalog removes retired database rows and restores the canonical current b
   assert.equal(clips.deliveryType, "external");
   assert.equal(clips.deliveryUrl, "https://clips.emxtweaks.com/");
   assert.match(clips.licenseType, /Free download/);
-  assert.equal(volt.version, "v0.1.73");
+  assert.equal(volt.version, "v0.1.76");
+  assert.equal(volt.image, "./assets/emx-volt-v0.1.76/dashboard.png");
+  assert.equal(volt.gallery.length, 5);
+  assert.equal(fps.image, "./assets/emx-fps-current/dashboard.png");
+  assert.equal(fps.gallery.length, 2);
   assert.equal(fps.version, "v1.0.24");
   assert.equal(tweaksPro.key, "tkYJN");
   assert.equal(tweaksPro.price, 35);
@@ -119,6 +124,13 @@ test("catalog removes retired database rows and restores the canonical current b
   assert.equal(desktopFlow.price, 29.99);
   assert.equal(desktopFlow.previewType, "video");
   assert.equal(desktopFlow.previewSrc, "./media/emx-desktop-flow-promo.mp4");
+  assert.equal(desktopFlowLite.key, "t2qKl");
+  assert.equal(desktopFlowLite.price, 14.99);
+  assert.equal(desktopFlowLite.version, "v1.5.1");
+  assert.equal(desktopFlowLite.productUrl, "https://payhip.com/b/t2qKl");
+  assert.equal(desktopFlowLite.image, "./assets/emx-desktop-flow-lite/cover.png");
+  assert.equal(desktopFlowLite.previewType, "video");
+  assert.equal(desktopFlowLite.previewSrc, "./media/emx-desktop-flow-lite-promo.mp4");
   const catalogBehavior = require("node:fs").readFileSync(require("node:path").join(__dirname, "..", "catalog.js"), "utf8");
   assert.match(catalogBehavior, /function productPreview\(product, card = false\)/);
   assert.match(catalogBehavior, /video\.controls = !card/);
