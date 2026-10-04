@@ -145,7 +145,7 @@ test("WORLD catalog uses the verified price, paid checkout and real screenshots"
   assert.equal(product.key, "GUE6H");
   assert.equal(product.productUrl, "https://payhip.com/b/GUE6H");
   assert.equal(product.deliveryType, "payhip");
-  assert.equal(product.version, "v0.5.0");
+  assert.equal(product.version, "v0.6.0");
   assert.ok(product.visible);
   assert.ok(product.gallery.every(image => fs.existsSync(path.join(__dirname, "..", image))));
 });
