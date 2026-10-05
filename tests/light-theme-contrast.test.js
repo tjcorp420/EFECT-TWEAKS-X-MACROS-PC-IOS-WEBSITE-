@@ -19,8 +19,9 @@ test("shared and comparison light modes override dark-only hover and data colors
   const site = read("site.css");
   const compare = read("compare.css");
   assert.match(site, /:root\[data-theme="light"\] \.site-footer a:hover/);
-  assert.match(compare, /:root\[data-theme="light"\] \.compare-table thead th/);
-  assert.match(compare, /:root\[data-theme="light"\] \.compare-cards dd/);
+  assert.match(compare, /:root\[data-theme="light"\] \.compare-guide a/);
+  assert.match(compare, /\.discovery-card dd[^}]*color: var\(--emx-text-muted\)/);
+  assert.match(compare, /\.discovery-toolbar input[^}]*color: var\(--emx-text\)/);
 });
 
 test("free Payhip releases use their verified delivery URL", () => {

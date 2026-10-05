@@ -11,6 +11,7 @@ const DEFAULT_BUNDLE_ITEMS = {
 };
 const RETIRED_PRODUCT_IDS = new Set(["optimizer", "macro", "controller_macro", "bundle"]);
 const CANONICAL_PRODUCT_FIELDS = {
+  emx_tweaks_pro: ["visible", "publishStatus", "homepage", "featured", "showInIntro"],
   emx_vex: ["id", "slug", "key", "title", "price", "version", "description", "features", "limitations", "productUrl", "image", "gallery", "previewType", "previewSrc", "fallbackPreview", "fullDescription", "eyebrow", "oldPrice", "featured", "saleBadge", "lastVerified", "platform", "purpose", "licenseType", "category", "tags", "requirements", "installation", "recovery", "homepage", "deliveryType", "ctaLabel", "showInIntro", "sortPriority", "publishStatus", "visible"],
   emx_nexus: ["id", "slug", "key", "title", "price", "version", "description", "features", "limitations", "productUrl", "image", "gallery", "previewType", "previewSrc", "fallbackPreview", "fullDescription", "eyebrow", "oldPrice", "featured", "saleBadge", "lastVerified", "platform", "purpose", "licenseType", "category", "tags", "requirements", "installation", "recovery", "homepage", "deliveryType", "ctaLabel", "showInIntro", "sortPriority", "publishStatus", "visible"],
   emx_world: ["id", "slug", "key", "title", "price", "version", "description", "features", "limitations", "productUrl", "image", "gallery", "previewType", "previewSrc", "fallbackPreview", "fullDescription", "eyebrow", "oldPrice", "featured", "saleBadge", "lastVerified", "platform", "purpose", "licenseType", "category", "tags", "requirements", "installation", "recovery", "homepage", "deliveryType", "ctaLabel", "showInIntro", "sortPriority", "publishStatus", "visible"],
@@ -255,6 +256,7 @@ function normalizeProduct(product, index) {
     deliveryUrl: cleanUrl(product.deliveryUrl || product.downloadUrl),
     deliveryFileName: cleanString(product.deliveryFileName, 160),
     documentationUrl: cleanUrl(product.documentationUrl),
+    releaseUrl: cleanUrl(product.releaseUrl),
     websiteLabel: cleanString(product.websiteLabel, 40),
     supportUrl: cleanUrl(product.supportUrl),
     installation: normalizeLines(product.installation, 20),

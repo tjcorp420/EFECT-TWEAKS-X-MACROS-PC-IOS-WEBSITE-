@@ -5,6 +5,8 @@
   const navigation = [
     ["home", "./index.html", "Home"],
     ["products", "./products.html", "Products"],
+    ["compare", "./compare.html", "Compare"],
+    ["updates", "./updates.html", "Updates"],
     ["hub", "./index.html#emx-hub", "Hub"],
     ["bundles", "./bundles.html", "Bundles"],
     ["macros", "./macros.html", "Macros"],
@@ -15,8 +17,11 @@
     ["license", "https://activate.emxtweaks.com/activate", "Claim"],
     ["affiliate", "./affiliate.html", "Affiliate"],
     ["help", "./help.html", "Help"],
+    ["faq", "./faq.html", "FAQ"],
     ["account", "./account.html", "Account"],
   ];
+  const primaryKeys = new Set(["home", "products", "compare", "updates", "bundles", "macros", "free", "help"]);
+  const navLink = ([key, href, label]) => `<a href="${href}"${page === key ? ' aria-current="page"' : ""}>${label}</a>`;
 
   const header = document.querySelector("[data-site-header]");
   if (header) {
@@ -28,7 +33,8 @@
       </a>
       <button class="emx-nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-emx-nav-toggle aria-label="Toggle navigation"><span></span></button>
       <nav id="site-navigation" data-emx-mobile-nav aria-label="Primary navigation">
-        ${navigation.map(([key, href, label]) => `<a href="${href}"${page === key ? ' aria-current="page"' : ""}>${label}</a>`).join("")}
+        ${navigation.filter(([key]) => primaryKeys.has(key)).map(navLink).join("")}
+        <details class="site-more"><summary${navigation.some(([key]) => !primaryKeys.has(key) && page === key) ? ' class="is-current"' : ""}>More</summary><div class="site-more-links">${navigation.filter(([key]) => !primaryKeys.has(key)).map(navLink).join("")}</div></details>
       </nav>
       <div class="site-header-actions">
         <button class="emx-theme-toggle" type="button" data-emx-theme-toggle aria-label="Switch color theme">

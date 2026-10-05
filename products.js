@@ -569,6 +569,7 @@ window.EMX_PRODUCTS = [
 },
   {
     id: "windows_tweak_dashboard",
+    releaseUrl: "https://github.com/tjcorp420/emx-windows-tweak-dashboard-updates/releases",
     key: "TJFav",
     productUrl: "https://payhip.com/b/TJFav",
     title: "EMX Windows Tweak Dashboard",
@@ -624,7 +625,7 @@ window.EMX_PRODUCTS = [
       "Machine-bound EMX Pro activation with a bounded offline grace period",
       "Unsigned Windows application with a published SHA-256 checksum"
     ],
-    featured: true,
+    featured: false,
     bestSeller: false,
     saleBadge: "PRO",
     version: "1.0.0",
@@ -638,12 +639,12 @@ window.EMX_PRODUCTS = [
     tags: ["Windows utility", "Reversible", "Repairs", "App manager", "Pro"],
     deliveryType: "payhip",
     ctaLabel: "Buy EMX Tweaks Pro",
-    homepage: true,
-    showInIntro: true,
+    homepage: false,
+    showInIntro: false,
     introOrder: 3,
     category: "Windows Tuning",
-    publishStatus: "published",
-    visible: true
+    publishStatus: "draft",
+    visible: false
   },
   {
     id: "clips",
@@ -744,6 +745,7 @@ window.EMX_PRODUCTS = [
   },
   {
     id: "volt",
+    releaseUrl: "https://github.com/tjcorp420/emx-volt-updates/releases",
     key: "Oqz73",
     productUrl: "https://payhip.com/b/Oqz73",
     title: "EMX VOLT MACRO",
@@ -776,6 +778,7 @@ window.EMX_PRODUCTS = [
   },
   {
     id: "fps",
+    releaseUrl: "https://github.com/tjcorp420/EFECT-FPS-BOOSTER-V1/releases",
     key: "EQIrd",
     productUrl: "https://payhip.com/b/EQIrd",
     title: "EMX FPS Booster",
@@ -861,7 +864,8 @@ window.EMX_PRODUCTS = [
 
 window.EMX_PRODUCTS.push(
   {
-    id: "window_deck", slug: "window-deck", title: "EMX Window Deck", eyebrow: "Free Desktop Command Wheel", price: 0,
+    id: "window_deck",
+    releaseUrl: "https://github.com/tjcorp420/emx-window-deck-updates/releases", slug: "window-deck", title: "EMX Window Deck", eyebrow: "Free Desktop Command Wheel", price: 0,
     image: "./assets/free-tools/window-deck-wheel.jpg", gallery: ["./assets/free-tools/window-deck-wheel.jpg"],
     description: "A free animated Windows command wheel for launching apps, restoring windows, opening shortcuts, and reaching PC controls.",
     features: ["Animated app and shortcut command wheel", "Window restore and desktop controls", "Direct ZIP download from the EMX storefront"],

@@ -291,3 +291,13 @@ body:not(.deck-page) .site-footer { position: relative; z-index: 1; }
 .review-card img { width: 100%; height: auto; display: block; }
 .review-card:hover, .review-card:focus-visible { transform: translateY(-4px); box-shadow: inset 0 1px rgba(255,255,255,.18), 0 26px 58px rgba(0,0,0,.44), 0 0 28px rgba(176,70,255,.2); outline: none; }
 @media (max-width: 640px) { .reviews-grid { columns: 1; } }
+
+.site-more { position: relative; }
+.site-more summary { padding: 10px 12px; border: 1px solid transparent; border-radius: 10px; color: var(--emx-text-muted); font-size: .85rem; font-weight: 700; cursor: pointer; }
+.site-more summary:hover, .site-more summary.is-current { color: var(--emx-text); border-color: var(--emx-border); }
+.site-more-links { position: absolute; top: calc(100% + 8px); right: 0; width: 210px; display: grid; padding: 10px; border: 1px solid var(--emx-border); border-radius: 14px; background: var(--emx-bg-raised); box-shadow: var(--emx-shadow-lg); }
+.site-header .site-more-links a { display: block; font-size: .85rem; }
+.site-header nav > a { font-size: .85rem; }
+@media (max-width: 720px) { .site-more-links { position: static; width: auto; margin-top: 8px; } }
+
+@media (min-width: 721px) and (max-width: 1020px) { .site-header nav { overflow: visible; flex-wrap: wrap; } }

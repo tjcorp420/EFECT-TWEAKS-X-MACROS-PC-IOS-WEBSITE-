@@ -24,6 +24,16 @@ npm run build
 
 ## Current storefront features
 
+- Compare and Updates read the live public catalog with an eight-second timeout,
+  a labeled bundled fallback, refresh, search, and category filtering.
+- Compare supports up to four selected products; Updates excludes bundles and
+  shows catalog-listed versions and available notes without claiming a live
+  updater check. Missing facts are labeled rather than inferred.
+- Compare, Updates, and Help are primary navigation destinations; secondary
+  destinations including FAQ remain available in the keyboard-accessible More menu.
+- EMX Tweaks Pro is draft/hidden in both bundled data and API reconciliation;
+  change its source visibility fields only when public availability is authorized.
+
 - Responsive first-party Affiliate and Support paths in the main navigation and checkout areas
 - Homepage EMX TWEAKS HUB with official product, Discord, Fortnite, free-utility, and subdomain paths
 - Five current free releases available directly from the homepage utility panel
