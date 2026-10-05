@@ -1,5 +1,17 @@
 window.EMX_PRODUCTS = [
   {
+    id: "emx_reelfree", slug: "emx-reelfree", title: "EMX ReelFree", eyebrow: "Smart Movie Picker", price: 1,
+    productUrl: "https://payhip.com/b/LJsj3", image: "./assets/reelfree/product.png", gallery: ["./assets/reelfree/product.png"],
+    description: "A movie-discovery app for Windows, mobile PWA, and browsers. Find movie suggestions using genre, year, runtime, ratings, and your preferred streaming services.",
+    features: ["Movie search and filtered recommendations", "Saved movies and seen or not-interested selections", "Trailers and provider availability", "3-Pick Shuffle and two-player movie showdown", "Windows application and installable mobile PWA"],
+    category: "Entertainment", platform: "Windows / Mobile PWA / Browser", purpose: "Find movies across your preferred streaming services",
+    requirements: ["Optional Live Access requires your own TMDB API Read Access Token"],
+    limitations: ["Streaming availability varies by region and changes over time", "Live Access checks United States streaming availability", "Independent discovery tool; not affiliated with TMDB or streaming providers"],
+    deliveryType: "external", deliveryUrl: "https://payhip.com/b/LJsj3", ctaLabel: "View on Payhip", homepage: true, featured: false,
+    showInIntro: false, visible: true, publishStatus: "published", lastVerified: "October 5, 2026"
+  },
+
+  {
     id: "custom_os",
     key: "Isg28",
     productUrl: "https://payhip.com/b/Isg28",
@@ -873,7 +885,7 @@ window.EMX_PRODUCTS.push(
     version: "v0.4.2", lastVerified: "August 29, 2026", licenseType: "Free download", controllerSupport: "Not required",
     requirements: ["Windows 10 or 11", "Review the included README before use"], recovery: ["Remove the utility to stop using it"], limitations: ["Does not replace Windows recovery or account security"],
     deliveryType: "direct", deliveryUrl: "/downloads/EMX-Window-Deck_0.4.2_CUSTOMER-PACKAGE.zip", deliveryFileName: "EMX-Window-Deck_0.4.2_CUSTOMER-PACKAGE.zip",
-    ctaLabel: "Download free ZIP", homepage: true, featured: false, showInIntro: true, introOrder: 7, visible: true, publishStatus: "published"
+    ctaLabel: "Download free ZIP", homepage: false, featured: false, showInIntro: false, introOrder: 7, visible: false, publishStatus: "draft"
   },
   {
     id: "aim_trainer", slug: "aim-trainer", title: "EMX Aim Trainer", eyebrow: "Free Training Suite", price: 0,
@@ -895,7 +907,7 @@ window.EMX_PRODUCTS.push(
     version: "v1.0.3", lastVerified: "August 29, 2026", licenseType: "Free download", controllerSupport: "Not required",
     requirements: ["64-bit Windows PC"], recovery: ["Uninstall through Windows when no longer needed"], limitations: ["Does not scan or modify hardware automatically"],
     deliveryType: "external", deliveryUrl: "https://x1gzparfdlol2128.public.blob.vercel-storage.com/downloads/EMX-Tweaks-Control-Hub-Setup-1.0.3-x64.exe", deliveryFileName: "EMX-Tweaks-Control-Hub-Setup-1.0.3-x64.exe",
-    ctaLabel: "Download free EXE", homepage: true, featured: false, showInIntro: false, introOrder: 8, visible: true, publishStatus: "published"
+    ctaLabel: "Download free EXE", homepage: false, featured: false, showInIntro: false, introOrder: 8, visible: false, publishStatus: "draft"
   },
   {
     id: "sprite_tracker", slug: "sprite-tracker", title: "EMX Fortnite Sprite Tracker", eyebrow: "Free Fortnite Collection Tracker", price: 0,

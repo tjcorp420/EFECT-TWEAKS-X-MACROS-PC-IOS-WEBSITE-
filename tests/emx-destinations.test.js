@@ -44,9 +44,7 @@ test("the hub exposes every current free release and Labs resolves to the free p
 
   for (const title of [
     "EMX Clips",
-    "Window Deck",
     "EMX Aim Trainer",
-    "Control Hub",
     "EMX Sprite Tracker",
   ])
     assert.match(home, new RegExp(title));
@@ -57,7 +55,8 @@ test("the hub exposes every current free release and Labs resolves to the free p
   assert.match(hubBehavior, /navigator\.clipboard/);
   assert.match(hubBehavior, /aria-expanded/);
   assert.match(hubBehavior, /showModal\(\)/);
-  assert.match(hubBehavior, /window_deck/);
+  assert.doesNotMatch(hubBehavior, /window_deck|control_hub/);
+  assert.doesNotMatch(home, /data-free-app="(?:window_deck|control_hub)"/);
   assert.match(products, /id: "sprite_tracker"[\s\S]*?price: 0/);
   assert.match(products, /deliveryUrl: "https:\/\/payhip\.com\/b\/V90h5"/);
   assert.match(

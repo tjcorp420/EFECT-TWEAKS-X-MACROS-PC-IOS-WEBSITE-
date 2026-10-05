@@ -36,7 +36,11 @@ npm run build
 
 - Responsive first-party Affiliate and Support paths in the main navigation and checkout areas
 - Homepage EMX TWEAKS HUB with official product, Discord, Fortnite, free-utility, and subdomain paths
-- Five current free releases available directly from the homepage utility panel
+- Three current free releases available directly from the homepage utility panel
+- Payhip reconciliation on October 5, 2026: Control Hub and Window Deck are
+  hidden without deleting historical records or packages; ReelFree links to its
+  official $1 Payhip listing. Clips retains the newer free website release while
+  its older $1 Payhip listing remains a content/delivery decision to reconcile.
 - Central multi-product license recovery at `https://activate.emxtweaks.com/activate`
 - Full-frame product screenshot carousels with Previous/Next controls and thumbnail rails
 - Answer-based Setup Finder with optional Windows, GPU, input, and price preferences

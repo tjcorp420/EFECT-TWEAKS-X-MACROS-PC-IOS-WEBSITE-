@@ -33,23 +33,6 @@
         "In-game ready and saved notifications",
       ],
     },
-    window_deck: {
-      title: "EMX Window Deck",
-      category: "FREE DESKTOP UTILITY",
-      image: "assets/free-tools/window-deck-wheel.jpg",
-      platform: "Windows 10 / 11",
-      access: "Free ZIP",
-      action: "DOWNLOAD WINDOW DECK",
-      href: "/downloads/EMX-Window-Deck_0.4.2_CUSTOMER-PACKAGE.zip",
-      productId: "window_deck",
-      description:
-        "An animated command wheel for launching apps, restoring windows, opening shortcuts, and reaching desktop controls without digging through menus.",
-      features: [
-        "Animated app and shortcut command wheel",
-        "Window restore and desktop controls",
-        "Direct EMX-hosted ZIP package",
-      ],
-    },
     aim_trainer: {
       title: "EMX Aim Trainer",
       category: "FREE TRAINING SUITE",
@@ -65,23 +48,6 @@
         "Flick, tracking, precision, and reaction modules",
         "Saved local setup and session reports",
         "Official EMX download route",
-      ],
-    },
-    control_hub: {
-      title: "EMX Control Hub",
-      category: "FREE SETUP ORGANIZER",
-      image: "assets/free-tools/control-hub-dashboard.png",
-      platform: "64-bit Windows",
-      access: "Free EXE",
-      action: "DOWNLOAD CONTROL HUB",
-      href: "https://x1gzparfdlol2128.public.blob.vercel-storage.com/downloads/EMX-Tweaks-Control-Hub-Setup-1.0.3-x64.exe",
-      productId: "control_hub",
-      description:
-        "Search, pin, and organize the launchers, shortcuts, and system tools around your setup from one clean desktop surface.",
-      features: [
-        "Search and pin your setup tools",
-        "Organized launcher workspace",
-        "Official EMX installer delivery",
       ],
     },
     sprite_tracker: {

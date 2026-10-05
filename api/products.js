@@ -11,6 +11,8 @@ const DEFAULT_BUNDLE_ITEMS = {
 };
 const RETIRED_PRODUCT_IDS = new Set(["optimizer", "macro", "controller_macro", "bundle"]);
 const CANONICAL_PRODUCT_FIELDS = {
+  control_hub: ["visible", "publishStatus", "homepage", "featured", "showInIntro"],
+  window_deck: ["visible", "publishStatus", "homepage", "featured", "showInIntro"],
   emx_tweaks_pro: ["visible", "publishStatus", "homepage", "featured", "showInIntro"],
   emx_vex: ["id", "slug", "key", "title", "price", "version", "description", "features", "limitations", "productUrl", "image", "gallery", "previewType", "previewSrc", "fallbackPreview", "fullDescription", "eyebrow", "oldPrice", "featured", "saleBadge", "lastVerified", "platform", "purpose", "licenseType", "category", "tags", "requirements", "installation", "recovery", "homepage", "deliveryType", "ctaLabel", "showInIntro", "sortPriority", "publishStatus", "visible"],
   emx_nexus: ["id", "slug", "key", "title", "price", "version", "description", "features", "limitations", "productUrl", "image", "gallery", "previewType", "previewSrc", "fallbackPreview", "fullDescription", "eyebrow", "oldPrice", "featured", "saleBadge", "lastVerified", "platform", "purpose", "licenseType", "category", "tags", "requirements", "installation", "recovery", "homepage", "deliveryType", "ctaLabel", "showInIntro", "sortPriority", "publishStatus", "visible"],

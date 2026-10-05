@@ -43,3 +43,17 @@ test("bundled Tweaks Pro remains private for offline storefronts", () => {
   assert.equal(pro.visible, false);
   assert.equal(pro.publishStatus, "draft");
 });
+
+test("Payhip reconciliation hides withdrawn listings and includes ReelFree", () => {
+  const ctx = { window: {} };
+  vm.runInNewContext(fs.readFileSync(path.join(root, "products.js"), "utf8"), ctx);
+  const api = context();
+  const publicItems = api.publicProducts(ctx.window.EMX_PRODUCTS);
+  for (const id of ["control_hub", "window_deck", "emx_tweaks_pro"]) {
+    assert.equal(publicItems.some((item) => item.id === id), false);
+  }
+  const reel = publicItems.find((item) => item.id === "emx_reelfree");
+  assert.equal(reel.price, 1);
+  assert.equal(reel.productUrl, "https://payhip.com/b/LJsj3");
+  assert.equal(reel.deliveryType, "external");
+});
