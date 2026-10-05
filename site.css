@@ -248,10 +248,10 @@ body[data-page="links"] .card-grid .content-card:hover {
 
 /* Lift shell content above the fixed background */
 body:not(.deck-page):not(.link-hub-page) { background: transparent; }
-body:not(.deck-page) .site-header,
 body:not(.deck-page) main,
 body:not(.deck-page) .page-shell,
 body:not(.deck-page) .site-footer { position: relative; z-index: 1; }
+body:not(.deck-page) .site-header { position: relative; z-index: 50; }
 
 /* Premium glass surfaces everywhere */
 .content-card, .feature-card, .glass-panel {
@@ -301,3 +301,13 @@ body:not(.deck-page) .site-footer { position: relative; z-index: 1; }
 @media (max-width: 720px) { .site-more-links { position: static; width: auto; margin-top: 8px; } }
 
 @media (min-width: 721px) and (max-width: 1020px) { .site-header nav { overflow: visible; flex-wrap: wrap; } }
+
+.site-header nav a.site-clips-link {
+  color: #dfffbd;
+  border-color: rgba(170,255,91,.5);
+  background: linear-gradient(135deg, rgba(102,174,34,.24), rgba(133,48,210,.22));
+  box-shadow: 0 0 16px rgba(170,255,91,.1);
+  font-weight: 850;
+}
+.site-header nav a.site-clips-link:hover { color: #fff; border-color: #aaff5b; background: rgba(112,191,37,.28); }
+:root[data-theme="light"] .site-header nav a.site-clips-link { color: #245900; border-color: #4f8d20; background: linear-gradient(135deg,#e7f7d9,#f0e1ff); }

@@ -5,6 +5,7 @@
   const navigation = [
     ["home", "./index.html", "Home"],
     ["products", "./products.html", "Products"],
+    ["clips", "https://clips.emxtweaks.com/", "Clips · Free"],
     ["compare", "./compare.html", "Compare"],
     ["updates", "./updates.html", "Updates"],
     ["hub", "./index.html#emx-hub", "Hub"],
@@ -20,8 +21,8 @@
     ["faq", "./faq.html", "FAQ"],
     ["account", "./account.html", "Account"],
   ];
-  const primaryKeys = new Set(["home", "products", "compare", "updates", "bundles", "macros", "free", "help"]);
-  const navLink = ([key, href, label]) => `<a href="${href}"${page === key ? ' aria-current="page"' : ""}>${label}</a>`;
+  const primaryKeys = new Set(["home", "products", "clips", "compare", "updates", "bundles", "macros", "free", "help"]);
+  const navLink = ([key, href, label]) => `<a href="${href}"${key === "clips" ? ' class="site-clips-link"' : ""}${page === key ? ' aria-current="page"' : ""}>${label}</a>`;
 
   const header = document.querySelector("[data-site-header]");
   if (header) {

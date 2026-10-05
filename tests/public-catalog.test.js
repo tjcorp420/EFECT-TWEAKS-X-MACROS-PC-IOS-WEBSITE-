@@ -57,3 +57,11 @@ test("Payhip reconciliation hides withdrawn listings and includes ReelFree", () 
   assert.equal(reel.productUrl, "https://payhip.com/b/LJsj3");
   assert.equal(reel.deliveryType, "external");
 });
+
+test("shared navigation promotes free Clips and keeps menus above page content", () => {
+  const shell = fs.readFileSync(path.join(root, "site-shell.js"), "utf8");
+  const css = fs.readFileSync(path.join(root, "site.css"), "utf8");
+  assert.match(shell, /\["clips", "https:\/\/clips\.emxtweaks\.com\/", "Clips · Free"\]/);
+  assert.match(shell, /class="site-clips-link"/);
+  assert.match(css, /body:not\(\.deck-page\) \.site-header \{ position: relative; z-index: 50; \}/);
+});
