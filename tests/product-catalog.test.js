@@ -115,7 +115,7 @@ test("catalog removes retired database rows and restores the canonical current b
   assert.equal(clips.versionSource, "Official GitHub release");
   assert.match(clips.releaseUrl, /emx-clips-releases\/releases\/tag\/v1\.9\.41$/);
   assert.ok(!clips.requirements.includes("Invented stale GPU requirement"));
-  assert.match(clips.deliveryNote, /older installer/);
+  assert.match(clips.deliveryNote, /No Payhip purchase is required/);
   assert.equal(volt.version, "v0.1.76");
   assert.equal(volt.image, "./assets/emx-volt-v0.1.76/dashboard.png");
   assert.equal(volt.gallery.length, 5);

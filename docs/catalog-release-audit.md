@@ -22,6 +22,8 @@ Verified October 5, 2026 against public GitHub release metadata. These are publi
 
 CRU and Hub facts come from their official Payhip listings (LwdbV and Q7ikr). ReelFree (LJsj3) does not publish an explicit version or device-license policy; the website says so. Existing documented app requirements are preserved. Custom OS release notes confirm one-PC activation.
 
-Clips remains free. Its subdomain currently advertises 1.9.8 while GitHub publishes 1.9.41. The main catalog download now links directly to the official 1.9.41 installer, and Compare/Updates explain the mismatch and link to activation instructions on the product website. The separate subdomain has not been edited by this change. Aim Trainer’s download redirect and landing-page version now match the public 0.3.6 installer.
+Clips remains free. The main catalog download links directly to the official 1.9.41 installer, with free activation instructions on the product website. A subsequent coordinated update refreshes the separate Clips subdomain to the same version and checksum. The user confirmed that Payhip is already free and its Download Now button opens external delivery instructions linking to that website; an older search-indexed Payhip description must not override that confirmation. Aim Trainer’s download redirect and landing-page version match the public 0.3.6 installer.
+
+The existing Help page now includes `#getting-started` for download, product-specific activation, and first-use updates. Products links to it from the preserved update reminder.
 
 Source-owned audit fields override stale stored catalog facts. No checkout, key claim, updater signature, or activation service is changed.

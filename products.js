@@ -1008,7 +1008,7 @@ const EMX_VERIFIED_CATALOG_DETAILS = {
     "releasePublished": "2026-10-04T16:13:37Z",
     "lastVerified": "October 5, 2026",
     "versionSource": "Official GitHub release",
-    "deliveryNote": "The free installer links to the official v1.9.41 release. Use the product website for free activation instructions; it currently displays an older installer version.",
+    "deliveryNote": "The free installer links to the official v1.9.41 release. Use the product website for free activation instructions. No Payhip purchase is required.",
     "documentationUrl": "https://clips.emxtweaks.com/",
     "deliveryUrl": "https://github.com/tjcorp420/emx-clips-releases/releases/download/v1.9.41/EMX-Clips-Setup-1.9.41.exe",
     "deliveryFileName": "EMX-Clips-Setup-1.9.41.exe",
