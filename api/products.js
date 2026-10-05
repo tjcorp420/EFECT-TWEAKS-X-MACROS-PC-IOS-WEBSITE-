@@ -247,6 +247,9 @@ function normalizeProduct(product, index) {
     ctaLabel: cleanString(product.ctaLabel, 40),
     version: cleanString(product.version, 80),
     lastVerified: cleanString(product.lastVerified, 80),
+    versionSource: cleanString(product.versionSource, 120),
+    releasePublished: cleanString(product.releasePublished, 40),
+    deliveryNote: cleanString(product.deliveryNote, 600),
     platform: cleanString(product.platform, 100),
     purpose: cleanString(product.purpose, 180),
     licenseType: cleanString(product.licenseType, 120),
@@ -297,7 +300,9 @@ async function loadProducts() {
     const id = cleanId(product.id, "");
     const seed = seedById.get(id);
     if (!seed) return product;
-    const canonicalFields = CANONICAL_PRODUCT_FIELDS[id] || [];
+    const auditedFields = ["versionSource", "releaseUrl", "releasePublished", "deliveryNote"];
+    if (seed.versionSource) auditedFields.push("version", "lastVerified", "platform", "purpose", "licenseType", "controllerSupport", "requirements", "installation", "recovery", "limitations", "documentationUrl", "deliveryFileName");
+    const canonicalFields = [...(CANONICAL_PRODUCT_FIELDS[id] || []), ...auditedFields];
     const canonicalValues = Object.fromEntries(
       canonicalFields.map(field => [field, seed[field]])
     );
@@ -316,13 +321,13 @@ async function loadProducts() {
       lastVerified: useCanonicalFacts || canonicalFields.includes("lastVerified")
         ? seed.lastVerified
         : product.lastVerified || seed.lastVerified,
-      platform: product.platform || seed.platform,
-      purpose: sourceOwnedInputFacts ? seed.purpose : product.purpose || seed.purpose,
-      licenseType: useCanonicalFacts ? seed.licenseType : product.licenseType || seed.licenseType,
-      controllerSupport: sourceOwnedInputFacts ? seed.controllerSupport : product.controllerSupport || seed.controllerSupport,
-      requirements: sourceOwnedInputFacts ? seed.requirements : (product.requirements?.length ? product.requirements : seed.requirements),
-      recovery: product.recovery?.length ? product.recovery : seed.recovery,
-      limitations: sourceOwnedInputFacts ? seed.limitations : (product.limitations?.length ? product.limitations : seed.limitations)
+      platform: canonicalFields.includes("platform") ? seed.platform : product.platform || seed.platform,
+      purpose: sourceOwnedInputFacts || canonicalFields.includes("purpose") ? seed.purpose : product.purpose || seed.purpose,
+      licenseType: useCanonicalFacts || canonicalFields.includes("licenseType") ? seed.licenseType : product.licenseType || seed.licenseType,
+      controllerSupport: sourceOwnedInputFacts || canonicalFields.includes("controllerSupport") ? seed.controllerSupport : product.controllerSupport || seed.controllerSupport,
+      requirements: sourceOwnedInputFacts || canonicalFields.includes("requirements") ? seed.requirements : (product.requirements?.length ? product.requirements : seed.requirements),
+      recovery: canonicalFields.includes("recovery") ? seed.recovery : product.recovery?.length ? product.recovery : seed.recovery,
+      limitations: sourceOwnedInputFacts || canonicalFields.includes("limitations") ? seed.limitations : (product.limitations?.length ? product.limitations : seed.limitations)
     };
   });
 

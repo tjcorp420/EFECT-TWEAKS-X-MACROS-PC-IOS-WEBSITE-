@@ -40,21 +40,22 @@
     card.append(badges, node("p", catalog.value(item.purpose || item.description)));
     const facts = node("dl");
     const fields = release
-      ? [["Platform", item.platform], ["Catalog version", item.version], ["License", item.licenseType]]
-      : [["Platform", item.platform], ["Controller", item.controllerSupport], ["License", item.licenseType], ["Catalog version", item.version]];
+      ? [["Platform", item.platform], ["Listed version", item.version], ["Version source", item.versionSource], ["Checked", item.lastVerified], ["License", item.licenseType]]
+      : [["Platform", item.platform], ["Controller", item.controllerSupport], ["License", item.licenseType], ["Listed version", item.version], ["Version source", item.versionSource]];
     fields.forEach(([label, value]) => facts.append(node("dt", label), node("dd", catalog.value(value))));
     card.append(facts);
+    if (item.deliveryNote) card.append(node("p", item.deliveryNote, "delivery-note"));
     details(card, "Requirements", item.requirements);
     details(card, "Installation", item.installation);
     details(card, "Recovery", item.recovery);
     details(card, "Known limitations", item.limitations);
-    if (release) details(card, "Catalog release notes", item.changelog);
+    if (release) details(card, "Included catalog notes", item.changelog);
     const actions = node("div", null, "discovery-actions");
     actions.append(link("View product", `./products.html#product-${encodeURIComponent(item.id)}`));
     const docs = catalog.safeUrl(item.documentationUrl);
     if (docs) actions.append(link("Product website", docs));
     const releaseUrl = catalog.safeUrl(item.releaseUrl);
-    if (release && releaseUrl) actions.append(link("Official releases", releaseUrl));
+    if (releaseUrl) actions.append(link("Official releases", releaseUrl));
     const support = catalog.safeUrl(item.supportUrl) || "https://support.emxtweaks.com/";
     actions.append(link("Support", support));
     card.append(actions);

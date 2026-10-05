@@ -895,7 +895,7 @@ window.EMX_PRODUCTS.push(
     tags: ["Free", "Training", "Windows"], category: "Training", platform: "Windows", purpose: "Aim practice and local session review",
     version: "v0.3.0", lastVerified: "August 29, 2026", licenseType: "Free download", controllerSupport: "Keyboard and mouse",
     requirements: ["64-bit Windows PC"], recovery: ["Uninstall through Windows when no longer needed"], limitations: ["No fabricated skill ranking or guaranteed gameplay result"],
-    deliveryType: "external", deliveryUrl: "/download/aim-trainer", deliveryFileName: "EMX.Aim.Trainer_0.3.0_x64-setup.exe",
+    deliveryType: "external", deliveryUrl: "/download/aim-trainer", deliveryFileName: "EMX.Aim.Trainer_0.3.6_x64-setup.exe",
     ctaLabel: "Download free trainer", homepage: true, featured: false, showInIntro: true, introOrder: 6, visible: true, publishStatus: "published"
   },
   {
@@ -935,7 +935,7 @@ window.EMX_PRODUCTS.forEach((product) => Object.assign(product, EMX_DELIVERY_DET
 const EMX_TRUST_DETAILS = {
   custom_os: { version: "v1.3.21", lastVerified: "August 31, 2026", platform: "Windows 10 / 11", purpose: "Guided Windows setup and personalization", licenseType: "Lifetime access", controllerSupport: "Not required", requirements: ["64-bit Windows 10 or 11 PC", "Administrator access for supported system changes", "Working Windows recovery access"], recovery: ["Restore points before supported changes", "Change evidence and support bundles", "Built-in restore and rollback controls"], limitations: ["No guaranteed FPS, ping, or hardware result", "Driver and hardware compatibility varies"] },
   windows_tweak_dashboard: { version: "v0.3.1", lastVerified: "August 31, 2026", platform: "Windows 10 / 11", purpose: "Reversible Windows tuning", licenseType: "Lifetime one-PC access", controllerSupport: "Not required", requirements: ["Supported Windows 10 or 11 PC", "Administrator access for system changes", "Create and retain a recovery point"], recovery: ["Backups before supported changes", "Undo Center and action logs", "Restore tools"], limitations: ["Performance gains are not guaranteed", "Exact effect depends on the PC and selected changes"] },
-  clips: { version: "v1.9.4", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Local instant replay and clip library", licenseType: "Free download with free machine-bound activation", controllerSupport: "Not required", requirements: ["Windows PC", "NVIDIA GPU with supported NVENC path", "Available local storage for replay files"], recovery: ["Original clips remain ordinary local files", "Storage controls do not replace a personal backup"], limitations: ["Non-NVIDIA capture paths are not currently confirmed", "Capture results depend on driver and encoder support"] },
+  clips: { version: "v1.9.41", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Local instant replay and clip library", licenseType: "Free download with free machine-bound activation", controllerSupport: "Not required", requirements: ["Windows PC", "NVIDIA GPU with supported NVENC path", "Available local storage for replay files"], recovery: ["Original clips remain ordinary local files", "Storage controls do not replace a personal backup"], limitations: ["Non-NVIDIA capture paths are not currently confirmed", "Capture results depend on driver and encoder support"] },
   volt: { version: "v0.1.76", lastVerified: "September 30, 2026", platform: "Windows", purpose: "Desktop keyboard and mouse macro control", licenseType: "Lifetime single-PC access", controllerSupport: "Keyboard and mouse", requirements: ["Windows PC", "Supported keyboard and mouse", "Use only where game and platform rules allow"], recovery: ["Visible emergency stop", "Saved configuration and profile controls", "Reset or rebind from the app"], limitations: ["No guaranteed in-game result or rules compatibility"] },
   emx_controller_macro: { version: "v0.6.1", lastVerified: "September 7, 2026", platform: "Windows", purpose: "PlayStation controller macro control", licenseType: "One-PC paid activation", controllerSupport: "PlayStation (DualSense / DS4 via ViGEmBus)", requirements: ["Windows PC", "PlayStation DualSense or DS4 controller", "ViGEmBus for virtual controller output"], recovery: ["Visible emergency stop", "Restore controller access and open logs", "Saved settings and profiles"], limitations: ["Sprint Assist is experimental and may cycle inventory in some cases", "No guaranteed in-game result or rules compatibility"] },
   fps: { version: "v1.0.24", lastVerified: "August 31, 2026", platform: "Windows", purpose: "Performance setup pack", licenseType: "Lifetime access", controllerSupport: "Not required", requirements: ["Windows PC", "Review each change before applying", "Keep Windows recovery available"], recovery: ["Follow included backup and rollback guidance before applying changes"], limitations: ["Results vary by hardware and current configuration", "No performance result is guaranteed"] },
@@ -943,3 +943,188 @@ const EMX_TRUST_DETAILS = {
 };
 
 window.EMX_PRODUCTS.forEach((product) => Object.assign(product, EMX_TRUST_DETAILS[product.id] || {}));
+
+// Audited release channels and customer-facing facts; see docs/catalog-release-audit.md.
+const EMX_VERIFIED_CATALOG_DETAILS = {
+  "emx_pro_timer": {
+    "version": "v1.2.2",
+    "releaseUrl": "https://github.com/tjcorp420/EMX-Pro-Timer-Res-Tuner-updates/releases/tag/v1.2.2",
+    "releasePublished": "2026-10-04T02:46:43Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "emx_vex": {
+    "version": "v1.0.3",
+    "releaseUrl": "https://github.com/tjcorp420/emx-vex-updates/releases/tag/v1.0.3",
+    "releasePublished": "2026-10-04T19:32:19Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "emx_nexus": {
+    "version": "v1.0.0",
+    "releaseUrl": "https://github.com/tjcorp420/EMX-NEXUS-UPDATES/releases/tag/v1.0.0",
+    "releasePublished": "2026-10-03T23:12:10Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "emx_taskbar_studio": {
+    "version": "v1.1.2",
+    "releaseUrl": "https://github.com/tjcorp420/EMX-TASKBAR-STUDIO-UPDATES/releases/tag/v1.1.2",
+    "releasePublished": "2026-10-04T18:24:07Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "windows_tweak_dashboard": {
+    "version": "v0.3.1",
+    "releaseUrl": "https://github.com/tjcorp420/emx-windows-tweak-dashboard-updates/releases/tag/v0.3.1",
+    "releasePublished": "2026-09-01T00:37:53Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "sprite_tracker": {
+    "version": "v1.2.2",
+    "releaseUrl": "https://github.com/tjcorp420/emx-fortnite-sprite-tracker/releases/tag/v1.2.2",
+    "releasePublished": "2026-09-01T15:30:02Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "Official releases list v1.2.2. The Payhip package version has not been independently checked."
+  },
+  "fps": {
+    "version": "v1.0.24",
+    "releaseUrl": "https://github.com/tjcorp420/EFECT-FPS-BOOSTER-V1/releases/tag/v1.0.24",
+    "releasePublished": "2026-09-01T00:47:27Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "clips": {
+    "version": "v1.9.41",
+    "releaseUrl": "https://github.com/tjcorp420/emx-clips-releases/releases/tag/v1.9.41",
+    "releasePublished": "2026-10-04T16:13:37Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The free installer links to the official v1.9.41 release. Use the product website for free activation instructions; it currently displays an older installer version.",
+    "documentationUrl": "https://clips.emxtweaks.com/",
+    "deliveryUrl": "https://github.com/tjcorp420/emx-clips-releases/releases/download/v1.9.41/EMX-Clips-Setup-1.9.41.exe",
+    "deliveryFileName": "EMX-Clips-Setup-1.9.41.exe",
+    "ctaLabel": "Download free installer",
+    "installation": ["Download the official Windows setup installer", "Follow the free Machine ID activation instructions on the EMX Clips product website", "Review the official release notes before updating"]
+  },
+  "emx_desktop_flow_lite": {
+    "version": "v1.6.2",
+    "releaseUrl": "https://github.com/tjcorp420/emx-desktop-flow-lite-updates/releases/tag/v1.6.2",
+    "releasePublished": "2026-10-04T02:33:52Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "aim_trainer": {
+    "version": "v0.3.6",
+    "releaseUrl": "https://github.com/tjcorp420/EFECT-AIM-TRAINER-UPDATES/releases/tag/v0.3.6",
+    "releasePublished": "2026-05-27T13:35:31Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The website download redirects to the official v0.3.6 Windows installer.",
+    "deliveryFileName": "EMX.Aim.Trainer_0.3.6_x64-setup.exe"
+  },
+  "custom_os": {
+    "version": "v1.3.21",
+    "releaseUrl": "https://github.com/tjcorp420/EMX-CUSTOM-OS/releases/tag/v1.3.21",
+    "releasePublished": "2026-09-01T00:24:26Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions.",
+    "licenseType": "Lifetime access with one-PC activation"
+  },
+  "volt": {
+    "version": "v0.1.76",
+    "releaseUrl": "https://github.com/tjcorp420/emx-volt-updates/releases/tag/v0.1.76",
+    "releasePublished": "2026-09-27T19:58:14Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "emx_desktop_flow": {
+    "version": "v1.0.31",
+    "releaseUrl": "https://github.com/tjcorp420/EMX-DESKTOP-FLOW-UPDATES/releases/tag/v1.0.31",
+    "releasePublished": "2026-09-22T02:51:21Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "emx_world": {
+    "version": "v0.6.0",
+    "releaseUrl": "https://github.com/tjcorp420/emx-world-updates/releases/tag/v0.6.0",
+    "releasePublished": "2026-10-04T03:33:57Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "emx_controller_macro": {
+    "version": "v0.7.0",
+    "releaseUrl": "https://github.com/tjcorp420/emx-controller-macro-updates/releases/tag/v0.7.0",
+    "releasePublished": "2026-09-08T18:24:01Z",
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Official GitHub release",
+    "deliveryNote": "The Payhip package may be older than this release. After installing, use the app’s Check for updates control or follow the official release instructions."
+  },
+  "emx_cru": {
+    "purpose": "Stretched resolution and Fortnite display configuration",
+    "controllerSupport": "Not required",
+    "requirements": [
+      "Windows PC with a display driver that accepts the selected resolution",
+      "GPU scaling controls for your NVIDIA, AMD, or Intel GPU",
+      "Fortnite installed when changing its display configuration"
+    ],
+    "installation": [
+      "Download through the official Payhip receipt and follow included activation instructions"
+    ],
+    "recovery": [
+      "15-second keep/revert screen for display changes",
+      "Back up Fortnite display configuration before editing"
+    ],
+    "lastVerified": "October 5, 2026",
+    "versionSource": "Payhip product listing",
+    "documentationUrl": "https://payhip.com/b/LwdbV",
+    "deliveryNote": "Use the official Payhip delivery instructions. A newer public installer has not been independently verified."
+  },
+  "emx_hub": {
+    "purpose": "EMX account library and installed-app launcher",
+    "controllerSupport": "Not required",
+    "licenseType": "Free hub; paid products retain their own licenses",
+    "requirements": [
+      "Windows 10 or 11",
+      "EMX account using your purchase email for owned-product matching",
+      "Install each app separately before launching it from the hub"
+    ],
+    "installation": [
+      "Get the free download from the official Payhip listing",
+      "Sign in with the email used for your EMX purchases"
+    ],
+    "limitations": [
+      "The hub does not include licenses for paid products",
+      "A separate public release channel has not been confirmed"
+    ],
+    "documentationUrl": "https://payhip.com/b/Q7ikr",
+    "versionSource": "Catalog version; separate release not verified",
+    "deliveryNote": "Use the official Payhip delivery instructions. A newer public installer has not been independently verified."
+  },
+  "emx_reelfree": {
+    "licenseType": "See Payhip listing; activation and device terms not published",
+    "installation": [
+      "Get the Windows app or PWA instructions from the official Payhip delivery page",
+      "Configure your own TMDB token only if using optional Live Access"
+    ],
+    "recovery": [
+      "Keep your TMDB token private and retain a personal copy"
+    ],
+    "versionSource": "Public release version not listed",
+    "deliveryNote": "Use the official Payhip delivery instructions. A newer public installer has not been independently verified."
+  }
+};
+window.EMX_PRODUCTS.forEach((product) => Object.assign(product, EMX_VERIFIED_CATALOG_DETAILS[product.id] || {}));

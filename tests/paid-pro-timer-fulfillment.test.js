@@ -145,7 +145,7 @@ test("Pro Timer Res Tuner catalog uses the verified price, paid checkout and rea
   assert.equal(product.key, "4ENPW");
   assert.equal(product.productUrl, "https://payhip.com/b/4ENPW");
   assert.equal(product.deliveryType, "payhip");
-  assert.equal(product.version, "v1.2.0");
+  assert.equal(product.version, "v1.2.2");
   assert.ok(product.visible);
   assert.ok(product.gallery.every(image => fs.existsSync(path.join(__dirname, "..", image))));
 });

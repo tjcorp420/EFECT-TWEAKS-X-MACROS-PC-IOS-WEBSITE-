@@ -65,3 +65,27 @@ test("shared navigation promotes free Clips and keeps menus above page content",
   assert.match(shell, /class="site-clips-link"/);
   assert.match(css, /body:not\(\.deck-page\) \.site-header \{ position: relative; z-index: 50; \}/);
 });
+
+test("public comparison products have requirements and explicit license guidance", () => {
+  const ctx = { window: {} };
+  vm.runInNewContext(fs.readFileSync(path.join(root, "products.js"), "utf8"), ctx);
+  for (const item of context().publicProducts(ctx.window.EMX_PRODUCTS)) {
+    assert.ok(item.requirements?.length, `${item.id} requirements`);
+    assert.ok(item.licenseType, `${item.id} license guidance`);
+  }
+  const clips = ctx.window.EMX_PRODUCTS.find((item) => item.id === "clips");
+  assert.equal(clips.price, 0);
+  assert.match(clips.deliveryUrl, /\/v1\.9\.41\/EMX-Clips-Setup-1\.9\.41\.exe$/);
+});
+
+test("Aim Trainer GET and HEAD redirect to the verified release without caching", () => {
+  const handler = require("../api/aim-trainer-download");
+  for (const method of ["GET", "HEAD"]) {
+    const headers = {};
+    const response = { setHeader: (name, value) => { headers[name] = value; }, end() {} };
+    handler({ method }, response);
+    assert.equal(response.statusCode, 302);
+    assert.match(headers.location, /\/v0\.3\.6\/EMX\.Aim\.Trainer_0\.3\.6_x64-setup\.exe$/);
+    assert.equal(headers["cache-control"], "no-store");
+  }
+});

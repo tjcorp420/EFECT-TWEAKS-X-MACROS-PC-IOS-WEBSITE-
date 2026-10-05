@@ -1,4 +1,4 @@
-const AIM_TRAINER_DOWNLOAD_URL = "https://github.com/tjcorp420/EFECT-AIM-TRAINER-UPDATES/releases/download/v0.3.0/EMX.Aim.Trainer_0.3.0_x64-setup.exe";
+const AIM_TRAINER_DOWNLOAD_URL = "https://github.com/tjcorp420/EFECT-AIM-TRAINER-UPDATES/releases/download/v0.3.6/EMX.Aim.Trainer_0.3.6_x64-setup.exe";
 
 function handler(req, res) {
   if (req.method !== "GET" && req.method !== "HEAD") {

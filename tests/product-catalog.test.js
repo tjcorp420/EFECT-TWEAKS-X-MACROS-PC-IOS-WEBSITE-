@@ -70,6 +70,8 @@ test("catalog removes retired database rows and restores the canonical current b
       price: 1,
       version: "Old catalog release",
       licenseType: "Paid access",
+      requirements: ["Invented stale GPU requirement"],
+      releaseUrl: "https://example.com/stale-download",
       deliveryType: "payhip",
       visible: true
     }
@@ -106,10 +108,14 @@ test("catalog removes retired database rows and restores the canonical current b
   assert.equal(dashboard.version, "v0.3.1");
   assert.equal(clips.price, 0);
   assert.equal(clips.key, "");
-  assert.equal(clips.version, "v1.9.4");
+  assert.equal(clips.version, "v1.9.41");
   assert.equal(clips.deliveryType, "external");
-  assert.equal(clips.deliveryUrl, "https://clips.emxtweaks.com/");
+  assert.equal(clips.deliveryUrl, "https://github.com/tjcorp420/emx-clips-releases/releases/download/v1.9.41/EMX-Clips-Setup-1.9.41.exe");
   assert.match(clips.licenseType, /Free download/);
+  assert.equal(clips.versionSource, "Official GitHub release");
+  assert.match(clips.releaseUrl, /emx-clips-releases\/releases\/tag\/v1\.9\.41$/);
+  assert.ok(!clips.requirements.includes("Invented stale GPU requirement"));
+  assert.match(clips.deliveryNote, /older installer/);
   assert.equal(volt.version, "v0.1.76");
   assert.equal(volt.image, "./assets/emx-volt-v0.1.76/dashboard.png");
   assert.equal(volt.gallery.length, 5);
@@ -126,7 +132,7 @@ test("catalog removes retired database rows and restores the canonical current b
   assert.equal(desktopFlow.previewSrc, "./media/emx-desktop-flow-promo.mp4");
   assert.equal(desktopFlowLite.key, "t2qKl");
   assert.equal(desktopFlowLite.price, 14.99);
-  assert.equal(desktopFlowLite.version, "v1.5.1");
+  assert.equal(desktopFlowLite.version, "v1.6.2");
   assert.equal(desktopFlowLite.productUrl, "https://payhip.com/b/t2qKl");
   assert.equal(desktopFlowLite.image, "./assets/emx-desktop-flow-lite/cover.png");
   assert.equal(desktopFlowLite.previewType, "video");

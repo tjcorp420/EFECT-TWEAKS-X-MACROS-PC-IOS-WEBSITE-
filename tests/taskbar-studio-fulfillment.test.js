@@ -145,7 +145,7 @@ test("Taskbar catalog uses the verified price, paid checkout and real screenshot
   assert.equal(product.key, "sAu8f");
   assert.equal(product.productUrl, "https://payhip.com/b/sAu8f");
   assert.equal(product.deliveryType, "payhip");
-  assert.equal(product.version, "v1.0.0");
+  assert.equal(product.version, "v1.1.2");
   assert.ok(product.visible);
   assert.ok(product.gallery.every(image => fs.existsSync(path.join(__dirname, "..", image))));
 });
