@@ -49,6 +49,13 @@ tool on `https://emxtweaks.com/` and request indexing. Google selects the final
 site name, title, snippet, and favicon; deployment does not guarantee an immediate
 search-result update. Crawling and processing can take days to weeks.
 
+`sitemap.xml` lists the preferred canonical URLs of 15 public discovery pages;
+`robots.txt` advertises it without blocking the assets crawlers need. Account,
+admin, API, and redirected legacy pages are excluded from the sitemap. Sitemap
+exclusion is not access control. When adding a public page, add its canonical URL
+and sharing metadata, update the sitemap, and run `npm test` and `npm run build`.
+Submit `https://emxtweaks.com/sitemap.xml` in Search Console's Sitemaps report.
+
 ## Configuration
 
 The server functions require the existing Firebase Admin configuration (`FIREBASE_SERVICE_ACCOUNT_JSON` or the project/client/private-key variables). Product/settings persistence uses `KV_REST_API_URL` and `KV_REST_API_TOKEN`. Uploads use `BLOB_READ_WRITE_TOKEN`. License automation requires `PAYHIP_API_KEY`; optional delivery mail uses the existing Resend settings. `ADMIN_PASSWORD` protects both admin applications. `EMX_DEFAULT_AFFILIATE_RATE_BPS` optionally sets the initial commission rate in basis points. Never place these values in source or client-side files.

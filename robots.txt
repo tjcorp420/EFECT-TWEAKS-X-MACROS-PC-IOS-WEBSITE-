@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://emxtweaks.com/sitemap.xml
