@@ -64,6 +64,8 @@ test("shared navigation promotes free Clips and keeps menus above page content",
   assert.match(shell, /\["clips", "https:\/\/clips\.emxtweaks\.com\/", "Clips · Free"\]/);
   assert.match(shell, /class="site-clips-link"/);
   assert.match(css, /body:not\(\.deck-page\) \.site-header \{ position: relative; z-index: 50; \}/);
+  const catalogCss = fs.readFileSync(path.join(root, "catalog.css"), "utf8");
+  assert.doesNotMatch(catalogCss, /body\[data-page="products"\] \.site-header[^{]*\{[^}]*z-index:\s*1\s*;/);
 });
 
 test("public comparison products have requirements and explicit license guidance", () => {

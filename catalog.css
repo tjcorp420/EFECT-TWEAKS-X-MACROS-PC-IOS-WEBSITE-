@@ -106,7 +106,6 @@
 
 /* ===== Products page spice-up: hub background + premium cards ===== */
 body[data-page="products"] { background: transparent; }
-body[data-page="products"] .site-header,
 body[data-page="products"] .page-shell,
 body[data-page="products"] .site-footer { position: relative; z-index: 1; }
 
