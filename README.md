@@ -37,6 +37,18 @@ npm run build
 - Premium product quick-view modals and a database-driven, replay-safe cinematic home intro
 - Direct package uploads with progress, multipart support, and client/server magic-signature validation
 
+## Homepage search appearance
+
+`index.html` owns the homepage title, search description, Open Graph/Twitter
+sharing metadata, and `WebSite` JSON-LD identifying the site as EMX TWEAKS.
+Keep the search and sharing descriptions aligned. The favicon uses the existing
+square EMX logo at the stable `/emx-logo-v2.png` URL.
+
+After publishing metadata changes, use Google Search Console's URL Inspection
+tool on `https://emxtweaks.com/` and request indexing. Google selects the final
+site name, title, snippet, and favicon; deployment does not guarantee an immediate
+search-result update. Crawling and processing can take days to weeks.
+
 ## Configuration
 
 The server functions require the existing Firebase Admin configuration (`FIREBASE_SERVICE_ACCOUNT_JSON` or the project/client/private-key variables). Product/settings persistence uses `KV_REST_API_URL` and `KV_REST_API_TOKEN`. Uploads use `BLOB_READ_WRITE_TOKEN`. License automation requires `PAYHIP_API_KEY`; optional delivery mail uses the existing Resend settings. `ADMIN_PASSWORD` protects both admin applications. `EMX_DEFAULT_AFFILIATE_RATE_BPS` optionally sets the initial commission rate in basis points. Never place these values in source or client-side files.

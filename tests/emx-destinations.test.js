@@ -29,7 +29,7 @@ test("public navigation routes free utilities through the hub and keeps personal
   assert.match(shell, /https:\/\/activate\.emxtweaks\.com\/activate/);
   assert.doesNotMatch(shell, /href="\.\/license\.html"/);
   assert.doesNotMatch(shell, /mail\.emxtweaks\.com/);
-  assert.match(home, /EMX TWEAKS — Windows Tools/);
+  assert.match(home, /EMX TWEAKS — Windows Apps, Tweaks &amp; Utilities/);
   assert.match(home, /FREE UTILITY DROP/);
   assert.match(home, /EMX Network/);
   assert.doesNotMatch(home, /EMX Mail/);
