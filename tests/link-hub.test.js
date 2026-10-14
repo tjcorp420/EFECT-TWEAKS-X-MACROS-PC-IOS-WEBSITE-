@@ -59,6 +59,17 @@ test("future marketplaces are labeled without linking to unpublished listings", 
   assert.ok(fs.existsSync(path.join(root, "account.html")));
 });
 
+test("new discovery paths retain the existing software and support pages", () => {
+  const routing = JSON.parse(read("vercel.json"));
+  const target = (source) => routing.rewrites.find((route) => route.source === source)?.destination;
+  assert.equal(target("/software"), "/products.html");
+  assert.equal(target("/extensions"), "/extensions.html");
+  assert.equal(target("/support"), "/help.html");
+  const extensions = read("extensions.html");
+  assert.match(extensions, /no published EMX Chrome extension listing/);
+  assert.match(extensions, /no EMX app listing is published/);
+});
+
 test("public headers share a persistent light and dark theme control", () => {
   const home = read("index.html");
   const affiliate = read("affiliate.html");

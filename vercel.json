@@ -70,6 +70,18 @@
   ],
   "rewrites": [
     {
+      "source": "/software",
+      "destination": "/products.html"
+    },
+    {
+      "source": "/extensions",
+      "destination": "/extensions.html"
+    },
+    {
+      "source": "/support",
+      "destination": "/help.html"
+    },
+    {
       "source": "/",
       "has": [
         {
