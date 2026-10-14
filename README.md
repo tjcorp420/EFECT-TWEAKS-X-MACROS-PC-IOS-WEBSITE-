@@ -24,7 +24,7 @@ npm run build
 
 ## Current storefront features
 
-- The bio-link homepage URL `https://emxtweaks.com/?entry=bio` plays the supplied four-second EMX Software boot video before revealing the storefront. It starts muted for browser autoplay, offers Sound on and Skip intro, and releases the page on video completion, error, or timeout. Normal homepage and internal navigation do not show the boot video; `?intro=1` is an explicit preview route. Reduced-motion visitors go straight to the page.
+- The homepage plays the supplied four-second EMX Software boot video once per browser session when a visitor arrives at `https://emxtweaks.com/` from outside the site (for example the bio link). `?entry=bio` always plays it. It starts muted for browser autoplay, offers Sound on and Skip intro, and releases the page on video completion, error, or timeout. Internal navigation, reloads, back/forward, section anchors and `?free=1` do not replay it; `?intro=1` is an explicit preview route. Reduced-motion visitors go straight to the page.
 - Compare and Updates read the live public catalog with an eight-second timeout,
   a labeled bundled fallback, refresh, search, and category filtering.
 - Compare supports up to four selected products; Updates excludes bundles and

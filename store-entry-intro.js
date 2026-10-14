@@ -11,13 +11,22 @@
   const params = new URLSearchParams(location.search);
   const preview = params.get("intro") === "1";
   const fromBio = params.get("entry") === "bio";
-  if (!preview && !fromBio) return;
+  const seenKey = "emx-store-intro-seen";
   let internal = false;
   try {
     internal =
       !!document.referrer &&
       new URL(document.referrer).origin === location.origin;
   } catch {}
+  let seen = false;
+  try {
+    seen = sessionStorage.getItem(seenKey) === "1";
+  } catch {}
+  // A plain homepage visit plays the intro once per browser session when it
+  // arrives from outside the site; reloads and back/forward never replay it.
+  const navigation = performance.getEntriesByType?.("navigation")[0]?.type;
+  const freshArrival = navigation !== "reload" && navigation !== "back_forward";
+  if (!preview && !fromBio && (seen || !freshArrival)) return;
   if (
     (internal && !preview) ||
     location.hash ||
@@ -25,6 +34,9 @@
     matchMedia("(prefers-reduced-motion: reduce)").matches
   )
     return;
+  try {
+    sessionStorage.setItem(seenKey, "1");
+  } catch {}
   const previousFocus = document.activeElement;
   overlay.hidden = false;
   main.inert = true;

@@ -9,13 +9,17 @@ function harness(options = {}) {
     nodes[id] = {hidden:true, inert:false, muted:true, events:{}, attributes:{}, addEventListener(k, f){this.events[k]=f;}, setAttribute(k,v){this.attributes[k]=v;}, focus(){}, contains(){return false;}, querySelector(){return null;}, pause(){}, play(){return options.reject ? Promise.reject(new Error('autoplay')) : Promise.resolve();}};
   }
   let timeout;
+  const store = new Map(options.seen ? [['emx-store-intro-seen','1']] : []);
+  const sessionStorage = {getItem:k=>store.has(k)?store.get(k):null, setItem:(k,v)=>store.set(k,String(v))};
   vm.runInNewContext(source, {
+    sessionStorage,
+    performance:{getEntriesByType:()=>[{type:options.navigation||'navigate'}]},
     document: {getElementById:id=>nodes[id], querySelector:s=>nodes[s==='main'?'main':'header'], referrer:options.internal?'https://emxtweaks.com/products.html':'', activeElement:null, body:{}, documentElement:{classList:{add(){},remove(){}}}},
     location:{origin:'https://emxtweaks.com',hash:options.hash||'',search:options.search||''},
     matchMedia:()=>({matches:!!options.reduced}), URL, URLSearchParams,
     setTimeout:f=>{timeout=f;return 1;},clearTimeout(){},
   });
-  return {nodes, timeout};
+  return {nodes, timeout, store};
 }
 test('direct entrance plays muted and completion restores the shop',()=>{
   const {nodes}=harness({search:'?entry=bio'});
@@ -36,9 +40,13 @@ test('skip, video errors and stalled loading all release the store',()=>{
     assert.equal(h.nodes['store-entry-intro'].hidden,true);
   }
 });
-test('only the bio entry or explicit preview opens the intro',()=>{
-  for(const options of [{},{search:'?entry=bio',internal:true},{search:'?entry=bio',hash:'#emx-hub'},{search:'?entry=bio',reduced:true},{search:'?entry=bio&free=1'}]) assert.equal(harness(options).nodes['store-entry-intro'].hidden,true);
-  assert.equal(harness({search:'?entry=bio'}).nodes['store-entry-intro'].hidden,false);
+test('the plain homepage plays once per session for outside arrivals; the bio link always plays',()=>{
+  const first=harness();
+  assert.equal(first.nodes['store-entry-intro'].hidden,false);
+  assert.equal(first.store.get('emx-store-intro-seen'),'1');
+  for(const options of [{seen:true},{internal:true},{navigation:'reload'},{navigation:'back_forward'},{hash:'#free-tools'},{search:'?free=1'},{reduced:true}]) assert.equal(harness(options).nodes['store-entry-intro'].hidden,true);
+  for(const options of [{search:'?entry=bio',internal:true},{search:'?entry=bio',hash:'#emx-hub'},{search:'?entry=bio',reduced:true},{search:'?entry=bio&free=1'}]) assert.equal(harness(options).nodes['store-entry-intro'].hidden,true);
+  assert.equal(harness({search:'?entry=bio',seen:true}).nodes['store-entry-intro'].hidden,false);
   assert.equal(harness({search:'?intro=1',internal:true}).nodes['store-entry-intro'].hidden,false);
 });
 test('blocked autoplay exposes play and retains skip recovery',async()=>{
