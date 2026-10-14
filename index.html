@@ -55,16 +55,14 @@
     <link rel="stylesheet" href="storefront-home.css?v=2" />
     <link rel="preload" as="image" href="assets/brand/emx-hero-world.webp" type="image/webp" media="(min-width: 901px)" />
     <link rel="preload" as="image" href="assets/brand/emx-hero-world-960.webp" type="image/webp" media="(max-width: 900px)" />
-    <link rel="stylesheet" href="software-redesign.css?v=showroom-1" />
+    <link rel="stylesheet" href="software-redesign.css?v=showroom-2" />
   </head>
   <body data-page="home" class="link-hub-page deck-page">
     <a class="emx-skip-link" href="#main">Skip to store</a>
     <div id="store-entry-intro" class="store-intro" role="dialog" aria-modal="true" aria-label="EMX Software introduction" hidden>
-      <video id="store-intro-video" muted playsinline webkit-playsinline disablepictureinpicture preload="metadata" poster="media/store/emx-software-bio-boot-poster.webp" aria-label="EMX Software boot animation">
-        <source src="media/store/emx-software-bio-boot.mp4" type="video/mp4" />
-      </video>
+      <img id="store-intro-media" class="store-intro-media" data-src="media/store/emx-software-bio-boot.webp" data-duration="4050" width="736" height="400" alt="EMX Software boot animation" decoding="async" />
+      <audio id="store-intro-audio" preload="none" src="media/store/emx-software-bio-boot.m4a"></audio>
       <div class="store-intro-actions">
-        <button id="store-intro-play" type="button" hidden><span aria-hidden="true">▶</span> Play intro</button>
         <button id="store-intro-sound" type="button" aria-pressed="false">Sound on</button>
         <button id="store-intro-skip" type="button">Skip intro →</button>
       </div>

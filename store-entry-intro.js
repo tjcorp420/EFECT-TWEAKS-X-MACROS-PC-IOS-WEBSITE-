@@ -1,17 +1,21 @@
 (() => {
   "use strict";
+  // The boot intro is an animated image rather than a <video>: images always
+  // animate on their own, including inside Instagram/TikTok in-app browsers
+  // that refuse video autoplay or force a native full-screen player.
   const overlay = document.getElementById("store-entry-intro");
-  const video = document.getElementById("store-intro-video");
+  const media = document.getElementById("store-intro-media");
+  const audio = document.getElementById("store-intro-audio");
   const skip = document.getElementById("store-intro-skip");
-  const play = document.getElementById("store-intro-play");
   const sound = document.getElementById("store-intro-sound");
   const main = document.querySelector("main");
   const header = document.querySelector("[data-site-header]");
-  if (!overlay || !video || !skip || !play || !sound || !main || !header) return;
+  if (!overlay || !media || !audio || !skip || !sound || !main || !header) return;
   const params = new URLSearchParams(location.search);
   const preview = params.get("intro") === "1";
   const fromBio = params.get("entry") === "bio";
   const seenKey = "emx-store-intro-seen";
+  const animationMs = Number(media.dataset.duration) || 4050;
   let internal = false;
   try {
     internal =
@@ -37,6 +41,7 @@
   try {
     sessionStorage.setItem(seenKey, "1");
   } catch {}
+
   const previousFocus = document.activeElement;
   overlay.hidden = false;
   main.inert = true;
@@ -44,11 +49,16 @@
   document.documentElement.classList.add("store-intro-active");
   let done = false;
   let timer;
+  let startedAt = 0;
+  function arm(ms) {
+    clearTimeout(timer);
+    timer = setTimeout(dismiss, ms);
+  }
   function dismiss() {
     if (done) return;
     done = true;
     clearTimeout(timer);
-    video.pause();
+    audio.pause();
     main.inert = false;
     header.inert = false;
     if (overlay.contains(document.activeElement)) {
@@ -58,55 +68,43 @@
       returnTarget?.focus({ preventScroll: true });
     }
     overlay.hidden = true;
+    media.removeAttribute("src");
     document.documentElement.classList.remove("store-intro-active");
   }
-  // The safety timer always leaves the store reachable, but it is re-armed for
-  // each phase so a slow load, a tap on Play or playback never cut the intro short.
-  function arm(ms) {
-    clearTimeout(timer);
-    timer = setTimeout(dismiss, ms);
-  }
-  function start() {
-    play.hidden = true;
-    video.muted = true;
-    video.preload = "auto";
-    sound.setAttribute("aria-pressed", "false");
-    sound.textContent = "Sound on";
-    arm(9000);
-    const attempt = video.play();
-    attempt?.catch?.(() => {
-      if (done) return;
-      // Autoplay was refused (for example Low Power Mode or an in-app browser).
-      play.hidden = false;
-      play.focus();
-      arm(15000);
-    });
-  }
+  // The animation starts when the image finishes loading; release the store
+  // when it ends, if it fails, or if it cannot load within a few seconds.
+  media.addEventListener("load", () => {
+    startedAt = Date.now();
+    overlay.classList.add("is-playing");
+    arm(animationMs + 250);
+  });
+  media.addEventListener("error", dismiss);
   skip.addEventListener("click", dismiss);
-  play.addEventListener("click", start);
   sound.addEventListener("click", () => {
-    video.muted = !video.muted;
-    sound.setAttribute("aria-pressed", String(!video.muted));
-    sound.textContent = video.muted ? "Sound on" : "Sound off";
+    const turnOn = audio.paused;
+    if (turnOn) {
+      // A tap is a user gesture, so in-app browsers allow this audio to play.
+      try {
+        audio.currentTime = startedAt ? Math.min((Date.now() - startedAt) / 1000, 3.9) : 0;
+      } catch {}
+      audio.play()?.catch?.(() => {});
+    } else {
+      audio.pause();
+    }
+    sound.setAttribute("aria-pressed", String(turnOn));
+    sound.textContent = turnOn ? "Sound off" : "Sound on";
   });
-  video.addEventListener("playing", () => {
-    const remaining = (video.duration - video.currentTime) * 1000;
-    arm(Number.isFinite(remaining) && remaining > 0 ? remaining + 3000 : 9000);
-  });
-  video.addEventListener("ended", dismiss);
-  video.addEventListener("error", dismiss);
-  // A <source> that cannot load reports its error on the source element, not the video.
-  video.querySelector("source")?.addEventListener("error", dismiss);
   overlay.addEventListener("keydown", (event) => {
     if (event.key === "Escape") dismiss();
     if (event.key === "Tab") {
       event.preventDefault();
-      const controls = [play, sound, skip].filter((button) => !button.hidden);
+      const controls = [sound, skip];
       const current = controls.indexOf(document.activeElement);
       const next = event.shiftKey ? current - 1 : current + 1;
       controls[(next + controls.length) % controls.length].focus();
     }
   });
   skip.focus({ preventScroll: true });
-  start();
+  arm(7000);
+  media.src = media.dataset.src;
 })();

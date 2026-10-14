@@ -14,7 +14,7 @@ catalog.css/catalog.js  catalog cards, filters, galleries, and product quick-vie
 storefront-intro.*      database-driven cinematic home introduction
 software-redesign.css   homepage showroom scene, glass system and responsive layout
 software-showroom.js    optional pointer/scroll depth, tilt and reveal for the homepage
-store-entry-intro.js    ?entry=bio boot video with Sound on, Skip and timeout recovery
+store-entry-intro.js    once-per-session boot animation (animated WebP) with Sound on, Skip and timeout recovery
 affiliate-admin.*       Affiliate Command Center
 admin.*                 Product Control Center
 products.js             catalog seed and browser fallback

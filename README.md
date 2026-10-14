@@ -24,7 +24,7 @@ npm run build
 
 ## Current storefront features
 
-- The homepage plays the supplied four-second EMX Software boot video once per browser session when a visitor arrives at `https://emxtweaks.com/` from outside the site (for example the bio link). `?entry=bio` always plays it. It starts muted for browser autoplay, offers Sound on and Skip intro, and releases the page on video completion, error, or timeout. Internal navigation, reloads, back/forward, section anchors and `?free=1` do not replay it; `?intro=1` is an explicit preview route. Reduced-motion visitors go straight to the page.
+- The homepage plays the four-second EMX Software boot animation once per browser session when a visitor arrives at `https://emxtweaks.com/` from outside the site (for example the bio link). `?entry=bio` always plays it. The animation is an animated WebP (`media/store/emx-software-bio-boot.webp`, generated from the supplied MP4) rather than a `<video>`, because Instagram/TikTok in-app browsers refuse video autoplay and force a native full-screen player. It plays silently by itself; Sound on plays the separate boot audio (`emx-software-bio-boot.m4a`) after a tap. It releases the page when the animation ends, on Skip, on a load error, or after a 7-second load timeout. Internal navigation, reloads, back/forward, section anchors and `?free=1` do not replay it; `?intro=1` is an explicit preview route. Reduced-motion visitors go straight to the page.
 - Compare and Updates read the live public catalog with an eight-second timeout,
   a labeled bundled fallback, refresh, search, and category filtering.
 - Compare supports up to four selected products; Updates excludes bundles and

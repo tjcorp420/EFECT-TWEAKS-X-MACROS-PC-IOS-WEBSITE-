@@ -19,32 +19,16 @@ body[data-page="home"] {
 html:has(body[data-page="home"]) { overflow-x: clip; }
 
 /* ---------- Bio entrance overlay ---------- */
-.store-intro { background: radial-gradient(ellipse at center, #081025, #020207 68%); }
-.store-intro video { width: min(100%, 1400px); height: 100%; object-fit: contain; }
+.store-intro { background: url("media/store/emx-software-bio-boot-poster.webp") center / contain no-repeat, radial-gradient(ellipse at center, #081025, #020207 68%); }
+.store-intro.is-playing { background: radial-gradient(ellipse at center, #081025, #020207 68%); }
 .store-intro-actions { z-index: 1; right: max(24px, env(safe-area-inset-right)); bottom: max(24px, env(safe-area-inset-bottom)); }
 .store-intro-actions button { border-color: rgba(156, 227, 244, .35); background: rgba(8, 13, 26, .78); backdrop-filter: blur(12px); font-weight: 700; }
 .store-intro-actions button:hover { border-color: rgba(169, 251, 104, .8); background: rgba(21, 31, 40, .95); }
 .store-intro-actions button:active { transform: translateY(1px); }
 .store-intro-actions button[hidden] { display: none; }
-/* When a phone refuses autoplay, Play becomes the obvious centred action. */
-.store-intro-actions #store-intro-play {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 56px;
-  padding: 0 28px;
-  border: 1px solid rgba(210, 255, 160, .7);
-  border-radius: 14px;
-  color: #0d150b;
-  background: linear-gradient(180deg, #d2ff9c, #a6f74f 55%, #8fe537);
-  box-shadow: 0 0 40px rgba(150, 255, 70, .35), inset 0 1px rgba(255, 255, 255, .7);
-  font-size: 1rem;
-  transform: translate(-50%, -50%);
-}
-.store-intro-actions #store-intro-play[hidden] { display: none; }
+/* The boot animation is an image; the poster holds the frame until it has loaded. */
+.store-intro .store-intro-media { width: 100%; height: 100%; max-width: none; object-fit: contain; opacity: 0; }
+.store-intro.is-playing .store-intro-media { opacity: 1; }
 html.store-intro-active .store-hero *,
 html.store-intro-active .store-hero *::before,
 html.store-intro-active .store-hero *::after { animation-play-state: paused !important; }

@@ -27,7 +27,8 @@ test("link hub keeps emxtweaks.com as the home route and preserves required dest
   assert.match(home, /Developer verification in progress/);
   assert.doesNotMatch(home, /id="emx-splash"/);
   assert.match(home, /id="store-entry-intro"[^>]*hidden/);
-  assert.match(home, /media\/store\/emx-software-bio-boot\.mp4/);
+  assert.match(home, /media\/store\/emx-software-bio-boot\.webp/);
+  assert.doesNotMatch(home, /<video id="store-intro/);
   assert.match(home, /store-entry-intro\.js/);
   assert.equal(manifest.start_url, "/");
   for (const subdomain of [
