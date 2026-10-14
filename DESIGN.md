@@ -4,7 +4,7 @@
 
 EMX combines premium PC hardware software, competitive gaming utilities, and enthusiast control software. The experience should feel precise and confident rather than noisy.
 
-The homepage uses the supplied EMX Software mark at `assets/brand/emx-software-mark.png`, the line "Built Beyond Ordinary," and a layered command-center stage with restrained glass, orbit lines, and real product cards. Public page heroes use the same restrained grid and orbit treatment. Real product screenshots remain separate from the brand art and retain factual captions. The shared header uses the existing compact EMX mark and a short Explore menu so the brand stays legible at small sizes.
+The homepage uses a transparent EMX wordmark derived from the supplied logo at `assets/brand/emx-software-wordmark.png`, the line "Built Beyond Ordinary," a single refractive glass plane, and real product cards. The original `assets/brand/emx-software-mark.png` remains the social preview image. The wordmark floats gently and receives a slow highlight sweep; reduced-motion users see a static version. Public page heroes use restrained grid details. Real product screenshots remain separate from the brand art and retain factual captions. The shared header uses the existing compact EMX mark and a short Explore menu so the brand stays legible at small sizes.
 
 Avoid generic SaaS cards, full-page gradients, matrix effects, fake telemetry, excessive particles, random cyberpunk decoration, pill-shaped everything, or glow on every surface.
 
