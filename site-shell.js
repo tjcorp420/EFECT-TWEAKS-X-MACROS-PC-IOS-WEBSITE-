@@ -21,7 +21,7 @@
     ["help", "./help.html", "Help"],
     ["faq", "./faq.html", "FAQ"],
   ];
-  const primaryKeys = new Set(["home", "products", "clips", "bundles", "macros", "links", "help"]);
+  const primaryKeys = new Set(["products", "clips", "extensions", "links"]);
   const navLink = ([key, href, label]) => `<a href="${href}"${key === "clips" ? ' class="site-clips-link"' : ""}${page === key ? ' aria-current="page"' : ""}>${label}</a>`;
 
   const header = document.querySelector("[data-site-header]");
@@ -30,19 +30,18 @@
     header.innerHTML = `
       <a class="site-brand" href="./index.html" aria-label="EMX Software home">
         <img src="emx-logo-v2.png" width="500" height="500" alt="">
-        <span>EMX <strong>SOFTWARE</strong></span>
+        <span><b>EMX</b><strong>SOFTWARE</strong></span>
       </a>
       <button class="emx-nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-emx-nav-toggle aria-label="Toggle navigation"><span></span></button>
       <nav id="site-navigation" data-emx-mobile-nav aria-label="Primary navigation">
         ${navigation.filter(([key]) => primaryKeys.has(key)).map(navLink).join("")}
-        <details class="site-more"><summary${navigation.some(([key]) => !primaryKeys.has(key) && page === key) ? ' class="is-current"' : ""}>More</summary><div class="site-more-links">${navigation.filter(([key]) => !primaryKeys.has(key)).map(navLink).join("")}</div></details>
+        <details class="site-more"><summary${navigation.some(([key]) => !primaryKeys.has(key) && page === key) ? ' class="is-current"' : ""}>Explore <span aria-hidden="true">⌄</span></summary><div class="site-more-links">
+          ${navigation.filter(([key]) => !primaryKeys.has(key)).map(navLink).join("")}
+          <a href="https://support.emxtweaks.com/">Support center</a>
+          <button class="emx-theme-toggle" type="button" data-emx-theme-toggle aria-label="Switch color theme"><span class="emx-theme-icon" aria-hidden="true">☀</span><span class="emx-theme-label">Light mode</span></button>
+        </div></details>
       </nav>
-      <div class="site-header-actions">
-        <button class="emx-theme-toggle" type="button" data-emx-theme-toggle aria-label="Switch color theme">
-          <span class="emx-theme-icon" aria-hidden="true">☀</span><span class="emx-theme-label">Light mode</span>
-        </button>
-        <a class="site-support" href="https://support.emxtweaks.com/"><i></i> Support center</a>
-      </div>
+      <span class="site-header-signature" aria-hidden="true">BUILT BEYOND ORDINARY <i></i></span>
     `;
   }
 

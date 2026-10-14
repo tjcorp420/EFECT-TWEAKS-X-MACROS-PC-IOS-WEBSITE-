@@ -15,6 +15,10 @@
       "WINDOWS TUNING",
       "Guided Windows tuning with backups, an Undo Center, and action logs.",
     ],
+    clips: [
+      "FREE CAPTURE APP",
+      "Keep replay ready, save a moment with your hotkey, and manage finished clips locally.",
+    ],
   };
   const el = (tag, text, className) => {
     const node = document.createElement(tag);
@@ -47,7 +51,7 @@
       const link = el("a", "Explore product →", "deck-btn deck-btn-ghost");
       link.href = "products.html#product-" + encodeURIComponent(id);
       link.dataset.storeProductLink = id;
-      actions.append(el("strong", "See current details"), link);
+      actions.append(el("strong", id === "clips" ? "Free access" : "See current details"), link);
       content.append(actions);
       card.append(image, content);
       grid.append(card);

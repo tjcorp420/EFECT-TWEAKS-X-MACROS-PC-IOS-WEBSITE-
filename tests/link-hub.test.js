@@ -20,7 +20,7 @@ test("link hub keeps emxtweaks.com as the home route and preserves required dest
   assert.match(home, /href="products\.html"/);
   assert.match(home, /href="links\.html"/);
   assert.match(home, /ONE LINK · EVERY OFFICIAL EMX DESTINATION/);
-  assert.match(home, /Software for/);
+  assert.match(home, /Built beyond/);
   assert.match(home, /Explore software/);
   assert.match(home, /assets\/brand\/emx-software-mark\.png/);
   assert.match(home, /Microsoft Store and Chrome Web Store releases are in preparation/);
@@ -40,11 +40,11 @@ test("link hub keeps emxtweaks.com as the home route and preserves required dest
 test("featured software uses current catalog records in the requested order", () => {
   const featured = read("storefront-home.js");
   const catalog = read("products.js");
-  const ids = ["volt", "emx_desktop_flow_lite", "windows_tweak_dashboard"];
+  const ids = ["volt", "emx_desktop_flow_lite", "windows_tweak_dashboard", "clips"];
   for (const id of ids) assert.match(catalog, new RegExp(`id: "${id}"`));
   const positions = ids.map((id) => featured.indexOf(`${id}: [`));
   assert.ok(positions.every((position) => position >= 0));
-  assert.ok(positions[0] < positions[1] && positions[1] < positions[2]);
+  assert.ok(positions.every((position, index) => index === 0 || positions[index - 1] < position));
   assert.match(featured, /p\.visible !== false/);
   assert.match(featured, /p\.publishStatus !== "draft"/);
 });

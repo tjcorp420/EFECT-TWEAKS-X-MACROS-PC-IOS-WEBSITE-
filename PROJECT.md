@@ -4,7 +4,7 @@
 
 EMX Software is the public brand for the `emxtweaks.com` storefront and product hub. The domain and existing product, support, checkout, download, referral, and activation routes remain in use.
 
-The EMX Software homepage features VOLT Macro, Desktop Flow Lite, and Windows Tweak Dashboard from the existing catalog. Microsoft Store and Chrome Web Store are marked coming soon until actual listings are published. The Account Hub is absent from shared navigation while its direct route remains available for existing users.
+The EMX Software homepage features VOLT Macro, Desktop Flow Lite, Windows Tweak Dashboard, and free EMX Clips from the existing catalog. Microsoft Store and Chrome Web Store are marked coming soon until actual listings are published. The Account Hub is absent from shared navigation while its direct route remains available for existing users.
 
 The additional `/software`, `/extensions`, and `/support` paths resolve to the current catalog, an honest extensions status page, and the existing help page. Older URLs remain valid.
 
