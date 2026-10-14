@@ -124,6 +124,10 @@
       "destination": "/privacy.html"
     },
     {
+      "source": "/new-tab-privacy",
+      "destination": "/new-tab-privacy.html"
+    },
+    {
       "source": "/refunds",
       "destination": "/refunds.html"
     },
