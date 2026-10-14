@@ -311,3 +311,20 @@ body:not(.deck-page) .site-header { position: relative; z-index: 50; }
 }
 .site-header nav a.site-clips-link:hover { color: #fff; border-color: #aaff5b; background: rgba(112,191,37,.28); }
 :root[data-theme="light"] .site-header nav a.site-clips-link { color: #245900; border-color: #4f8d20; background: linear-gradient(135deg,#e7f7d9,#f0e1ff); }
+
+/* Give the compact support action a recognizable visible label. */
+@media (max-width: 720px) {
+  .site-support i {
+    display: grid;
+    width: 21px;
+    height: 21px;
+    place-items: center;
+    border-radius: 50%;
+    color: #32103f;
+    font-style: normal;
+    font-size: 14px;
+    font-weight: 900;
+    box-shadow: none;
+  }
+  .site-support i::before { content: "?"; }
+}

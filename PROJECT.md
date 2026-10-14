@@ -1,8 +1,10 @@
-# EMX TWEAKS Website
+# EMX Software Website
 
 ## Purpose
 
-EMX TWEAKS is the public storefront and product hub for EMX Windows software, tweaks, macros, creator utilities, downloads, release information, support, and post-purchase license recovery.
+EMX Software is the public brand for the `emxtweaks.com` storefront and product hub. The domain and existing product, support, checkout, download, referral, and activation routes remain in use.
+
+The EMX Software homepage features VOLT Macro, Desktop Flow Lite, and Windows Tweak Dashboard from the existing catalog. Microsoft Store and Chrome Web Store are marked coming soon until actual listings are published. The Account Hub is absent from shared navigation while its direct route remains available for existing users.
 
 The primary visitor should be able to answer these questions quickly:
 

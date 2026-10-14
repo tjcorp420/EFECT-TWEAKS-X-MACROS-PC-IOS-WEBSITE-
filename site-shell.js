@@ -4,11 +4,11 @@
   const page = document.body.dataset.page || "";
   const navigation = [
     ["home", "./index.html", "Home"],
-    ["products", "./products.html", "Products"],
+    ["products", "./products.html", "Software"],
     ["clips", "https://clips.emxtweaks.com/", "Clips · Free"],
     ["compare", "./compare.html", "Compare"],
     ["updates", "./updates.html", "Updates"],
-    ["hub", "./index.html#emx-hub", "Hub"],
+    ["hub", "./index.html#emx-hub", "Community"],
     ["bundles", "./bundles.html", "Bundles"],
     ["macros", "./macros.html", "Macros"],
     ["free", "./index.html?free=1#free-tools", "Free"],
@@ -19,18 +19,17 @@
     ["affiliate", "./affiliate.html", "Affiliate"],
     ["help", "./help.html", "Help"],
     ["faq", "./faq.html", "FAQ"],
-    ["account", "./account.html", "Account"],
   ];
-  const primaryKeys = new Set(["home", "products", "clips", "compare", "updates", "bundles", "macros", "free", "help"]);
+  const primaryKeys = new Set(["home", "products", "clips", "bundles", "macros", "links", "help"]);
   const navLink = ([key, href, label]) => `<a href="${href}"${key === "clips" ? ' class="site-clips-link"' : ""}${page === key ? ' aria-current="page"' : ""}>${label}</a>`;
 
   const header = document.querySelector("[data-site-header]");
   if (header) {
     header.className = "site-header";
     header.innerHTML = `
-      <a class="site-brand" href="./index.html" aria-label="EMX TWEAKS home">
+      <a class="site-brand" href="./index.html" aria-label="EMX Software home">
         <img src="emx-logo-v2.png" width="500" height="500" alt="">
-        <span>EMX <strong>TWEAKS</strong></span>
+        <span>EMX <strong>SOFTWARE</strong></span>
       </a>
       <button class="emx-nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-emx-nav-toggle aria-label="Toggle navigation"><span></span></button>
       <nav id="site-navigation" data-emx-mobile-nav aria-label="Primary navigation">
@@ -55,7 +54,7 @@
         ? `<p class="site-legal-note">Digital products. Licensing and eligibility vary by product. See <a href="./eula.html">License &amp; Keys</a> for details.</p>`
         : `<p class="site-legal-note"><strong>All EMX products are digital — all sales are final.</strong> License keys are machine-bound; an OS reinstall, factory reset, or hardware change can void a key, and keys are not recovered or re-issued for free. Contact <a href="mailto:emxbiz@emxtweaks.com">emxbiz@emxtweaks.com</a>.</p>`;
     footer.innerHTML = `
-      <div><a class="site-brand" href="./index.html"><img src="emx-logo-v2.png" width="500" height="500" alt=""><span>EMX <strong>TWEAKS</strong></span></a><p>Windows software, setup tools, and real product support.</p>${legalNote}</div>
+      <div><a class="site-brand" href="./index.html"><img src="emx-logo-v2.png" width="500" height="500" alt=""><span>EMX <strong>SOFTWARE</strong></span></a><p>Windows apps, creator tools, and real product support.</p>${legalNote}</div>
       <nav aria-label="Footer navigation"><a href="./about.html">About</a><a href="./vouches.html">Reviews</a><a href="./help.html">Help</a><a href="./compare.html">Compare</a><a href="./updates.html">Updates</a><a href="./links.html">EMX Network</a><a href="https://support.emxtweaks.com/">Support</a><a href="./terms.html">Terms</a><a href="./privacy.html">Privacy</a><a href="./refunds.html">Refund Policy</a><a href="./eula.html">License &amp; Keys</a></nav>
     `;
   }

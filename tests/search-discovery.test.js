@@ -26,7 +26,7 @@ test("sitemap exposes unique canonical public pages without private or redirect 
     assert.doesNotMatch(source, /name="robots"[^>]*content="[^"]*noindex/);
     const canonical = source.match(/<link\s+[^>]*rel="canonical"[^>]*href="([^"]+)"/s);
     assert.equal(canonical?.[1], value);
-    assert.match(source, /property="og:site_name" content="EMX TWEAKS"/);
+    assert.match(source, /property="og:site_name" content="EMX Software"/);
     assert.ok(source.includes(`property="og:url" content="${value}"`));
     for (const property of ["og:title", "og:description", "og:image"]) {
       assert.ok(source.includes(`property="${property}"`));

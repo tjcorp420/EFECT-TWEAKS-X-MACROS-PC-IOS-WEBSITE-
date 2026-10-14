@@ -3,17 +3,17 @@
   const grid = document.getElementById("store-featured");
   const status = document.getElementById("featured-status");
   const goals = {
-    fps: [
-      "Tune your gaming PC",
-      "A focused Windows performance pack with system, network, and profile controls.",
+    volt: [
+      "MACRO CONTROL",
+      "Configure keyboard and mouse macros, timing profiles, and saved binds from one Windows app.",
+    ],
+    emx_desktop_flow_lite: [
+      "DESKTOP CUSTOMIZATION",
+      "Shape your desktop with live wallpapers and focused visual controls.",
     ],
     windows_tweak_dashboard: [
-      "Manage Windows changes",
+      "WINDOWS TUNING",
       "Guided Windows tuning with backups, an Undo Center, and action logs.",
-    ],
-    volt: [
-      "Configure your macros",
-      "Keyboard and mouse macros with timing profiles, saved binds, and emergency stop.",
     ],
   };
   const el = (tag, text, className) => {
@@ -47,16 +47,7 @@
       const link = el("a", "Explore product →", "deck-btn deck-btn-ghost");
       link.href = "products.html#product-" + encodeURIComponent(id);
       link.dataset.storeProductLink = id;
-      actions.append(
-        el(
-          "strong",
-          new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-          }).format(product.price),
-        ),
-        link,
-      );
+      actions.append(el("strong", "See current details"), link);
       content.append(actions);
       card.append(image, content);
       grid.append(card);

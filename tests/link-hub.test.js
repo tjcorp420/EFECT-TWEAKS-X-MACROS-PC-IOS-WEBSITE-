@@ -20,8 +20,11 @@ test("link hub keeps emxtweaks.com as the home route and preserves required dest
   assert.match(home, /href="products\.html"/);
   assert.match(home, /href="links\.html"/);
   assert.match(home, /ONE LINK · EVERY OFFICIAL EMX DESTINATION/);
-  assert.match(home, /Your setup\./);
-  assert.match(home, /Shop Windows tools/);
+  assert.match(home, /Software for/);
+  assert.match(home, /Explore software/);
+  assert.match(home, /assets\/brand\/emx-software-mark\.png/);
+  assert.match(home, /Microsoft Store and Chrome Web Store releases are in preparation/);
+  assert.match(home, /Developer verification in progress/);
   assert.doesNotMatch(home, /id="(?:emx-splash|store-entry-intro)"/);
   assert.equal(manifest.start_url, "/");
   for (const subdomain of [
@@ -32,6 +35,28 @@ test("link hub keeps emxtweaks.com as the home route and preserves required dest
     "notes.emxtweaks.com",
   ])
     assert.match(network, new RegExp(subdomain.replaceAll(".", "\\.")));
+});
+
+test("featured software uses current catalog records in the requested order", () => {
+  const featured = read("storefront-home.js");
+  const catalog = read("products.js");
+  const ids = ["volt", "emx_desktop_flow_lite", "windows_tweak_dashboard"];
+  for (const id of ids) assert.match(catalog, new RegExp(`id: "${id}"`));
+  const positions = ids.map((id) => featured.indexOf(`${id}: [`));
+  assert.ok(positions.every((position) => position >= 0));
+  assert.ok(positions[0] < positions[1] && positions[1] < positions[2]);
+  assert.match(featured, /p\.visible !== false/);
+  assert.match(featured, /p\.publishStatus !== "draft"/);
+});
+
+test("future marketplaces are labeled without linking to unpublished listings", () => {
+  const home = read("index.html");
+  const shell = read("site-shell.js");
+  assert.match(home, /MICROSOFT STORE[\s\S]*?Coming soon/);
+  assert.match(home, /CHROME WEB STORE[\s\S]*?Coming soon/);
+  assert.doesNotMatch(home, /apps\.microsoft\.com\/detail|chromewebstore\.google\.com\/detail/);
+  assert.doesNotMatch(shell, /\["account",/);
+  assert.ok(fs.existsSync(path.join(root, "account.html")));
 });
 
 test("public headers share a persistent light and dark theme control", () => {
