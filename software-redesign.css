@@ -26,6 +26,25 @@ html:has(body[data-page="home"]) { overflow-x: clip; }
 .store-intro-actions button:hover { border-color: rgba(169, 251, 104, .8); background: rgba(21, 31, 40, .95); }
 .store-intro-actions button:active { transform: translateY(1px); }
 .store-intro-actions button[hidden] { display: none; }
+/* When a phone refuses autoplay, Play becomes the obvious centred action. */
+.store-intro-actions #store-intro-play {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 28px;
+  border: 1px solid rgba(210, 255, 160, .7);
+  border-radius: 14px;
+  color: #0d150b;
+  background: linear-gradient(180deg, #d2ff9c, #a6f74f 55%, #8fe537);
+  box-shadow: 0 0 40px rgba(150, 255, 70, .35), inset 0 1px rgba(255, 255, 255, .7);
+  font-size: 1rem;
+  transform: translate(-50%, -50%);
+}
+.store-intro-actions #store-intro-play[hidden] { display: none; }
 html.store-intro-active .store-hero *,
 html.store-intro-active .store-hero *::before,
 html.store-intro-active .store-hero *::after { animation-play-state: paused !important; }

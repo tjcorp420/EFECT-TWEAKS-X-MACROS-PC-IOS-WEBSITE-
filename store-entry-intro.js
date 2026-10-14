@@ -60,14 +60,26 @@
     overlay.hidden = true;
     document.documentElement.classList.remove("store-intro-active");
   }
+  // The safety timer always leaves the store reachable, but it is re-armed for
+  // each phase so a slow load, a tap on Play or playback never cut the intro short.
+  function arm(ms) {
+    clearTimeout(timer);
+    timer = setTimeout(dismiss, ms);
+  }
   function start() {
     play.hidden = true;
     video.muted = true;
+    video.preload = "auto";
     sound.setAttribute("aria-pressed", "false");
     sound.textContent = "Sound on";
-    video.play().catch(() => {
+    arm(9000);
+    const attempt = video.play();
+    attempt?.catch?.(() => {
+      if (done) return;
+      // Autoplay was refused (for example Low Power Mode or an in-app browser).
       play.hidden = false;
       play.focus();
+      arm(15000);
     });
   }
   skip.addEventListener("click", dismiss);
@@ -77,8 +89,14 @@
     sound.setAttribute("aria-pressed", String(!video.muted));
     sound.textContent = video.muted ? "Sound on" : "Sound off";
   });
+  video.addEventListener("playing", () => {
+    const remaining = (video.duration - video.currentTime) * 1000;
+    arm(Number.isFinite(remaining) && remaining > 0 ? remaining + 3000 : 9000);
+  });
   video.addEventListener("ended", dismiss);
   video.addEventListener("error", dismiss);
+  // A <source> that cannot load reports its error on the source element, not the video.
+  video.querySelector("source")?.addEventListener("error", dismiss);
   overlay.addEventListener("keydown", (event) => {
     if (event.key === "Escape") dismiss();
     if (event.key === "Tab") {
@@ -90,6 +108,5 @@
     }
   });
   skip.focus({ preventScroll: true });
-  timer = setTimeout(dismiss, 9000);
   start();
 })();

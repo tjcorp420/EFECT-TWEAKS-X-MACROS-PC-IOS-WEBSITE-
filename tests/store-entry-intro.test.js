@@ -9,6 +9,7 @@ function harness(options = {}) {
     nodes[id] = {hidden:true, inert:false, muted:true, events:{}, attributes:{}, addEventListener(k, f){this.events[k]=f;}, setAttribute(k,v){this.attributes[k]=v;}, focus(){}, contains(){return false;}, querySelector(){return null;}, pause(){}, play(){return options.reject ? Promise.reject(new Error('autoplay')) : Promise.resolve();}};
   }
   let timeout;
+  const delays = [];
   const store = new Map(options.seen ? [['emx-store-intro-seen','1']] : []);
   const sessionStorage = {getItem:k=>store.has(k)?store.get(k):null, setItem:(k,v)=>store.set(k,String(v))};
   vm.runInNewContext(source, {
@@ -17,9 +18,9 @@ function harness(options = {}) {
     document: {getElementById:id=>nodes[id], querySelector:s=>nodes[s==='main'?'main':'header'], referrer:options.internal?'https://emxtweaks.com/products.html':'', activeElement:null, body:{}, documentElement:{classList:{add(){},remove(){}}}},
     location:{origin:'https://emxtweaks.com',hash:options.hash||'',search:options.search||''},
     matchMedia:()=>({matches:!!options.reduced}), URL, URLSearchParams,
-    setTimeout:f=>{timeout=f;return 1;},clearTimeout(){},
+    setTimeout:(f,ms)=>{timeout=f;delays.push(ms);return 1;},clearTimeout(){},
   });
-  return {nodes, timeout, store};
+  return {nodes, get timeout(){return timeout;}, store, delays};
 }
 test('direct entrance plays muted and completion restores the shop',()=>{
   const {nodes}=harness({search:'?entry=bio'});
@@ -63,3 +64,20 @@ test('sound control starts muted and allows user initiated audio',()=>{
   assert.equal(nodes['store-intro-video'].muted,false);
   assert.equal(nodes['store-intro-sound'].attributes['aria-pressed'],'true');
 });
+test('a refused autoplay waits for a tap instead of releasing on the load timer',async()=>{
+  const h=harness({search:'?entry=bio',reject:true});
+  await Promise.resolve(); await Promise.resolve();
+  assert.equal(h.nodes['store-intro-play'].hidden,false);
+  assert.equal(h.nodes['store-entry-intro'].hidden,false);
+  h.nodes['store-intro-play'].events.click();
+  assert.equal(h.nodes['store-intro-play'].hidden,true);
+  assert.equal(h.nodes['store-entry-intro'].hidden,false);
+});
+test('playback re-arms the safety timer from the remaining duration',()=>{
+  const h=harness({search:'?entry=bio'});
+  const video=h.nodes['store-intro-video'];
+  video.duration=4; video.currentTime=1;
+  video.events.playing();
+  assert.equal(h.delays.at(-1),6000);
+});
+

@@ -60,11 +60,11 @@
   <body data-page="home" class="link-hub-page deck-page">
     <a class="emx-skip-link" href="#main">Skip to store</a>
     <div id="store-entry-intro" class="store-intro" role="dialog" aria-modal="true" aria-label="EMX Software introduction" hidden>
-      <video id="store-intro-video" muted playsinline preload="metadata" poster="media/store/emx-software-bio-boot-poster.webp" aria-label="EMX Software boot animation">
+      <video id="store-intro-video" muted playsinline webkit-playsinline disablepictureinpicture preload="metadata" poster="media/store/emx-software-bio-boot-poster.webp" aria-label="EMX Software boot animation">
         <source src="media/store/emx-software-bio-boot.mp4" type="video/mp4" />
       </video>
       <div class="store-intro-actions">
-        <button id="store-intro-play" type="button" hidden>Play intro</button>
+        <button id="store-intro-play" type="button" hidden><span aria-hidden="true">▶</span> Play intro</button>
         <button id="store-intro-sound" type="button" aria-pressed="false">Sound on</button>
         <button id="store-intro-skip" type="button">Skip intro →</button>
       </div>
