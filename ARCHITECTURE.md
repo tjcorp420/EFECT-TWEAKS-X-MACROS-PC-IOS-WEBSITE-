@@ -12,6 +12,9 @@ site.css/site-shell.js  shared public-route layout and navigation
 labs.html/css/js        catalog-driven free-utility and public-experiment hub
 catalog.css/catalog.js  catalog cards, filters, galleries, and product quick-view modal
 storefront-intro.*      database-driven cinematic home introduction
+software-redesign.css   homepage showroom scene, glass system and responsive layout
+software-showroom.js    optional pointer/scroll depth, tilt and reveal for the homepage
+store-entry-intro.js    ?entry=bio boot video with Sound on, Skip and timeout recovery
 affiliate-admin.*       Affiliate Command Center
 admin.*                 Product Control Center
 products.js             catalog seed and browser fallback
@@ -64,6 +67,8 @@ Do not migrate to Next.js/React/Tailwind solely because the pasted planning chat
 - testability and maintenance.
 
 Until that decision is accepted, build shared primitives in plain HTML/CSS/JavaScript and keep production routing stable.
+
+October 2026 showroom redesign decision: React + Vite was evaluated and not adopted. The dimensional hero, glass surfaces and pointer depth use CSS transforms, blend modes and a small progressive-enhancement script, which plain HTML supports fully. A framework would add a build step to every route, risk the existing rewrites, metadata and Vercel Functions, and complicate rollback without enabling a visual capability the static stack lacks.
 
 ## Verification pipeline
 

@@ -373,6 +373,63 @@ body:not(.deck-page) .site-header { position: relative; z-index: 50; }
   .site-brand img { width: 42px; height: 42px; }
 }
 
+/* Floating glass console: the shared header used by every public page. */
+.site-header {
+  position: sticky;
+  top: 10px;
+  z-index: 70;
+  width: min(1320px, calc(100% - 32px));
+  min-height: 70px;
+  margin: 10px auto 0;
+  padding: 8px 10px 8px 16px;
+  border: 1px solid rgba(205, 225, 255, .14);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(26, 24, 48, .58), rgba(8, 7, 18, .5));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .09), inset 0 -1px rgba(0, 0, 0, .4), 0 18px 50px -12px rgba(0, 0, 0, .55);
+  backdrop-filter: blur(18px) saturate(1.5);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  transition: background .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+.site-header::before {
+  content: "";
+  position: absolute;
+  right: 22px;
+  bottom: -1px;
+  left: 22px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(182, 255, 92, .7), rgba(180, 140, 255, .7) 50%, rgba(100, 228, 255, .7), transparent);
+  pointer-events: none;
+}
+.site-header.is-scrolled { border-color: rgba(205, 225, 255, .18); background: linear-gradient(180deg, rgba(20, 18, 38, .86), rgba(8, 7, 18, .82)); box-shadow: inset 0 1px rgba(255, 255, 255, .09), 0 22px 60px -14px rgba(0, 0, 0, .75); }
+.site-header .site-brand .site-brand-wordmark { display: block; width: 138px; height: auto; border: 0; border-radius: 0; object-fit: contain; filter: drop-shadow(0 0 14px rgba(140, 110, 255, .28)); transition: filter .25s; }
+.site-header .site-brand:hover .site-brand-wordmark { filter: drop-shadow(0 0 18px rgba(182, 255, 92, .4)); }
+.site-header .site-brand:focus-visible { outline: 2px solid #b6ff5c; outline-offset: 4px; border-radius: 8px; }
+.site-header nav { gap: clamp(2px, .6vw, 8px); }
+.site-header nav > a { padding: 10px 14px; border: 1px solid transparent; border-radius: 10px; color: #cfc8da; }
+.site-header nav > a::after { right: 14px; left: 14px; bottom: 5px; height: 1px; background: linear-gradient(90deg, #b6ff5c, #64e4ff); }
+.site-header nav > a:hover { color: #fff; background: rgba(255, 255, 255, .05); }
+.site-header nav > a[aria-current="page"] { border-color: rgba(182, 255, 92, .45); color: #eaffd4; background: linear-gradient(180deg, rgba(182, 255, 92, .14), rgba(182, 255, 92, .04)); box-shadow: inset 0 1px rgba(255, 255, 255, .12), 0 0 18px rgba(182, 255, 92, .14); }
+.site-header nav > a[aria-current="page"]::after { transform: scaleX(0); }
+.site-header nav > a:focus-visible, .site-more summary:focus-visible { outline: 2px solid #b6ff5c; outline-offset: 2px; }
+.site-header nav a.site-clips-link { color: #d8ffb0; }
+.site-more summary { border-color: rgba(205, 225, 255, .2); background: rgba(255, 255, 255, .04); }
+.site-more-links { border-color: rgba(205, 225, 255, .16); background: rgba(12, 10, 24, .96); box-shadow: 0 30px 70px -20px rgba(0, 0, 0, .8); backdrop-filter: blur(18px); }
+.site-header .emx-nav-toggle { border-color: rgba(205, 225, 255, .22); background: rgba(255, 255, 255, .05); }
+:root[data-theme="light"] .site-header,
+:root[data-theme="light"] .site-header.is-scrolled { border-color: rgba(67, 35, 87, .16); background: rgba(255, 255, 255, .82); box-shadow: 0 18px 44px -20px rgba(62, 34, 76, .3); }
+:root[data-theme="light"] .site-header .site-brand .site-brand-wordmark { filter: drop-shadow(0 1px 1px rgba(20, 10, 30, .5)); }
+:root[data-theme="light"] .site-header nav > a[aria-current="page"] { border-color: rgba(61, 105, 0, .4); color: #234000; background: #eefbe2; box-shadow: none; }
+:root[data-theme="light"] .site-header nav > a:hover { background: rgba(80, 40, 110, .06); }
+:root[data-theme="light"] .site-header nav a.site-clips-link { color: #2f5a00; }
+:root[data-theme="light"] .site-more-links { background: #fff; }
+@media (max-width: 720px) {
+  .site-header { top: 8px; width: calc(100% - 24px); min-height: 60px; margin-top: 8px; padding: 8px 8px 8px 14px; }
+  .site-header .site-brand .site-brand-wordmark { width: 112px; }
+  .site-header nav.is-open { max-height: calc(100svh - 96px); overflow-y: auto; padding-bottom: 6px; }
+  .site-header nav > a { border-radius: 0; border-width: 0 0 1px; border-bottom-color: rgba(191, 172, 207, .1); }
+  .site-header nav > a[aria-current="page"] { border-radius: 10px; border-width: 1px; }
+}
+
 /* Carry the command-stage language through the catalog and public detail pages. */
 .page-hero {
   position: relative;

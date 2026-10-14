@@ -8,6 +8,8 @@ PATTERNS = (
     "app-screenshots/emx-windows-tweak-dashboard-*.png",
     "assets/emx-os/*.png",
     "assets/emx-clips/*.png",
+    "assets/emx-volt-v0.1.76/dashboard.png",
+    "assets/emx-desktop-flow-lite/cover.png",
     "assets/free-tools/*.png",
     "assets/free-tools/*.jpg",
     "emx-aim-trainer-command-center.png",

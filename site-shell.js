@@ -21,7 +21,7 @@
     ["help", "./help.html", "Help"],
     ["faq", "./faq.html", "FAQ"],
   ];
-  const primaryKeys = new Set(["products", "clips", "extensions", "links"]);
+  const primaryKeys = new Set(["home", "products", "clips", "extensions", "links"]);
   const navLink = ([key, href, label]) => `<a href="${href}"${key === "clips" ? ' class="site-clips-link"' : ""}${page === key ? ' aria-current="page"' : ""}>${label}</a>`;
 
   const header = document.querySelector("[data-site-header]");
@@ -29,8 +29,7 @@
     header.className = "site-header";
     header.innerHTML = `
       <a class="site-brand" href="./index.html" aria-label="EMX Software home">
-        <img src="emx-logo-v2.png" width="500" height="500" alt="">
-        <span><b>EMX</b><strong>SOFTWARE</strong></span>
+        <img class="site-brand-wordmark" src="./assets/brand/emx-software-wordmark-320.webp" width="320" height="123" alt="">
       </a>
       <button class="emx-nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-emx-nav-toggle aria-label="Toggle navigation"><span></span></button>
       <nav id="site-navigation" data-emx-mobile-nav aria-label="Primary navigation">
