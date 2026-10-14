@@ -920,3 +920,20 @@ html.showroom-motion .store-showcase.is-revealed .store-product { animation: sr-
 @media (prefers-reduced-motion: reduce) { .store-showcase::before { filter: none; } }
 /* On very wide screens the plate's pedestal falls behind the path tiles; drop its caption. */
 @media (min-width: 1600px) { .rig-caption { display: none; } }
+
+/* Spotlight apps: Desktop Flow Lite and Taskbar Studio lead the catalog as wide display cases. */
+@media (min-width: 1181px) {
+  .store-featured { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .store-featured > .store-product { grid-column: span 2; }
+  .store-featured > .store-product.is-spotlight {
+    grid-column: span 3;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+  .store-product.is-spotlight .store-product-media { margin: 10px 0 10px 10px; aspect-ratio: auto; min-height: 260px; }
+  .store-product.is-spotlight .store-product-copy { padding: 22px 22px 20px; }
+  .store-product.is-spotlight h3 { font-size: 1.35rem; }
+}
+.store-product.is-spotlight { border-color: color-mix(in srgb, var(--accent) 34%, transparent); }
+.store-product.is-spotlight::before { opacity: 1; height: 2px; }

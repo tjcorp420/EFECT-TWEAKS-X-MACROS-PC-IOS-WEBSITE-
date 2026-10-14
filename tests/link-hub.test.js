@@ -44,7 +44,7 @@ test("link hub keeps emxtweaks.com as the home route and preserves required dest
 test("featured software uses current catalog records in the requested order", () => {
   const featured = read("storefront-home.js");
   const catalog = read("products.js");
-  const ids = ["volt", "emx_desktop_flow_lite", "windows_tweak_dashboard", "clips"];
+  const ids = ["emx_desktop_flow_lite", "emx_taskbar_studio", "volt", "windows_tweak_dashboard", "clips"];
   for (const id of ids) assert.match(catalog, new RegExp(`id: "${id}"`));
   const positions = ids.map((id) => featured.indexOf(`${id}: [`));
   assert.ok(positions.every((position) => position >= 0));
@@ -95,4 +95,15 @@ test("public headers share a persistent light and dark theme control", () => {
     siteStyles,
     /explicit component colors prevent white-on-white regressions/,
   );
+});
+
+test("the /links hub leads with the store, spotlight apps and the Payhip storefront", () => {
+  const hub = read("links.html");
+  const home = read("index.html");
+  for (const href of ["./index.html", "./products.html#product-emx_desktop_flow_lite", "./products.html#product-emx_taskbar_studio", "https://payhip.com/EMXTWEAKS"])
+    assert.ok(hub.includes(`href="${href}"`), href);
+  assert.match(hub, /Microsoft Store<\/b><small>Coming soon/);
+  assert.match(hub, /Chrome Web Store<\/b><small>Coming soon/);
+  assert.doesNotMatch(hub, /apps\.microsoft\.com|chromewebstore\.google\.com/);
+  assert.match(home, /href="https:\/\/payhip\.com\/EMXTWEAKS"/);
 });

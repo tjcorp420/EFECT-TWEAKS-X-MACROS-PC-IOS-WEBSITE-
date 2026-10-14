@@ -2,14 +2,20 @@
   "use strict";
   const grid = document.getElementById("store-featured");
   const status = document.getElementById("featured-status");
+  // Desktop Flow Lite and Taskbar Studio lead as the two spotlight apps.
+  const spotlight = new Set(["emx_desktop_flow_lite", "emx_taskbar_studio"]);
   const goals = {
+    emx_desktop_flow_lite: [
+      "DESKTOP CUSTOMIZATION",
+      "Shape your desktop with live wallpapers, rotation, custom cursors, and focused visual controls.",
+    ],
+    emx_taskbar_studio: [
+      "TASKBAR CUSTOMIZATION",
+      "Build your own Windows taskbar with floating layouts, icon shapes, image or MP4 backgrounds, saved profiles, and an audio panel.",
+    ],
     volt: [
       "MACRO CONTROL",
       "Configure keyboard and mouse macros, timing profiles, and saved binds from one Windows app.",
-    ],
-    emx_desktop_flow_lite: [
-      "DESKTOP CUSTOMIZATION",
-      "Shape your desktop with live wallpapers and focused visual controls.",
     ],
     windows_tweak_dashboard: [
       "WINDOWS TUNING",
@@ -33,11 +39,12 @@
   const accents = {
     volt: "lime",
     emx_desktop_flow_lite: "violet",
+    emx_taskbar_studio: "cyan",
     windows_tweak_dashboard: "cyan",
     clips: "lime",
   };
   const optimizedImage =
-    /(?:app-screenshots\/emx-windows-tweak-dashboard|assets\/emx-clips\/|assets\/emx-volt-v0\.1\.76\/dashboard|assets\/emx-desktop-flow-lite\/cover)[^/]*\.png$/;
+    /(?:app-screenshots\/emx-windows-tweak-dashboard|assets\/emx-clips\/|assets\/emx-volt-v0\.1\.76\/dashboard|assets\/emx-desktop-flow-lite\/cover|assets\/emx-taskbar-studio\/appearance)[^/]*\.png$/;
   function productImage(product) {
     const image = el("img");
     image.src = product.image;
@@ -52,7 +59,7 @@
     const webp = el("source");
     webp.type = "image/webp";
     webp.srcset = `${stem}-640.webp 640w, ${stem}-960.webp 960w`;
-    webp.sizes = "(max-width: 760px) 92vw, (max-width: 1080px) 46vw, 300px";
+    webp.sizes = spotlight.has(product.id) ? "(max-width: 760px) 92vw, 600px" : "(max-width: 760px) 92vw, (max-width: 1080px) 46vw, 400px";
     picture.append(webp, image);
     return picture;
   }
@@ -71,6 +78,7 @@
       card.dataset.storeProduct = id;
       card.dataset.accent = accents[id] || "lime";
       card.dataset.tilt = "";
+      if (spotlight.has(id)) card.classList.add("is-spotlight");
       const media = el("div", null, "store-product-media");
       media.append(productImage(product), el("span", null, "store-product-glare"));
       if (product.saleBadge)

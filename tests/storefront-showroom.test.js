@@ -14,6 +14,7 @@ function element(tag) {
     dataset: {},
     attributes: {},
     style: { setProperty() {} },
+    classList: { names: new Set(), add(n) { this.names.add(n); } },
     hidden: false,
     textContent: "",
     append(...nodes) { this.children.push(...nodes); },
@@ -47,7 +48,7 @@ function renderFeatured() {
 test("featured display cases render catalog facts and prices without inventing values", () => {
   const { nodes, products } = renderFeatured();
   const cards = nodes["store-featured"].children;
-  assert.deepEqual(cards.map((card) => card.dataset.storeProduct), ["volt", "emx_desktop_flow_lite", "windows_tweak_dashboard", "clips"]);
+  assert.deepEqual(cards.map((card) => card.dataset.storeProduct), ["emx_desktop_flow_lite", "emx_taskbar_studio", "volt", "windows_tweak_dashboard", "clips"]);
   const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
   for (const card of cards) {
     const product = products.find((item) => item.id === card.dataset.storeProduct);
