@@ -5,6 +5,12 @@
  * server-side, once per minute per edge region, and hands the page back only
  * what the upstream services actually returned.
  *
+ * It lives in api/_lib/ rather than api/ on purpose: Vercel counts every file
+ * under api/ as a Serverless Function, and this project is already at the
+ * plan limit. The public route /api/project-emx-status is a rewrite onto
+ * api/site-settings.js, which delegates here. Nothing about the response
+ * changes.
+ *
  * Rules this file exists to enforce:
  *   - Never invent, round, estimate or carry over a number. A source either
  *     answers or is reported as unavailable, with a reason.
@@ -14,7 +20,7 @@
  *     and is validated against a list that has no "live" or "operational" in it.
  */
 
-const content = require("../content/project-emx.json");
+const content = require("../../content/project-emx.json");
 
 const UPSTREAM_TIMEOUT_MS = 6000;
 const ALLOWED_PHASES = new Set(["development", "playtesting", "open-beta"]);

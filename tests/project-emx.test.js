@@ -6,7 +6,7 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const content = JSON.parse(read("content/project-emx.json"));
-const statusApi = require("../api/project-emx-status.js");
+const statusApi = require("../api/_lib/project-emx-status.js");
 
 const GAME_PAGES = ["news.html", "game.html", "community.html", "playtesting.html", "roadmap.html"];
 
@@ -116,7 +116,7 @@ test("the status phase list cannot express a released game", () => {
   assert.ok(!statusApi.ALLOWED_PHASES.has("operational"));
   // Checked against the code only, with comments stripped, so that explaining
   // the rule in prose does not look like breaking it.
-  const code = read("api/project-emx-status.js")
+  const code = read("api/_lib/project-emx-status.js")
     .replace(/\/\*[\s\S]*?\*\//g, "")
     .replace(/^\s*\/\/.*$/gm, "");
   assert.doesNotMatch(code, /["']live["']|["']operational["']/i);
@@ -310,6 +310,39 @@ test("the storefront keeps every checkout route and product link", () => {
   const redirects = routing.redirects.map((route) => route.source);
   assert.ok(redirects.includes("/license"));
   assert.ok(redirects.includes("/labs"));
+});
+
+/* ------------------------------------------- deployable on this plan ----- */
+
+test("api/ stays within the Serverless Function budget the deploy allows", () => {
+  // Vercel turns every file directly under api/ into a Serverless Function and
+  // rejects the deployment past the plan limit - the build succeeds and then
+  // fails at "Deploying outputs", which is how a 13th file broke production
+  // once already. Shared code belongs in api/_lib/, which is not counted.
+  const functions = fs
+    .readdirSync(path.join(root, "api"), { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".js"))
+    .map((entry) => entry.name);
+  assert.ok(
+    functions.length <= 12,
+    `api/ has ${functions.length} functions, over the 12 the plan allows: ${functions.join(", ")}`,
+  );
+  assert.ok(!functions.includes("project-emx-status.js"));
+  assert.ok(fs.existsSync(path.join(root, "api/_lib/project-emx-status.js")));
+});
+
+test("the public status route reaches the handler through a rewrite", () => {
+  const routing = JSON.parse(read("vercel.json"));
+  const route = routing.rewrites.find((entry) => entry.source === "/api/project-emx-status");
+  assert.ok(route, "missing the /api/project-emx-status rewrite");
+  assert.equal(route.destination, "/api/site-settings?resource=project-emx-status");
+  // The page must keep calling the public path, not the host function.
+  assert.match(read("project-emx.js"), /\/api\/project-emx-status/);
+  // And the host function must actually delegate.
+  const host = read("api/site-settings.js");
+  assert.match(host, /require\("\.\/_lib\/project-emx-status"\)/);
+  assert.match(host, /searchParams\.get\("resource"\)/);
+  assert.match(host, /=== "project-emx-status"\) return projectEmxStatus\(req, res\)/);
 });
 
 /* --------------------------------------------------- the intro is gone --- */

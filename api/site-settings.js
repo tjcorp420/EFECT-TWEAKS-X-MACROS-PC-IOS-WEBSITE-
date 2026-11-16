@@ -1,4 +1,9 @@
 const { requireAdmin } = require("./_lib/admin-auth");
+// PROJECT EMX live status is served from this function rather than its own file
+// under api/: Vercel turns every api/*.js into a Serverless Function and the
+// project is at its plan limit. vercel.json rewrites /api/project-emx-status
+// here, and the response is produced by the module below, unchanged.
+const projectEmxStatus = require("./_lib/project-emx-status");
 
 const KEY = "emx:storefront-settings:v1";
 const DEFAULTS = Object.freeze({
@@ -85,6 +90,11 @@ async function write(settings) {
 }
 module.exports = async function handler(req, res) {
   try {
+    // Read the marker off the URL rather than req.query so this behaves the
+    // same however the platform parses the request.
+    const requested = new URL(req.url || "/", "http://localhost").searchParams.get("resource");
+    if (requested === "project-emx-status") return projectEmxStatus(req, res);
+
     if (req.method === "GET")
       return json(res, { ok: true, settings: await read() });
     if (req.method !== "POST")

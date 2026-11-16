@@ -208,6 +208,10 @@
       "destination": "/index.html"
     },
     {
+      "source": "/api/project-emx-status",
+      "destination": "/api/site-settings?resource=project-emx-status"
+    },
+    {
       "source": "/c/:creator",
       "destination": "/index.html"
     },
