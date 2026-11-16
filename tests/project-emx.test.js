@@ -146,6 +146,10 @@ test("the dashboard renders only fetched values and has no placeholder numbers",
 test("the homepage leads with PROJECT EMX and keeps the store underneath", () => {
   const home = read("index.html");
   assert.match(home, /<h1 class="pe-title" id="pe-title">/);
+  // data-text feeds the sheen overlay on the wordmark; without it the effect
+  // silently disappears.
+  assert.match(home, /<span class="pe-title-main" data-text="EMX">EMX<\/span>/);
+  assert.match(read("project-emx.css"), /content: attr\(data-text\)/);
   assert.match(home, /The island is <em>calling\.<\/em>/);
   assert.match(home, /OG movement\. Modern assets\. Battle Royale reimagined\./);
   for (const mode of ["Build Mode", "Zero Build", "Squads", "Competitive", "Live Events"]) {

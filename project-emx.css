@@ -646,3 +646,470 @@
   .pe-btn:hover,
   .pe-more-grid a:hover { transform: none; }
 }
+
+/* ===========================================================================
+   PROJECT EMX - finish pass.
+   Everything below sharpens the same layout rather than changing it: hairline
+   rules instead of borders, real glass, HUD corner brackets, numbered modules
+   and one slow sheen across the title. Motion is slow and small on purpose,
+   and all of it is switched off under prefers-reduced-motion at the end.
+   =========================================================================== */
+
+.pe-scope {
+  --pe-hair: rgba(140, 190, 255, .16);
+  --pe-hair-lit: rgba(120, 190, 255, .42);
+  --pe-glass: rgba(10, 18, 42, .5);
+  --pe-glass-lit: rgba(18, 32, 68, .62);
+  --pe-inner-top: inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+/* ---------------------------------------------------------- hero frame --- */
+
+/* A fine scanline field over the whole hero. Low enough to read as texture
+   rather than as a pattern. */
+.pe-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(180, 220, 255, .035) 0 1px,
+    transparent 1px 3px
+  );
+  mix-blend-mode: screen;
+}
+
+/* HUD brackets around the hero content. */
+.pe-hero-inner::before,
+.pe-hero-inner::after {
+  content: "";
+  position: absolute;
+  width: clamp(26px, 4vw, 54px);
+  height: clamp(26px, 4vw, 54px);
+  pointer-events: none;
+  opacity: .72;
+}
+.pe-hero-inner::before {
+  top: clamp(-34px, -3vw, -12px);
+  left: clamp(-10px, 1vw, 24px);
+  border-top: 1px solid var(--pe-hair-lit);
+  border-left: 1px solid var(--pe-hair-lit);
+}
+.pe-hero-inner::after {
+  right: clamp(-10px, 1vw, 24px);
+  bottom: clamp(-34px, -3vw, -12px);
+  border-right: 1px solid var(--pe-hair-lit);
+  border-bottom: 1px solid var(--pe-hair-lit);
+}
+
+.pe-kicker {
+  padding: 7px 14px;
+  border: 1px solid var(--pe-hair);
+  border-radius: 999px;
+  background: var(--pe-glass);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--pe-inner-top);
+  font-size: clamp(9px, 1.1vw, 11px);
+  letter-spacing: .38em;
+  text-indent: .38em;
+}
+.pe-kicker span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pe-blue-bright);
+  box-shadow: 0 0 10px var(--pe-blue-bright);
+  animation: pe-breathe 3.4s ease-in-out infinite;
+}
+@keyframes pe-breathe {
+  50% { opacity: .35; }
+}
+
+/* ------------------------------------------------------------- title ----- */
+
+.pe-title-top {
+  font-weight: 600;
+  letter-spacing: .42em;
+  text-indent: .42em;
+  font-size: clamp(20px, 3.4vw, 40px);
+  color: var(--pe-silver);
+  text-shadow: none;
+}
+
+/* The wordmark gets a brighter metal ramp and a slow sheen that travels across
+   it once every ten seconds. */
+.pe-title-main {
+  position: relative;
+  background: linear-gradient(176deg, #ffffff 2%, #d7ecff 20%, #74c0ff 48%, #1f8cff 72%, #0a4ea6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 1px rgba(255, 255, 255, .5)) drop-shadow(0 10px 40px rgba(31, 140, 255, .45));
+}
+.pe-title-main::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 38%, rgba(255, 255, 255, .92) 50%, transparent 62%);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: pe-sheen 10s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes pe-sheen {
+  0%, 62% { background-position: 170% 0; }
+  88%, 100% { background-position: -70% 0; }
+}
+
+.pe-headline {
+  letter-spacing: -.005em;
+  text-shadow: 0 2px 26px rgba(4, 6, 15, .9);
+}
+.pe-tagline {
+  font-size: clamp(11px, 1.35vw, 15px);
+  letter-spacing: .24em;
+  color: var(--pe-silver-dim);
+}
+.pe-rule {
+  width: min(320px, 70%);
+  background: linear-gradient(90deg, transparent, var(--pe-hair-lit) 35%, var(--pe-blue-bright) 50%, var(--pe-hair-lit) 65%, transparent);
+  opacity: .8;
+}
+
+/* ----------------------------------------------------------- buttons ----- */
+
+.pe-btn {
+  padding-block: 15px;
+  border-color: var(--pe-hair);
+  background: var(--pe-glass);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--pe-inner-top);
+  letter-spacing: .16em;
+  overflow: hidden;
+}
+/* A light sweeps across the face on hover instead of the block changing colour. */
+.pe-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 35%, rgba(170, 220, 255, .16) 50%, transparent 65%);
+  background-size: 250% 100%;
+  background-position: 160% 0;
+  transition: background-position .7s ease;
+  pointer-events: none;
+}
+.pe-btn:hover::before,
+.pe-btn:focus-visible::before { background-position: -60% 0; }
+.pe-btn:hover,
+.pe-btn:focus-visible {
+  border-color: var(--pe-hair-lit);
+  background: var(--pe-glass-lit);
+  box-shadow: var(--pe-inner-top), 0 16px 44px -18px rgba(31, 140, 255, .9);
+}
+.pe-btn-discord {
+  border-color: rgba(92, 182, 255, .44);
+  background:
+    linear-gradient(180deg, rgba(31, 140, 255, .22), rgba(10, 18, 42, .6));
+  box-shadow: var(--pe-inner-top), 0 20px 50px -22px rgba(31, 140, 255, .95);
+}
+.pe-btn[aria-disabled="true"]::before { content: none; }
+
+/* -------------------------------------------------------- mode strip ----- */
+
+.pe-modes {
+  counter-reset: pe-mode;
+  border: 1px solid var(--pe-hair);
+  border-radius: 2px;
+  background: var(--pe-glass);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--pe-inner-top);
+  overflow: hidden;
+}
+.pe-modes li {
+  counter-increment: pe-mode;
+  position: relative;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 20px 16px;
+  border-left-color: var(--pe-hair);
+  font-size: clamp(9px, 1vw, 12px);
+  letter-spacing: .18em;
+  transition: background .25s ease, color .25s ease;
+}
+/* Module numbers come from a counter, so the markup stays clean. */
+.pe-modes li::before {
+  content: counter(pe-mode, decimal-leading-zero);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--pe-blue-bright);
+  opacity: .55;
+}
+/* A hairline that grows along the bottom of the module on hover. */
+.pe-modes li::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--pe-blue), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s cubic-bezier(.22, .68, .3, 1);
+}
+.pe-modes li:hover { background: rgba(31, 140, 255, .07); }
+.pe-modes li:hover::after { transform: scaleX(1); }
+.pe-modes svg { opacity: .9; }
+
+/* --------------------------------------------------------- dashboard ----- */
+
+.pe-dash,
+.pe-section {
+  border-top-color: var(--pe-hair);
+  border-bottom-color: var(--pe-hair);
+}
+.pe-dash-head h2,
+.pe-section h2 {
+  position: relative;
+  padding-left: 16px;
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+.pe-dash-head h2::before,
+.pe-section h2::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 3px;
+  height: 1.05em;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--pe-blue-bright), var(--pe-violet));
+  box-shadow: 0 0 14px rgba(31, 140, 255, .6);
+}
+.pe-dash-stamp {
+  padding: 6px 12px;
+  border: 1px solid var(--pe-hair);
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: .2em;
+}
+
+.pe-tiles { gap: 14px; }
+
+.pe-tile {
+  padding: 22px;
+  border: 1px solid var(--pe-hair);
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--pe-glass-lit), var(--pe-glass));
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--pe-inner-top);
+  clip-path: none;
+  overflow: hidden;
+  transition: border-color .3s ease, transform .3s ease, box-shadow .3s ease;
+}
+/* Hairline along the top edge, brightest on the live tiles. */
+.pe-tile::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--pe-hair-lit) 20%, var(--pe-blue-bright) 50%, var(--pe-hair-lit) 80%, transparent);
+  opacity: .5;
+}
+/* Corner bracket, bottom right. */
+.pe-tile::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 12px;
+  height: 12px;
+  border-right: 1px solid var(--pe-hair-lit);
+  border-bottom: 1px solid var(--pe-hair-lit);
+  opacity: .5;
+}
+.pe-tile:hover {
+  transform: translateY(-2px);
+  border-color: var(--pe-hair-lit);
+  box-shadow: var(--pe-inner-top), 0 22px 50px -26px rgba(31, 140, 255, .9);
+}
+.pe-tile[data-state="ok"]::before { opacity: 1; }
+.pe-tile[data-state="loading"]::before,
+.pe-tile[data-state="empty"]::before,
+.pe-tile[data-state="unavailable"]::before {
+  background: linear-gradient(90deg, transparent, rgba(150, 165, 195, .5), transparent);
+  opacity: .5;
+}
+
+.pe-tile-label {
+  font-size: 9px;
+  letter-spacing: .26em;
+  color: var(--pe-silver-dim);
+}
+.pe-tile[data-state="ok"] .pe-tile-label { color: var(--pe-blue-bright); }
+.pe-tile-value {
+  font-weight: 600;
+  letter-spacing: -.01em;
+  text-shadow: 0 0 34px rgba(31, 140, 255, .35);
+}
+.pe-tile-note { font-size: 11.5px; letter-spacing: .01em; }
+
+.pe-pulse {
+  width: 7px;
+  height: 7px;
+  margin-right: 11px;
+  box-shadow: 0 0 10px var(--pe-blue-bright), 0 0 0 0 rgba(92, 182, 255, .55);
+  vertical-align: middle;
+}
+
+.pe-dash-foot {
+  padding-top: 16px;
+  border-top: 1px solid var(--pe-hair);
+  font-size: 10.5px;
+  letter-spacing: .1em;
+}
+.pe-dash-foot strong { color: var(--pe-silver); font-weight: 600; }
+.pe-dash-foot a { text-decoration: none; border-bottom: 1px solid var(--pe-hair-lit); }
+.pe-dash-foot a:hover { color: #fff; border-bottom-color: var(--pe-blue-bright); }
+
+/* ------------------------------------------------------ more from EMX ---- */
+
+.pe-more-head { letter-spacing: .42em; text-indent: .42em; font-size: clamp(9px, 1vw, 11px); }
+.pe-more-grid { gap: 14px; }
+.pe-more-grid a {
+  position: relative;
+  padding: 20px;
+  border: 1px solid var(--pe-hair);
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--pe-glass-lit), var(--pe-glass));
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--pe-inner-top);
+  clip-path: none;
+  overflow: hidden;
+}
+/* The arrow slides in from the edge rather than sitting there permanently. */
+.pe-more-grid a::after {
+  content: "→";
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translate(8px, -50%);
+  color: var(--pe-blue-bright);
+  font-size: 15px;
+  opacity: 0;
+  transition: transform .3s ease, opacity .3s ease;
+}
+.pe-more-grid a:hover::after,
+.pe-more-grid a:focus-visible::after { transform: translate(0, -50%); opacity: 1; }
+.pe-more-grid a:hover,
+.pe-more-grid a:focus-visible {
+  border-color: var(--pe-hair-lit);
+  box-shadow: var(--pe-inner-top), 0 20px 44px -24px rgba(31, 140, 255, .9);
+}
+.pe-more-grid b { font-weight: 600; letter-spacing: .16em; font-size: 12px; }
+.pe-more-grid small { letter-spacing: .1em; }
+.pe-signature { letter-spacing: .46em; text-indent: .46em; opacity: .7; }
+
+/* ----------------------------------------------------- inner pages ------- */
+
+.pe-page h1 { font-weight: 600; letter-spacing: -.005em; }
+.pe-page-lead { color: var(--pe-silver-dim); }
+.pe-card,
+.pe-stub,
+.pe-empty {
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--pe-glass-lit), var(--pe-glass));
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--pe-inner-top);
+  clip-path: none;
+}
+.pe-card {
+  border: 1px solid var(--pe-hair);
+  transition: border-color .3s ease, transform .3s ease;
+}
+.pe-card:hover { transform: translateY(-2px); border-color: var(--pe-hair-lit); }
+.pe-card h3 { font-weight: 600; letter-spacing: .12em; }
+.pe-card-time { letter-spacing: .24em; opacity: .85; }
+.pe-stub { border-color: rgba(150, 165, 195, .2); }
+.pe-stub-flag { border-radius: 999px; letter-spacing: .24em; }
+.pe-empty { border: 1px dashed rgba(150, 165, 195, .3); }
+.pe-section-note { letter-spacing: .02em; }
+
+/* ---------------------------------------------------------- restraint ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  .pe-kicker span,
+  .pe-title-main::after { animation: none; }
+  .pe-title-main::after { opacity: 0; }
+  .pe-btn::before,
+  .pe-modes li::after,
+  .pe-more-grid a::after,
+  .pe-tile,
+  .pe-card { transition: none; }
+  .pe-tile:hover,
+  .pe-card:hover { transform: none; }
+}
+
+/* --------------------------------------------------------- corrections --- */
+
+/* The tagline is one line on desktop; at 46ch it broke after "BATTLE". */
+.pe-tagline { max-width: 64ch; }
+
+/* Pull the HUD brackets in so they frame the hero copy instead of drifting out
+   towards the header. */
+.pe-hero-inner::before {
+  top: clamp(-18px, -1vw, -6px);
+  left: clamp(4px, 3vw, 64px);
+}
+.pe-hero-inner::after {
+  right: clamp(4px, 3vw, 64px);
+  bottom: clamp(-18px, -1vw, -6px);
+}
+
+/* Five tiles across on a wide screen rather than four and a stretched orphan. */
+.pe-tiles { grid-template-columns: repeat(auto-fit, minmax(206px, 1fr)); }
+@media (max-width: 1180px) {
+  .pe-tiles { grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); }
+}
+
+/* The brackets framed the full content column, which left them floating in
+   empty space beside centred copy. Cleaner without them. */
+.pe-hero-inner::before,
+.pe-hero-inner::after { content: none; }
+
+/* Tagline: one line on a wide screen, and a balanced break rather than an
+   orphaned last word when it does wrap. */
+.pe-tagline {
+  max-width: min(100%, 880px);
+  letter-spacing: .18em;
+  text-wrap: balance;
+}
+
+/* Five equal columns squeezed "OPEN BETA" onto two lines. On a wide screen the
+   home dashboard runs three tiles then two wider ones, which gives the values
+   room and reads as a deliberate rhythm rather than a stretched orphan.
+   Scoped to .pe-dash so the two-tile grids on Game Info and Community keep
+   their own layout. */
+@media (min-width: 1020px) {
+  .pe-dash .pe-tiles { grid-template-columns: repeat(6, 1fr); }
+  .pe-dash .pe-tile { grid-column: span 2; }
+  .pe-dash .pe-tile:nth-child(4),
+  .pe-dash .pe-tile:nth-child(5) { grid-column: span 3; }
+}
+@media (max-width: 1019px) {
+  .pe-tiles { grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); }
+}
