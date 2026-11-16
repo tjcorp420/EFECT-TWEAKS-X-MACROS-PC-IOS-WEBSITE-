@@ -10,7 +10,7 @@
   },
   "discord": {
     "_comment": "invite = the PROJECT EMX server invite code only (the part after discord.gg/). While it is empty the JOIN DISCORD buttons say 'Invite coming soon' and the member tile reads 'Not connected'. No placeholder invite is ever shown.",
-    "invite": "",
+    "invite": "hpuxcvaUNV",
     "serverName": "PROJECT EMX"
   },
   "status": {

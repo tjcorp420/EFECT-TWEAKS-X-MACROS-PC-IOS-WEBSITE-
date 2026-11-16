@@ -30,10 +30,13 @@ test("the content file is the single source of truth and carries no invented ent
     }
   }
 
-  // An invite is either a real code or absent - never a placeholder.
+  // An invite is either a real code or absent - never a placeholder. The code
+  // itself is not pinned here, so rotating the invite does not break the build.
   const invite = content.discord.invite;
   assert.equal(typeof invite, "string");
   assert.doesNotMatch(invite, /example|placeholder|xxx|your-?invite|todo/i);
+  assert.doesNotMatch(invite, /^https?:|discord\.gg/i, "store the code only, not the full URL");
+  if (invite) assert.match(invite, /^[A-Za-z0-9-]{2,25}$/, "not a Discord invite code");
 });
 
 /* ---------------------------------------------------------- status API --- */
