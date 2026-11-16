@@ -161,16 +161,22 @@ test("the homepage leads with PROJECT EMX and keeps the store underneath", () =>
 test("every dashboard tile ships in the loading state with no number baked into the markup", () => {
   const home = read("index.html");
   const tiles = [...home.matchAll(/<article class="pe-tile[^"]*"[\s\S]*?<\/article>/g)].map((m) => m[0]);
-  assert.equal(tiles.length, 6, "the homepage dashboard should have six tiles");
+  assert.equal(tiles.length, 5, "the homepage dashboard should have five tiles");
   for (const tile of tiles) {
     assert.match(tile, /data-state="loading"/);
     const value = tile.match(/<p class="pe-tile-value" data-pe-value>([\s\S]*?)<\/p>/);
     assert.ok(value, "tile must have a value slot");
     assert.doesNotMatch(value[1], /\d/, `a tile shipped with a hardcoded number: ${value[1]}`);
   }
-  for (const key of ["players", "status", "discord", "playtest", "update", "announcement"]) {
+  for (const key of ["players", "status", "playtest", "update", "announcement"]) {
     assert.ok(home.includes(`data-pe-tile="${key}"`), `missing tile ${key}`);
   }
+  // The Discord member count is deliberately off the home page while the server
+  // is new, but it is hidden rather than removed: Community still carries it.
+  assert.ok(!home.includes('data-pe-tile="discord"'), "member count should stay off the home page");
+  assert.ok(read("community.html").includes('data-pe-tile="discord"'), "Community should keep the member count");
+  // Hiding the count must not hide the way in.
+  assert.match(home, /data-pe-discord/);
 });
 
 test("the homepage never claims the game is live or released", () => {
