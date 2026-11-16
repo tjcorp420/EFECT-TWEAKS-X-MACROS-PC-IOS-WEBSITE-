@@ -26,10 +26,15 @@ test("link hub keeps emxtweaks.com as the home route and preserves required dest
   assert.match(home, /Microsoft Store and Chrome Web Store releases are in preparation/);
   assert.match(home, /Developer verification in progress/);
   assert.doesNotMatch(home, /id="emx-splash"/);
-  assert.match(home, /id="store-entry-intro"[^>]*hidden/);
-  assert.match(home, /media\/store\/emx-software-bio-boot\.webp/);
+  // The boot intro was retired: arriving at the site must not open an overlay,
+  // play an animation, or load the old boot media. The page simply fades in.
+  assert.doesNotMatch(home, /id="store-entry-intro"/);
+  assert.doesNotMatch(home, /store-entry-intro.js/);
+  assert.doesNotMatch(home, /emx-software-bio-boot/);
   assert.doesNotMatch(home, /<video id="store-intro/);
-  assert.match(home, /store-entry-intro\.js/);
+  assert.ok(!fs.existsSync(path.join(root, "store-entry-intro.js")));
+  assert.match(read("foundation.css"), /@keyframes emx-page-fade/);
+  assert.match(read("foundation.css"), /prefers-reduced-motion: reduce/);
   assert.equal(manifest.start_url, "/");
   for (const subdomain of [
     "clips.emxtweaks.com",

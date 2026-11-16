@@ -151,3 +151,45 @@ body { min-width: 320px; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
+
+/* ---------------------------------------------------------------------------
+   Page entrance. Replaces the old boot-intro overlay: the site simply fades up
+   instead of making visitors sit through an animation. Pure CSS, so there is no
+   script that could leave the page stuck at zero opacity, and nothing is hidden
+   before the stylesheet applies.
+   --------------------------------------------------------------------------- */
+@keyframes emx-page-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes emx-page-rise {
+  from { opacity: 0; transform: translate3d(0, 14px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+body {
+  animation: emx-page-fade .32s ease-out both;
+}
+body > header,
+body > main,
+body > footer,
+body > .site-header,
+body > .site-footer {
+  animation: emx-page-rise .5s cubic-bezier(.22, .68, .3, 1) both;
+}
+body > header,
+body > .site-header { animation-delay: .04s; }
+body > main { animation-delay: .1s; }
+body > footer,
+body > .site-footer { animation-delay: .16s; }
+
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body > header,
+  body > main,
+  body > footer,
+  body > .site-header,
+  body > .site-footer {
+    animation: none;
+  }
+}

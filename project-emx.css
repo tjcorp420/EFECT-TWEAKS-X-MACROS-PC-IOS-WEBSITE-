@@ -1,0 +1,648 @@
+/* ===========================================================================
+   PROJECT EMX - game presentation layer.
+   Every selector is namespaced .pe-* and every colour is a --pe-* token defined
+   on .pe-scope, so none of this reaches the EMX Software store styling. The
+   band stays dark in both site themes on purpose: it is a poster, not a panel.
+   =========================================================================== */
+
+.pe-scope {
+  --pe-void: #04060f;
+  --pe-navy: #080e22;
+  --pe-navy-raised: #0d1530;
+  --pe-blue: #1f8cff;
+  --pe-blue-bright: #5cb6ff;
+  --pe-blue-deep: #0a4fa8;
+  --pe-violet: #7b3dff;
+  --pe-violet-soft: #a978ff;
+  --pe-silver: #c3d2ea;
+  --pe-silver-dim: #8c9cba;
+  --pe-white: #ffffff;
+  --pe-edge: rgba(92, 182, 255, .28);
+  --pe-edge-strong: rgba(92, 182, 255, .62);
+  --pe-panel: rgba(10, 18, 42, .72);
+  --pe-display: "Space Grotesk", Inter, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------- hero ---- */
+.pe-hero {
+  position: relative;
+  isolation: isolate;
+  margin: 0 calc(50% - 50vw);
+  width: 100vw;
+  max-width: 100vw;
+  min-height: min(84vh, 760px);
+  display: grid;
+  align-content: center;
+  padding: clamp(72px, 11vh, 132px) clamp(16px, 5vw, 72px) clamp(28px, 5vh, 56px);
+  background: var(--pe-void);
+  overflow: hidden;
+}
+
+.pe-hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+/* The backdrop is the game's own Roblox key art, which carries its own logo
+   type. It is blurred and scaled past the edges so it reads as atmosphere and
+   colour rather than competing with the title set over it. */
+.pe-hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  transform: scale(1.18);
+  filter: blur(26px) saturate(1.35) contrast(1.05) brightness(.72);
+}
+/* Scrims: a blue/violet wash over the screenshot, then a vertical fade so the
+   type always has contrast no matter how bright the art behind it is. */
+.pe-hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 18%, rgba(31, 140, 255, .34), transparent 62%),
+    radial-gradient(90% 80% at 14% 86%, rgba(123, 61, 255, .36), transparent 64%),
+    linear-gradient(180deg, rgba(4, 6, 15, .82) 0%, rgba(4, 6, 15, .42) 34%, rgba(4, 6, 15, .88) 86%, var(--pe-void) 100%);
+}
+.pe-hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(92, 182, 255, .07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(92, 182, 255, .07) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 50%, #000 20%, transparent 78%);
+  mask-image: radial-gradient(70% 60% at 50% 50%, #000 20%, transparent 78%);
+}
+
+.pe-hero-inner {
+  position: relative;
+  width: min(1180px, 100%);
+  margin-inline: auto;
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: clamp(14px, 2vh, 22px);
+}
+
+.pe-kicker {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 600 clamp(10px, 1.2vw, 12px)/1 var(--pe-display);
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--pe-blue-bright);
+}
+.pe-kicker span {
+  width: 26px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--pe-blue));
+}
+
+.pe-title {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  line-height: .82;
+  font-family: var(--pe-display);
+  text-transform: uppercase;
+}
+.pe-title-top {
+  font-size: clamp(26px, 5.2vw, 62px);
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: var(--pe-white);
+  text-shadow: 0 0 28px rgba(31, 140, 255, .45);
+}
+.pe-title-main {
+  font-size: clamp(64px, 14vw, 184px);
+  font-weight: 700;
+  letter-spacing: .02em;
+  background: linear-gradient(180deg, #eaf5ff 6%, #7ec6ff 42%, #1f8cff 70%, #0b4fa6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 34px rgba(31, 140, 255, .5));
+}
+
+.pe-headline {
+  margin: 0;
+  font: italic 700 clamp(22px, 4.4vw, 54px)/1 var(--pe-display);
+  letter-spacing: .01em;
+  text-transform: uppercase;
+  color: var(--pe-white);
+  text-shadow: 0 2px 18px rgba(4, 6, 15, .8);
+}
+.pe-headline em {
+  font-style: italic;
+  color: var(--pe-blue-bright);
+  text-shadow: 0 0 26px rgba(92, 182, 255, .6);
+}
+
+.pe-tagline {
+  margin: 0;
+  max-width: 46ch;
+  font: 500 clamp(12px, 1.5vw, 17px)/1.5 var(--pe-display);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--pe-silver);
+}
+
+.pe-rule {
+  width: min(560px, 90%);
+  height: 1px;
+  border: 0;
+  margin: 2px 0 0;
+  background: linear-gradient(90deg, transparent, var(--pe-edge-strong), transparent);
+}
+
+/* ---------------------------------------------------------- hero CTAs ---- */
+.pe-cta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.pe-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px clamp(20px, 3vw, 38px);
+  border: 1px solid var(--pe-edge-strong);
+  background: linear-gradient(180deg, rgba(13, 21, 48, .92), rgba(6, 10, 26, .94));
+  color: var(--pe-white);
+  font: 700 clamp(13px, 1.4vw, 17px)/1 var(--pe-display);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+.pe-btn:hover,
+.pe-btn:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--pe-blue-bright);
+  box-shadow: 0 14px 38px rgba(31, 140, 255, .34);
+}
+.pe-btn:focus-visible {
+  outline: 2px solid var(--pe-blue-bright);
+  outline-offset: 3px;
+}
+.pe-btn svg {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  fill: currentColor;
+}
+.pe-btn-label { text-align: left; }
+.pe-btn small {
+  display: block;
+  margin-top: 5px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .18em;
+  color: var(--pe-silver-dim);
+}
+
+.pe-btn-discord {
+  padding-inline: clamp(24px, 4vw, 52px);
+  background:
+    linear-gradient(180deg, rgba(31, 140, 255, .26), rgba(10, 18, 42, .94)),
+    var(--pe-navy);
+  box-shadow: 0 0 0 1px rgba(92, 182, 255, .18), 0 18px 46px rgba(10, 60, 140, .4);
+}
+
+/* A control with nowhere to go is never dressed up as a working button. */
+.pe-btn[aria-disabled="true"] {
+  cursor: not-allowed;
+  border-color: rgba(140, 156, 186, .3);
+  background: rgba(10, 16, 34, .8);
+  color: var(--pe-silver-dim);
+  box-shadow: none;
+}
+.pe-btn[aria-disabled="true"]:hover,
+.pe-btn[aria-disabled="true"]:focus-visible {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(140, 156, 186, .3);
+}
+
+/* ---------------------------------------------------------- mode strip --- */
+.pe-modes {
+  list-style: none;
+  margin: clamp(18px, 3vh, 34px) 0 0;
+  padding: 0;
+  width: min(1100px, 100%);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border: 1px solid var(--pe-edge);
+  background: var(--pe-panel);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.pe-modes li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 10px;
+  font: 600 clamp(10px, 1.1vw, 14px)/1.2 var(--pe-display);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--pe-white);
+  border-left: 1px solid var(--pe-edge);
+}
+.pe-modes li:first-child { border-left: 0; }
+.pe-modes svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  fill: none;
+  stroke: var(--pe-blue-bright);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ------------------------------------------------------------ dashboard -- */
+.pe-dash {
+  margin: 0 calc(50% - 50vw);
+  width: 100vw;
+  padding: clamp(34px, 6vh, 64px) clamp(16px, 5vw, 72px);
+  background:
+    radial-gradient(90% 120% at 50% 0%, rgba(31, 140, 255, .12), transparent 60%),
+    var(--pe-navy);
+  border-top: 1px solid var(--pe-edge);
+  border-bottom: 1px solid var(--pe-edge);
+  color: var(--pe-white);
+}
+.pe-dash-inner { width: min(1180px, 100%); margin-inline: auto; }
+
+.pe-dash-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px 20px;
+  margin-bottom: clamp(18px, 3vh, 28px);
+}
+.pe-dash-head h2 {
+  margin: 0;
+  font: 700 clamp(18px, 2.6vw, 30px)/1 var(--pe-display);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.pe-dash-stamp {
+  margin: 0;
+  font: 500 11px/1.4 var(--pe-display);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--pe-silver-dim);
+}
+
+.pe-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.pe-tile {
+  position: relative;
+  padding: 20px 20px 18px;
+  border: 1px solid var(--pe-edge);
+  background: linear-gradient(180deg, rgba(14, 24, 54, .9), rgba(7, 12, 30, .92));
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  min-height: 132px;
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+.pe-tile-label {
+  margin: 0;
+  font: 600 10px/1 var(--pe-display);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--pe-blue-bright);
+}
+.pe-tile-value {
+  margin: 0;
+  font: 700 clamp(26px, 3.4vw, 42px)/1 var(--pe-display);
+  letter-spacing: .01em;
+  color: var(--pe-white);
+  font-variant-numeric: tabular-nums;
+}
+.pe-tile-note {
+  margin: 0;
+  font: 500 12px/1.45 var(--pe-display);
+  color: var(--pe-silver-dim);
+}
+/* Text-first tiles (next playtest, latest update) read as copy, not a metric. */
+.pe-tile-text .pe-tile-value {
+  font-size: clamp(15px, 1.7vw, 19px);
+  line-height: 1.3;
+  letter-spacing: .02em;
+}
+
+/* Honest states. An unknown never borrows the styling of a real value. */
+.pe-tile[data-state="loading"] .pe-tile-value,
+.pe-tile[data-state="unavailable"] .pe-tile-value,
+.pe-tile[data-state="empty"] .pe-tile-value {
+  font-size: clamp(14px, 1.6vw, 17px);
+  line-height: 1.35;
+  color: var(--pe-silver-dim);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.pe-tile[data-state="loading"] { border-color: rgba(140, 156, 186, .26); }
+.pe-tile[data-state="empty"] { border-color: rgba(140, 156, 186, .26); }
+.pe-tile[data-state="empty"] .pe-tile-label { color: var(--pe-silver-dim); }
+.pe-tile[data-state="unavailable"] { border-color: rgba(255, 138, 118, .4); }
+.pe-tile[data-state="unavailable"] .pe-tile-label { color: #ff9f8c; }
+
+.pe-pulse {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 9px;
+  border-radius: 50%;
+  background: var(--pe-blue-bright);
+  box-shadow: 0 0 0 0 rgba(92, 182, 255, .6);
+  animation: pe-pulse 2.4s ease-out infinite;
+}
+@keyframes pe-pulse {
+  70% { box-shadow: 0 0 0 11px rgba(92, 182, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(92, 182, 255, 0); }
+}
+.pe-tile[data-state="unavailable"] .pe-pulse,
+.pe-tile[data-state="loading"] .pe-pulse,
+.pe-tile[data-state="empty"] .pe-pulse {
+  background: var(--pe-silver-dim);
+  animation: none;
+  box-shadow: none;
+}
+
+.pe-dash-foot {
+  margin: 16px 0 0;
+  font: 500 11px/1.6 var(--pe-display);
+  letter-spacing: .08em;
+  color: var(--pe-silver-dim);
+}
+.pe-dash-foot a { color: var(--pe-blue-bright); }
+
+/* ----------------------------------------------------- more from EMX ----- */
+.pe-more {
+  margin: 0 calc(50% - 50vw);
+  width: 100vw;
+  padding: clamp(28px, 5vh, 52px) clamp(16px, 5vw, 72px);
+  background: var(--pe-void);
+  color: var(--pe-white);
+}
+.pe-more-inner { width: min(1180px, 100%); margin-inline: auto; }
+.pe-more-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 0 18px;
+  font: 600 clamp(11px, 1.2vw, 14px)/1 var(--pe-display);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--pe-silver);
+}
+.pe-more-head::before,
+.pe-more-head::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--pe-edge), transparent);
+}
+.pe-more-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(216px, 1fr));
+  gap: 12px;
+}
+.pe-more-grid a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--pe-edge);
+  background: linear-gradient(180deg, rgba(13, 21, 48, .82), rgba(6, 10, 26, .9));
+  color: var(--pe-white);
+  text-decoration: none;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+.pe-more-grid a:hover,
+.pe-more-grid a:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--pe-blue-bright);
+  box-shadow: 0 12px 30px rgba(31, 140, 255, .24);
+}
+.pe-more-grid svg {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  fill: none;
+  stroke: var(--pe-blue-bright);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pe-more-grid b {
+  display: block;
+  font: 700 13px/1.2 var(--pe-display);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.pe-more-grid small {
+  display: block;
+  margin-top: 4px;
+  font: 500 11px/1.3 var(--pe-display);
+  letter-spacing: .08em;
+  color: var(--pe-silver-dim);
+}
+.pe-signature {
+  margin: 20px 0 0;
+  font: 500 clamp(10px, 1.1vw, 13px)/1 var(--pe-display);
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--pe-silver-dim);
+}
+
+/* ------------------------------------------------------- inner pages ----- */
+.pe-page {
+  margin: 0 calc(50% - 50vw);
+  width: 100vw;
+  padding: clamp(84px, 13vh, 140px) clamp(16px, 5vw, 72px) clamp(40px, 7vh, 80px);
+  background:
+    radial-gradient(90% 70% at 50% 0%, rgba(31, 140, 255, .16), transparent 62%),
+    radial-gradient(70% 60% at 12% 100%, rgba(123, 61, 255, .16), transparent 64%),
+    var(--pe-void);
+  color: var(--pe-white);
+}
+.pe-page-inner { width: min(1180px, 100%); margin-inline: auto; }
+.pe-page h1 {
+  margin: 10px 0 0;
+  font: 700 clamp(34px, 6.6vw, 76px)/.92 var(--pe-display);
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.pe-page h1 em {
+  font-style: normal;
+  background: linear-gradient(180deg, #eaf5ff 10%, #5cb6ff 60%, #1f8cff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.pe-page-lead {
+  margin: 16px 0 0;
+  max-width: 62ch;
+  font: 500 clamp(14px, 1.6vw, 17px)/1.6 var(--pe-display);
+  color: var(--pe-silver);
+}
+
+.pe-section {
+  margin: 0 calc(50% - 50vw);
+  width: 100vw;
+  padding: clamp(32px, 6vh, 64px) clamp(16px, 5vw, 72px);
+  background: var(--pe-navy);
+  border-top: 1px solid var(--pe-edge);
+  color: var(--pe-white);
+}
+.pe-section:nth-of-type(even) { background: var(--pe-void); }
+.pe-section-inner { width: min(1180px, 100%); margin-inline: auto; }
+.pe-section h2 {
+  margin: 0 0 6px;
+  font: 700 clamp(18px, 2.6vw, 28px)/1.1 var(--pe-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.pe-section-note {
+  margin: 0 0 20px;
+  font: 500 13px/1.6 var(--pe-display);
+  color: var(--pe-silver-dim);
+}
+
+.pe-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-card {
+  padding: 20px;
+  border: 1px solid var(--pe-edge);
+  background: linear-gradient(180deg, rgba(14, 24, 54, .9), rgba(7, 12, 30, .92));
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+.pe-card h3 {
+  margin: 0 0 8px;
+  font: 700 15px/1.3 var(--pe-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--pe-white);
+}
+.pe-card p {
+  margin: 0;
+  font: 500 13px/1.6 var(--pe-display);
+  color: var(--pe-silver-dim);
+}
+.pe-card-time {
+  display: block;
+  margin-bottom: 8px;
+  font: 600 10px/1 var(--pe-display);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--pe-blue-bright);
+}
+
+/* Empty states carry the same weight as content: nothing is faked to fill a grid. */
+.pe-empty {
+  padding: 28px 22px;
+  border: 1px dashed rgba(140, 156, 186, .38);
+  background: rgba(8, 14, 34, .6);
+  color: var(--pe-silver-dim);
+  font: 500 13px/1.6 var(--pe-display);
+}
+.pe-empty strong {
+  display: block;
+  margin-bottom: 6px;
+  font: 700 12px/1.3 var(--pe-display);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--pe-silver);
+}
+
+/* A stub is labelled a stub. It never shows invented weapons, skins or maps. */
+.pe-stub {
+  padding: 22px;
+  border: 1px solid rgba(140, 156, 186, .26);
+  background: rgba(8, 14, 34, .5);
+  clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+}
+.pe-stub h3 {
+  margin: 0 0 6px;
+  font: 700 14px/1.3 var(--pe-display);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--pe-silver);
+}
+.pe-stub p {
+  margin: 0;
+  font: 500 12px/1.6 var(--pe-display);
+  color: var(--pe-silver-dim);
+}
+.pe-stub-flag {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 4px 9px;
+  border: 1px solid rgba(140, 156, 186, .4);
+  font: 700 9px/1 var(--pe-display);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--pe-silver-dim);
+}
+
+/* ------------------------------------------------------------ responsive - */
+@media (max-width: 900px) {
+  .pe-hero { min-height: auto; padding-top: clamp(88px, 15vh, 124px); }
+  .pe-modes { grid-template-columns: repeat(2, 1fr); }
+  .pe-modes li {
+    justify-content: flex-start;
+    padding-inline: 16px;
+    border-left: 0;
+    border-top: 1px solid var(--pe-edge);
+  }
+  .pe-modes li:first-child,
+  .pe-modes li:nth-child(2) { border-top: 0; }
+  .pe-modes li:nth-child(even) { border-left: 1px solid var(--pe-edge); }
+  .pe-cta { width: 100%; }
+  .pe-btn { flex: 1 1 100%; justify-content: center; }
+  .pe-btn-label { text-align: center; }
+}
+@media (max-width: 560px) {
+  .pe-modes { grid-template-columns: 1fr; }
+  .pe-modes li:nth-child(2) { border-top: 1px solid var(--pe-edge); }
+  .pe-modes li:nth-child(even) { border-left: 0; }
+  .pe-tiles { grid-template-columns: 1fr; }
+  .pe-hero-media img { object-position: center 42%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pe-pulse { animation: none; }
+  .pe-btn,
+  .pe-more-grid a { transition: none; }
+  .pe-btn:hover,
+  .pe-more-grid a:hover { transform: none; }
+}

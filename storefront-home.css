@@ -54,47 +54,6 @@ body[data-page="home"] .deck-aurora {
   line-height: 1.7;
   margin-top: 16px;
 }
-.store-intro {
-  position: fixed;
-  inset: 0;
-  z-index: 100000;
-  background: #020204;
-  display: grid;
-  place-items: center;
-}
-.store-intro[hidden] {
-  display: none;
-}
-.store-intro video {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: contain;
-}
-.store-intro-actions {
-  position: absolute;
-  bottom: 28px;
-  right: 28px;
-  display: flex;
-  gap: 12px;
-}
-.store-intro-actions button {
-  padding: 14px 20px;
-  border: 1px solid #7c698f;
-  background: #100b19;
-  color: #fff;
-  border-radius: 10px;
-  cursor: pointer;
-  min-height: 44px;
-}
-.store-intro-actions button:focus-visible,
-.store-faq summary:focus-visible {
-  outline: 2px solid #9bff3a;
-  outline-offset: 4px;
-}
-html.store-intro-active {
-  overflow: hidden;
-}
 @media (max-width: 1000px) {
   .store-gameplay-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

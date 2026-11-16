@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <base href="/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#04060f" />
+    <meta
+      name="description"
+      content="PROJECT EMX news: patch notes and announcements as they are published. Nothing is posted here until it is real."
+    />
+    <meta property="og:title" content="PROJECT EMX — News" />
+    <meta property="og:description" content="Patch notes and announcements for PROJECT EMX." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EMX Software" />
+    <meta property="og:image" content="https://emxtweaks.com/assets/roblox/project-emx-1280.webp" />
+    <meta property="og:url" content="https://emxtweaks.com/news" />
+    <link rel="canonical" href="https://emxtweaks.com/news" />
+    <link rel="icon" type="image/png" href="/emx-logo-v2.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="foundation.css" />
+    <link rel="stylesheet" href="site.css" />
+    <link rel="stylesheet" href="project-emx.css?v=1" />
+    <title>News — PROJECT EMX</title>
+  </head>
+  <body data-page="news" class="deck-page">
+    <a class="emx-skip-link" href="#main">Skip to content</a>
+    <header data-site-header></header>
+    <main id="main" class="pe-scope">
+      <section class="pe-page">
+        <div class="pe-page-inner">
+          <p class="pe-kicker"><span></span> Project EMX</p>
+          <h1>News &amp; <em>patch notes</em></h1>
+          <p class="pe-page-lead">
+            Everything published about PROJECT EMX, newest first. This page is fed from the
+            site&rsquo;s own content file, so a post appears here only when it has actually been
+            written &mdash; there are no sample entries and no placeholder dates.
+          </p>
+        </div>
+      </section>
+
+      <section class="pe-section" aria-labelledby="news-announcements">
+        <div class="pe-section-inner">
+          <h2 id="news-announcements">Announcements</h2>
+          <p class="pe-section-note">Bigger news: playtests, features, events and release milestones.</p>
+          <div
+            data-pe-feed="announcements"
+            data-pe-feed-empty-title="No announcements yet"
+            data-pe-feed-empty="The first PROJECT EMX announcement will be posted here and in Discord at the same time."
+          >
+            <div class="pe-empty"><strong>Loading</strong>Checking for announcements&hellip;</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="pe-section" aria-labelledby="news-updates">
+        <div class="pe-section-inner">
+          <h2 id="news-updates">Patch notes</h2>
+          <p class="pe-section-note">What changed in the build, and when.</p>
+          <div
+            data-pe-feed="updates"
+            data-pe-feed-empty-title="No patch notes yet"
+            data-pe-feed-empty="Patch notes start appearing here with the next build that ships to the beta."
+          >
+            <div class="pe-empty"><strong>Loading</strong>Checking for patch notes&hellip;</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="pe-section" aria-labelledby="news-where">
+        <div class="pe-section-inner">
+          <h2 id="news-where">Where news lands first</h2>
+          <p class="pe-section-note">
+            The Discord server gets everything as it happens; this page is the public record.
+          </p>
+          <div class="pe-cta">
+            <a
+              class="pe-btn pe-btn-discord"
+              data-pe-discord
+              data-pe-discord-ready="Join our Discord"
+              aria-disabled="true"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.3 5.3A16.5 16.5 0 0 0 15.1 4l-.2.4a12.5 12.5 0 0 1 3.7 1.9 13.3 13.3 0 0 0-11.2 0 12.5 12.5 0 0 1 3.7-1.9L10.9 4a16.5 16.5 0 0 0-4.2 1.3C4.1 9.2 3.4 13 3.8 16.7a16.7 16.7 0 0 0 5.1 2.6l1.1-1.7a10.8 10.8 0 0 1-1.7-.8l.4-.3a11.9 11.9 0 0 0 10.6 0l.4.3a10.8 10.8 0 0 1-1.7.8l1.1 1.7a16.7 16.7 0 0 0 5.1-2.6c.5-4.3-.6-8-2.9-11.4ZM9.7 14.6c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.9.9 1.8 2c0 1.1-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.9.9 1.8 2c0 1.1-.8 2-1.8 2Z"/></svg>
+              <span class="pe-btn-label"><span data-pe-discord-label>Invite coming soon</span></span>
+            </a>
+            <a class="pe-btn" href="playtesting.html">
+              <span class="pe-btn-label">Playtesting</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer data-site-footer></footer>
+    <script defer src="site-shell.js"></script>
+    <script defer src="foundation.js"></script>
+    <script defer src="project-emx.js?v=1"></script>
+  </body>
+</html>

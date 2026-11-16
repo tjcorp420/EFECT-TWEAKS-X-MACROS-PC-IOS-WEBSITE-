@@ -18,20 +18,6 @@ body[data-page="home"] {
 }
 html:has(body[data-page="home"]) { overflow-x: clip; }
 
-/* ---------- Bio entrance overlay ---------- */
-.store-intro { background: url("media/store/emx-software-bio-boot-poster.webp") center / contain no-repeat, radial-gradient(ellipse at center, #081025, #020207 68%); }
-.store-intro.is-playing { background: radial-gradient(ellipse at center, #081025, #020207 68%); }
-.store-intro-actions { z-index: 1; right: max(24px, env(safe-area-inset-right)); bottom: max(24px, env(safe-area-inset-bottom)); }
-.store-intro-actions button { border-color: rgba(156, 227, 244, .35); background: rgba(8, 13, 26, .78); backdrop-filter: blur(12px); font-weight: 700; }
-.store-intro-actions button:hover { border-color: rgba(169, 251, 104, .8); background: rgba(21, 31, 40, .95); }
-.store-intro-actions button:active { transform: translateY(1px); }
-.store-intro-actions button[hidden] { display: none; }
-/* The boot animation is an image; the poster holds the frame until it has loaded. */
-.store-intro .store-intro-media { width: 100%; height: 100%; max-width: none; object-fit: contain; opacity: 0; }
-.store-intro.is-playing .store-intro-media { opacity: 1; }
-html.store-intro-active .store-hero *,
-html.store-intro-active .store-hero *::before,
-html.store-intro-active .store-hero *::after { animation-play-state: paused !important; }
 
 /* ---------- Page atmosphere ---------- */
 body[data-page="home"] .deck-bg {
@@ -996,8 +982,6 @@ html.showroom-motion .store-showcase.is-revealed .store-product { animation: sr-
   .path-copy small { font-size: .76rem; }
   .store-assurance ul, .store-marketplace-grid { grid-template-columns: 1fr; }
   .store-assurance li + li { border-left: 0; border-top: 1px solid rgba(255, 255, 255, .07); }
-  .store-intro-actions { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); left: 16px; justify-content: flex-end; flex-wrap: wrap; }
-  .store-intro-actions button { padding: 10px 14px; font-size: .8rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

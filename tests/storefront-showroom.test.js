@@ -69,12 +69,17 @@ test("showroom scene is decorative and every control stays real HTML", () => {
   const home = read("index.html");
   const css = read("software-redesign.css");
   assert.match(home, /<div class="showroom-scene" aria-hidden="true">/);
-  assert.match(home, /<h1 id="store-title"><em>EMX<\/em> Software\.<\/h1>/);
+  // PROJECT EMX now leads the page, so the store block keeps its wording but
+  // is no longer the document heading.
+  assert.match(home, /<h1 class="pe-title" id="pe-title">/);
+  assert.match(home, /<h2 id="store-title"><em>EMX<\/em> Software\.<\/h2>/);
+  assert.doesNotMatch(home, /<h1 id="store-title"/);
   assert.match(home, /assets\/brand\/emx-software-wordmark-1200\.webp/);
   assert.match(home, /<nav class="store-paths" aria-label="Explore EMX Software">/);
   assert.match(css, /\.showroom-scene \{[^}]*pointer-events: none/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
-  assert.match(css, /html\.store-intro-active \.store-hero \*/);
+  // The boot overlay is gone, so none of its styling may survive.
+  assert.doesNotMatch(css, /store-intro/);
   const scene = home.slice(home.indexOf('class="showroom-scene"'), home.indexOf('class="store-hero-copy"'));
   assert.doesNotMatch(scene, /<(?:a|button|input|select)\b/);
   assert.doesNotMatch(home, /apps\.microsoft\.com|chromewebstore\.google\.com/);

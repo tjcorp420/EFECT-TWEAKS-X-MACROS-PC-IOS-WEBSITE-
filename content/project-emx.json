@@ -1,0 +1,25 @@
+{
+  "_comment": "Single source of truth for PROJECT EMX content on emxtweaks.com. The site reads this file directly; nothing here is generated or guessed. Empty arrays render as honest empty states ('No playtest scheduled yet'), never as placeholder content. Add real entries only.",
+  "roblox": {
+    "universeId": 10775458042,
+    "placeId": 91734259300852,
+    "name": "Project EMX",
+    "url": "https://www.roblox.com/games/91734259300852/Project-EMX",
+    "playUrl": "https://www.roblox.com/games/start?placeId=91734259300852",
+    "browserPlayUrl": "https://play.roblox.com/games/start?placeId=91734259300852"
+  },
+  "discord": {
+    "_comment": "invite = the PROJECT EMX server invite code only (the part after discord.gg/). While it is empty the JOIN DISCORD buttons say 'Invite coming soon' and the member tile reads 'Not connected'. No placeholder invite is ever shown.",
+    "invite": "",
+    "serverName": "PROJECT EMX"
+  },
+  "status": {
+    "_comment": "phase must be one of: development | playtesting | open-beta. 'live' and 'operational' are deliberately not valid values.",
+    "phase": "open-beta",
+    "note": "Open beta on Roblox. Still in active development — expect changes between sessions."
+  },
+  "playtests": [],
+  "updates": [],
+  "announcements": [],
+  "roadmap": []
+}
