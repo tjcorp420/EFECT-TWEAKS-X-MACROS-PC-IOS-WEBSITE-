@@ -152,9 +152,11 @@ test("the homepage leads with PROJECT EMX and keeps the store underneath", () =>
   assert.match(read("project-emx.css"), /content: attr\(data-text\)/);
   assert.match(home, /The island is <em>calling\.<\/em>/);
   assert.match(home, /OG movement\. Modern assets\. Battle Royale reimagined\./);
-  for (const mode of ["Build Mode", "Zero Build", "Squads", "Competitive", "Live Events"]) {
-    assert.ok(home.includes(mode), `missing mode ${mode}`);
+  // The hero lists what the beta actually has, not a wish list.
+  for (const mode of ["1v1s", "Box fights", "Zone wars", "Speed realistics", "Piece control", "Map maker"]) {
+    assert.ok(home.includes(mode), `missing playable mode ${mode}`);
   }
+  assert.match(home, /Playable now/);
   assert.match(home, /More from EMX/);
   // The store did not move or lose its catalogue entry points.
   assert.match(home, /<h2 id="store-title"><em>EMX<\/em> Software\.<\/h2>/);
@@ -272,11 +274,36 @@ test("the stub pages are labelled as empty and name no invented items", () => {
   assert.match(game, /Weapon database/);
   assert.match(game, /Cosmetic gallery/);
   assert.match(game, /Interactive island map/);
-  assert.equal((game.match(/pe-stub-flag/g) || []).length, 3);
-  assert.match(game, /Empty on purpose/);
-  // No fabricated stats sneaking into the stubs.
+  // Scoped to the "Not published yet" block, since the planned-modes block
+  // above it uses the same flag styling for its own three entries.
   const stubs = game.slice(game.indexOf("Not published yet"));
+  assert.equal((stubs.match(/pe-stub-flag/g) || []).length, 3);
+  assert.match(stubs, /Empty on purpose/);
+  // No fabricated stats sneaking into the stubs.
   assert.doesNotMatch(stubs, /\d+\s*(?:damage|DPS|rounds|HP)/i);
+});
+
+test("Battle Royale is only ever shown as planned, never as something to play", () => {
+  // There is no Battle Royale in the build. Someone clicking PLAY expecting one
+  // and landing in box fights is the failure this guards against.
+  const home = read("index.html");
+  const game = read("game.html");
+
+  // On the home page the words appear in the tagline and in the planned row,
+  // and the planned row must say so.
+  assert.match(home, /Coming next[\s\S]{0,400}Battle Royale/);
+  const playable = home.slice(home.indexOf("Playable now"), home.indexOf("Coming next"));
+  assert.ok(!playable.includes("Battle Royale"), "Battle Royale must not sit in the playable row");
+  assert.match(home, /not in the build yet/i);
+
+  // And on Game Info it is a flagged stub, not a feature card.
+  assert.match(game, /Planned, not in the build yet/);
+  const planned = game.slice(game.indexOf("game-planned"));
+  for (const mode of ["Battle Royale", "Reload", "Arena"]) {
+    assert.ok(planned.includes(mode), `${mode} should be listed as planned`);
+  }
+  assert.equal((planned.match(/Not playable yet/g) || []).length, 3);
+  assert.ok(!read("playtesting.html").match(/battle royale/i), "playtesting must not promise a BR");
 });
 
 test("Game Info describes the beta as it actually is, not as the finished game", () => {

@@ -1113,3 +1113,76 @@
 @media (max-width: 1019px) {
   .pe-tiles { grid-template-columns: repeat(auto-fit, minmax(232px, 1fr)); }
 }
+
+/* ------------------------------------------------- playable vs planned --- */
+
+/* The hero used to show five unlabelled feature tiles, which read as five modes
+   you could go and play. The beta's actual modes are listed under "Playable
+   now"; Battle Royale, Reload and Arena sit under "Coming next" and are styled
+   so they cannot be mistaken for something you can load today. */
+.pe-lineup {
+  width: min(1100px, 100%);
+  margin-top: clamp(18px, 3vh, 32px);
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+.pe-lineup-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  font: 600 10px/1 var(--pe-display);
+  letter-spacing: .3em;
+  text-indent: .3em;
+  text-transform: uppercase;
+  color: var(--pe-blue-bright);
+}
+.pe-lineup-label-soon {
+  margin-top: 6px;
+  color: var(--pe-silver-dim);
+}
+.pe-lineup-label .pe-pulse { margin-right: 2px; }
+
+/* Chips rather than a fixed five-column bar, so the real list fits at any
+   length without the layout dictating the content. */
+.pe-lineup .pe-modes {
+  width: auto;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  counter-reset: none;
+}
+.pe-lineup .pe-modes li {
+  counter-increment: none;
+  padding: 11px 16px;
+  border: 1px solid var(--pe-hair);
+  border-radius: 999px;
+  background: var(--pe-glass);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--pe-inner-top);
+  font-size: clamp(10px, 1vw, 12px);
+  letter-spacing: .14em;
+}
+.pe-lineup .pe-modes li::before,
+.pe-lineup .pe-modes li::after { content: none; }
+.pe-lineup .pe-modes svg { width: 16px; height: 16px; }
+
+/* Planned modes: outlined, dimmed, no glass, no icon - visibly a different
+   class of thing from the row above. */
+.pe-lineup .pe-modes-soon li {
+  border-style: dashed;
+  border-color: rgba(150, 165, 195, .34);
+  background: none;
+  box-shadow: none;
+  color: var(--pe-silver-dim);
+  padding-block: 9px;
+}
