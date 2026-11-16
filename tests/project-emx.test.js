@@ -279,6 +279,21 @@ test("the stub pages are labelled as empty and name no invented items", () => {
   assert.doesNotMatch(stubs, /\d+\s*(?:damage|DPS|rounds|HP)/i);
 });
 
+test("Game Info describes the beta as it actually is, not as the finished game", () => {
+  const game = read("game.html");
+  // The live Roblox build is build, edit and box fighting; the Battle Royale is
+  // the direction, not the current match loop. Stating it as present-tense fact
+  // would be the same kind of overclaim the dashboard rules exist to prevent.
+  assert.doesNotMatch(game, /PROJECT EMX is a Battle Royale/i);
+  assert.match(game, /heading for a[\s\S]{0,40}Battle Royale/i);
+  assert.match(game, /build, edit and box fighting/i);
+  assert.match(game, /not in the\s+build yet/i);
+  // What is playable is named, and it comes from the game's own Roblox listing.
+  for (const detail of ["Piece control drills", "map maker", "EMX Bucks"]) {
+    assert.ok(game.includes(detail), `missing beta detail: ${detail}`);
+  }
+});
+
 test("playtesting is open to everyone with no application step", () => {
   const page = read("playtesting.html");
   assert.match(page, /no application/i);
