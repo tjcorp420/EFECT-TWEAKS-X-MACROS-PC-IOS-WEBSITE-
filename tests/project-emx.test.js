@@ -152,10 +152,14 @@ test("the homepage leads with PROJECT EMX and keeps the store underneath", () =>
   assert.match(read("project-emx.css"), /content: attr\(data-text\)/);
   assert.match(home, /The island is <em>calling\.<\/em>/);
   assert.match(home, /OG movement\. Modern assets\. Battle Royale reimagined\./);
-  // The hero lists what the beta actually has, not a wish list.
-  for (const mode of ["1v1s", "Box fights", "Zone wars", "Speed realistics", "Piece control", "Map maker"]) {
+  // The hero lists what the beta actually has, under the names the game's own
+  // lobby uses (src/client/Lobby.luau and src/shared/Rules/Match.luau).
+  for (const mode of ["Freebuild", "Piece Control", "Speed Realistics", "Zone Wars", "Free For All", "Map maker"]) {
     assert.ok(home.includes(mode), `missing playable mode ${mode}`);
   }
+  // Build Zombies exists in the lobby code but ships behind a disabled flag,
+  // so it must not be advertised as something to play.
+  assert.doesNotMatch(home, /zombies/i);
   assert.match(home, /Playable now/);
   assert.match(home, /More from EMX/);
   // The store did not move or lose its catalogue entry points.
@@ -352,6 +356,29 @@ test("the storefront keeps every checkout route and product link", () => {
   const redirects = routing.redirects.map((route) => route.source);
   assert.ok(redirects.includes("/license"));
   assert.ok(redirects.includes("/labs"));
+});
+
+test("Game Info shows the real mode cards with the game's own wording", () => {
+  const game = read("game.html");
+  const dir = path.join(root, "assets/project-emx/modes");
+  const cards = [
+    ["freebuild", "Freebuild", "Public: up to 5 on one island"],
+    ["practice", "Piece Control practice", "Practice drills against the Player bot"],
+    ["piece1", "Piece Control 1v1", "Closed box, a new solid layout every round, first to 10"],
+    ["piece2", "Piece Control 2v2", "Two a side, closed box, new layout every round, first to 10"],
+    ["realistics1", "Speed Realistics 1v1", "30 m apart in the open, anything goes, first to 10"],
+    ["realistics2", "Speed Realistics 2v2", "Two a side, 30 m apart, anything goes, first to 10"],
+    ["zonewars", "Zone Wars", "Red vs blue, up to 4 a side, the storm closes in"],
+    ["ffa", "Free For All", "Box fight, 8 fighters, last one standing"],
+  ];
+  for (const [file, name, sub] of cards) {
+    assert.ok(fs.existsSync(path.join(dir, `${file}.png`)), `missing art ${file}.png`);
+    assert.ok(game.includes(`assets/project-emx/modes/${file}.png`), `${file} art not used`);
+    assert.ok(game.includes(name), `missing mode name ${name}`);
+    // The description is the game's, copied rather than written here.
+    assert.ok(game.includes(sub), `description for ${name} does not match the game`);
+  }
+  assert.doesNotMatch(game, /zombies/i, "Build Zombies is behind a disabled flag");
 });
 
 test("the game thumbnail is the current one from Roblox, not the retired art", () => {

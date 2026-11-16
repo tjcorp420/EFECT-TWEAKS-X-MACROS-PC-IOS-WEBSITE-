@@ -1186,3 +1186,25 @@
   color: var(--pe-silver-dim);
   padding-block: 9px;
 }
+
+/* ------------------------------------------------------- mode cards ----- */
+
+/* The game's own mode card art, copied from the Studio project. The picture
+   does the work, so the card itself gets out of the way: no padding at the top,
+   and the text sits under the image. */
+.pe-mode-cards { grid-template-columns: repeat(auto-fit, minmax(248px, 1fr)); }
+.pe-mode-card {
+  padding: 0 0 18px;
+  overflow: hidden;
+}
+.pe-mode-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #0a1024;
+  border-bottom: 1px solid var(--pe-hair);
+}
+.pe-mode-card h3 { margin: 16px 18px 6px; }
+.pe-mode-card p { margin: 0 18px; }
