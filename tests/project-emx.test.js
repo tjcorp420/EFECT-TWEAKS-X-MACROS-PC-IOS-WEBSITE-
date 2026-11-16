@@ -354,6 +354,19 @@ test("the storefront keeps every checkout route and product link", () => {
   assert.ok(redirects.includes("/labs"));
 });
 
+test("the game thumbnail is the current one from Roblox, not the retired art", () => {
+  // The old lobby art stopped matching the game. The card and the share image
+  // now use the thumbnail Roblox itself serves for the universe.
+  assert.ok(fs.existsSync(path.join(root, "assets/roblox/project-emx-768.webp")));
+  for (const file of ["assets/roblox/project-emx-640.webp", "assets/roblox/project-emx-1280.webp"]) {
+    assert.ok(!fs.existsSync(path.join(root, file)), `${file} should have been retired`);
+  }
+  for (const page of ["index.html", ...GAME_PAGES]) {
+    assert.doesNotMatch(read(page), /project-emx-(?:640|1280)\.webp/, `${page} still points at the old art`);
+  }
+  assert.match(read("index.html"), /assets\/roblox\/project-emx-768\.webp/);
+});
+
 /* ------------------------------------------- deployable on this plan ----- */
 
 test("api/ stays within the Serverless Function budget the deploy allows", () => {
