@@ -1208,3 +1208,207 @@
 }
 .pe-mode-card h3 { margin: 16px 18px 6px; }
 .pe-mode-card p { margin: 0 18px; }
+
+/* ===========================================================================
+   Depth pass. The hero was reading flat because the backdrop was blurred to
+   26px to stop the key art's own logo competing with the title. Cropping to
+   the right-hand side of the frame moves that logo out of shot, so the blur
+   can come most of the way off and the art can actually be seen.
+   =========================================================================== */
+
+.pe-hero-media img {
+  object-position: 78% 45%;
+  transform: scale(1.06);
+  filter: blur(7px) saturate(1.55) contrast(1.12) brightness(.62);
+}
+
+/* Colour comes back up: a deeper violet on one shoulder, electric blue on the
+   other, and a tighter floor so the type still sits on something solid. */
+.pe-hero-media::after {
+  background:
+    radial-gradient(85% 70% at 78% 28%, rgba(31, 140, 255, .42), transparent 60%),
+    radial-gradient(80% 75% at 18% 72%, rgba(123, 61, 255, .5), transparent 62%),
+    linear-gradient(180deg, rgba(4, 6, 15, .78) 0%, rgba(4, 6, 15, .3) 30%, rgba(4, 6, 15, .72) 72%, var(--pe-void) 100%);
+}
+
+/* Angular light streaks, the one piece of pure decoration here. They sit
+   behind the content and drift slowly across the frame. */
+.pe-hero-grid::before,
+.pe-hero-grid::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  width: 2px;
+  height: 140%;
+  background: linear-gradient(180deg, transparent, var(--pe-blue-bright), transparent);
+  opacity: .5;
+  filter: blur(1px);
+}
+.pe-hero-grid::before {
+  left: 16%;
+  transform: rotate(14deg);
+  animation: pe-streak 11s ease-in-out infinite;
+}
+.pe-hero-grid::after {
+  right: 22%;
+  transform: rotate(-12deg);
+  background: linear-gradient(180deg, transparent, var(--pe-violet-soft), transparent);
+  animation: pe-streak 14s ease-in-out infinite 2s;
+}
+@keyframes pe-streak {
+  0%, 100% { opacity: 0; transform: translateY(-8%) rotate(14deg); }
+  50% { opacity: .55; transform: translateY(8%) rotate(14deg); }
+}
+
+/* The wordmark earns a real glow rather than a flat gradient. */
+.pe-title-main {
+  background: linear-gradient(174deg, #ffffff 2%, #e4f1ff 16%, #8fd0ff 42%, #2f9bff 66%, #7b3dff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter:
+    drop-shadow(0 0 2px rgba(255, 255, 255, .55))
+    drop-shadow(0 6px 24px rgba(31, 140, 255, .55))
+    drop-shadow(0 14px 60px rgba(123, 61, 255, .45));
+}
+.pe-headline em { text-shadow: 0 0 34px rgba(92, 182, 255, .85), 0 0 8px rgba(255, 255, 255, .35); }
+
+/* Buttons get weight: a lit primary, and a visible edge on the secondary. */
+.pe-btn-discord {
+  border-color: rgba(140, 200, 255, .62);
+  background:
+    linear-gradient(180deg, rgba(60, 120, 255, .55), rgba(123, 61, 255, .42)),
+    var(--pe-navy);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .22),
+    0 10px 28px -10px rgba(80, 60, 255, .9),
+    0 0 44px -14px rgba(92, 182, 255, .9);
+}
+.pe-cta .pe-btn:not(.pe-btn-discord) {
+  border-color: rgba(150, 200, 255, .4);
+  background: linear-gradient(180deg, rgba(18, 30, 64, .82), rgba(8, 12, 30, .86));
+}
+
+/* Chips lift off the background instead of sitting flush on it. */
+.pe-lineup .pe-modes li {
+  border-color: rgba(140, 195, 255, .34);
+  background: linear-gradient(180deg, rgba(24, 40, 86, .72), rgba(10, 18, 42, .66));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 8px 20px -12px rgba(0, 0, 0, .9);
+}
+
+/* Section bands get a lit top edge so each one reads as its own surface. */
+.pe-dash,
+.pe-section {
+  position: relative;
+}
+.pe-dash::before,
+.pe-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(92, 182, 255, .55), rgba(123, 61, 255, .45), transparent);
+}
+.pe-dash {
+  background:
+    radial-gradient(70% 120% at 20% 0%, rgba(123, 61, 255, .18), transparent 60%),
+    radial-gradient(70% 120% at 80% 0%, rgba(31, 140, 255, .18), transparent 60%),
+    var(--pe-navy);
+}
+
+/* Tiles: more contrast between the lit edge and the body, and a real shadow. */
+.pe-tile {
+  background: linear-gradient(180deg, rgba(20, 34, 72, .92), rgba(7, 12, 30, .94));
+  box-shadow: var(--pe-inner-top), 0 16px 34px -22px rgba(0, 0, 0, .95);
+}
+.pe-tile[data-state="ok"] .pe-tile-value { text-shadow: 0 0 42px rgba(92, 182, 255, .6); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pe-hero-grid::before,
+  .pe-hero-grid::after { animation: none; opacity: .3; }
+}
+
+/* The crop could not clear the key art's own logo: the hero box is wider than
+   the image, so cover trims vertically and horizontal positioning does nothing.
+   Blur is the lever that works. 14px is past the point where the lettering
+   reads, but well short of the flat wash 26px produced - the colour, the lights
+   and the shape of the stage all survive. */
+.pe-hero-media img {
+  object-position: 50% 62%;
+  transform: scale(1.12);
+  filter: blur(14px) saturate(1.7) contrast(1.15) brightness(.66);
+}
+
+/* An extra pool of shade over the top-left, where that lettering sits. */
+.pe-hero-media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(60% 55% at 12% 10%, rgba(4, 6, 15, .85), transparent 70%);
+}
+
+/* --------------------------------------------------- home mode band ----- */
+
+/* The homepage band that replaced the chip rows. Mode art is the most colourful
+   thing the project owns, so it gets the space the chips were wasting. */
+.pe-modeband {
+  background:
+    radial-gradient(80% 110% at 15% 0%, rgba(123, 61, 255, .2), transparent 62%),
+    radial-gradient(80% 110% at 85% 10%, rgba(31, 140, 255, .18), transparent 62%),
+    var(--pe-void);
+}
+.pe-modeband .pe-lineup-label { margin-bottom: 10px; }
+.pe-modeband h2 {
+  margin: 0 0 20px;
+  padding-left: 0;
+  font-size: clamp(22px, 3.4vw, 38px);
+  letter-spacing: .06em;
+}
+.pe-modeband h2::before { content: none; }
+.pe-modeband .pe-mode-cards { margin-bottom: 18px; }
+.pe-modeband-note {
+  margin: 0 0 18px;
+  max-width: 70ch;
+  font: 500 13px/1.6 var(--pe-display);
+  color: var(--pe-silver-dim);
+}
+.pe-modeband .pe-modes-soon {
+  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  border: 0;
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.pe-modeband .pe-modes-soon li {
+  border: 1px dashed rgba(150, 165, 195, .34);
+  border-radius: 999px;
+  padding: 9px 16px;
+  background: none;
+  box-shadow: none;
+  color: var(--pe-silver-dim);
+  font-size: clamp(10px, 1vw, 12px);
+  letter-spacing: .14em;
+}
+.pe-modeband .pe-modes-soon li::before,
+.pe-modeband .pe-modes-soon li::after { content: none; }
+
+/* Card art gets a lit edge and a real lift on hover. */
+.pe-mode-card {
+  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+.pe-mode-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--pe-hair-lit);
+  box-shadow: var(--pe-inner-top), 0 24px 46px -24px rgba(31, 140, 255, .85);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pe-mode-card { transition: none; }
+  .pe-mode-card:hover { transform: none; }
+}

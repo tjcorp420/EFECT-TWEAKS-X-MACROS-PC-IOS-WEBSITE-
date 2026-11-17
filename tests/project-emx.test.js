@@ -152,8 +152,8 @@ test("the homepage leads with PROJECT EMX and keeps the store underneath", () =>
   assert.match(read("project-emx.css"), /content: attr\(data-text\)/);
   assert.match(home, /The island is <em>calling\.<\/em>/);
   assert.match(home, /OG movement\. Modern assets\. Battle Royale reimagined\./);
-  // The hero lists what the beta actually has, under the names the game's own
-  // lobby uses (src/client/Lobby.luau and src/shared/Rules/Match.luau).
+  // The mode band lists what the beta actually has, under the names the game's
+  // own lobby uses (src/client/Lobby.luau and src/shared/Rules/Match.luau).
   for (const mode of ["Freebuild", "Piece Control", "Speed Realistics", "Zone Wars", "Free For All", "Map maker"]) {
     assert.ok(home.includes(mode), `missing playable mode ${mode}`);
   }
