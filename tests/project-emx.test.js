@@ -372,8 +372,11 @@ test("Game Info shows the real mode cards with the game's own wording", () => {
     ["ffa", "Free For All", "Box fight, 8 fighters, last one standing"],
   ];
   for (const [file, name, sub] of cards) {
-    assert.ok(fs.existsSync(path.join(dir, `${file}.png`)), `missing art ${file}.png`);
-    assert.ok(game.includes(`assets/project-emx/modes/${file}.png`), `${file} art not used`);
+    // The PNG the game exported is kept as the source; the page loads the WebP
+    // the optimizer derives from it.
+    assert.ok(fs.existsSync(path.join(dir, `${file}.png`)), `missing source art ${file}.png`);
+    assert.ok(fs.existsSync(path.join(dir, `${file}.webp`)), `missing derived art ${file}.webp`);
+    assert.ok(game.includes(`assets/project-emx/modes/${file}.webp`), `${file} art not used`);
     assert.ok(game.includes(name), `missing mode name ${name}`);
     // The description is the game's, copied rather than written here.
     assert.ok(game.includes(sub), `description for ${name} does not match the game`);

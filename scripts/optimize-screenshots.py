@@ -17,6 +17,11 @@ PATTERNS = (
 )
 WIDTHS = (640, 960)
 
+# Mode cards arrive at card size already (227-622px wide), so the responsive
+# ladder above would only upscale them. These are converted once, at their own
+# width, next to the PNG the game exported.
+NATIVE_PATTERNS = ("assets/project-emx/modes/*.png",)
+
 
 def output_path(source: Path, width: int) -> Path:
     return source.with_name(f"{source.stem}-{width}.webp")
@@ -42,6 +47,23 @@ def main() -> None:
                 created += 1
     print(f"Created {created} responsive WebP files from {len(sources)} originals.")
     print(f"Original source bytes: {original_bytes:,}; responsive derivative bytes: {responsive_bytes:,}")
+
+    cards = sorted({path for pattern in NATIVE_PATTERNS for path in ROOT.glob(pattern)})
+    card_png_bytes = 0
+    card_webp_bytes = 0
+    for source in cards:
+        with Image.open(source) as image:
+            destination = source.with_suffix(".webp")
+            image.convert("RGB").save(destination, "WEBP", quality=84, method=6)
+            card_png_bytes += source.stat().st_size
+            card_webp_bytes += destination.stat().st_size
+    if cards:
+        saved = card_png_bytes - card_webp_bytes
+        print(f"Converted {len(cards)} mode cards at native width.")
+        print(
+            f"Card PNG bytes: {card_png_bytes:,}; WebP bytes: {card_webp_bytes:,} "
+            f"({saved:,} saved, {saved / card_png_bytes:.0%})"
+        )
 
 
 if __name__ == "__main__":
