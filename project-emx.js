@@ -65,6 +65,9 @@
     if (!tile) return;
     const valueNode = tile.querySelector("[data-pe-value]");
     const noteNode = tile.querySelector("[data-pe-note]");
+    // Anything with something to say is shown, including an unavailable source.
+    // Only hideTile() takes a panel off the page.
+    tile.hidden = false;
     tile.dataset.state = state;
     if (valueNode) {
       valueNode.textContent = "";
@@ -151,12 +154,7 @@
         when ? `${playtest.title} - ${when.relative}` : "Time to be confirmed",
       );
     } else {
-      setTile(
-        "playtest",
-        "empty",
-        "None scheduled yet",
-        "The beta is open now - sessions get posted here and in Discord.",
-      );
+      hideTile("playtest");
     }
 
     const update = firstEntry(content?.updates);
@@ -164,7 +162,7 @@
       const when = describeDate(update.postedAt);
       setTile("update", "ok", update.title, when ? when.absolute : "");
     } else {
-      setTile("update", "empty", "No update posted yet", "Patch notes appear here as they ship.");
+      hideTile("update");
     }
 
     const announcement = firstEntry(content?.announcements);
@@ -172,7 +170,32 @@
       const when = describeDate(announcement.postedAt);
       setTile("announcement", "ok", announcement.title, when ? when.absolute : "");
     } else {
-      setTile("announcement", "empty", "Nothing announced yet", "Announcements appear here first.");
+      hideTile("announcement");
+    }
+  }
+
+  /* A panel with genuinely nothing in it is removed rather than left reading
+     "nothing yet". Three of those in a row made a running game look abandoned,
+     and an empty box tells a visitor less than no box at all.
+
+     This is only for having nothing to say. A source that could not be reached
+     still renders as unavailable, because that is information - the difference
+     between "no playtest is scheduled" and "we could not check" matters, and
+     hiding the second one would be hiding a fault. */
+  function hideTile(key) {
+    const tile = tiles.get(key);
+    if (!tile) return;
+    tile.hidden = true;
+    tile.dataset.state = "empty";
+  }
+
+  /* The dashboard lays out five tiles as three then two on a wide screen. With
+     any hidden, that explicit arrangement would leave holes, so the count goes
+     on the container and the stylesheet falls back to an even row. */
+  function countVisibleTiles() {
+    for (const grid of document.querySelectorAll(".pe-tiles")) {
+      const visible = [...grid.querySelectorAll("[data-pe-tile]")].filter((tile) => !tile.hidden);
+      grid.dataset.count = String(visible.length);
     }
   }
 
@@ -468,6 +491,7 @@
 
     if (content) {
       renderContentTiles(content);
+      countVisibleTiles();
     } else {
       // Without the content file the site cannot know the invite or the
       // schedule, so it says so rather than guessing.

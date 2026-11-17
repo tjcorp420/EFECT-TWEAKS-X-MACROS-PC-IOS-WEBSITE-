@@ -401,8 +401,34 @@ test("the game thumbnail is the current one from Roblox, not the retired art", (
   assert.match(read("index.html"), /assets\/roblox\/project-emx-768\.webp/);
 });
 
+test("a panel with nothing in it is hidden, but a broken source still shows", () => {
+  const behaviour = read("project-emx.js");
+  // Three panels reading "nothing yet" made a running game look abandoned, so
+  // an empty one comes off the page.
+  assert.match(behaviour, /function hideTile\(key\)/);
+  for (const key of ["playtest", "update", "announcement"]) {
+    assert.match(behaviour, new RegExp(`hideTile\\("${key}"\\)`), `${key} should hide when empty`);
+  }
+  // But a source that could not be reached is information, not nothing, so it
+  // must still render. "No playtest scheduled" and "we could not check" are
+  // different things and hiding the second would hide a fault.
+  assert.match(behaviour, /setTile\(\s*key,\s*"unavailable"/);
+  assert.match(behaviour, /tile\.hidden = false;/, "anything with something to say must be shown");
+
+  // Five tiles lay out as three then two; with any hidden the grid must reflow.
+  assert.match(behaviour, /function countVisibleTiles\(\)/);
+  assert.match(read("project-emx.css"), /\.pe-tiles:not\(\[data-count="5"\]\)/);
+});
+
 test("the gameplay clips and the Roblox card say true things", () => {
   const home = read("index.html");
+  // The captures are PROJECT EMX footage. They used to sit below the store
+  // hero, the Roblox band and the software grid, which is how they ended up
+  // advertising a macro product.
+  const clips = home.indexOf('aria-labelledby="video-title"');
+  const storeHero = home.indexOf('class="store-hero"');
+  assert.ok(clips > 0 && storeHero > 0);
+  assert.ok(clips < storeHero, "the clips belong in the game half of the page");
   // The five captures are PROJECT EMX gameplay; they used to send people to a
   // macro product.
   assert.doesNotMatch(home, /Explore VOLT Macro/);

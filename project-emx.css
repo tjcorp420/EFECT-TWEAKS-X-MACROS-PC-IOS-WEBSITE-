@@ -1507,3 +1507,27 @@
   .pe-codedrop-inner { flex-direction: column; align-items: stretch; }
   .pe-codedrop-action { min-width: 0; }
 }
+
+/* ------------------------------------------------- dashboard reflow ----- */
+
+/* The dashboard arranges five tiles as three then two. Panels with nothing in
+   them are hidden rather than left reading "nothing yet", so that arrangement
+   would leave holes: with any other count, fall back to an even row. */
+@media (min-width: 1020px) {
+  .pe-dash .pe-tiles:not([data-count="5"]) { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .pe-dash .pe-tiles:not([data-count="5"]) .pe-tile,
+  .pe-dash .pe-tiles:not([data-count="5"]) .pe-tile:nth-child(4),
+  .pe-dash .pe-tiles:not([data-count="5"]) .pe-tile:nth-child(5) { grid-column: auto; }
+}
+.pe-tile[hidden] { display: none; }
+
+/* The clips moved up into the game half of the page, so the band needs the
+   game's own surface rather than the storefront's. */
+.pe-scope .store-gameplay {
+  margin: 0 calc(50% - 50vw);
+  width: 100vw;
+  padding: clamp(32px, 6vh, 64px) clamp(16px, 5vw, 72px);
+  background: var(--pe-navy);
+  border-top: 1px solid var(--pe-hair);
+}
+.pe-scope .store-gameplay > * { width: min(1180px, 100%); margin-inline: auto; }
