@@ -397,6 +397,50 @@ test("the game thumbnail is the current one from Roblox, not the retired art", (
   assert.match(read("index.html"), /assets\/roblox\/project-emx-768\.webp/);
 });
 
+test("a gift code is presented as the one-time race it is", () => {
+  const home = read("index.html");
+  const banner = home.slice(home.indexOf('data-pe-codedrop'), home.indexOf("pe-modeband"));
+
+  // The game defines codes as single use (src/shared/Rules/Codes.luau: "used
+  // once: the first player to redeem it spends it"), so the page must not imply
+  // everyone can have it.
+  // Both wordings are in the page and the script reveals whichever matches the
+  // game. The strict one must exist, and it must be the default.
+  assert.match(banner, /data-pe-code-note="one-player"/);
+  assert.match(banner, /One code, one player/i);
+  assert.match(banner, /first person to redeem it takes it/i);
+  assert.match(banner, /data-pe-code-note="per-player"/);
+  assert.match(banner, /once each/i);
+  assert.doesNotMatch(banner, /unlimited|as many times/i);
+  const behaviour = read("project-emx.js");
+  assert.match(
+    behaviour,
+    /drop\.redemption === "per-player" \? "per-player" : "one-player"/,
+    "an unknown redemption mode must fall back to the stricter claim",
+  );
+  // Neither note may be visible until the script has picked one.
+  assert.equal((banner.match(/class="pe-codedrop-note" data-pe-code-note="[a-z-]+" hidden/g) || []).length, 2);
+  // It ships hidden, so an empty content file cannot leave a dangling offer.
+  assert.match(banner, /data-pe-codedrop hidden/);
+
+  // The code itself is never hardcoded into the page.
+  assert.doesNotMatch(home, /EMX-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}/);
+
+  const drop = content.codeDrop;
+  if (drop && drop.code) {
+    // Matches the game's own generator: EMX plus twelve characters, none of
+    // them the ones that get misread off a stream (0, O, 1, I).
+    const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    const normalized = drop.code.toUpperCase().replace(/[\s-]/g, "");
+    assert.equal(normalized.length, 15, `${drop.code} is not 15 characters normalized`);
+    assert.equal(normalized.slice(0, 3), "EMX");
+    for (const character of normalized.slice(3)) {
+      assert.ok(letters.includes(character), `${drop.code} uses ${character}, which the game rejects`);
+    }
+    assert.ok(String(drop.reward || "").trim(), "a code without a stated reward is not publishable");
+  }
+});
+
 /* ------------------------------------------- deployable on this plan ----- */
 
 test("api/ stays within the Serverless Function budget the deploy allows", () => {

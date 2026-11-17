@@ -1412,3 +1412,98 @@
   .pe-mode-card { transition: none; }
   .pe-mode-card:hover { transform: none; }
 }
+
+/* ---------------------------------------------------------- code drop --- */
+
+/* A one-time code is a race, not an offer, so the banner is built to read that
+   way: loud about the reward, equally plain that the first person to redeem it
+   ends it. It ships hidden and only appears when a code is configured. */
+.pe-codedrop {
+  margin: 0 calc(50% - 50vw);
+  width: 100vw;
+  padding: clamp(22px, 4vh, 34px) clamp(16px, 5vw, 72px);
+  background:
+    linear-gradient(90deg, rgba(123, 61, 255, .3), rgba(31, 140, 255, .22) 55%, transparent),
+    var(--pe-navy-raised);
+  border-top: 1px solid rgba(160, 120, 255, .45);
+  border-bottom: 1px solid rgba(160, 120, 255, .45);
+  color: var(--pe-white);
+}
+.pe-codedrop[hidden] { display: none; }
+.pe-codedrop-inner {
+  width: min(1180px, 100%);
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px 28px;
+}
+.pe-codedrop-kicker {
+  margin: 0 0 6px;
+  display: inline-block;
+  padding: 5px 11px;
+  border: 1px solid rgba(255, 214, 102, .55);
+  border-radius: 999px;
+  font: 700 9px/1 var(--pe-display);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: #ffd666;
+}
+.pe-codedrop h2 {
+  margin: 0 0 8px;
+  font: 700 clamp(22px, 3.4vw, 36px)/1.05 var(--pe-display);
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.pe-codedrop h2 strong {
+  font-weight: 700;
+  background: linear-gradient(180deg, #fff 10%, #ffd666 55%, #ff9f1c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 4px 22px rgba(255, 180, 60, .45));
+}
+.pe-codedrop-note {
+  margin: 0;
+  max-width: 58ch;
+  font: 500 13px/1.6 var(--pe-display);
+  color: var(--pe-silver);
+}
+.pe-codedrop-note b { color: var(--pe-white); font-weight: 700; }
+
+.pe-codedrop-action {
+  display: grid;
+  gap: 10px;
+  justify-items: stretch;
+  min-width: min(300px, 100%);
+}
+.pe-codedrop-code {
+  display: block;
+  padding: 15px 20px;
+  border: 1px dashed rgba(255, 214, 102, .6);
+  border-radius: 2px;
+  background: rgba(6, 10, 26, .75);
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: clamp(15px, 1.9vw, 21px);
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-align: center;
+  color: #ffe9a8;
+  -webkit-user-select: all;
+  user-select: all;
+}
+.pe-codedrop-copy-btn { justify-content: center; }
+.pe-codedrop-status {
+  margin: 0;
+  min-height: 1.2em;
+  font: 500 11px/1.2 var(--pe-display);
+  letter-spacing: .08em;
+  text-align: center;
+  color: var(--pe-silver-dim);
+}
+
+@media (max-width: 760px) {
+  .pe-codedrop-inner { flex-direction: column; align-items: stretch; }
+  .pe-codedrop-action { min-width: 0; }
+}

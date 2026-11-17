@@ -21,5 +21,13 @@
   "playtests": [],
   "updates": [],
   "announcements": [],
-  "roadmap": []
+  "roadmap": [],
+  "codeDrop": {
+    "_comment": "A one-time gift code, as the game defines them (src/shared/Rules/Codes.luau: used once, the first player to redeem it spends it). Set code to \"\" the moment it is claimed and the banner disappears. Never advertise a code as if everyone can have it.",
+    "code": "EMX-KR55-SKDB-25B5",
+    "reward": "800 EMX Bucks",
+    "where": "Shop → REDEEM CODE",
+    "redemption": "one-player",
+    "_redemption": "one-player = the game as it is today (Rules/Codes.luau: used once, first player to redeem it spends it). per-player = once each for everyone, only once the game actually works that way. The banner wording follows this value."
+  }
 }

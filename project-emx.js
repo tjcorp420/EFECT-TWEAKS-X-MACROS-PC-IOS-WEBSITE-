@@ -36,7 +36,8 @@
   }
   const discordTargets = document.querySelectorAll("[data-pe-discord]");
   const feedTargets = document.querySelectorAll("[data-pe-feed]");
-  if (!tiles.size && !discordTargets.length && !feedTargets.length) return;
+  const codeDrop = document.querySelector("[data-pe-codedrop]");
+  if (!tiles.size && !discordTargets.length && !feedTargets.length && !codeDrop) return;
 
   /* ------------------------------------------------------------- helpers - */
 
@@ -173,6 +174,71 @@
     } else {
       setTile("announcement", "empty", "Nothing announced yet", "Announcements appear here first.");
     }
+  }
+
+  /* ---------------------------------------------------------- code drop -- */
+
+  /* Fills in the one-time code banner. The banner stays hidden unless a code is
+     actually configured, so clearing `code` in the content file removes it from
+     the page - which is what should happen the moment it is claimed. The script
+     supplies the code, the reward and where to redeem it; every claim about how
+     the code behaves is written into the markup, not generated here. */
+  function renderCodeDrop(content) {
+    const banner = document.querySelector("[data-pe-codedrop]");
+    if (!banner) return;
+
+    const drop = content?.codeDrop;
+    const code = String(drop?.code || "").trim();
+    const reward = String(drop?.reward || "").trim();
+    if (!code || !reward) {
+      banner.hidden = true;
+      return;
+    }
+
+    const codeNode = banner.querySelector("[data-pe-code]");
+    const rewardNode = banner.querySelector("[data-pe-code-reward]");
+    if (codeNode) codeNode.textContent = code;
+    if (rewardNode) rewardNode.textContent = reward;
+    if (drop.where) {
+      for (const node of banner.querySelectorAll(".pe-code-where")) {
+        node.textContent = drop.where;
+      }
+    }
+
+    // Both wordings are written into the page; this only reveals the one that
+    // matches how the game actually redeems codes. An unrecognised value falls
+    // back to the stricter claim rather than the more generous one.
+    const mode = drop.redemption === "per-player" ? "per-player" : "one-player";
+    for (const note of banner.querySelectorAll("[data-pe-code-note]")) {
+      note.hidden = note.dataset.peCodeNote !== mode;
+    }
+    banner.hidden = false;
+
+    const button = banner.querySelector("[data-pe-code-copy]");
+    const label = banner.querySelector("[data-pe-code-copy-label]");
+    const status = banner.querySelector("[data-pe-code-status]");
+    if (!button) return;
+
+    button.addEventListener("click", async () => {
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(code);
+        copied = true;
+      } catch {
+        copied = false;
+      }
+      if (status) {
+        // On failure the code is already on screen, so say that rather than
+        // leaving someone wondering whether it worked.
+        status.textContent = copied ? "Copied." : `Copy blocked - the code is ${code}`;
+      }
+      if (label && copied) {
+        label.textContent = "Copied";
+        setTimeout(() => {
+          label.textContent = "Copy code";
+        }, 2000);
+      }
+    });
   }
 
   /* --------------------------------------------------------- list feeds -- */
@@ -381,6 +447,7 @@
     }
 
     wireDiscord(content);
+    renderCodeDrop(content);
     renderFeeds(content);
 
     // Store pages carry the header Discord button but no dashboard: stop here
