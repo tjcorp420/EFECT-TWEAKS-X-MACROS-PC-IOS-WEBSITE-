@@ -27,7 +27,9 @@
     "code": "EMX-KR55-SKDB-25B5",
     "reward": "800 EMX Bucks",
     "where": "Shop → REDEEM CODE",
-    "redemption": "one-player",
-    "_redemption": "one-player = the game as it is today (Rules/Codes.luau: used once, first player to redeem it spends it). per-player = once each for everyone, only once the game actually works that way. The banner wording follows this value."
+    "redemption": "per-player",
+    "_redemption": "one-player = the game as it is today (Rules/Codes.luau: used once, first player to redeem it spends it). per-player = once each for everyone, only once the game actually works that way. The banner wording follows this value.",
+    "cap": 100,
+    "_cap": "Total redemptions allowed across all players (the shared code maxUses). Omit or set 0 for no cap."
   }
 }

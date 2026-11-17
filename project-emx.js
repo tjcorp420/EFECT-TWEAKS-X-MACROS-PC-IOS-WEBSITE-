@@ -212,6 +212,18 @@
     for (const note of banner.querySelectorAll("[data-pe-code-note]")) {
       note.hidden = note.dataset.peCodeNote !== mode;
     }
+
+    // A shared code can carry a cap on total redemptions. The clause only shows
+    // when there is a real number to put in it, so no cap means no claim.
+    const cap = Number(drop.cap);
+    const capWrap = banner.querySelector("[data-pe-code-cap-wrap]");
+    const capNode = banner.querySelector("[data-pe-code-cap]");
+    if (capWrap) {
+      const usable = mode === "per-player" && Number.isFinite(cap) && cap > 0;
+      capWrap.hidden = !usable;
+      if (usable && capNode) capNode.textContent = numberFormat.format(cap);
+    }
+
     banner.hidden = false;
 
     const button = banner.querySelector("[data-pe-code-copy]");
