@@ -151,7 +151,11 @@ test("the homepage leads with PROJECT EMX and keeps the store underneath", () =>
   assert.match(home, /<span class="pe-title-main" data-text="EMX">EMX<\/span>/);
   assert.match(read("project-emx.css"), /content: attr\(data-text\)/);
   assert.match(home, /The island is <em>calling\.<\/em>/);
-  assert.match(home, /OG movement\. Modern assets\. Battle Royale reimagined\./);
+  // The old line promised a Battle Royale while the same page said it was not
+  // in the build. The tagline now names what the beta actually is and keeps the
+  // Battle Royale as the next thing rather than the current one.
+  assert.match(home, /OG build fighting now\. Battle Royale next\./);
+  assert.doesNotMatch(home, /Battle Royale reimagined/);
   // The mode band lists what the beta actually has, under the names the game's
   // own lobby uses (src/client/Lobby.luau and src/shared/Rules/Match.luau).
   for (const mode of ["Freebuild", "Piece Control", "Speed Realistics", "Zone Wars", "Free For All", "Map maker"]) {
@@ -395,6 +399,22 @@ test("the game thumbnail is the current one from Roblox, not the retired art", (
     assert.doesNotMatch(read(page), /project-emx-(?:640|1280)\.webp/, `${page} still points at the old art`);
   }
   assert.match(read("index.html"), /assets\/roblox\/project-emx-768\.webp/);
+});
+
+test("the gameplay clips and the Roblox card say true things", () => {
+  const home = read("index.html");
+  // The five captures are PROJECT EMX gameplay; they used to send people to a
+  // macro product.
+  assert.doesNotMatch(home, /Explore VOLT Macro/);
+  assert.equal((home.match(/<a href="game\.html">See every mode →<\/a>/g) || []).length, 5);
+
+  // Levels stopped opening skins on 16 November. Rules/Skins.luau: FREE is
+  // three skins plus the Rookie default, CODE_ONLY is Skeleton, SkeletonChrome
+  // and PurpleSkull, and everything else rotates through the shop.
+  assert.doesNotMatch(home, /unlock as you level up/);
+  assert.match(home, /Four skins are free from the start/);
+  assert.match(home, /rotate through the shop/);
+  assert.match(home, /three are code-only and never sold/);
 });
 
 test("a gift code is presented as the one-time race it is", () => {
