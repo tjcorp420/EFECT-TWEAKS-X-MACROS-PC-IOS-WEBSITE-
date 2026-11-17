@@ -51,12 +51,33 @@
       <span data-pe-discord-label>Invite coming soon</span>
     </a>`;
 
+  // The game pages wear the PROJECT EMX wordmark; everything else keeps the EMX
+  // Software one. The same bar renders on the catalogue and the checkout pages,
+  // and branding those with the game would misname the shop someone is buying
+  // from.
+  const gamePages = new Set(["home", "news", "game", "community", "playtesting", "roadmap"]);
+  const brand = gamePages.has(page)
+    ? {
+        label: "PROJECT EMX home",
+        src: "./assets/project-emx/logo-wordmark-320.webp",
+        srcset: "./assets/project-emx/logo-wordmark-320.webp 320w, ./assets/project-emx/logo-wordmark-640.webp 640w",
+        width: 320,
+        height: 98,
+      }
+    : {
+        label: "EMX Software home",
+        src: "./assets/brand/emx-software-wordmark-320.webp",
+        srcset: "",
+        width: 320,
+        height: 123,
+      };
+
   const header = document.querySelector("[data-site-header]");
   if (header) {
     header.className = "site-header";
     header.innerHTML = `
-      <a class="site-brand" href="./index.html" aria-label="EMX home">
-        <img class="site-brand-wordmark" src="./assets/brand/emx-software-wordmark-320.webp" width="320" height="123" alt="">
+      <a class="site-brand" href="./index.html" aria-label="${brand.label}">
+        <img class="site-brand-wordmark" src="${brand.src}"${brand.srcset ? ` srcset="${brand.srcset}" sizes="150px"` : ""} width="${brand.width}" height="${brand.height}" alt="">
       </a>
       <button class="emx-nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-emx-nav-toggle aria-label="Toggle navigation"><span></span></button>
       <nav id="site-navigation" data-emx-mobile-nav aria-label="Primary navigation">
