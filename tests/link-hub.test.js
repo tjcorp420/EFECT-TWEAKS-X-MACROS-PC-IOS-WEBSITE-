@@ -22,7 +22,10 @@ test("link hub keeps emxtweaks.com as the home route and preserves required dest
   assert.match(home, /ONE LINK · EVERY OFFICIAL EMX DESTINATION/);
   assert.match(home, /Built beyond/);
   assert.match(home, /Explore software/);
-  assert.match(home, /assets\/brand\/emx-software-mark\.png/);
+  // The home page leads with the game, so its share card is the PROJECT EMX
+  // key art rather than the EMX Software mark.
+  assert.match(home, /assets\/project-emx\/share-card\.jpg/);
+  assert.match(home, /twitter:card" content="summary_large_image"/);
   assert.match(home, /Microsoft Store and Chrome Web Store releases are in preparation/);
   assert.match(home, /Developer verification in progress/);
   assert.doesNotMatch(home, /id="emx-splash"/);
