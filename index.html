@@ -82,6 +82,20 @@
               fetchpriority="high"
               decoding="async"
             />
+            <video
+              class="pe-hero-video"
+              data-pe-hero-video
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="none"
+              poster="assets/project-emx/clips/hero-lobby.jpg"
+              width="1280"
+              height="720"
+            >
+              <source src="assets/project-emx/clips/hero-lobby.mp4" type="video/mp4" />
+            </video>
           </div>
           <div class="pe-hero-grid" aria-hidden="true"></div>
           <div class="pe-hero-inner">
@@ -206,113 +220,85 @@
             </ul>
           </div>
         </section>
-        <section class="store-section store-gameplay" aria-labelledby="video-title" data-reveal>
-          <p class="deck-kicker"><span></span> EMX IN ACTION</p>
-          <h2 id="video-title">See it played.</h2>
-          <p class="store-lead">
-            Five creator captures from freebuild practice and live matches.
-          </p>
-          <div class="store-gameplay-grid">
+        <section class="pe-section pe-clips" aria-labelledby="pe-clips-title">
+          <div class="pe-section-inner">
+            <p class="pe-lineup-label"><span class="pe-pulse" aria-hidden="true"></span> Captured 17 November</p>
+            <h2 id="pe-clips-title">See it played</h2>
+            <p class="pe-section-note">
+              Four captures from the current build. No commentary, no edit &mdash; this is what a
+              round looks like.
+            </p>
+            <div class="pe-clip-grid">
             <figure>
               <video
-                controls
+                class="pe-clip"
+                preload="none"
                 playsinline
                 muted
-                preload="none"
-                poster="media/store/freebuild-poster.jpg"
-                aria-label="Freebuild practice · September 29"
+                loop
+                controls
+                poster="assets/project-emx/clips/build-fight.jpg"
+                width="960"
+                height="768"
+                aria-label="Building under fire"
               >
-                <source
-                  src="media/store/emx-freebuild-showcase.mp4"
-                  type="video/mp4"
-                />
+                <source src="assets/project-emx/clips/build-fight.mp4" type="video/mp4" />
               </video>
-              <figcaption>
-                <b>Freebuild practice · September 29</b
-                ><a href="game.html">See every mode →</a>
-              </figcaption>
+              <figcaption>Building under fire</figcaption>
             </figure>
             <figure>
               <video
-                controls
+                class="pe-clip"
+                preload="none"
                 playsinline
                 muted
-                preload="none"
-                poster="media/store/gameplay-sep22.jpg"
-                aria-label="Build and edit gameplay · September 22"
+                loop
+                controls
+                poster="assets/project-emx/clips/wall-and-ramp.jpg"
+                width="960"
+                height="768"
+                aria-label="Wall, ramp, reset"
               >
-                <source
-                  src="media/store/emx-gameplay-sep22.mp4"
-                  type="video/mp4"
-                />
+                <source src="assets/project-emx/clips/wall-and-ramp.mp4" type="video/mp4" />
               </video>
-              <figcaption>
-                <b>Build and edit gameplay · September 22</b
-                ><a href="game.html">See every mode →</a>
-              </figcaption>
+              <figcaption>Wall, ramp, reset</figcaption>
             </figure>
             <figure>
               <video
-                controls
+                class="pe-clip"
+                preload="none"
                 playsinline
                 muted
-                preload="none"
-                poster="media/store/gameplay-sep29.jpg"
-                aria-label="Live match gameplay · September 29"
+                loop
+                controls
+                poster="assets/project-emx/clips/ramp-up.jpg"
+                width="960"
+                height="768"
+                aria-label="Taking the high ground"
               >
-                <source
-                  src="media/store/emx-gameplay-sep29.mp4"
-                  type="video/mp4"
-                />
+                <source src="assets/project-emx/clips/ramp-up.mp4" type="video/mp4" />
               </video>
-              <figcaption>
-                <b>Live match gameplay · September 29</b
-                ><a href="game.html">See every mode →</a>
-              </figcaption>
+              <figcaption>Taking the high ground</figcaption>
             </figure>
             <figure>
               <video
-                controls
+                class="pe-clip"
+                preload="none"
                 playsinline
                 muted
-                preload="none"
-                poster="media/store/gameplay-sep18-a.jpg"
-                aria-label="Close-range gameplay · September 18"
-              >
-                <source
-                  src="media/store/emx-gameplay-sep18-a.mp4"
-                  type="video/mp4"
-                />
-              </video>
-              <figcaption>
-                <b>Close-range gameplay · September 18</b
-                ><a href="game.html">See every mode →</a>
-              </figcaption>
-            </figure>
-            <figure>
-              <video
+                loop
                 controls
-                playsinline
-                muted
-                preload="none"
-                poster="media/store/gameplay-sep18-b.jpg"
-                aria-label="Build-fight gameplay · September 18"
+                poster="assets/project-emx/clips/high-ground.jpg"
+                width="960"
+                height="768"
+                aria-label="Holding the build"
               >
-                <source
-                  src="media/store/emx-gameplay-sep18-b.mp4"
-                  type="video/mp4"
-                />
+                <source src="assets/project-emx/clips/high-ground.mp4" type="video/mp4" />
               </video>
-              <figcaption>
-                <b>Build-fight gameplay · September 18</b
-                ><a href="game.html">See every mode →</a>
-              </figcaption>
+              <figcaption>Holding the build</figcaption>
             </figure>
+            </div>
           </div>
-          <p class="store-subline">
-            Creator-supplied gameplay. These clips are not controlled
-            before-and-after benchmarks.
-          </p>
         </section>
 
         <section class="pe-dash" aria-labelledby="pe-dash-title">
@@ -329,6 +315,16 @@
               </article>
               <article class="pe-tile" data-pe-tile="status" data-state="loading">
                 <p class="pe-tile-label">Build status</p>
+                <p class="pe-tile-value" data-pe-value>Checking&hellip;</p>
+                <p class="pe-tile-note" data-pe-note></p>
+              </article>
+              <article class="pe-tile" data-pe-tile="favourites" data-state="loading">
+                <p class="pe-tile-label">Favourites</p>
+                <p class="pe-tile-value" data-pe-value>Checking&hellip;</p>
+                <p class="pe-tile-note" data-pe-note></p>
+              </article>
+              <article class="pe-tile" data-pe-tile="rating" data-state="loading">
+                <p class="pe-tile-label">Rating</p>
                 <p class="pe-tile-value" data-pe-value>Checking&hellip;</p>
                 <p class="pe-tile-note" data-pe-note></p>
               </article>
@@ -351,8 +347,6 @@
             <p class="pe-dash-foot">
               Player count, visits and ratings come straight from the Roblox API; the member count comes from Discord.
               Nothing here is estimated &mdash; a figure that cannot be fetched is shown as unavailable.
-              Favourites <strong data-pe-favourites>&ndash;&ndash;</strong> &middot;
-              Rating <strong data-pe-rating>&ndash;&ndash;</strong> &middot;
               <a href="game.html">What is playable today</a>
             </p>
             <noscript>
@@ -612,6 +606,115 @@
           <article><em class="soon-badge">Coming soon</em><span>CHROME WEB STORE</span><strong>Browser extensions</strong><small>Coming soon · Developer verification in progress</small></article>
         </div>
       </section>
+      <section class="store-section store-gameplay" aria-labelledby="video-title" data-reveal>
+        <p class="deck-kicker"><span></span> EMX IN ACTION</p>
+        <h2 id="video-title">Watch the gameplay.</h2>
+        <p class="store-lead">
+          Five creator captures from freebuild practice and live matches.
+        </p>
+        <div class="store-gameplay-grid">
+          <figure>
+            <video
+              controls
+              playsinline
+              muted
+              preload="none"
+              poster="media/store/freebuild-poster.jpg"
+              aria-label="Freebuild practice · September 29"
+            >
+              <source
+                src="media/store/emx-freebuild-showcase.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <figcaption>
+              <b>Freebuild practice · September 29</b
+              ><a href="macros.html">Explore VOLT Macro →</a>
+            </figcaption>
+          </figure>
+          <figure>
+            <video
+              controls
+              playsinline
+              muted
+              preload="none"
+              poster="media/store/gameplay-sep22.jpg"
+              aria-label="Build and edit gameplay · September 22"
+            >
+              <source
+                src="media/store/emx-gameplay-sep22.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <figcaption>
+              <b>Build and edit gameplay · September 22</b
+              ><a href="macros.html">Explore VOLT Macro →</a>
+            </figcaption>
+          </figure>
+          <figure>
+            <video
+              controls
+              playsinline
+              muted
+              preload="none"
+              poster="media/store/gameplay-sep29.jpg"
+              aria-label="Live match gameplay · September 29"
+            >
+              <source
+                src="media/store/emx-gameplay-sep29.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <figcaption>
+              <b>Live match gameplay · September 29</b
+              ><a href="macros.html">Explore VOLT Macro →</a>
+            </figcaption>
+          </figure>
+          <figure>
+            <video
+              controls
+              playsinline
+              muted
+              preload="none"
+              poster="media/store/gameplay-sep18-a.jpg"
+              aria-label="Close-range gameplay · September 18"
+            >
+              <source
+                src="media/store/emx-gameplay-sep18-a.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <figcaption>
+              <b>Close-range gameplay · September 18</b
+              ><a href="macros.html">Explore VOLT Macro →</a>
+            </figcaption>
+          </figure>
+          <figure>
+            <video
+              controls
+              playsinline
+              muted
+              preload="none"
+              poster="media/store/gameplay-sep18-b.jpg"
+              aria-label="Build-fight gameplay · September 18"
+            >
+              <source
+                src="media/store/emx-gameplay-sep18-b.mp4"
+                type="video/mp4"
+              />
+            </video>
+            <figcaption>
+              <b>Build-fight gameplay · September 18</b
+              ><a href="macros.html">Explore VOLT Macro →</a>
+            </figcaption>
+          </figure>
+        </div>
+        <p class="store-subline">
+          Creator-supplied gameplay. These clips are not controlled
+          before-and-after benchmarks.
+        </p>
+      </section>
+
       <section class="store-section store-faq" data-reveal>
         <p class="deck-kicker"><span></span> BEFORE YOU CHOOSE</p>
         <h2>Questions, answered.</h2>

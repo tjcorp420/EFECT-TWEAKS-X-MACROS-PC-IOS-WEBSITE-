@@ -175,16 +175,19 @@ test("the homepage leads with PROJECT EMX and keeps the store underneath", () =>
 test("every dashboard tile ships in the loading state with no number baked into the markup", () => {
   const home = read("index.html");
   const tiles = [...home.matchAll(/<article class="pe-tile[^"]*"[\s\S]*?<\/article>/g)].map((m) => m[0]);
-  assert.equal(tiles.length, 5, "the homepage dashboard should have five tiles");
+  assert.equal(tiles.length, 7, "the homepage dashboard should have seven tiles");
   for (const tile of tiles) {
     assert.match(tile, /data-state="loading"/);
     const value = tile.match(/<p class="pe-tile-value" data-pe-value>([\s\S]*?)<\/p>/);
     assert.ok(value, "tile must have a value slot");
     assert.doesNotMatch(value[1], /\d/, `a tile shipped with a hardcoded number: ${value[1]}`);
   }
-  for (const key of ["players", "status", "playtest", "update", "announcement"]) {
+  for (const key of ["players", "status", "favourites", "rating", "playtest", "update", "announcement"]) {
     assert.ok(home.includes(`data-pe-tile="${key}"`), `missing tile ${key}`);
   }
+  // Favourites and the rating are live Roblox figures, so they are tiles rather
+  // than footnote type under the dashboard.
+  assert.doesNotMatch(home, /data-pe-favourites|data-pe-rating/);
   // The Discord member count is deliberately off the home page while the server
   // is new, but it is hidden rather than removed: Community still carries it.
   assert.ok(!home.includes('data-pe-tile="discord"'), "member count should stay off the home page");
@@ -422,17 +425,36 @@ test("a panel with nothing in it is hidden, but a broken source still shows", ()
 
 test("the gameplay clips and the Roblox card say true things", () => {
   const home = read("index.html");
-  // The captures are PROJECT EMX footage. They used to sit below the store
-  // hero, the Roblox band and the software grid, which is how they ended up
-  // advertising a macro product.
-  const clips = home.indexOf('aria-labelledby="video-title"');
+  // Two different sets of footage, and they were conflated. The September
+  // captures are EMX Tweaks and Macros material - PROJECT EMX was not created
+  // on Roblox until 8 November, so September footage cannot be of it - and they
+  // belong in the storefront with the VOLT Macro link. The 17 November captures
+  // are the game, and they lead.
   const storeHero = home.indexOf('class="store-hero"');
-  assert.ok(clips > 0 && storeHero > 0);
-  assert.ok(clips < storeHero, "the clips belong in the game half of the page");
-  // The five captures are PROJECT EMX gameplay; they used to send people to a
-  // macro product.
-  assert.doesNotMatch(home, /Explore VOLT Macro/);
-  assert.equal((home.match(/<a href="game\.html">See every mode →<\/a>/g) || []).length, 5);
+  const september = home.indexOf('aria-labelledby="video-title"');
+  const projectEmx = home.indexOf('aria-labelledby="pe-clips-title"');
+  assert.ok(storeHero > 0 && september > 0 && projectEmx > 0);
+  assert.ok(projectEmx < storeHero, "the game's own clips belong above the store");
+  assert.ok(september > storeHero, "the September clips are storefront material");
+  assert.equal((home.match(/Explore VOLT Macro/g) || []).length, 5);
+  assert.equal((home.match(/class="pe-clip"/g) || []).length, 4);
+
+  // Every clip the game section shows must actually exist on disk.
+  for (const clip of ["build-fight", "wall-and-ramp", "ramp-up", "high-ground"]) {
+    assert.ok(home.includes(`assets/project-emx/clips/${clip}.mp4`), `${clip} not used`);
+    for (const ext of ["mp4", "jpg"]) {
+      assert.ok(
+        fs.existsSync(path.join(root, `assets/project-emx/clips/${clip}.${ext}`)),
+        `missing ${clip}.${ext}`,
+      );
+    }
+  }
+
+  // The hero plays the lobby over the still, and stops for reduced motion.
+  assert.match(home, /class="pe-hero-video"/);
+  assert.ok(fs.existsSync(path.join(root, "assets/project-emx/clips/hero-lobby.mp4")));
+  assert.ok(fs.existsSync(path.join(root, "assets/project-emx/clips/hero-lobby.jpg")));
+  assert.match(read("project-emx.css"), /\.pe-hero-video \{ display: none; \}/);
 
   // Levels stopped opening skins on 16 November. Rules/Skins.luau: FREE is
   // three skins plus the Rookie default, CODE_ONLY is Skeleton, SkeletonChrome

@@ -404,25 +404,35 @@
       setTile("discord", "unavailable", "Unavailable", "Discord did not answer.");
     }
 
-    // Extra real figures, shown only when they exist.
-    const favourites = document.querySelector("[data-pe-favourites]");
-    if (favourites) {
-      favourites.textContent =
-        roblox?.ok && isNumber(roblox.favorites)
-          ? numberFormat.format(roblox.favorites)
-          : "--";
+    // Favourites and the rating are tiles of their own: two of the few numbers
+    // on this page that are genuinely live, so they are not set in footnote
+    // type. Both come from the same Roblox call as the player count.
+    if (roblox?.ok && isNumber(roblox.favorites)) {
+      setTile(
+        "favourites",
+        "ok",
+        numberFormat.format(roblox.favorites),
+        roblox.favorites === 1 ? "player saved it" : "players saved it",
+      );
+    } else {
+      setTile("favourites", "unavailable", "Unavailable", "Roblox did not answer.");
     }
-    const rating = document.querySelector("[data-pe-rating]");
-    if (rating) {
-      const up = roblox?.ok ? roblox.upVotes : null;
-      const down = roblox?.ok ? roblox.downVotes : null;
-      if (isNumber(up) && isNumber(down) && up + down > 0) {
-        rating.textContent = `${Math.round((up / (up + down)) * 100)}%`;
-      } else if (isNumber(up) && isNumber(down)) {
-        rating.textContent = "No ratings yet";
-      } else {
-        rating.textContent = "--";
-      }
+
+    const up = roblox?.ok ? roblox.upVotes : null;
+    const down = roblox?.ok ? roblox.downVotes : null;
+    if (isNumber(up) && isNumber(down) && up + down > 0) {
+      const total = up + down;
+      setTile(
+        "rating",
+        "ok",
+        `${Math.round((up / total) * 100)}%`,
+        `${numberFormat.format(total)} ${total === 1 ? "rating" : "ratings"}`,
+      );
+    } else if (isNumber(up) && isNumber(down)) {
+      // Nobody has rated it yet. That is a fact, not a failure.
+      setTile("rating", "empty", "No ratings yet", "The first one counts double, basically.");
+    } else {
+      setTile("rating", "unavailable", "Unavailable", "Roblox did not answer.");
     }
 
     const stamp = document.querySelector("[data-pe-stamp]");
